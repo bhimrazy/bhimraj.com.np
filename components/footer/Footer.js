@@ -57,7 +57,7 @@ export default function Footer() {
               <ul className="flex flex-row space-x-4">
                 <li>
                   <a
-                    href=""
+                    href="/"
                     title="Twitter"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -75,7 +75,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    href=""
+                    href="/"
                     title="YouTube"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -93,7 +93,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    href=""
+                    href="/"
                     title="Instagram"
                     target="_blank"
                     rel="noopener noreferrer"
