@@ -11,7 +11,7 @@ export default function Home() {
         <meta name="application-name" content="Bhimraj Yadav" />
       </Head>
       <Header />
-      <main className="flex flex-col container mx-auto px-20">
+      <main className="flex flex-col container mx-auto px-4 sm:px-20">
         <Hero />
       </main>
 

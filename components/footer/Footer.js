@@ -14,7 +14,7 @@ export default function Footer() {
               >
                 Bhimraj Yadav
               </a>
-              <div className="text-lg">
+              <div className="text-xl font-medium">
                 <p>Software Developer</p>
               </div>
             </div>

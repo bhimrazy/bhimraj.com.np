@@ -2,10 +2,21 @@ import React, { useState } from "react";
 import Link from "next/link";
 export default function Header() {
   const [menu, setMenu] = useState(false);
+  const handleClick = () => {
+    setMenu((v) => !v);
+  };
   return (
     <header className="bg-gray-50 w-full">
-      <div className="sm:hidden absolute min-h-screen w-screen bg-teal-400 z-50 flex flex-col p-6 transition ease-in-out duration-500">
-        <button className=" p-6 absolute top-0 right-0" title="Menu">
+      <div
+        className={`${
+          menu ? `block` : `hidden`
+        } sm:hidden absolute min-h-screen w-screen bg-teal-400 z-50 flex flex-col p-6 transition ease-in-out duration-500`}
+      >
+        <button
+          className=" p-6 absolute top-0 right-0"
+          title="Menu"
+          onClick={handleClick}
+        >
           <svg
             className="w-10 h-10 focus:outline-none text-gray-100"
             fill="none"
@@ -23,15 +34,21 @@ export default function Header() {
         </button>
         <nav className="text-white justify-center items-center mt-20">
           <ul className="flex flex-col transition-all duration-500">
-            <li className="hover:opacity-80 cursor-pointer px-6 py-5 bg-teal-300 ">
-              <a>Home</a>
-            </li>
-            <li className="hover:opacity-80 cursor-pointer px-6 py-5 bg-teal-300 ">
-              <a>About</a>
-            </li>
-            <li className="hover:opacity-80 cursor-pointer px-6 py-5 bg-teal-300 ">
-              <a>Contact</a>
-            </li>
+            <Link href="/">
+              <li className="hover:opacity-80 cursor-pointer px-6 py-5 bg-teal-300 ">
+                <a>Home</a>
+              </li>
+            </Link>
+            <Link href="/">
+              <li className="hover:opacity-80 cursor-pointer px-6 py-5 bg-teal-300 ">
+                <a>About</a>
+              </li>
+            </Link>
+            <Link href="/">
+              <li className="hover:opacity-80 cursor-pointer px-6 py-5 bg-teal-300 ">
+                <a>Contact</a>
+              </li>
+            </Link>
           </ul>
         </nav>
       </div>
@@ -57,7 +74,7 @@ export default function Header() {
             </li>
           </ul>
         </nav>
-        <button className="sm:hidden" title="Menu">
+        <button className="sm:hidden" title="Menu" onClick={handleClick}>
           <svg
             className="w-6 h-6 focus:outline-none"
             fill="none"

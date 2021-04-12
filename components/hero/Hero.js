@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 export default function Hero() {
   return (
-    <section className="justify-center items-center space-x-8 px-8 space-y-2 flex flex-col md:flex-row py-9">
+    <section className="justify-center items-center sm:space-x-8 px-8 space-y-2 flex flex-col md:flex-row py-9">
       <div className="flex flex-col space-y-8">
         <div className="space-y-10">
           <h1 className="text-4xl md:text-6xl  font-bold text-left">
@@ -87,14 +87,15 @@ export default function Hero() {
           </Link>
         </div>
       </div>
-      <div>
+      <div className=" pt-16 sm:pt-0 sm:block">
         <Image
-          className="rounded-full bg-cover filter-grayscale"
+          className=" rounded-xl shadow-lg sm:shadow-none sm:rounded-full bg-cover filter-grayscale"
           src="/bhimraj_yadav.png"
           alt="Bhimraj Yadav"
           width={350}
           height={350}
           loading="eager"
+          quality={40}
         />
       </div>
     </section>
