@@ -15,9 +15,12 @@ module.exports = {
       },
       colors: {
         gray: colors.trueGray,
+        bluegray: colors.blueGray,
         red: colors.red,
         blue: colors.lightBlue,
         yellow: colors.amber,
+        teal: colors.teal,
+        cyan: colors.cyan,
       },
     },
   },

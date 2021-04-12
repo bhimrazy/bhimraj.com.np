@@ -27,60 +27,60 @@ export default function Hero() {
         <div className="flex flex-1 space-x-5">
           <Link href="https://www.linkedin.com/in/bhimrazy/">
             <a target="_blank">
-              <img
-                className="h-8 w-8 shadow-md rounded-lg p-1 transition-all delay-100 hover:opacity-90 cursor-pointer"
+              <Image
+                className="h-8 w-8 shadow-md transition-all delay-100 hover:opacity-90 cursor-pointer"
                 src="/social/linkedin.svg"
                 alt="LinkedIn"
-                // width={30}
-                // height={30}
+                width={30}
+                height={30}
                 loading="eager"
               />
             </a>
           </Link>
           <Link href="https://www.instagram.com/bhimrazyadav/">
             <a target="_blank">
-              <img
-                className="h-8 w-8 shadow-md rounded-lg p-1 transition-all delay-100 hover:opacity-90 cursor-pointer"
+              <Image
+                className="h-8 w-8 shadow-md transition-all delay-100 hover:opacity-90 cursor-pointer"
                 src="/social/instagram.svg"
                 alt="Instagram"
-                // width={30}
-                // height={30}
+                width={30}
+                height={30}
                 loading="eager"
               />
             </a>
           </Link>
           <Link href="https://www.twitter.com/bhimrazyadav/">
             <a target="_blank">
-              <img
-                className="h-8 w-8 shadow-md rounded-lg p-1 transition-all delay-100 hover:opacity-90 cursor-pointer"
+              <Image
+                className="h-8 w-8 shadow-md transition-all delay-100 hover:opacity-90 cursor-pointer"
                 src="/social/twitter.svg"
                 alt="Twitter"
-                // width={30}
-                // height={30}
+                width={30}
+                height={30}
                 loading="eager"
               />
             </a>
           </Link>
           <Link href="https://www.behance.net/bhimrazy">
             <a target="_blank">
-              <img
-                className="h-8 w-8 shadow-md rounded-lg p-1 transition-all delay-100 hover:opacity-90 cursor-pointer"
+              <Image
+                className="h-8 w-8 shadow-md transition-all delay-100 hover:opacity-90 cursor-pointer"
                 src="/social/behance.svg"
                 alt="Behance"
-                // width={30}
-                // height={30}
+                width={30}
+                height={30}
                 loading="eager"
               />
             </a>
           </Link>
           <Link href="https://github.com/bhimrazy">
             <a target="_blank">
-              <img
-                className="h-8 w-8 shadow-md rounded-lg p-1 transition-all delay-100 hover:opacity-90 cursor-pointer"
+              <Image
+                className="h-8 w-8 shadow-md transition-all delay-100 hover:opacity-90 cursor-pointer"
                 src="/social/github.svg"
                 alt="Github"
-                // width={30}
-                // height={30}
+                width={30}
+                height={30}
                 loading="eager"
               />
             </a>
