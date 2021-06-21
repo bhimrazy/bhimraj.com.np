@@ -3,7 +3,7 @@ import Image from 'next/image'
 import profilePic from '../public/bhimraj_yadav.jpg'
 export default function Home() {
   return (
-    <div className="flex flex-col items-center bg-gray-50 justify-center min-h-screen ">
+    <div className="flex flex-col items-center bg-white justify-center min-h-screen ">
       <Head>
       <title>Software Developer | AI Enthusiast | Bhimraj Yadav</title>
         <link rel="icon" href="/favicon.ico" />
@@ -16,7 +16,7 @@ export default function Home() {
       <div className="absolute top-0 right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob animation-delay-2000" ></div>
       <div className="absolute top-20 left-28  w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob animation-delay-4000" ></div>
       <div className="bg-gray-100/20 backdrop-blur-md rounded-2xl w-full h-full items-center flex flex-col p-8">
-        <Image src={profilePic} alt="Bhimraj Yadav" width={300} height={300} priority loading="eager" className="rounded-full filter saturate-[70%] drop-shadow-sm object-center"/>
+        <Image src={profilePic} alt="Bhimraj Yadav" width={300} height={300} priority loading="eager" className="rounded-full filter saturate-100 drop-shadow-sm object-center"/>
         <h1 className="text-5xl text-gray-800 font-semibold pt-4 pb-2">Bhimraj Yadav</h1>
         <p className="text-lg text-gray-700 font-light">Software Developer | AI Enthusiast</p>
         <small className="text-gray-500 py-4">!!! Website Launching Soon !!!</small>
