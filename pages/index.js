@@ -8,8 +8,6 @@ export default function Home() {
       <title>Software Developer | AI Enthusiast | Bhimraj Yadav</title>
         <link rel="icon" href="/favicon.ico" />
         <meta name="application-name" content="Bhimraj Yadav" />
-        <link rel="preconnect" href="https://fonts.gstatic.com"/>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/> 
       </Head>
       <main className="relative w-full max-w-lg"> 
       <div className="absolute top-4 left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob" ></div>
