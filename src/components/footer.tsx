@@ -34,7 +34,7 @@ export default function Footer() {
     const copyright = '© Bhimraj Yadav 2021'
     return (
         <footer className="flex border-t">
-            <div className="flex flex-col px-4 py-2 space-y-4 lg:px-0 w-full max-w-7xl mx-auto">
+            <div className="flex flex-col px-4 py-2 space-y-4 xl:px-0 w-full max-w-5xl mx-auto">
                 <section className="py-4 md:py-6">
                     <nav>
                         <ul className="flex space-x-4 justify-center text-sm font-medium text-gray-700">
