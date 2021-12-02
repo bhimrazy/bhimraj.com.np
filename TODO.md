@@ -9,8 +9,14 @@
   - Changed default directory to src.
 
 - [x] Create Home Page
+
   - Created an index page.
   - Created an app layout along with header and footer.
-  - Added a header feature with content and sticky at top.
-  - Added max-width feature for the page.
-  - Added footer with content.
+
+  - Added a header.
+
+    - Added feature with content and sticky at top.
+    - Added max-width feature for the page.
+
+  - Added footer.
+    - Added content.
