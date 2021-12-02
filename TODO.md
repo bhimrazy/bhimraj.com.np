@@ -21,3 +21,4 @@
     - Added some social media links.
     - Added footer copyright info.
 
+- [x] Add a Hero Section for homepage
