@@ -13,10 +13,13 @@
   - Created an index page.
   - Created an app layout along with header and footer.
 
-  - Added a header.
+  - [x] Added a header.
 
     - Added feature with content and sticky at top.
     - Added max-width feature for the page.
+    - Added a top bar
 
-  - Added footer.
-    - Added content.
+  - Added a footer.
+    - Added links.
+    - Added some social media links.
+    - Added footer copyright info.
