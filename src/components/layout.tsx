@@ -5,7 +5,7 @@ import Footer from './footer'
 
 export default function Layout({children}:{children:ReactNode}) {
     return (
-        <div className="flex font-display flex-col antialiased min-h-screen bg-white">
+        <div className="flex font-display flex-col antialiased bg-white">
             <Head>
                 <title>Software Engineer | AI Enthusiast | BHIMRAJ YADAV</title>
             </Head>
