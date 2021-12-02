@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import profilePic from '../public/bhimraj_yadav.jpg'
+import profilePic from 'public/bhimraj_yadav.jpg'
 export default function Home() {
   return (
     <div className="flex flex-col items-center bg-white justify-center min-h-screen ">

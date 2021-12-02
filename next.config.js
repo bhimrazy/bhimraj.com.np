@@ -1,3 +1,7 @@
 module.exports = {
-    webpack5: true,
-  };
+  swcMinify: true,
+  reactStrictMode: true,
+  images: {
+    formats: ['image/avif', 'image/webp']
+  },
+};
