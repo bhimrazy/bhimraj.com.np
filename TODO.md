@@ -25,6 +25,7 @@
   - Added footer copyright info
   - Added policy info
   - Updated paddings
+  - Updated Social Icons
 
 - [x] Add a Hero Section for homepage
   - Added hero content

@@ -3,12 +3,12 @@ export default function NewsLetter() {
     title: 'Subscribe to the NewsLetter',
     description:
       'Get emails from me about web development, tech, and early access to new articles.',
-    input_placeholder: 'elon@tesla.com',
+    input_placeholder: 'example@email.com',
     button: 'Subscribe',
   }
   return (
     <section className="pt-10 pb-16">
-      <div className="flex flex-col border rounded-lg p-10 text-center mx-auto space-y-6">
+      <div className="flex flex-col border rounded-lg py-14 text-center mx-auto space-y-6">
         <div className="space-y-1">
           <h2 className="text-2xl font-semibold">{newsletter_content?.title}</h2>
           <p className="text-gray-600">{newsletter_content?.description}</p>
