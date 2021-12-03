@@ -48,4 +48,6 @@
 
 - [x] Add a NewsLetter Section for homepage
   - Created a newsletter section component
-  - 
+  - Added content for news letter
+  - Added title , description and input section along with subscribe button
+  - Updated ui for newsletter

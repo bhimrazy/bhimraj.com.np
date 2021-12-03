@@ -27,7 +27,7 @@ export default function VideoSection() {
     ],
   }
   return (
-    <section className="flex flex-col justify-center text-left space-y-8 py-2 container">
+    <section className="flex flex-col justify-center text-left space-y-8 py-2 ">
       <div className="flex flex-col space-y-2">
         <h2 className="text-2xl font-bold text-gray-800">{video_content?.title}</h2>
         <p className="text-gray-500">{video_content?.description}</p>
