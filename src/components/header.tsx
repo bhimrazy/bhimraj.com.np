@@ -1,10 +1,11 @@
+import Link from 'next/link'
 export default function Header() {
   const top_bar = 'Accelerating our mission to give rich content. →'
+  const icon_name = 'Bhimraj Yadav'
   const nav_items = [
     { title: 'Home', is_home: true },
     { title: 'Blog' },
     { title: 'Projects' },
-    { title: 'Library' },
     { title: 'About' },
   ]
   const button_content = 'Sign up ->'
@@ -15,12 +16,12 @@ export default function Header() {
       </p>
       <header className="flex flex-col bg-white sticky top-0 w-full place-content-center border-b">
         <nav className="flex justify-between px-4 py-4 xl:px-0 w-full max-w-5xl mx-auto items-center">
-          <ul className="flex space-x-2 sm:space-x-4 md:space-x-5 lg:space-x-6 font-medium text-gray-600">
+          <Link href="/"><a className="text-base font-medium text-gray-900 uppercase tracking-wider">{icon_name}</a></Link>
+          <ul className="hidden sm:flex space-x-2 sm:space-x-4 md:space-x-5 lg:space-x-6 font-medium text-gray-600">
             {nav_items.map((item, idx) => (
               <li
-                className={`${
-                  item?.is_home ? 'text-gray-800' : ''
-                } hover:text-gray-900 cursor-pointer`}
+                className={`${item?.is_home ? 'text-gray-900' : ''
+                  } hover:text-blue-500 cursor-pointer`}
                 key={idx}
               >
                 {item?.title}

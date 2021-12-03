@@ -4,10 +4,11 @@ import Header from './header'
 import Footer from './footer'
 
 export default function Layout({children}:{children:ReactNode}) {
+    const title='BHIMRAJ YADAV'
     return (
         <div className="flex font-display flex-col antialiased bg-white">
             <Head>
-                <title>Software Engineer | AI Enthusiast | BHIMRAJ YADAV</title>
+                <title>{title}</title>
             </Head>
             <Header/>
             {children}
