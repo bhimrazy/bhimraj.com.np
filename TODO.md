@@ -28,3 +28,8 @@
   - Added hero content
   - Added buttons
   - Add cta for guestbook
+  - Moved Hero Section content to separate component
+
+- [x] Add a Video Section for homepage
+  - Created a video section component
+  - Added a default content for video section
