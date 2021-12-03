@@ -33,3 +33,6 @@
 - [x] Add a Video Section for homepage
   - Created a video section component
   - Added a default content for video section
+  - Added title,description and image for video component
+  - Added loop for videos
+  - Added hover effect for video component
