@@ -1,17 +1,17 @@
 import Link from 'next/link'
 export default function Header() {
-  const top_bar = 'Accelerating our mission to give rich content. →'
+  const top_bar = 'all lives matter'
   const icon_name = 'Bhimraj Yadav'
   const nav_items = [
-    { title: 'Home', is_home: true },
-    { title: 'Blog' },
-    { title: 'Projects' },
-    { title: 'About' },
+    { title: 'Home', is_home: true, link: '/' },
+    { title: 'Blog', link: '/' },
+    { title: 'Projects', link: '/' },
+    { title: 'About', link: '/' },
   ]
   const button_content = 'Sign up ->'
   return (
     <>
-      <p className="text-sm font-medium text-center py-2 bg-gray-50 border-b cursor-pointer">
+      <p className="text-sm tracking-widest uppercase font-medium text-center py-2 bg-gray-50 border-b cursor-pointer">
         {top_bar}
       </p>
       <header className="flex flex-col bg-white sticky top-0 w-full place-content-center border-b">
