@@ -17,7 +17,7 @@ export default function ProjectSection() {
     },
   }
   return (
-    <section className="flex flex-col justify-center text-left space-y-2 pt-4 ">
+    <section className="flex flex-col justify-center text-left space-y-2 pt-8 ">
       <div className="flex flex-col space-y-2">
         <h2 className="text-2xl font-bold text-gray-800">{featured_content?.title}</h2>
         <p className="text-gray-500">{featured_content?.description}</p>
