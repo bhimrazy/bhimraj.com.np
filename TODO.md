@@ -23,6 +23,8 @@
   - Added nav links
   - Added some social media links
   - Added footer copyright info
+  - Added policy info
+  - Updated paddings
 
 - [x] Add a Hero Section for homepage
   - Added hero content
@@ -39,6 +41,11 @@
   - Added play button
 
 - [x] Add a Featured Project Section for homepage
-  - Created a project section
+  - Created a project section component
   - Added a github repo content for featured project
   - Added title,description and image for featued project
+  - Updated to fit the content
+
+- [x] Add a NewsLetter Section for homepage
+  - Created a newsletter section component
+  - 

@@ -31,11 +31,12 @@ export default function Footer() {
             },
         ],
     }
-    const copyright = '© Bhimraj Yadav 2021'
+    const copyright = '© Bhimraj Yadav 2021 . All rights reserved.'
+    const policy = 'Privacy Policy'
     return (
         <footer className="flex border-t">
-            <div className="flex flex-col px-4 py-2 space-y-4 xl:px-0 w-full max-w-5xl mx-auto">
-                <section className="py-4 md:py-6">
+            <div className="flex flex-col px-4 space-y-4 xl:px-0 w-full max-w-5xl mx-auto">
+                <section className="py-6 md:py-6">
                     <nav>
                         <ul className="flex space-x-4 justify-center text-sm font-medium text-gray-700">
                             {
@@ -54,8 +55,9 @@ export default function Footer() {
                         ))}
                     </ul>
                 </section>
-                <section className="flex justify-center py-2">
-                    <small className="text-sm font-medium tracking-wide text-gray-600">{copyright}</small>
+                <section className="flex justify-center items-center border-t py-10 divide-x text-gray-500">
+                    <small className="text-sm font-medium tracking-wide pr-3">{copyright}</small>
+                    <small className="text-sm font-medium tracking-wide pl-3 hover:text-gray-800 cursor-pointer">{policy}</small>
                 </section>
             </div>
         </footer >
