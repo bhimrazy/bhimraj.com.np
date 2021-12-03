@@ -36,3 +36,9 @@
   - Added title,description and image for video component
   - Added loop for videos
   - Added hover effect for video component
+  - Added play button
+
+- [x] Add a Featured Project Section for homepage
+  - Created a project section
+  - Added a github repo content for featured project
+  - Added title,description and image for featued project
