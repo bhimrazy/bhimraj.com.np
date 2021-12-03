@@ -25,3 +25,6 @@
   - Added footer copyright info
 
 - [x] Add a Hero Section for homepage
+  - Added hero content
+  - Added buttons
+  - Add cta for guestbook

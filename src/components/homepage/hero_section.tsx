@@ -14,8 +14,9 @@ export default function HeroSection() {
     cta_d: 'guestbook!',
     buttons: [{ title: 'Read the blog' }, { title: 'Learn more about me' }],
   }
+//   h-[85vh]
   return (
-    <section className="relative flex flex-col justify-center text-left space-y-3 h-[85vh]">
+    <section className="relative flex flex-col justify-center text-left space-y-3 py-16">
       <span className="text-xl md:text-4xl font-semibold">{hero_content?.greetings}</span>
 
       {/* <h1 className="text-4xl md:text-6xl lg:text-8xl font-extrabold">{hero_content?.heading}</h1> */}
