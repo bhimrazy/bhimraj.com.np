@@ -40,6 +40,7 @@ export default function VideoSection() {
                 <Image
                   className="rounded-lg hover:shadow-md hover:opacity-95 transition-all"
                   src={video?.thumbnail_url}
+                  placeholder="blur"
                   blurDataURL={video?.thumbnail_url}
                   alt={video?.title}
                   width={video?.width}
