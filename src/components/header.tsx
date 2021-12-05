@@ -11,10 +11,10 @@ export default function Header() {
   const button_content = 'Sign up ->'
   return (
     <>
-      <p className="text-sm tracking-widest uppercase font-medium text-center py-2 bg-gray-50 border-b cursor-pointer">
+      <p className="text-sm tracking-widest uppercase font-medium text-center py-2 bg-gray-50  cursor-pointer">
         {top_bar}
       </p>
-      <header className="flex flex-col bg-white sticky top-0 z-10 w-full place-content-center border-b">
+      <header className="flex flex-col bg-white sticky top-0 z-10 w-full place-content-center border-t border-b">
         <nav className="flex justify-between px-4 py-4 xl:px-0 w-full max-w-5xl mx-auto items-center">
           <Link href="/"><a className="text-base font-medium text-gray-900 uppercase tracking-wider">{icon_name}</a></Link>
           <ul className="hidden sm:flex space-x-2 sm:space-x-4 md:space-x-5 lg:space-x-6 font-medium text-gray-600">
