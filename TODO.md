@@ -56,5 +56,7 @@
 - [x] Add a featured post Section for homepage
   - Created a component for post section
   - Added few contents for this section
+  - Added a thumbnail image
   - Added post title, descriptions and each post in grid format
   - Added a see more post button
+  - Modified UI
