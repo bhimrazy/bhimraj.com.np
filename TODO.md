@@ -52,3 +52,5 @@
   - Added content for news letter
   - Added title , description and input section along with subscribe button
   - Updated ui for newsletter
+
+- [x] Add a featured post Section for homepage
