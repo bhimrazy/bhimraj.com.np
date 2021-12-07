@@ -13,7 +13,7 @@ export default function PostSection() {
         description:
           'Hi 👏 I am Bhimraj Yadav. In this video, I have tried to build and deploy an Image Recognition App.',
         thumbnail_url: 'https://i3.ytimg.com/vi/7Rm5mGhYWVI/maxresdefault.jpg',
-        link: '',
+        link: '/',
         tags: ['pytorch', 'python', 'fastapi'],
         reading_time: '5 min read',
         views: '200 views',
@@ -25,7 +25,7 @@ export default function PostSection() {
         description:
           'Hi 👏 I am Bhimraj Yadav. In this video, I have tried to build and deploy an Image Recognition App.',
         thumbnail_url: 'https://i3.ytimg.com/vi/7Rm5mGhYWVI/maxresdefault.jpg',
-        link: '',
+        link: '/',
         tags: ['pytorch', 'python', 'fastapi'],
         reading_time: '5 min read',
         views: '200 views',
@@ -37,7 +37,7 @@ export default function PostSection() {
         description:
           'Hi 👏 I am Bhimraj Yadav. In this video, I have tried to build and deploy an Image Recognition App.',
         thumbnail_url: 'https://i3.ytimg.com/vi/7Rm5mGhYWVI/maxresdefault.jpg',
-        link: '',
+        link: '/',
         tags: ['pytorch', 'python', 'fastapi'],
         reading_time: '5 min read',
         views: '200 views',
