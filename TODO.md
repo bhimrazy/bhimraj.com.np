@@ -54,3 +54,5 @@
   - Updated ui for newsletter
 
 - [x] Add a featured post Section for homepage
+  - Created a component for post section
+  - Added few contents for this section
