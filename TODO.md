@@ -62,5 +62,6 @@
   - Modified UI
 
 - [x] Add Content for blog
-  - Created folder for content and blog.
+  - Created folder for content and blog
   - Created a page for blog
+  - Added a lib and utils directory for lib functions and utilities 
