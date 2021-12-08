@@ -8,6 +8,10 @@
 ## Preview
 ![Homepage](https://user-images.githubusercontent.com/46085301/145170356-af335df1-e8ef-4e32-988f-71da6770dfef.png)
 
+# Tech Stack Used
+- **Framework**: [Next.js](https://nextjs.org/)
+- **Content**: [MDX](https://github.com/mdx-js/mdx)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 ## Overview
 - `public/*` - Static assets including fonts and images.
 - `src/*` - All other components and pages.
