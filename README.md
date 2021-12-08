@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/46085301/145169259-0ad36299-c8ae-460b-ac66-5cb7940f3c51.png" height="50"/>
+  <img src="https://user-images.githubusercontent.com/46085301/145169259-0ad36299-c8ae-460b-ac66-5cb7940f3c51.png" height="75"/>
   <br/>
   <b>BHIMRAJ YADAV</b><br/>
-✨ My portfolio built with Next.js, Tailwind, Prisma, and Vercel.
+<p align="center">✨ My portfolio built with Next.js, Tailwind, Prisma, and Vercel.</p>
 </P>
 
 ## Preview
