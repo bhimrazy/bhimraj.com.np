@@ -3,12 +3,11 @@ import Head from 'next/head'
 import Header from './header'
 import Footer from './footer'
 
-export default function Layout({children}:{children:ReactNode}) {
-    const title='BHIMRAJ YADAV'
+export default function Layout({children,meta_data}:{children:ReactNode,meta_data:any}) {
     return (
         <div className="flex font-display flex-col antialiased bg-white">
             <Head>
-                <title>{title}</title>
+                <title>{meta_data?.title}</title>
             </Head>
             <Header/>
             {children}

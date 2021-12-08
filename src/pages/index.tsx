@@ -6,15 +6,17 @@ import VideoSection from 'src/components/homepage/video_section'
 import Layout from 'src/components/layout'
 
 export default function Home() {
-  
+  const meta_data = {
+    title: 'HOME | BHIMRAJ YADAV',
+  }
   return (
-    <Layout>
+    <Layout meta_data={meta_data}>
       <main className="flex flex-col px-4 xl:px-0 space-y-10 w-full max-w-5xl mx-auto">
-        <HeroSection/>
-        <VideoSection/>
-        <PostSection/>
-        <ProjectSection/>
-        <NewsLetter/>
+        <HeroSection />
+        <VideoSection />
+        <PostSection />
+        <ProjectSection />
+        <NewsLetter />
       </main>
     </Layout>
   )
