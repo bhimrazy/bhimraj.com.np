@@ -60,3 +60,6 @@
   - Added post title, descriptions and each post in grid format
   - Added a see more post button
   - Modified UI
+
+- [x] Add Content for blog
+  - Created folder for content and blog.
