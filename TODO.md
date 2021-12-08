@@ -69,3 +69,4 @@
 
 - [x] Add Blog page
   - Created a page for blog
+  - Added title for the page
