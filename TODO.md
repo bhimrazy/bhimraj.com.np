@@ -63,5 +63,9 @@
 
 - [x] Add Content for blog
   - Created folder for content and blog
-  - Created a page for blog
   - Added a lib and utils directory for lib functions and utilities 
+  - Added a directory for blog to keep blog page components
+  - Added two blog content with some content
+
+- [x] Add Blog page
+  - Created a page for blog
