@@ -67,8 +67,9 @@ export default function PostSection() {
           <Link href={post?.link} key={idx}>
             <a target="_blank">
               <article className="flex flex-col rounded-lg border shadow-xs hover:shadow-lg overflow-hidden transition-all">
-                <div>
+                <div className="rounded-lg overflow-hidden">
                   <Image
+                  className="p-1 h-10"
                     src={post?.thumbnail_url}
                     blurDataURL={post?.thumbnail_url}
                     height={1080}
