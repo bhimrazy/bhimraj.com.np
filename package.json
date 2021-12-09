@@ -8,7 +8,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "@tailwindcss/line-clamp": "^0.2.2",
     "gray-matter": "^4.0.3",
     "next": "latest",
     "react": "^17.0.2",
@@ -22,6 +21,8 @@
     "eslint-config-next": "^11.0.1",
     "postcss": "^8.1.10",
     "tailwindcss": "^2.1.1",
+    "@tailwindcss/line-clamp": "^0.2.2",
+    "@tailwindcss/typography": "^0.4.1",
     "typescript": "^4.5.2"
   }
 }

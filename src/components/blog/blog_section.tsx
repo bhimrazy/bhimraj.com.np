@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function BlogSection({blogs}) {
   const blog_content = {
     title: 'Blog',
@@ -7,8 +5,16 @@ export default function BlogSection({blogs}) {
   }
   console.log(blog_content)
   return (
-    <section className="flex flex-col space-y-3 pt-20 pb-10 min-h-screen">
-      <h1 className="text-5xl font-black">{blog_content?.title}</h1>
+    <section className="flex flex-col py-10 md:py-16">
+      <h1 className="text-5xl  font-bold md:font-black">{blog_content?.title}</h1>
+      <div className="flex flex-col prose lg:prose-lg ">
+        {blog_content?.blogs.map((blog,idx)=>(
+          <article key={idx} className="">
+            <a href="#"><h2>{blog?.data?.title}</h2></a>
+            <p>{blog?.data?.summary}</p>
+          </article>
+        ))}
+      </div>
     </section>
   )
 }
