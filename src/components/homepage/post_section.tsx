@@ -66,7 +66,7 @@ export default function PostSection() {
         {post_content?.posts.map((post, idx) => (
           <Link href={post?.link} key={idx}>
             <a target="_blank">
-              <article className="flex flex-col rounded-lg border shadow-xs hover:shadow-lg overflow-hidden transition-all">
+              <article className="flex flex-col rounded-lg border dark:border-gray-900 shadow-xs hover:shadow-lg overflow-hidden transition-all">
                 <div className="rounded-lg overflow-hidden">
                   <Image
                   className="p-1 h-10"
@@ -133,7 +133,7 @@ export default function PostSection() {
         ))}
       </div>
       <div>
-        <button className="px-8 py-2 rounded-lg shadow-sm hover:shadow transition-all bg-white border font-semibold text-base ">
+        <button className="px-8 py-2 rounded-lg shadow-sm hover:shadow transition-all bg-white dark:bg-gray-900 border dark:border-gray-900 font-semibold text-base ">
           {post_content?.see_more}
         </button>
       </div>
