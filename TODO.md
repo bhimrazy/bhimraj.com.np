@@ -70,3 +70,6 @@
 - [x] Add Blog page
   - Created a page for blog
   - Added title for the page
+  - Added a utility function to read all posts and its contents
+  - Created a blog section page and passed the blog content to this component
+  - Added posts along with tailwind typography's prose
