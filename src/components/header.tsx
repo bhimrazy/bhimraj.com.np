@@ -23,13 +23,12 @@ export default function Header() {
           </Link>
           <ul className="hidden sm:flex space-x-2 sm:space-x-4 md:space-x-5 lg:space-x-6 font-medium text-gray-600">
             {nav_items.map((item, idx) => (
-              <Link href={item?.link}>
+              <Link href={item?.link} key={idx}>
                 <a>
                   <li
                     className={`${
                       item?.is_home ? 'text-gray-900' : ''
                     } hover:text-blue-500 cursor-pointer`}
-                    key={idx}
                   >
                     {item?.title}
                   </li>
