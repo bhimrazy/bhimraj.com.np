@@ -16,7 +16,7 @@ export default function HeroSection() {
   }
 //   h-[85vh]
   return (
-    <section className="flex flex-col justify-center text-left space-y-3 pt-20 pb-10">
+    <section className="flex flex-col justify-center text-left space-y-3 pt-20 pb-10 dark:text-gray-200">
       <span className="text-xl sm:text-3xl md:text-5xl font-semibold">{hero_content?.greetings}</span>
 
       {/* <h1 className="text-4xl md:text-6xl lg:text-8xl font-extrabold">{hero_content?.heading}</h1> */}
@@ -32,7 +32,7 @@ export default function HeroSection() {
         {hero_content?.buttons.map((button: { title: string }, idx: Key) => (
           <button
             key={idx}
-            className="bg-white text-gray-800 text-base font-medium px-6 py-2 rounded-md shadow-sm hover:shadow-md border transition-all"
+            className="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-base font-medium px-6 py-2 rounded-md shadow-sm hover:shadow-md border dark:border-gray-900 transition-all"
           >
             {button?.title}
           </button>
