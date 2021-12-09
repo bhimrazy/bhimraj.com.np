@@ -3,7 +3,6 @@ export default function BlogSection({blogs}) {
     title: 'Blog',
     blogs
   }
-  console.log(blog_content)
   return (
     <section className="flex flex-col py-10 md:py-16">
       <h1 className="text-5xl  font-bold md:font-black">{blog_content?.title}</h1>
