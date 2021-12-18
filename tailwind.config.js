@@ -1,11 +1,8 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 const colors = require("tailwindcss/colors");
 module.exports = {
-  mode: 'jit',
-  // purge: ['.src/pages/**/*.{js,ts,jsx,tsx}', '.src/components/**/*.{js,ts,jsx,tsx}'],
   // darkMode: false, // or 'media' or 'class'
-  purge: ['./src/**/*.{js,ts,jsx,tsx}'],
-  darkMode: false,
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       fontFamily: {
@@ -20,21 +17,6 @@ module.exports = {
       colors: {
         transparent: "transparent",
         current: "currentColor",
-        black: colors.black,
-        white: colors.white,
-        teal: colors.teal,
-        purple: colors.purple,
-        violet: colors.violet,
-        fuchsia: colors.fuchsia,
-        cyan: colors.cyan,
-        gray: colors.coolGray,
-        red: colors.red,
-        yellow: colors.amber,
-        blue: colors.blue,
-        sky: colors.sky,
-        pink: colors.pink,
-        bluegray: colors.blueGray,
-        skyblue: colors.sky,
       },
       animation: {
         blob: "blob 7s infinite"
