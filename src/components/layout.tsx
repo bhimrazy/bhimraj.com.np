@@ -11,7 +11,7 @@ export default function Layout({
   meta_data: any;
 }) {
   return (
-    <div className="flex flex-col bg-white font-display antialiased dark:bg-black dark:text-white">
+    <div className="flex flex-col bg-white font-display antialiased dark:bg-slate-900 dark:text-white">
       <Head>
         <title>{meta_data?.title}</title>
       </Head>

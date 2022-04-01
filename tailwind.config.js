@@ -13,6 +13,7 @@ module.exports = {
         "ubuntu-mono": ["Ubuntu Mono", ...defaultTheme.fontFamily.mono],
         system: defaultTheme.fontFamily.sans,
         flow: "Flow",
+        inter: "Inter roman",
       },
       colors: {
         transparent: "transparent",

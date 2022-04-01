@@ -12,10 +12,10 @@ export default function Header() {
   const button_content = "Sign up ->";
   return (
     <>
-      <p className="cursor-pointer bg-gray-50 py-2 text-center text-sm font-medium uppercase tracking-widest  dark:bg-black">
+      <p className="z-[1] cursor-pointer bg-white/90 py-2 text-center text-sm font-medium  uppercase tracking-widest backdrop-blur dark:bg-slate-900/75">
         {top_bar}
       </p>
-      <header className="sticky top-0 z-10 flex w-full flex-col place-content-center border-t border-b bg-white dark:border-gray-900 dark:bg-black">
+      <header className="sticky top-0 z-10 flex w-full flex-col place-content-center border-t border-b bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/75">
         <nav className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-4 xl:px-0">
           <Link href="/">
             <a className="text-base font-medium uppercase tracking-wider text-gray-900 dark:text-gray-100">

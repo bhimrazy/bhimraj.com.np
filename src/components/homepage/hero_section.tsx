@@ -17,9 +17,9 @@ export default function HeroSection() {
   //   h-[85vh]
   return (
     <section className="flex flex-col justify-center space-y-3 pt-20 pb-10 text-left dark:text-gray-200">
-      <span className="text-xl font-semibold sm:text-3xl md:text-5xl">
+      <h1 className="font-inter text-xl font-bold sm:text-3xl md:text-5xl ">
         {hero_content?.greetings}
-      </span>
+      </h1>
 
       {/* <h1 className="text-4xl md:text-6xl lg:text-8xl font-extrabold">{hero_content?.heading}</h1> */}
 
