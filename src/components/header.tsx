@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Theme from './theme'
 export default function Header() {
   const top_bar = 'all lives matter'
   const icon_name = 'Bhimraj Yadav'
@@ -36,9 +37,7 @@ export default function Header() {
               </Link>
             ))}
           </ul>
-          <button className="bg-blue-600  text-white text-sm sm:text-base px-3 py-[6px] rounded-md hover:bg-white border border-opacity-0 hover:border-opacity-100 hover:text-blue-700 border-blue-600">
-            {button_content}
-          </button>
+         <Theme/>
         </nav>
       </header>
     </>

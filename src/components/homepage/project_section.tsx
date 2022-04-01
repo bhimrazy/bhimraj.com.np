@@ -10,7 +10,7 @@ export default function ProjectSection() {
       description:
         'This is an image recognition application based on the FastAPI framework and PyTorch which uses pretrained DenseNet 121 model to detect the image.',
       thumbnail_url:
-        'https://pbs.twimg.com/card_img/1465705744053858315/y3FDjLm8?format=png&name=large',
+        'https://pbs.twimg.com/card_img/1508111716827414533/4RMUmnce?format=jpg&name=large',
       repo_url: 'https://github.com/bhimrazy/Image-Recognition-App-using-FastAPI-and-PyTorch',
       height: '160',
       width: '320',
@@ -32,7 +32,6 @@ export default function ProjectSection() {
           </div>
           <div className="rounded-lg border hover:shadow transition-all overflow-hidden">
             <Image
-              
               src={featured_content?.project?.thumbnail_url}
               placeholder="blur"
               blurDataURL={featured_content?.project?.thumbnail_url}
