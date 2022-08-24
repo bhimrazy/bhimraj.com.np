@@ -2,8 +2,9 @@ import { useRouter } from "next/router";
 import { get_posts } from "src/lib/utils";
 import Layout from "src/components/layout";
 import { GetStaticProps, GetStaticPaths } from "next";
+import { getSiteInfo } from "@/lib/info";
 
-export default function Blog({ post }) {
+export default function Blog({ post, site_info }) {
   const meta_data = {
     title: "BLOG | BHIMRAJ YADAV",
   };
@@ -11,7 +12,7 @@ export default function Blog({ post }) {
 
   const post_content = post.content.split("\n").splice(1).join("\n");
   return (
-    <Layout meta_data={meta_data}>
+    <Layout meta_data={meta_data} site_info={site_info}>
       <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col space-y-10 px-4 xl:px-0">
         <div className="absolute -top-28 left-3/4 hidden h-full w-28 -rotate-45 bg-gradient-to-r from-indigo-600/80 via-sky-600/75 to-purple-600/80 blur-[150px]  dark:block"></div>
         <section className="flex flex-col py-6">
@@ -76,9 +77,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const post = get_posts().find((post) => post.slug === params.slug);
+  const { data: site_info } = getSiteInfo();
+
   return {
     props: {
       post,
+      site_info,
     },
   };
 };

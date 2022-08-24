@@ -62,6 +62,7 @@ export default function ProjectDetail({
                     className="text-blue-600"
                     href={site_info?.github}
                     target="_blank"
+                    rel="noreferrer"
                   >
                     @bhimrazy
                   </a>
