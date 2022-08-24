@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function VideoSection() {
+export default function VideoSection({ videos }: { videos: any }) {
   const video_content = {
     title: "Recent Videos",
     description: "Videos on what I'm building and learning.",
@@ -36,7 +36,7 @@ export default function VideoSection() {
         <p className="text-gray-500">{video_content?.description}</p>
       </div>
       <div className="grid grid-cols-1 gap-10 sm:grid-cols-2">
-        {video_content?.videos.map((video, idx) => (
+        {videos.slice(0, 4).map((video, idx) => (
           <Link href={video?.video_url} key={idx}>
             <a target="_blank">
               <div className="relative">
@@ -46,8 +46,8 @@ export default function VideoSection() {
                   placeholder="blur"
                   blurDataURL={video?.thumbnail_url}
                   alt={video?.title}
-                  width={video?.width}
-                  height={video?.height}
+                  width={1920}
+                  height={1080}
                   loading="eager"
                 />
                 <div className="absolute inset-y-0 inset-x-[41%] flex items-center">

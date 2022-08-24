@@ -22,15 +22,18 @@ export default function ProjectSection({ projects }) {
         {projects_content?.projects.map((project: Project, idx) => (
           <Link
             key={idx}
-            href="/project/[slug]/"
-            as={`/project/${project.slug}/`}
+            href="/projects/[slug]/"
+            as={`/projects/${project.slug}/`}
           >
             <a className={`${idx === 0 ? "md:col-span-2" : ""}`}>
               <article className="bg-gray-50 p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:bg-slate-800">
                 <div className="flex flex-col space-y-4">
                   <div className="flex flex-row space-x-2">
                     {project?.data?.tags.split(",").map((tag: string, i) => (
-                      <span key={i} className="bg-gray-200 p-2 text-xs font-medium uppercase tracking-wider dark:bg-slate-700 dark:text-slate-200">
+                      <span
+                        key={i}
+                        className="bg-gray-200 p-2 text-xs font-medium uppercase tracking-wider dark:bg-slate-700 dark:text-slate-200"
+                      >
                         {tag}
                       </span>
                     ))}

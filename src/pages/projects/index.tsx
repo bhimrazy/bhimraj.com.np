@@ -4,7 +4,7 @@ import { getProjects, getSiteInfo } from "@/lib/info";
 import { SiteInfo } from "@/lib/types";
 import ProjectSection from "@/components/projects/project_section";
 
-export default function Blog({
+export default function Projects({
   site_info,
   projects,
 }: {

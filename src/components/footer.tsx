@@ -1,12 +1,17 @@
 import Link from "next/link";
 
 export default function Footer() {
+  // const footer_navs = [
+  //   "Docs",
+  //   "Book Notes",
+  //   "Academy",
+  //   "Guestbook",
+  //   "Statistics",
+  // ];
   const footer_navs = [
-    "Docs",
-    "Book Notes",
-    "Academy",
-    "Guestbook",
-    "Statistics",
+    { title: "Home", link: "/" },
+    { title: "Blog", link: "/blog" },
+    { title: "Projects", link: "/projects" },
   ];
   const social_contact = {
     title: "Follow me on.",
@@ -127,7 +132,11 @@ export default function Footer() {
           <nav>
             <ul className="flex justify-center space-x-4 text-sm font-medium text-gray-700 md:text-base">
               {footer_navs.map((item, idx) => (
-                <li key={idx}>{item}</li>
+                <Link key={idx} href={item?.link}>
+                  <a>
+                    <li>{item?.title}</li>
+                  </a>
+                </Link>
               ))}
             </ul>
           </nav>

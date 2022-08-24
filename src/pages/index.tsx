@@ -5,10 +5,16 @@ import ProjectSection from "src/components/homepage/project_section";
 import VideoSection from "src/components/homepage/video_section";
 import Layout from "src/components/layout";
 import { GetStaticProps } from "next";
-import { getSiteInfo } from "@/lib/info";
+import { getSiteInfo, getYoutubeData } from "@/lib/info";
 import { MetaData, SiteInfo } from "@/lib/types";
 
-export default function Home({ data }: { data: SiteInfo }) {
+export default function Home({
+  data,
+  youtube_videos,
+}: {
+  data: SiteInfo;
+  youtube_videos: any;
+}) {
   const meta_data: MetaData = {
     title: "HOME | BHIMRAJ YADAV",
   };
@@ -18,7 +24,7 @@ export default function Home({ data }: { data: SiteInfo }) {
         <HeroSection />
         {/* <PostSection /> */}
         <ProjectSection />
-        <VideoSection />
+        <VideoSection videos={youtube_videos} />
         <NewsLetter />
       </main>
     </Layout>
@@ -27,8 +33,23 @@ export default function Home({ data }: { data: SiteInfo }) {
 
 export const getStaticProps: GetStaticProps = async () => {
   const { data } = getSiteInfo();
+  const res = await fetch(process.env.YOUTUBE_API_URL);
+  const youtube_data = await res.json();
+  const youtube_videos = youtube_data?.items.map((video) => {
+    return {
+      title: video?.snippet?.title,
+      description: video?.snippet?.description,
+      published_at: video?.snippet?.publishedAt,
+      thumbnail_url: video?.snippet?.thumbnails?.default?.url.replace(
+        "default",
+        "maxresdefault"
+      ),
+      video_url: "https://www.youtube.com/watch?v=" + video?.id?.videoId,
+    };
+  });
+
   return {
-    props: { data },
+    props: { data, youtube_videos },
     revalidate: 1,
   };
 };
