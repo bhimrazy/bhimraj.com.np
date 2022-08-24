@@ -1,49 +1,55 @@
+import Link from "next/link";
 import { Key } from "react";
 
 export default function HeroSection() {
   const hero_content: { [key: string]: any } = {
     greetings: "Hi there, I'm Bhimraj.",
-    // heading: "The Future CEO of \n Google.",
+    tagline: "ML/DL Engineer | Django Developer | NextJs Developer",
     description:
-      "I am a Computer Engineering Student at Kathford \
+      "I am a final year Computer Engineering Student at Kathford \
                       International College of Engineering and Management. \
-                      I like making websites with NextJs and Tailwinds CSS and \
+                      I like exploring and researching Computer Vision projects ,\
+                      developing websites with NextJs and Tailwinds CSS and \
                       playing with AI tools.\
                       ",
     cta: "Don't forget to sign my",
     cta_d: "guestbook!",
-    buttons: [{ title: "Read the blog" }, { title: "Learn more about me" }],
+    buttons: [
+      { title: "Read the blog", link: "/blog" },
+      {
+        title: "Explore more about me",
+        link: "https://www.linkedin.com/in/bhimrazy",
+      },
+    ],
   };
-  //   h-[85vh]
   return (
-    <section className="flex flex-col justify-center space-y-3 pt-20 pb-10 text-left dark:text-gray-200">
-      <h1 className="font-inter text-xl font-bold sm:text-3xl md:text-5xl ">
-        {hero_content?.greetings}
-      </h1>
-
-      {/* <h1 className="text-4xl md:text-6xl lg:text-8xl font-extrabold">{hero_content?.heading}</h1> */}
-
+    <section className="flex flex-col justify-center space-y-4 pt-32 pb-10 text-left dark:text-gray-200">
+      <div className="flex flex-col space-y-2">
+        <h1 className="font-inter text-xl font-bold sm:text-3xl md:text-5xl ">
+          {hero_content?.greetings}
+        </h1>
+        <p className=" max-w-2xl md:text-base">{hero_content?.tagline}</p>
+      </div>
       <p className=" max-w-2xl md:text-lg">{hero_content?.description}</p>
-      <p className="space-x-1 py-1 md:text-lg">
+      {/* <p className="space-x-1 py-1 md:text-lg">
         <span>{hero_content?.cta}</span>
         <span className="cursor-pointer border-b-2 border-dotted border-gray-200 py-1 transition-all hover:border-gray-300 hover:text-indigo-600">
           {hero_content?.cta_d}
         </span>
-      </p>
-      <div className="justify-center space-x-2 py-2">
-        {hero_content?.buttons.map((button: { title: string }, idx: Key) => (
-          <button
-            key={idx}
-            className="rounded-md border bg-white px-6 py-2 text-base font-medium text-gray-800 shadow-sm transition-all hover:shadow-md dark:border-gray-900 dark:bg-gray-900 dark:text-gray-200"
-          >
-            {button?.title}
-          </button>
-        ))}
+      </p> */}
+      <div className="justify-center space-x-2 py-4">
+        {hero_content?.buttons.map(
+          (button: { title: string; link: string }, idx: Key) => (
+            <Link href={button?.link} key={idx}>
+              <a>
+                <button className="rounded-md border bg-white px-6 py-2 text-base font-medium text-gray-800 shadow-sm transition-all hover:shadow-md dark:border-gray-900 dark:bg-slate-800 dark:text-gray-200 dark:hover:text-gray-300 dark:hover:shadow-slate-800">
+                  {button?.title}
+                </button>
+              </a>
+            </Link>
+          )
+        )}
       </div>
-
-      {/* <div className="absolute inset-x-1/2 bottom-6 animate-bounce transition-all">
-            <svg className="w-8 h-8 text-gray-600 hover:text-indigo-600 cursor-pointer" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 10.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l4.293-4.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-          </div> */}
     </section>
   );
 }
