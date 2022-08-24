@@ -1,20 +1,37 @@
 {
-  "name": "with-tailwindcss",
+  "name": "bhimraj.com.np",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "node ./src/scripts/generate-rss.mjs && node ./src/scripts/generate-sitemap.mjs",
     "start": "next start"
   },
   "dependencies": {
+    "framer-motion": "^6.3.1",
+    "gray-matter": "^4.0.3",
+    "marked": "^4.0.8",
     "next": "latest",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
-    "autoprefixer": "^10.0.4",
-    "postcss": "^8.1.10",
-    "tailwindcss": "^2.1.1"
+    "@tailwindcss/aspect-ratio": "^0.4.0",
+    "@tailwindcss/forms": "^0.4.0",
+    "@tailwindcss/line-clamp": "^0.3.0",
+    "@tailwindcss/typography": "^0.5.0",
+    "@types/node": "^16.11.11",
+    "@types/react": "^17.0.37",
+    "autoprefixer": "^10.4.8",
+    "eslint": "^7.31.0",
+    "eslint-config-next": "^11.0.1",
+    "globby": "^13.1.1",
+    "postcss": "^8.4.16",
+    "prettier": "^2.6.1",
+    "prettier-plugin-tailwindcss": "^0.1.8",
+    "rss": "^1.2.2",
+    "tailwindcss": "^3.1.8",
+    "typescript": "^4.5.2"
   }
 }
