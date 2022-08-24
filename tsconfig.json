@@ -14,8 +14,19 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js", "postcss.config.js", "prettier.config.js", "tailwind.config.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "next.config.js",
+    "postcss.config.js",
+    "prettier.config.js",
+    "tailwind.config.js"
+, "src/lib/info.js"  ],
   "exclude": ["node_modules"]
 }

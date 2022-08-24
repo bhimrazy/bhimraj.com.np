@@ -1,35 +1,43 @@
+import { SiteInfo } from "@/lib/types";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import Logo from "./logo";
 import Theme from "./theme";
-export default function Header() {
-  const top_bar = "all lives matter";
-  const icon_name = "Bhimraj Yadav";
+
+export default function Header({ site_info }: { site_info: SiteInfo }) {
+  const router = useRouter();
   const nav_items = [
-    { title: "Home", is_home: true, link: "/" },
+    { title: "Home", link: "/" },
     { title: "Blog", link: "/blog" },
-    { title: "Projects", link: "/" },
-    { title: "About", link: "/" },
+    { title: "Projects", link: "/projects" },
   ];
-  const button_content = "Sign up ->";
   return (
     <>
-      <p className="z-[1] cursor-pointer bg-white/90 py-2 text-center text-sm font-medium  uppercase tracking-widest backdrop-blur dark:bg-slate-900/75">
-        {top_bar}
-      </p>
+      <Link href="https://consciousplanet.org/">
+        <a rel="noreferrer" target="_blank">
+          <p className="z-[1] cursor-pointer bg-white/90 py-2 text-center text-sm font-normal tracking-widest text-lime-700 backdrop-blur transition hover:text-lime-800 dark:bg-slate-900/75 dark:text-white">
+            {site_info?.tagline}
+          </p>
+        </a>
+      </Link>
       <header className="sticky top-0 z-10 flex w-full flex-col place-content-center border-t border-b bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/75">
-        <nav className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-4 xl:px-0">
+        <nav className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-5 xl:px-0">
           <Link href="/">
-            <a className="text-base font-medium uppercase tracking-wider text-gray-900 dark:text-gray-100">
-              {icon_name}
+            <a>
+              {/* {icon_name} */}
+              <Logo site_info={site_info} />
             </a>
           </Link>
-          <ul className="hidden space-x-2 font-medium text-gray-600 dark:text-gray-100 sm:flex sm:space-x-4 md:space-x-5 lg:space-x-6">
+          <ul className="hidden space-x-2 font-medium text-slate-600 dark:text-slate-100 sm:flex sm:space-x-4 md:space-x-5 lg:space-x-6">
             {nav_items.map((item, idx) => (
               <Link href={item?.link} key={idx}>
                 <a>
                   <li
                     className={`${
-                      item?.is_home ? "text-gray-900 dark:text-gray-100" : ""
-                    } cursor-pointer hover:text-blue-500 dark:hover:text-blue-400`}
+                      item?.link === router.asPath
+                        ? "text-slate-900 dark:text-slate-100"
+                        : "text-slate-500 dark:text-slate-400"
+                    } cursor-pointer text-base hover:text-slate-700 dark:hover:text-slate-300`}
                   >
                     {item?.title}
                   </li>
@@ -37,8 +45,9 @@ export default function Header() {
               </Link>
             ))}
           </ul>
-          <div className="flex flex-row items-center space-x-3 divide-x divide-gray-600 dark:divide-gray-600">
+          <div className="flex flex-row items-center space-x-3 divide-x divide-slate-600 dark:divide-slate-600">
             <Theme />
+            {/* Github Logo */}
             <span className="pl-3">
               <svg
                 viewBox="0 0 16 16"
