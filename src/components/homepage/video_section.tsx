@@ -28,7 +28,7 @@ export default function VideoSection({ videos }: { videos: any }) {
     ],
   };
   return (
-    <section className="flex flex-col justify-center space-y-8 py-2 text-left ">
+    <section className="flex flex-col justify-center space-y-8 py-2 text-left dark:invert">
       <div className="flex flex-col space-y-2">
         <h2 className="text-2xl font-bold text-gray-800 md:text-4xl">
           {video_content?.title}

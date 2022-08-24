@@ -5,15 +5,17 @@ import ProjectSection from "src/components/homepage/project_section";
 import VideoSection from "src/components/homepage/video_section";
 import Layout from "src/components/layout";
 import { GetStaticProps } from "next";
-import { getSiteInfo, getYoutubeData } from "@/lib/info";
+import { getProjects, getSiteInfo, getYoutubeData } from "@/lib/info";
 import { MetaData, SiteInfo } from "@/lib/types";
 
 export default function Home({
   data,
   youtube_videos,
+  projects,
 }: {
   data: SiteInfo;
   youtube_videos: any;
+  projects: any;
 }) {
   const meta_data: MetaData = {
     title: "HOME | BHIMRAJ YADAV",
@@ -23,7 +25,7 @@ export default function Home({
       <main className="mx-auto flex w-full max-w-5xl flex-col space-y-10 px-4 xl:px-0">
         <HeroSection />
         {/* <PostSection /> */}
-        <ProjectSection />
+        <ProjectSection projects={projects} />
         <VideoSection videos={youtube_videos} />
         <NewsLetter />
       </main>
@@ -48,8 +50,10 @@ export const getStaticProps: GetStaticProps = async () => {
     };
   });
 
+  const projects = getProjects();
+
   return {
-    props: { data, youtube_videos },
+    props: { data, youtube_videos, projects },
     revalidate: 1,
   };
 };
