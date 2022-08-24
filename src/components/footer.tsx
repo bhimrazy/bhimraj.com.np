@@ -118,10 +118,10 @@ export default function Footer() {
       },
     ],
   };
-  const copyright = "© Bhimraj Yadav 2021 . All rights reserved.";
+  const copyright = "© Bhimraj Yadav 2022 . All rights reserved.";
   const policy = "Privacy Policy";
   return (
-    <footer className="flex border-t dark:border-gray-900">
+    <footer className="flex border-t dark:border-gray-800">
       <div className="mx-auto flex w-full max-w-5xl flex-col px-4 xl:px-0">
         <section className="py-10 md:py-12">
           <nav>
@@ -140,7 +140,7 @@ export default function Footer() {
             {social_contact?.social_media.map((item, idx) => (
               <li
                 key={idx}
-                className="transition-all hover:opacity-95 hover:drop-shadow-lg "
+                className="transition-all hover:opacity-95 hover:drop-shadow"
               >
                 <Link href={item?.url}>
                   <a target="_blank" rel="noreferrer">

@@ -16,7 +16,7 @@ export default function Home({ data }: { data: SiteInfo }) {
     <Layout meta_data={meta_data} site_info={data}>
       <main className="mx-auto flex w-full max-w-5xl flex-col space-y-10 px-4 xl:px-0">
         <HeroSection />
-        <PostSection />
+        {/* <PostSection /> */}
         <ProjectSection />
         <VideoSection />
         <NewsLetter />
