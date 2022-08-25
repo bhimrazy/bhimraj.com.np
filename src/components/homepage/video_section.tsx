@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function VideoSection({ videos }: { videos: any }) {
   const video_content = {
-    title: "Recent Videos",
+    title: "Most Viewed Videos",
     description: "Videos on what I'm building and learning.",
     videos: [
       {
@@ -35,7 +35,7 @@ export default function VideoSection({ videos }: { videos: any }) {
         </h2>
         <p className="text-gray-500">{video_content?.description}</p>
       </div>
-      <div className="grid grid-cols-1 gap-10 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:ml-2">
         {videos.slice(0, 4).map((video, idx) => (
           <Link href={video?.video_url} key={idx}>
             <a target="_blank">
