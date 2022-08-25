@@ -37,7 +37,7 @@ export default function HeroSection() {
           {hero_content?.cta_d}
         </span>
       </p> */}
-      <div className="justify-center space-x-2 py-4">
+      <div className="flex flex-col gap-2 py-4 sm:flex-row">
         {hero_content?.buttons.map(
           (button: { title: string; link: string }, idx: Key) => (
             <Link href={button?.link} key={idx}>
