@@ -8,10 +8,11 @@ const socialTags = ({
   url,
   title,
   description,
-  image,
+  image: image_url,
   createdAt,
   updatedAt,
 }: SEOProps) => {
+  const image = settings.meta.rootUrl + image_url;
   const metaTags = [
     { name: "twitter:card", content: "summary_large_image" },
     {
@@ -71,7 +72,8 @@ const socialTags = ({
 };
 
 const SEO = (props: SEOProps) => {
-  const { title, description, image, url, schemaType } = props;
+  const { title, description, image: image_url, url, schemaType } = props;
+  const image = settings.meta.rootUrl + image_url;
   return (
     <Head>
       <title>{title}</title>
