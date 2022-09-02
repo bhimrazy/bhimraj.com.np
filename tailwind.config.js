@@ -22,6 +22,9 @@ module.exports = {
       animation: {
         blob: "blob 7s infinite"
       },
+      screens: {
+        "xs": "400px",
+      },
       keyframes: {
         blob: {
           "0%": {

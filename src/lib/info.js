@@ -2,7 +2,6 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { marked } from "marked";
-
 const SITE_INFO = path.join(process.cwd(), "src", "content", "site-info.md");
 
 export const getSiteInfo = () => {
