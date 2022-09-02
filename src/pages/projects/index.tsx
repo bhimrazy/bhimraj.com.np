@@ -3,7 +3,7 @@ import { GetStaticProps } from "next";
 import { getProjects, getSiteInfo } from "@/lib/info";
 import { SiteInfo } from "@/lib/types";
 import ProjectSection from "@/components/projects/project_section";
-import { getSiteUrl } from "@/lib/helper";
+import { useSiteUrl } from "@/lib/helper";
 
 export default function Projects({
   site_info,
@@ -18,7 +18,7 @@ export default function Projects({
     description:
       "This is the projects page where you can find some of my recent projects with all the details. " +
       site_info?.description,
-    url: getSiteUrl(),
+    url: useSiteUrl(),
   };
   return (
     <Layout site_info={site_info} meta_data={meta_data}>

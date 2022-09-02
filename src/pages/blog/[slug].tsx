@@ -3,7 +3,7 @@ import { get_posts } from "src/lib/utils";
 import Layout from "src/components/layout";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { getSiteInfo } from "@/lib/info";
-import { getSiteUrl } from "@/lib/helper";
+import { useSiteUrl } from "@/lib/helper";
 
 export default function Blog({ post, site_info }) {
   const router = useRouter();
@@ -11,7 +11,7 @@ export default function Blog({ post, site_info }) {
     title: post?.data?.title + " | Bhimraj Yadav",
     description: post?.data?.summary,
     image: post?.data?.image,
-    url: getSiteUrl(),
+    url: useSiteUrl(),
     createdAt: post?.data?.publishedAt,
   };
   const post_content = post.content.split("\n").splice(1).join("\n");

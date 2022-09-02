@@ -3,7 +3,7 @@ import Layout from "src/components/layout";
 import { GetStaticProps } from "next";
 import { get_posts } from "src/lib/utils";
 import { getSiteInfo } from "@/lib/info";
-import { getSiteUrl } from "@/lib/helper";
+import { useSiteUrl } from "@/lib/helper";
 
 export default function Blog({ posts, site_info }) {
   const meta_data = {
@@ -12,7 +12,7 @@ export default function Blog({ posts, site_info }) {
     description:
       "This is the blogs page where you can find some of my recent published articles. " +
       site_info?.description,
-      url: getSiteUrl(),
+    url: useSiteUrl(),
   };
   return (
     <Layout meta_data={meta_data} site_info={site_info}>

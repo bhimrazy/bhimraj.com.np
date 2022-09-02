@@ -3,7 +3,7 @@ import { GetStaticProps, GetStaticPaths } from "next";
 import { getProjects, getSiteInfo } from "@/lib/info";
 import { Project, SiteInfo } from "@/lib/types";
 import Link from "next/link";
-import { getSiteUrl } from "@/lib/helper";
+import { useSiteUrl } from "@/lib/helper";
 
 export default function ProjectDetail({
   site_info,
@@ -16,7 +16,7 @@ export default function ProjectDetail({
     title: project?.data?.title + " | Bhimraj Yadav",
     description: project?.data?.description,
     image: project?.data?.image,
-    url: getSiteUrl(),
+    url: useSiteUrl(),
     createdAt: project?.data?.published_at,
   };
 
