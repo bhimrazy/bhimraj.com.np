@@ -1,5 +1,5 @@
 ---
-title: "Bhimraj Yadav – Bhimraj Yadav – ML/DL Engineer, Python Developer, Creator."
+title: "Bhimraj Yadav – ML/DL Engineer, Python Developer, Creator."
 description:
   "Bhimraj Yadav | I like to explore Machine Learning, Data Science and Computer Vision\
   and apply these skills to develop some cool projects. | ML/DL Engineer"
