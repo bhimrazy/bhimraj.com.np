@@ -58,7 +58,7 @@ export default function Blog({ post, site_info }) {
                 </a>
               </div>
               <div
-                className="prose prose-slate col-span-5 max-w-xs overflow-hidden whitespace-normal break-words dark:prose-invert dark:text-slate-400 lg:prose-lg"
+                className="prose prose-slate col-span-5 max-w-xs overflow-hidden whitespace-normal break-words dark:prose-invert dark:text-slate-400 sm:max-w-md lg:max-w-2xl"
                 dangerouslySetInnerHTML={{ __html: post_content }}
               ></div>
             </div>
