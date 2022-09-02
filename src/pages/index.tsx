@@ -17,9 +17,7 @@ export default function Home({
   youtube_videos: any;
   projects: any;
 }) {
-  const meta_data: MetaData = {
-    title: "HOME | BHIMRAJ YADAV",
-  };
+  const meta_data: MetaData = data;
   return (
     <Layout meta_data={meta_data} site_info={data}>
       <main className="mx-auto flex w-full max-w-5xl flex-col space-y-10 px-4 xl:px-0">
@@ -54,6 +52,5 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props: { data, youtube_videos, projects },
-    revalidate: 1,
   };
 };

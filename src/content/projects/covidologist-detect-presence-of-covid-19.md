@@ -1,6 +1,6 @@
 ---
 title: "Covidologist : A Disease Detection Web App to assist radiologists to detect the presence of COVID-19."
-published_at: "Aug 6, 2022"
+published_at: "2022-08-06"
 description: "The main purpose of this project is to automate the process of COVID-19 diagnosis and help radiologists, doctors and patients in their process by saving their precious time. So, by using a trained model on COVID chest-X-ray images, It assists medical staff and radiologists to detect the presence/sign of COVID in the chest-x-ray images reducing the workloads and speeding up the diagnosis."
 tags: "Deep Learning,PyTorch,FastAPI"
 image: "/projects/covidologist-detect-presence-of-covid-19.png"

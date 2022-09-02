@@ -3,13 +3,17 @@ import { get_posts } from "src/lib/utils";
 import Layout from "src/components/layout";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { getSiteInfo } from "@/lib/info";
+import { getSiteUrl } from "@/lib/helper";
 
 export default function Blog({ post, site_info }) {
-  const meta_data = {
-    title: "BLOG | BHIMRAJ YADAV",
-  };
   const router = useRouter();
-
+  const meta_data = {
+    title: post?.data?.title + " | Bhimraj Yadav",
+    description: post?.data?.summary,
+    image: post?.data?.image,
+    url: getSiteUrl(),
+    createdAt: post?.data?.publishedAt,
+  };
   const post_content = post.content.split("\n").splice(1).join("\n");
   return (
     <Layout meta_data={meta_data} site_info={site_info}>
@@ -54,7 +58,7 @@ export default function Blog({ post, site_info }) {
                 </a>
               </div>
               <div
-                className="prose prose-slate col-span-5 overflow-hidden whitespace-normal break-words dark:prose-invert dark:text-slate-400 lg:prose-lg "
+                className="prose prose-slate col-span-5 max-w-xs overflow-hidden whitespace-normal break-words dark:prose-invert dark:text-slate-400 lg:prose-lg"
                 dangerouslySetInnerHTML={{ __html: post_content }}
               ></div>
             </div>

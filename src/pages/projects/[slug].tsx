@@ -3,6 +3,7 @@ import { GetStaticProps, GetStaticPaths } from "next";
 import { getProjects, getSiteInfo } from "@/lib/info";
 import { Project, SiteInfo } from "@/lib/types";
 import Link from "next/link";
+import { getSiteUrl } from "@/lib/helper";
 
 export default function ProjectDetail({
   site_info,
@@ -12,8 +13,13 @@ export default function ProjectDetail({
   project: Project;
 }) {
   const meta_data = {
-    title: project?.data?.title + " | Projects | BHIMRAJ YADAV",
+    title: project?.data?.title + " | Bhimraj Yadav",
+    description: project?.data?.description,
+    image: project?.data?.image,
+    url: getSiteUrl(),
+    createdAt: project?.data?.published_at,
   };
+
   const project_content = project.content.split("\n").splice(1).join("\n");
   return (
     <Layout meta_data={meta_data} site_info={site_info}>
@@ -81,7 +87,7 @@ export default function ProjectDetail({
 
             <div className="flex w-full flex-col items-center ">
               <div
-                className="prose prose-slate max-w-lg overflow-hidden whitespace-normal break-words dark:prose-invert dark:text-slate-400 sm:max-w-md lg:max-w-2xl"
+                className="prose prose-slate max-w-xs overflow-hidden whitespace-normal break-words dark:prose-invert dark:text-slate-400 sm:max-w-md lg:max-w-2xl"
                 dangerouslySetInnerHTML={{ __html: project_content }}
               ></div>
             </div>

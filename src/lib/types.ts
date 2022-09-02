@@ -1,5 +1,11 @@
 export type MetaData = {
-  [key: string]: string;
+  // [key: string]: string;
+  title: string;
+  description: string;
+  image: string;
+  url?: string;
+  schemaType?: string;
+  createdAt?: string;
 };
 export type SiteInfo = {
   title: string;
@@ -27,4 +33,15 @@ export type Project = {
     link: string;
   };
   content: any;
+};
+
+export type SEOProps = {
+  title: string;
+  description: string;
+  image: string;
+  url: string;
+  openGraphType?: string;
+  schemaType?: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
