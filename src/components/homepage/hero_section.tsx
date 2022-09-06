@@ -9,7 +9,7 @@ export default function HeroSection() {
       "I am a final year Computer Engineering Student at Kathford \
                       International College of Engineering and Management. \
                       I like exploring and researching Computer Vision projects ,\
-                      developing websites with NextJs and Tailwinds CSS and \
+                      developing websites with NextJs and Tailwind CSS and \
                       playing with AI tools.\
                       ",
     cta: "Don't forget to sign my",
