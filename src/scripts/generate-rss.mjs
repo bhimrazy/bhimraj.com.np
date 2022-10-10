@@ -5,14 +5,14 @@ import { get_posts } from "../lib/utils.mjs";
 async function generate() {
   const feed = new RSS({
     title: 'Bhimraj Yadav',
-    site_url: 'https://www.bhimraj.com.np',
-    feed_url: 'https://www.bhimraj.com.np/feed.xml'
+    site_url: 'https://bhimraj.com.np',
+    feed_url: 'https://bhimraj.com.np/feed.xml'
   });
   const posts = get_posts();
   posts.map((post) => {
     feed.item({
       title: post.title,
-      url: `https://www.bhimraj.com.np/blog/${post.slug}`,
+      url: `https://bhimraj.com.np/blog/${post.slug}`,
       date: post.publishedAt,
       description: post.summary
     });

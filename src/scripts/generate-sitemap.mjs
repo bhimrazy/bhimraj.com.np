@@ -28,7 +28,7 @@ async function generate() {
                 const route = path === '/index' ? '' : path;
                 return `
               <url>
-                  <loc>${`https://www.bhimraj.com.np${route}`}</loc>
+                  <loc>${`https://bhimraj.com.np${route}`}</loc>
               </url>
             `;
             })
