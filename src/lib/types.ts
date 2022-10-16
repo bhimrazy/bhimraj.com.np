@@ -22,6 +22,19 @@ export type SiteInfo = {
   youtube: string;
 };
 
+export type Blog = {
+  slug: string;
+  data: {
+    title: string;
+    description: string;
+    published_at: string;
+    tags: string;
+    image: string;
+    link: string;
+  };
+  content: any;
+};
+
 export type Project = {
   slug: string;
   data: {
