@@ -1,3 +1,4 @@
+import { Blog } from "@/lib/types";
 import Link from "next/link";
 
 export default function BlogSection({ blogs }) {
@@ -17,14 +18,22 @@ export default function BlogSection({ blogs }) {
         </p>
       </div>
       <div className="flex flex-col space-y-10">
-        {blog_content?.blogs.map((blog, idx) => (
+        {blog_content?.blogs.map((blog: Blog, idx) => (
           <article key={idx}>
             <div className="grid grid-cols-1 md:grid-cols-6">
               <dl className="hidden md:block">
                 <dt className="sr-only">Date</dt>
                 <dd className="text-sm leading-6 dark:text-slate-400">
-                  <time dateTime="2022-02-24T12:00:00.000Z">
-                    Febuary 24, 2022
+                  <time
+                    dateTime={new Date(
+                      blog?.data?.published_at ?? "2022-02-24T12:00:00.000Z"
+                    ).toISOString()}
+                  >
+                    {new Date(blog?.data?.published_at ?? "February 24, 2022")
+                      .toDateString()
+                      .split(" ")
+                      .slice(1)
+                      .join(" ")}
                   </time>
                 </dd>
               </dl>
@@ -37,7 +46,7 @@ export default function BlogSection({ blogs }) {
                   </a>
                 </Link>
                 <p className="prose prose-slate mb-6 dark:text-slate-400">
-                  {blog?.data?.summary}
+                  {blog?.data?.description}
                 </p>
                 <Link href="/blog/[slug]/" as={`/blog/${blog.slug}/`}>
                   <a className="group inline-flex h-9 items-center whitespace-nowrap rounded-full bg-slate-100 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white dark:focus:ring-slate-500">

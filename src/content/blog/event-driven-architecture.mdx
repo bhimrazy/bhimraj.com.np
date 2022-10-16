@@ -1,24 +1,20 @@
 ---
-title: "What is Event-Driven Architecture? Everything You Need TO Know"
-publishedAt: "2022-10-16"
-summary: "Event-Driven Architecture (EDA) is a software architecture based on a pub/sub model where an event is produced by the producer, stored on the queue and consumed by the consumers as an event stream."
-tags: broker, consumer, event driven arcitecture, event-driven-architecture, event-processing, producer, pub/sub, stream-processing
+title: "What is Event-Driven Architecture? Everything You Need To Know"
+published_at: "2022-10-16"
+description: "Event-Driven Architecture (EDA) is a software architecture based on a pub/sub model where an event is produced by the producer, stored on the queue and consumed by the consumers as an event stream."
+tags: broker, consumer, event driven arcitecture, event-processing, producer, pub/sub, stream-processing, event-driven-architecture
 image: "/blog/event-driven-architecture/event-driven-architecture.png"
 ---
 
 # What is Event-Driven Architecture? Everything You Need TO Know
 
-Event-Driven Architecture (EDA) is a software architecture based on a pub/sub model where an event is produced by the producer, stored on the queue and consumed by the consumers as an event stream.
+**Event-Driven Architecture (EDA)** is a software architecture based on a pub/sub model where an event is produced by the producer, stored on the queue and consumed by the consumers as an event stream.
 
 It has three main components i.e producer, event bus/broker and consumer.
-
 The three main components are clearly shown in the figure below.
-
 ![event-driven-architecture](/blog/event-driven-architecture/event-driven-architecture.png)
 
-event-driven-architecture
-
-Figure: Event-Driven Architecture
+<div align="center">Figure: Event-Driven Architecture</div>
 
 In this guide, you’ll learn:
 
@@ -35,7 +31,7 @@ In this guide, you’ll learn:
 
 ## Introduction
 
-An event is a change in state that merits attention from systems. It may be anything like a significant change in state or an update, which is triggered when a user takes an action.    For example: An item being placed in a shopping cart on an e-commerce website.
+An event is a change in state that merits attention from systems. It may be anything like a significant change in state or an update, which is triggered when a user takes an action. For example: An item being placed in a shopping cart on an e-commerce website.
 
 **Event-driven architecture (EDA)** is a software design pattern for application development. It allows organizations to track and detect “events” (valuable business moments such as customer transactions) and then instantly act on these events. EDA is different from a traditional request-driven system, where services needed to wait for a reply before processing the next task. An event-driven architecture is one that has the ability to detect events and react intelligently to them.
 
@@ -122,9 +118,15 @@ In [microservices](https://www.ibm.com/cloud/learn/microservices)—a foundatio
 
 Not surprisingly, event-driven architecture is widely considered best practice for microservices implementations. Microservices *can* communicate with each other using [REST APIs](https://www.ibm.com/cloud/learn/rest-apis). But REST, a request/response integration model, undermines many of the benefits of the loosely coupled microservices architecture by forcing a synchronous, tightly coupled integration between the microservices.
 
-## Some of the Most ****Common Event-Driven Architecture Tools****
+## Some of the Most \***\*Common Event-Driven Architecture Tools\*\***
 
 1. **Apache Kafka**: [Apache Kafka](https://kafka.apache.org/) is an open-source distributed event streaming platform used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications. It is an open-source system developed by the Apache Software Foundation written in Java and Scala.
 2. **Amazon Kinesis**: [Amazon Kinesis](https://aws.amazon.com/kinesis/) is a real-time data processing platform provided by Amazon Web Services. Amazon Kinesis makes it easy to collect, process, and analyze real-time, streaming data so you can get timely insights and react quickly to new information. Amazon Kinesis offers key capabilities to cost-effectively process streaming data at any scale, along with the flexibility to choose the tools that best suit the requirements of your application.
 3. **RabbitMQ**: [RabbitMQ](https://www.rabbitmq.com/) is an open-source message-broker software that originally implemented the Advanced Message Queuing Protocol and has since been extended with a plug-in architecture to support Streaming Text Oriented Messaging Protocol, MQ Telemetry Transport, and other protocols.
-4. **Apache Pulsar**: ****[Apache Pulsar](https://pulsar.apache.org/) is a cloud-native, multi-tenant, high-performance solution for server-to-server messaging and queuing built on the publisher-subscribe (pub-sub) pattern. Pulsar combines the best features of a traditional messaging system like RabbitMQ with those of a pub-sub system like Apache Kafka – scaling up or down dynamically without downtime. It's used by thousands of companies for high-performance data pipelines, microservices, instant messaging, data integrations, and more.
+4. **Apache Pulsar**: [Apache Pulsar](https://pulsar.apache.org/) is a cloud-native, multi-tenant, high-performance solution for server-to-server messaging and queuing built on the publisher-subscribe (pub-sub) pattern. Pulsar combines the best features of a traditional messaging system like RabbitMQ with those of a pub-sub system like Apache Kafka – scaling up or down dynamically without downtime. It's used by thousands of companies for high-performance data pipelines, microservices, instant messaging, data integrations, and more.
+
+## References
+
+- [1]: Event-driven architecture. In Wikipedia. https://en.wikipedia.org/wiki/Event-driven_architecture
+- [2]: Event-Driven Architecture. (n.d.). Amazon Web Services, Inc. https://aws.amazon.com/event-driven-architecture
+- [3]: Education, I. C. Event-Driven Architecture. IBM. https://www.ibm.com/cloud/learn/event-driven-architecture
