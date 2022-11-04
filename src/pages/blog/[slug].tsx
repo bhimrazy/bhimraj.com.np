@@ -7,13 +7,14 @@ import { getSiteInfo } from "@/lib/info";
 import { useSiteUrl } from "@/lib/helper";
 
 export default function Blog({ post, site_info }) {
-  const router = useRouter();
   const meta_data = {
     title: post?.data?.title,
-    description: post?.data?.summary,
+    description: post?.data?.description,
     image: post?.data?.image,
     url: useSiteUrl(),
-    createdAt: post?.data?.publishedAt,
+    schemaType: "WebPage",
+    createdAt: post?.data?.published_at,
+    updatedAt: post?.data?.updated_at,
   };
   const post_content = post.content.split("\n").splice(1).join("\n");
   return (

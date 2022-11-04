@@ -6,6 +6,7 @@ export type MetaData = {
   url?: string;
   schemaType?: string;
   createdAt?: string;
+  updatedAt?: string;
 };
 export type SiteInfo = {
   title: string;
@@ -57,6 +58,7 @@ export type SEOProps = {
   schemaType?: string;
   createdAt?: string;
   updatedAt?: string;
+  siteInfo?: SiteInfo;
 };
 
 export enum Form {

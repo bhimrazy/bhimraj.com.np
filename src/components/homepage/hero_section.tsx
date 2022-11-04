@@ -3,7 +3,7 @@ import { Key } from "react";
 
 export default function HeroSection() {
   const hero_content: { [key: string]: any } = {
-    greetings: "Hi there, I'm Bhimraj.",
+    greetings: "Hi there, I'm Bhimraj Yadav.",
     tagline: "ML/DL Engineer | Django Developer | NextJs Developer",
     description:
       "I am a final year Computer Engineering Student at Kathford \
@@ -23,12 +23,12 @@ export default function HeroSection() {
     ],
   };
   return (
-    <section className="flex flex-col justify-center space-y-4 pt-32 pb-10 text-left dark:text-gray-200">
+    <section className="flex flex-col justify-center space-y-6 pt-32 pb-10 text-left  font-inter dark:text-gray-200">
       <div className="flex flex-col space-y-2">
-        <h1 className="font-inter text-xl font-bold sm:text-3xl md:text-5xl ">
-          {hero_content?.greetings}
+        <span className="md:text-normal">{hero_content?.greetings}</span>
+        <h1 className="max-w-3xl text-xl font-bold sm:text-2xl md:text-4xl ">
+          {hero_content?.tagline}
         </h1>
-        <p className=" max-w-2xl md:text-base">{hero_content?.tagline}</p>
       </div>
       <p className=" max-w-2xl md:text-lg">{hero_content?.description}</p>
       {/* <p className="space-x-1 py-1 md:text-lg">

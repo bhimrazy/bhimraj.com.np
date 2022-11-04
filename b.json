@@ -1,0 +1,179 @@
+[
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://ahrefs.com/blog/affiliate-marketing-tools/",
+        "url": "https://ahrefs.com/blog/affiliate-marketing-tools/",
+        "name": "15 Best Affiliate Marketing Tools &amp; How to Use Them",
+        "isPartOf": { "@id": "https://ahrefs.com/blog/#website" },
+        "primaryImageOfPage": {
+          "@id": "https://ahrefs.com/blog/affiliate-marketing-tools/#primaryimage"
+        },
+        "image": {
+          "@id": "https://ahrefs.com/blog/affiliate-marketing-tools/#primaryimage"
+        },
+        "thumbnailUrl": "https://ahrefs.com/blog/wp-content/uploads/2022/10/fb_affiliate_marketing_tools.png",
+        "datePublished": "2022-10-31T06:00:00+00:00",
+        "dateModified": "2022-10-31T07:04:38+00:00",
+        "author": {
+          "@id": "https://ahrefs.com/blog/#/schema/person/6c7ae3a4dfeb7d9853b31821388a21de"
+        },
+        "description": "Affiliate marketing tools help you get more traffic and do your job faster and easier. Here are 15 of the best ones.",
+        "inLanguage": "en-US",
+        "potentialAction": [
+          {
+            "@type": "ReadAction",
+            "target": ["https://ahrefs.com/blog/affiliate-marketing-tools/"]
+          }
+        ]
+      },
+      {
+        "@type": "ImageObject",
+        "inLanguage": "en-US",
+        "@id": "https://ahrefs.com/blog/affiliate-marketing-tools/#primaryimage",
+        "url": "https://ahrefs.com/blog/wp-content/uploads/2022/10/fb_affiliate_marketing_tools.png",
+        "contentUrl": "https://ahrefs.com/blog/wp-content/uploads/2022/10/fb_affiliate_marketing_tools.png",
+        "width": 1200,
+        "height": 630
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://ahrefs.com/blog/#website",
+        "url": "https://ahrefs.com/blog/",
+        "name": "SEO Blog by Ahrefs",
+        "description": "Link Building Strategies &amp; SEO Tips",
+        "potentialAction": [
+          {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://ahrefs.com/blog/?s={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        ],
+        "inLanguage": "en-US"
+      },
+      {
+        "@type": "Person",
+        "@id": "https://ahrefs.com/blog/#/schema/person/6c7ae3a4dfeb7d9853b31821388a21de",
+        "name": "Bill Widmer",
+        "image": {
+          "@type": "ImageObject",
+          "inLanguage": "en-US",
+          "@id": "https://ahrefs.com/blog/#/schema/person/image/",
+          "url": "https://ahrefs.com/blog/wp-content/uploads/2022/07/bill-widmer.jpg",
+          "contentUrl": "https://ahrefs.com/blog/wp-content/uploads/2022/07/bill-widmer.jpg",
+          "caption": "Bill Widmer"
+        },
+        "description": "8+ years as a digital nomad, Bill is on a mission to travel the world and fund it using SEO and content marketing.",
+        "sameAs": [
+          "https://www.billwidmer.com/",
+          "https://www.instagram.com/billwidmer",
+          "https://www.linkedin.com/in/billwidmer"
+        ],
+        "url": "https://ahrefs.com/blog/author/bill-widmer/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://backlinko.com/reverse-outreach/#/schema/organization/backlinko",
+        "name": "Backlinko",
+        "url": "https://backlinko.com/reverse-outreach",
+        "sameAs": [
+          "https://www.facebook.com/Backlinko",
+          "https://www.youtube.com/user/backlinko/",
+          "https://twitter.com/Backlinko/"
+        ],
+        "logo": {
+          "@type": "ImageObject",
+          "@id": "https://backlinko.com/reverse-outreach/#/schema/image/backlinko",
+          "url": "https://api.backlinko.com/app/uploads/2022/04/how-i-built-5660-backlinks-in-30-days.png",
+          "width": 1600,
+          "height": 837,
+          "caption": "How I built 5,660 backlinks in 30 days"
+        },
+        "image": {
+          "@id": "https://backlinko.com/reverse-outreach/#/schema/image/backlinko",
+          "inLanguage": "en-US",
+          "url": "https://api.backlinko.com/app/uploads/2022/04/how-i-built-5660-backlinks-in-30-days.png",
+          "width": 1600,
+          "height": 837,
+          "caption": "How I built 5,660 backlinks in 30 days"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://backlinko.com/reverse-outreach/#/schema/website/backlinko",
+        "url": "https://backlinko.com/reverse-outreach",
+        "name": "Backlinko",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://backlinko.com/reverse-outreach/?s={search_term_string}",
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": {
+          "@id": "https://backlinko.com/reverse-outreach/#/schema/organization/backlinko"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://backlinko.com/reverse-outreach",
+        "url": "https://backlinko.com/reverse-outreach",
+        "inLanguage": "en-US",
+        "name": "Backlinko",
+        "datePublished": "2022-04-05T11:00:22+00:00",
+        "dateModified": "2022-04-02T11:06:02+00:00",
+        "description": "How to use a new link building strategy called \"Reverse Outreach\".",
+        "isPartOf": {
+          "@id": "https://backlinko.com/reverse-outreach/#/schema/website/backlinko"
+        },
+        "about": {
+          "@id": "https://backlinko.com/reverse-outreach/#/schema/organization/backlinko"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://backlinko.com/reverse-outreach/#/schema/breadcrumb/backlinko",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item": {
+              "@type": "WebPage",
+              "@id": "https://backlinko.com/",
+              "url": "https://backlinko.com/",
+              "name": "Home"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item": {
+              "@type": "WebPage",
+              "@id": "https://backlinko.com/blog",
+              "url": "https://backlinko.com/blog",
+              "name": "Blog"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item": {
+              "@type": "WebPage",
+              "@id": "https://backlinko.com/reverse-outreach",
+              "url": "https://backlinko.com/reverse-outreach",
+              "name": "How I Built 5,660 Backlinks in 30 Days [New Strategy]"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
