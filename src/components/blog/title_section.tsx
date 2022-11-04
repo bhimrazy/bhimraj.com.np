@@ -1,4 +1,5 @@
 import { Blog, SiteInfo } from "@/lib/types";
+import { getDate } from "@/utils/helpers";
 import Link from "next/link";
 import React from "react";
 
@@ -49,25 +50,27 @@ export default function TitleSection({
       </h1>
       <div className="flex flex-row space-x-2 text-left">
         <span>
+          {blog?.data?.updated_at ? "Last updated:" : "Published on:"}
+        </span>
+        <dl>
+          <dt className="sr-only">Date</dt>
+          <dd className="font-medium text-slate-700 dark:text-slate-700">
+            <time dateTime={blog?.data?.updated_at ?? blog?.data?.published_at}>
+              {getDate(blog?.data?.updated_at ?? blog?.data?.published_at)}
+            </time>
+          </dd>
+        </dl>
+        <span>
           by{" "}
           <a
-            className="text-blue-600"
-            href={site_info?.github}
+            className="font-medium text-blue-600"
+            href={site_info?.linkedin}
             target="_blank"
             rel="noreferrer"
           >
             @bhimrazy
           </a>
         </span>
-        <span>on</span>
-        <dl>
-          <dt className="sr-only">Date</dt>
-          <dd className="text-slate-700 dark:text-slate-400">
-            <time dateTime={blog?.data?.published_at}>
-              {blog?.data?.published_at}
-            </time>
-          </dd>
-        </dl>
       </div>
     </div>
   );

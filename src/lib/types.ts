@@ -29,6 +29,7 @@ export type Blog = {
     title: string;
     description: string;
     published_at: string;
+    updated_at?: string;
     tags: string;
     image: string;
     link: string;
