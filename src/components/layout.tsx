@@ -19,8 +19,9 @@ export default function Layout({
     description: meta_data?.description,
     image: meta_data?.image,
     url: meta_data?.url ?? settings?.meta?.rootUrl,
-    schemaType: meta_data?.schemaType ?? "WebPage",
+    schemaType: meta_data?.schemaType,
     createdAt: meta_data?.createdAt,
+    updatedAt: meta_data?.updatedAt,
     openGraphType: "website",
   };
   return (
@@ -33,6 +34,8 @@ export default function Layout({
         description={MetaProps?.description}
         image={MetaProps?.image}
         createdAt={MetaProps?.createdAt}
+        updatedAt={MetaProps?.updatedAt}
+        siteInfo={site_info}
       />
       <Header site_info={site_info} />
       {children}

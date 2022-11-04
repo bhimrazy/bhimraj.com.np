@@ -9,6 +9,8 @@ export default function Logo({ site_info }: { site_info: SiteInfo }) {
           className="hidden h-full w-full object-cover"
           src={site_info?.logo}
           layout="fill"
+          alt="Logo"
+          title="Logo"
         />
       </div>
       <div className="relative hidden h-8 w-32 transition  dark:block">
@@ -16,6 +18,8 @@ export default function Logo({ site_info }: { site_info: SiteInfo }) {
           className="h-full w-full object-cover"
           src={site_info?.logo_white}
           layout="fill"
+          alt="Logo"
+          title="Logo"
         />
       </div>
     </>

@@ -15,6 +15,9 @@ module.exports = {
         flow: "Flow",
         inter: "Inter roman",
       },
+      fontSize: {
+        "2xs": ['10px', '12px'],
+      },
       colors: {
         transparent: "transparent",
         current: "currentColor",

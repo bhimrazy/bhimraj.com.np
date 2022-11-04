@@ -19,7 +19,7 @@ export default function ProjectDetail({
     url: useSiteUrl(),
     createdAt: project?.data?.published_at,
   };
-
+  
   const project_content = project.content.split("\n").splice(1).join("\n");
   return (
     <Layout meta_data={meta_data} site_info={site_info}>

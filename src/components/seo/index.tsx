@@ -33,6 +33,7 @@ const socialTags = ({
         settings.meta.social &&
         settings.meta.social.twitter,
     },
+    { name: "twitter:image", content: image },
     { name: "twitter:image:src", content: image },
     { name: "twitter:card", content: "summary_large_image" },
     { name: "og:title", content: title },
@@ -57,14 +58,20 @@ const socialTags = ({
         : new Date().toISOString(),
     },
     {
+      name: "article:publisher",
+      content:
+        settings &&
+        settings.meta &&
+        settings.meta.social &&
+        settings.meta.social.twitter,
+    },
+    {
       name: "article:published_time",
       content: createdAt ? new Date(createdAt).toISOString() : "",
     },
     {
       name: "article:modified_time",
-      content: updatedAt
-        ? new Date(updatedAt).toISOString()
-        : new Date().toISOString(),
+      content: updatedAt ? new Date(updatedAt).toISOString() : "",
     },
   ];
 
@@ -72,8 +79,102 @@ const socialTags = ({
 };
 
 const SEO = (props: SEOProps) => {
-  const { title, description, image: image_url, url, schemaType } = props;
+  const {
+    title,
+    description,
+    image: image_url,
+    url,
+    schemaType,
+    siteInfo,
+    createdAt,
+    updatedAt,
+  } = props;
   const image = settings.meta.rootUrl + image_url;
+  let schema;
+  if (schemaType) {
+    schema = {
+      "@type": schemaType,
+      name: title,
+      about: description,
+      url: url,
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "@id": url,
+          url: url,
+          name: title,
+          isPartOf: { "@id": `${settings?.meta?.rootUrl}/#website` },
+          primaryImageOfPage: {
+            "@id": `${image}/#primaryimage`,
+          },
+          image: {
+            "@id": `${image}/#primaryimage`,
+          },
+          thumbnailUrl: image,
+          datePublished: createdAt ? new Date(createdAt).toISOString() : "",
+          dateModified: updatedAt ? new Date(updatedAt).toISOString() : "",
+          description: description,
+          inLanguage: "en-US",
+        },
+        {
+          "@type": "ImageObject",
+          inLanguage: "en-US",
+          "@id": `${image}/#primaryimage`,
+          url: image,
+          contentUrl: image,
+          width: 1920,
+          height: 1080,
+        },
+        {
+          "@type": "WebSite",
+          "@id": `${settings?.meta?.rootUrl}/#website`,
+          url: settings?.meta?.rootUrl,
+          name: siteInfo?.title,
+          description: siteInfo?.description,
+          potentialAction: [
+            {
+              "@type": "SearchAction",
+              target: {
+                "@type": "EntryPoint",
+                urlTemplate: `${settings?.meta?.rootUrl}/blog/?s={search_term_string}"`,
+              },
+              "query-input": "required name=search_term_string",
+            },
+          ],
+          inLanguage: "en-US",
+        },
+      ],
+    };
+  } else {
+    schema = {
+      "@type": schemaType,
+      name: title,
+      about: description,
+      url: url,
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": `${settings?.meta?.rootUrl}/#website`,
+          url: settings?.meta?.rootUrl,
+          name: siteInfo?.title,
+          description: siteInfo?.description,
+          potentialAction: [
+            {
+              "@type": "SearchAction",
+              target: {
+                "@type": "EntryPoint",
+                urlTemplate: `${url}?s={search_term_string}"`,
+              },
+              "query-input": "required name=search_term_string",
+            },
+          ],
+          inLanguage: "en-US",
+        },
+      ],
+    };
+  }
   return (
     <Head>
       <title>{title}</title>
@@ -96,13 +197,7 @@ const SEO = (props: SEOProps) => {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "http://schema.org",
-            "@type": schemaType,
-            name: title,
-            about: description,
-            url: url,
-          }),
+          __html: JSON.stringify(schema),
         }}
       />
     </Head>
@@ -119,7 +214,6 @@ SEO.defaultProps = {
     settings.meta.social.graphic,
   url: settings && settings.meta && settings.meta.rootUrl,
   openGraphType: "website",
-  schemaType: "Article",
 };
 
 export default SEO;

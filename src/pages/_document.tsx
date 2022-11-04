@@ -14,7 +14,7 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html lang="en">
         <Head>
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
@@ -24,28 +24,29 @@ class MyDocument extends Document {
           <link
             rel="apple-touch-icon"
             sizes="180x180"
-            href="/icons/apple-touch-icon.png"
+            href="/apple-touch-icon.png"
           />
           <link
             rel="icon"
             type="image/png"
             sizes="32x32"
-            href="/icons/favicon-32x32.png"
+            href="/favicon-32x32.png"
           />
           <link
             rel="icon"
             type="image/png"
             sizes="16x16"
-            href="/icons/favicon-16x16.png"
+            href="/favicon-16x16.png"
           />
-          <link rel="manifest" href="/icons/site.webmanifest" />
+          <link rel="manifest" href="/site.webmanifest" />
 
-           {/* Global Site Tag (gtag.js) - Google Analytics */}
-           <script
-            async
+          {/* Global Site Tag (gtag.js) - Google Analytics */}
+          <script
+            defer
             src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
           />
           <script
+            defer
             dangerouslySetInnerHTML={{
               __html: `
             window.dataLayer = window.dataLayer || [];

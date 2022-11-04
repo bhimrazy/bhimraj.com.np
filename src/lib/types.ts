@@ -6,6 +6,7 @@ export type MetaData = {
   url?: string;
   schemaType?: string;
   createdAt?: string;
+  updatedAt?: string;
 };
 export type SiteInfo = {
   title: string;
@@ -20,6 +21,20 @@ export type SiteInfo = {
   twitter: string;
   instagram: string;
   youtube: string;
+};
+
+export type Blog = {
+  slug: string;
+  data: {
+    title: string;
+    description: string;
+    published_at: string;
+    updated_at?: string;
+    tags: string;
+    image: string;
+    link: string;
+  };
+  content: any;
 };
 
 export type Project = {
@@ -44,6 +59,7 @@ export type SEOProps = {
   schemaType?: string;
   createdAt?: string;
   updatedAt?: string;
+  siteInfo?: SiteInfo;
 };
 
 export enum Form {
