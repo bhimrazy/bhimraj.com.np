@@ -28,7 +28,7 @@ export default function TitleSection({
                 strokeLinejoin="round"
               ></path>
             </svg>
-            Go back to blogs
+            Go back
           </a>
         </Link>
       </div>

@@ -25,12 +25,12 @@ export default function HeroSection() {
   return (
     <section className="flex flex-col justify-center space-y-6 pt-32 pb-10 text-left  font-inter dark:text-gray-200">
       <div className="flex flex-col space-y-2">
-        <span className="md:text-normal">{hero_content?.greetings}</span>
+        <span className="md:text-lg">{hero_content?.greetings}</span>
         <h1 className="max-w-3xl text-xl font-bold sm:text-2xl md:text-4xl ">
           {hero_content?.tagline}
         </h1>
       </div>
-      <p className=" max-w-2xl md:text-lg">{hero_content?.description}</p>
+      <p className="md:text-normal max-w-3xl">{hero_content?.description}</p>
       {/* <p className="space-x-1 py-1 md:text-lg">
         <span>{hero_content?.cta}</span>
         <span className="cursor-pointer border-b-2 border-dotted border-gray-200 py-1 transition-all hover:border-gray-300 hover:text-indigo-600">

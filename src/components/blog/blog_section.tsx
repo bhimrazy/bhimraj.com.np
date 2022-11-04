@@ -1,4 +1,5 @@
 import { Blog } from "@/lib/types";
+import { getDate } from "@/utils/helpers";
 import Link from "next/link";
 
 export default function BlogSection({ blogs }) {
@@ -23,17 +24,11 @@ export default function BlogSection({ blogs }) {
             <div className="grid grid-cols-1 md:grid-cols-6">
               <dl className="hidden md:block">
                 <dt className="sr-only">Date</dt>
-                <dd className="text-sm leading-6 dark:text-slate-400">
+                <dd className="text-sm leading-6 text-gray-700 dark:text-slate-400">
                   <time
-                    dateTime={new Date(
-                      blog?.data?.published_at ?? "2022-02-24T12:00:00.000Z"
-                    ).toISOString()}
+                    dateTime={new Date(blog?.data?.published_at).toISOString()}
                   >
-                    {new Date(blog?.data?.published_at ?? "February 24, 2022")
-                      .toDateString()
-                      .split(" ")
-                      .slice(1)
-                      .join(" ")}
+                    {getDate(blog?.data?.published_at)}
                   </time>
                 </dd>
               </dl>
@@ -45,7 +40,7 @@ export default function BlogSection({ blogs }) {
                     </h3>
                   </a>
                 </Link>
-                <p className="prose prose-slate mb-6 dark:text-slate-400">
+                <p className="prose prose-slate mb-6 max-w-none dark:text-slate-400">
                   {blog?.data?.description}
                 </p>
                 <Link href="/blog/[slug]/" as={`/blog/${blog.slug}/`}>
