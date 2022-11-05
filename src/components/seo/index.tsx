@@ -93,10 +93,6 @@ const SEO = (props: SEOProps) => {
   let schema;
   if (schemaType) {
     schema = {
-      "@type": schemaType,
-      name: title,
-      about: description,
-      url: url,
       "@context": "https://schema.org",
       "@graph": [
         {
@@ -138,10 +134,6 @@ const SEO = (props: SEOProps) => {
     };
   } else {
     schema = {
-      "@type": schemaType,
-      name: title,
-      about: description,
-      url: url,
       "@context": "https://schema.org",
       "@graph": [
         {
