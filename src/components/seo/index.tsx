@@ -132,16 +132,6 @@ const SEO = (props: SEOProps) => {
           url: settings?.meta?.rootUrl,
           name: siteInfo?.title,
           description: siteInfo?.description,
-          potentialAction: [
-            {
-              "@type": "SearchAction",
-              target: {
-                "@type": "EntryPoint",
-                urlTemplate: `${settings?.meta?.rootUrl}/blog/?s={search_term_string}"`,
-              },
-              "query-input": "required name=search_term_string",
-            },
-          ],
           inLanguage: "en-US",
         },
       ],
