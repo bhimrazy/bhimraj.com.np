@@ -33,8 +33,8 @@ export default function ProjectSection({ projects }) {
             key={idx}
             href="/projects/[slug]/"
             as={`/projects/${project.slug}/`}
+            className="flex flex-col justify-between sm:flex-row"
           >
-            <a className="flex flex-col justify-between sm:flex-row">
               <div className="flex max-w-2xl flex-col space-y-1 py-2 text-gray-600">
                 <h2 className="text-xl font-bold hover:text-gray-800">
                   {project?.data?.title}
@@ -53,7 +53,6 @@ export default function ProjectSection({ projects }) {
                   loading="eager"
                 />
               </div>
-            </a>
           </Link>
         ))}
       </div>

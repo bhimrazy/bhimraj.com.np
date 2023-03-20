@@ -24,8 +24,8 @@ export default function ProjectSection({ projects }) {
             key={idx}
             href="/projects/[slug]/"
             as={`/projects/${project.slug}/`}
+            className={`${idx === 0 ? "md:col-span-2" : ""}`}
           >
-            <a className={`${idx === 0 ? "md:col-span-2" : ""}`}>
               <article className="bg-gray-50 p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:bg-slate-800">
                 <div className="flex flex-col space-y-4">
                   <div className="flex flex-row space-x-2">
@@ -78,8 +78,8 @@ export default function ProjectSection({ projects }) {
                         <Link
                           href="/projects/[slug]/"
                           as={`/projects/${project.slug}/`}
+                          className="group inline-flex h-9 items-center whitespace-nowrap rounded-full bg-slate-100 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white dark:focus:ring-slate-500"
                         >
-                          <a className="group inline-flex h-9 items-center whitespace-nowrap rounded-full bg-slate-100 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white dark:focus:ring-slate-500">
                             Read more
                             <svg
                               className="ml-3 overflow-visible text-slate-300 group-hover:text-slate-400 dark:text-slate-500 dark:group-hover:text-slate-400"
@@ -94,14 +94,12 @@ export default function ProjectSection({ projects }) {
                             >
                               <path d="M0 0L3 3L0 6"></path>
                             </svg>
-                          </a>
                         </Link>
                       </div>
                     </div>
                   </div>
                 </div>
               </article>
-            </a>
           </Link>
         ))}
       </div>

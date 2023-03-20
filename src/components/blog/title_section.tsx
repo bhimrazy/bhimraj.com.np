@@ -13,8 +13,7 @@ export default function TitleSection({
   return (
     <div className="space-y-2 py-10 text-center sm:max-w-md lg:max-w-3xl">
       <div className="flex justify-start">
-        <Link href="/blog">
-          <a className="group flex cursor-pointer font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white">
+        <Link href="/blog" className="group flex cursor-pointer font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white">
             <svg
               viewBox="0 -9 3 24"
               className="mr-3 h-6 w-auto overflow-visible text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300"
@@ -29,7 +28,6 @@ export default function TitleSection({
               ></path>
             </svg>
             Go back
-          </a>
         </Link>
       </div>
       <div className="flex flex-row flex-wrap gap-4">
