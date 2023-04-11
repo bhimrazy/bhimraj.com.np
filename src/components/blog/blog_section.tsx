@@ -19,7 +19,7 @@ export default function BlogSection({ blogs }) {
         </p>
       </div>
       <div className="flex flex-col space-y-10">
-        {blog_content?.blogs.sort((a: Blog, b: Blog) => new Date(b?.data?.published_at) - new Date(a?.data?.published_at)).map((blog: Blog, idx) => (
+        {blog_content?.blogs.sort((a: Blog, b: Blog) => Number(new Date(b?.data?.published_at)) - Number(new Date(a?.data?.published_at))).map((blog: Blog, idx) => (
           <article key={idx}>
             <div className="grid grid-cols-1 md:grid-cols-6">
               <dl className="hidden md:block">
