@@ -37,43 +37,41 @@ export default function VideoSection({ videos }: { videos: any }) {
       </div>
       <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:ml-2">
         {videos.slice(0, 4).map((video, idx) => (
-          <Link href={video?.video_url} key={idx}>
-            <a target="_blank">
-              <div className="relative">
-                <Image
-                  className="rounded-lg transition-all hover:opacity-95 hover:shadow-md"
-                  src={video?.thumbnail_url}
-                  placeholder="blur"
-                  blurDataURL={video?.thumbnail_url}
-                  alt={video?.title}
-                  width={1920}
-                  height={1080}
-                  loading="eager"
-                />
-                <div className="absolute inset-y-0 inset-x-[41%] flex items-center">
-                  <svg
-                    className="h-16 w-16 text-gray-50 transition-all hover:text-red-500"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
+          <Link href={video?.video_url} key={idx} target="_blank" >
+            <div className="relative">
+              <Image
+                className="rounded-lg transition-all hover:opacity-95 hover:shadow-md"
+                src={video?.thumbnail_url}
+                placeholder="blur"
+                blurDataURL={video?.thumbnail_url}
+                alt={video?.title}
+                width={1920}
+                height={1080}
+                loading="eager"
+              />
+              <div className="absolute inset-y-0 inset-x-[41%] flex items-center">
+                <svg
+                  className="h-16 w-16 text-gray-50 transition-all hover:text-red-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                    clipRule="evenodd"
+                  />
+                </svg>
               </div>
-              <div className="flex flex-col space-y-1 py-2 text-gray-600">
-                <h2 className="text-lg font-bold line-clamp-1 hover:text-gray-800">
-                  {video?.title}
-                </h2>
-                <p className="text-gray-700 line-clamp-2">
-                  {video?.description}
-                </p>
-              </div>
-            </a>
+            </div>
+            <div className="flex flex-col space-y-1 py-2 text-gray-600">
+              <h2 className="text-lg font-bold line-clamp-1 hover:text-gray-800">
+                {video?.title}
+              </h2>
+              <p className="text-gray-700 line-clamp-2">
+                {video?.description}
+              </p>
+            </div>
           </Link>
         ))}
       </div>

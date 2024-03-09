@@ -33,27 +33,26 @@ export default function ProjectSection({ projects }) {
             key={idx}
             href="/projects/[slug]/"
             as={`/projects/${project.slug}/`}
-          >
-            <a className="flex flex-col justify-between sm:flex-row">
-              <div className="flex max-w-2xl flex-col space-y-1 py-2 text-gray-600">
-                <h2 className="text-xl font-bold hover:text-gray-800">
-                  {project?.data?.title}
-                </h2>
-                <p className="max-w-lg text-gray-700 line-clamp-2">
-                  {project?.data?.description}
-                </p>
-              </div>
-              <div className="relative aspect-video h-48 overflow-hidden rounded-lg border transition-all hover:shadow sm:h-24">
-                <Image
-                  src={project?.data?.image}
-                  placeholder="blur"
-                  blurDataURL={project?.data?.image}
-                  alt={project?.data?.title}
-                  layout="fill"
-                  loading="eager"
-                />
-              </div>
-            </a>
+            className="flex flex-col justify-between sm:flex-row">
+            <div className="flex max-w-2xl flex-col space-y-1 py-2 text-gray-600">
+              <h2 className="text-xl font-bold hover:text-gray-800">
+                {project?.data?.title}
+              </h2>
+              <p className="max-w-lg text-gray-700 line-clamp-2">
+                {project?.data?.description}
+              </p>
+            </div>
+            <div className="relative aspect-video h-48 overflow-hidden rounded-lg border transition-all hover:shadow sm:h-24">
+              <Image
+                src={project?.data?.image}
+                placeholder="blur"
+                blurDataURL={project?.data?.image}
+                alt={project?.data?.title}
+                width={192}
+                height={108}
+                loading="eager"
+              />
+            </div>
           </Link>
         ))}
       </div>

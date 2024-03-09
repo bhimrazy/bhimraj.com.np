@@ -19,7 +19,7 @@ export default function ProjectDetail({
     url: useSiteUrl(),
     createdAt: project?.data?.published_at,
   };
-  
+
   const project_content = project.content.split("\n").splice(1).join("\n");
   return (
     <Layout meta_data={meta_data} site_info={site_info}>
@@ -29,23 +29,21 @@ export default function ProjectDetail({
           <article className="flex flex-col">
             <div className="space-y-2 py-10 text-center">
               <div className="flex justify-start">
-                <Link href="/projects">
-                  <a className="group flex cursor-pointer font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white">
-                    <svg
-                      viewBox="0 -9 3 24"
-                      className="mr-3 h-6 w-auto overflow-visible text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300"
-                    >
-                      <path
-                        d="M3 0L0 3L3 6"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      ></path>
-                    </svg>
-                    Go back to projects
-                  </a>
+                <Link href="/projects" className="group flex cursor-pointer font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white">
+                  <svg
+                    viewBox="0 -9 3 24"
+                    className="mr-3 h-6 w-auto overflow-visible text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300"
+                  >
+                    <path
+                      d="M3 0L0 3L3 6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    ></path>
+                  </svg>
+                  Go back to projects
                 </Link>
               </div>
               <div className="flex flex-row space-x-2">
@@ -64,14 +62,14 @@ export default function ProjectDetail({
               <div className="flex flex-row space-x-2 text-left">
                 <span>
                   by{" "}
-                  <a
+                  <Link
                     className="text-blue-600"
                     href={site_info?.github}
                     target="_blank"
                     rel="noreferrer"
                   >
                     @bhimrazy
-                  </a>
+                  </Link>
                 </span>
                 <span>on</span>
                 <dl>
