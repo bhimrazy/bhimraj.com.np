@@ -52,7 +52,7 @@ export default function NewsLetter() {
   };
 
   return (
-    <section className="pt-10 pb-16">
+    <section className="pb-16 pt-10">
       <div className="mx-auto flex flex-col space-y-6 rounded-lg border py-14 text-center dark:border-gray-900">
         <div className="space-y-1">
           <h2 className="text-2xl font-semibold">

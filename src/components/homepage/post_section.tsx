@@ -67,72 +67,72 @@ export default function PostSection() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {post_content?.posts.map((post, idx) => (
           <Link href={post?.link} key={idx} target="_blank">
-              <article className="shadow-xs flex flex-col overflow-hidden rounded-lg border transition-all hover:shadow-lg dark:border-gray-900">
-                <div className="overflow-hidden rounded-lg">
-                  <Image
-                    className="h-10 p-1"
-                    src={post?.thumbnail_url}
-                    blurDataURL={post?.thumbnail_url}
-                    height={1080}
-                    width={1920}
-                    placeholder="blur"
-                    alt={post?.title}
-                  />
-                </div>
-                <div className="flex flex-col space-y-2 p-4 text-gray-600">
-                  <h2 className="text-lg font-bold text-gray-800 hover:text-gray-900">
-                    {post?.title}
-                  </h2>
-                  <span className="font-semibold text-gray-800">
-                    {post?.published_at}
-                  </span>
-                  <div className="flex flex-row space-x-3 font-medium">
-                    <div className="flex flex-row items-center space-x-1">
-                      <svg
-                        className="h-5 w-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      <span>{post?.reading_time}</span>
-                    </div>
-                    <div className="flex flex-row items-center space-x-1">
-                      <svg
-                        className="h-5 w-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                        />
-                      </svg>
-                      <span>{post?.views}</span>
-                    </div>
+            <article className="shadow-xs flex flex-col overflow-hidden rounded-lg border transition-all hover:shadow-lg dark:border-gray-900">
+              <div className="overflow-hidden rounded-lg">
+                <Image
+                  className="h-10 p-1"
+                  src={post?.thumbnail_url}
+                  blurDataURL={post?.thumbnail_url}
+                  height={1080}
+                  width={1920}
+                  placeholder="blur"
+                  alt={post?.title}
+                />
+              </div>
+              <div className="flex flex-col space-y-2 p-4 text-gray-600">
+                <h2 className="text-lg font-bold text-gray-800 hover:text-gray-900">
+                  {post?.title}
+                </h2>
+                <span className="font-semibold text-gray-800">
+                  {post?.published_at}
+                </span>
+                <div className="flex flex-row space-x-3 font-medium">
+                  <div className="flex flex-row items-center space-x-1">
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <span>{post?.reading_time}</span>
                   </div>
-                  <p className="text-gray-600 line-clamp-3">
-                    {post?.description}
-                  </p>
+                  <div className="flex flex-row items-center space-x-1">
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                    <span>{post?.views}</span>
+                  </div>
                 </div>
-              </article>
+                <p className="line-clamp-3 text-gray-600">
+                  {post?.description}
+                </p>
+              </div>
+            </article>
           </Link>
         ))}
       </div>

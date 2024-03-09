@@ -19,29 +19,41 @@ export default function BlogSection({ blogs }) {
         </p>
       </div>
       <div className="flex flex-col space-y-10">
-        {blog_content?.blogs.sort((a: Blog, b: Blog) => Number(new Date(b?.data?.published_at)) - Number(new Date(a?.data?.published_at))).map((blog: Blog, idx) => (
-          <article key={idx}>
-            <div className="grid grid-cols-1 md:grid-cols-6">
-              <dl className="hidden md:block">
-                <dt className="sr-only">Date</dt>
-                <dd className="text-sm leading-6 text-gray-700 dark:text-slate-400">
-                  <time
-                    dateTime={new Date(blog?.data?.published_at).toISOString()}
-                  >
-                    {getDate(blog?.data?.published_at)}
-                  </time>
-                </dd>
-              </dl>
-              <div className="md:col-span-5">
-                <Link href="/blog/[slug]/" as={`/blog/${blog.slug}/`}>
+        {blog_content?.blogs
+          .sort(
+            (a: Blog, b: Blog) =>
+              Number(new Date(b?.data?.published_at)) -
+              Number(new Date(a?.data?.published_at))
+          )
+          .map((blog: Blog, idx) => (
+            <article key={idx}>
+              <div className="grid grid-cols-1 md:grid-cols-6">
+                <dl className="hidden md:block">
+                  <dt className="sr-only">Date</dt>
+                  <dd className="text-sm leading-6 text-gray-700 dark:text-slate-400">
+                    <time
+                      dateTime={new Date(
+                        blog?.data?.published_at
+                      ).toISOString()}
+                    >
+                      {getDate(blog?.data?.published_at)}
+                    </time>
+                  </dd>
+                </dl>
+                <div className="md:col-span-5">
+                  <Link href="/blog/[slug]/" as={`/blog/${blog.slug}/`}>
                     <h3 className="prose mb-4 text-xl font-bold tracking-tight text-slate-900 dark:text-slate-200">
                       {blog?.data?.title}
                     </h3>
-                </Link>
-                <p className="prose prose-slate mb-6 max-w-none dark:text-slate-400">
-                  {blog?.data?.description}
-                </p>
-                <Link href="/blog/[slug]/" as={`/blog/${blog.slug}/`} className="group inline-flex h-9 items-center whitespace-nowrap rounded-full bg-slate-100 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white dark:focus:ring-slate-500">
+                  </Link>
+                  <p className="prose prose-slate mb-6 max-w-none dark:text-slate-400">
+                    {blog?.data?.description}
+                  </p>
+                  <Link
+                    href="/blog/[slug]/"
+                    as={`/blog/${blog.slug}/`}
+                    className="group inline-flex h-9 items-center whitespace-nowrap rounded-full bg-slate-100 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white dark:focus:ring-slate-500"
+                  >
                     Read more
                     <svg
                       className="ml-3 overflow-visible text-slate-300 group-hover:text-slate-400 dark:text-slate-500 dark:group-hover:text-slate-400"
@@ -56,11 +68,11 @@ export default function BlogSection({ blogs }) {
                     >
                       <path d="M0 0L3 3L0 6"></path>
                     </svg>
-                </Link>
+                  </Link>
+                </div>
               </div>
-            </div>
-          </article>
-        ))}
+            </article>
+          ))}
       </div>
     </section>
   );

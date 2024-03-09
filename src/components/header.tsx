@@ -13,29 +13,33 @@ export default function Header({ site_info }: { site_info: SiteInfo }) {
   ];
   return (
     <>
-      <Link href="https://consciousplanet.org/" rel="noreferrer" target="_blank">
-          <p className="z-[1] cursor-pointer bg-white/90 py-2 text-center text-sm font-normal tracking-widest text-lime-700 backdrop-blur transition hover:text-lime-800 dark:bg-slate-900/75 dark:text-white">
-            {site_info?.tagline}
-          </p>
+      <Link
+        href="https://consciousplanet.org/"
+        rel="noreferrer"
+        target="_blank"
+      >
+        <p className="z-[1] cursor-pointer bg-white/90 py-2 text-center text-sm font-normal tracking-widest text-lime-700 backdrop-blur transition hover:text-lime-800 dark:bg-slate-900/75 dark:text-white">
+          {site_info?.tagline}
+        </p>
       </Link>
-      <header className="sticky top-0 z-10 flex w-full flex-col place-content-center border-t border-b bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/75">
+      <header className="sticky top-0 z-10 flex w-full flex-col place-content-center border-b border-t bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/75">
         <nav className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-5 xl:px-0">
           <Link href="/">
-              {/* {icon_name} */}
-              <Logo site_info={site_info} />
+            {/* {icon_name} */}
+            <Logo site_info={site_info} />
           </Link>
           <ul className="hidden space-x-2 font-medium text-slate-600 dark:text-slate-100 sm:flex sm:space-x-4 md:space-x-5 lg:space-x-6">
             {nav_items.map((item, idx) => (
               <Link href={item?.link} key={idx}>
-                  <li
-                    className={`${
-                      item?.link === router.asPath
-                        ? "text-slate-900 dark:text-slate-100"
-                        : "text-slate-500 dark:text-slate-400"
-                    } cursor-pointer text-base hover:text-slate-700 dark:hover:text-slate-300`}
-                  >
-                    {item?.title}
-                  </li>
+                <li
+                  className={`${
+                    item?.link === router.asPath
+                      ? "text-slate-900 dark:text-slate-100"
+                      : "text-slate-500 dark:text-slate-400"
+                  } cursor-pointer text-base hover:text-slate-700 dark:hover:text-slate-300`}
+                >
+                  {item?.title}
+                </li>
               </Link>
             ))}
           </ul>

@@ -133,7 +133,7 @@ export default function Footer() {
             <ul className="flex justify-center space-x-4 text-sm font-medium text-gray-700 md:text-base">
               {footer_navs.map((item, idx) => (
                 <Link key={idx} href={item?.link}>
-                    <li>{item?.title}</li>
+                  <li>{item?.title}</li>
                 </Link>
               ))}
             </ul>
@@ -150,7 +150,7 @@ export default function Footer() {
                 className="transition-all hover:opacity-95 hover:drop-shadow"
               >
                 <Link href={item?.url} target="_blank" rel="noreferrer">
-                    {item?.icon}
+                  {item?.icon}
                 </Link>
               </li>
             ))}

@@ -11,7 +11,7 @@ image: "/blog/unet/pytorch-unet-image-segmentation-implementation.png"
 
 ### A Step-by-Step Guide to Implementing UNet in PyTorch from Scratch
 
-In this tutorial, we'll explore the power and walk through the implementation of UNet, one of the most popular and effective architectures for semantic segmentation in computer vision. Whether you're new to UNet or a seasoned pro, you'll discover new insights, tips, and techniques for building accurate and efficient segmentation models using PyTorch. 
+In this tutorial, we'll explore the power and walk through the implementation of UNet, one of the most popular and effective architectures for semantic segmentation in computer vision. Whether you're new to UNet or a seasoned pro, you'll discover new insights, tips, and techniques for building accurate and efficient segmentation models using PyTorch.
 
 Are you ready to take your image segmentation skills to the next level? So buckle up and get ready to unleash your creativity with UNet!
 
@@ -19,13 +19,13 @@ Are you ready to take your image segmentation skills to the next level? So buckl
 
 **What is image segmentation?**
 
-Image segmentation is the process of partitioning a digital image into multiple image segments, also known as **image regions** or **image objects** (sets of pixels), each of which corresponds to a different object or part of the image. 
+Image segmentation is the process of partitioning a digital image into multiple image segments, also known as **image regions** or **image objects** (sets of pixels), each of which corresponds to a different object or part of the image.
 
 ![Figure: [Road Image segmentation](https://arxiv.org/abs/1611.09326)](/blog/unet/example-image-for-road-segmentation.png "Road Image segmentation")
 
 Figure: [Road Image segmentation](https://arxiv.org/abs/1611.09326)
 
-The goal of segmentation is to simplify and/or change the representation of an image into something that is more meaningful and easier to analyze. Image segmentation is typically used to locate objects and boundaries (lines, curves, etc.) in images. 
+The goal of segmentation is to simplify and/or change the representation of an image into something that is more meaningful and easier to analyze. Image segmentation is typically used to locate objects and boundaries (lines, curves, etc.) in images.
 
 More precisely, image segmentation is the process of assigning a label to every pixel in an image such that pixels with the same label share certain characteristics¹.
 
@@ -43,23 +43,23 @@ Figure: [U-net architecture](https://lmb.informatik.uni-freiburg.de/people/ronne
 
 The **U-Net** is a fully convolutional neural network architecture that comprises an encoder and a decoder, with skip connections for accurate and efficient image segmentation. It has gained popularity due to its ability to produce fast and precise segmentation results.
 
-It consists of a **contracting path(encoder)** and an **expansive path(decoder)**. 
+It consists of a **contracting path(encoder)** and an **expansive path(decoder)**.
 
-The **contracting encoder** of the U-Net model includes a series of convolutional and pooling layers to downsample the input image and extract its features. This section follows the conventional architecture of a convolutional neural network, with two 3x3 unpadded convolutional layers followed by a ReLU activation function and a 2x2 max pooling operation with a stride of 2. 
+The **contracting encoder** of the U-Net model includes a series of convolutional and pooling layers to downsample the input image and extract its features. This section follows the conventional architecture of a convolutional neural network, with two 3x3 unpadded convolutional layers followed by a ReLU activation function and a 2x2 max pooling operation with a stride of 2.
 
 Additionally, at each downsampling step, the number of feature channels is doubled.
 
-Similarly, the **expansive decoder** part of the U-Net architecture consists of a series of transposed convolutional and concatenation layers. It is responsible for upsampling the feature maps and combining them with the corresponding feature maps from the encoder part to produce the final segmentation map. 
+Similarly, the **expansive decoder** part of the U-Net architecture consists of a series of transposed convolutional and concatenation layers. It is responsible for upsampling the feature maps and combining them with the corresponding feature maps from the encoder part to produce the final segmentation map.
 
 Each step in the expansive path involves first upsampling the feature map, followed by a 2x2 convolution (also known as "up-convolution") that halves the number of feature channels. Next, the upsampled feature map is concatenated with the corresponding feature map from the contracting path, and two 3x3 convolutions are applied, each followed by a ReLU activation function.
 
-The **U-Net architecture** has skip connections between the encoder and decoder parts, which help to preserve the **high-resolution details** of the input image during the upsampling process. 
+The **U-Net architecture** has skip connections between the encoder and decoder parts, which help to preserve the **high-resolution details** of the input image during the upsampling process.
 
 These skip connections concatenate the feature maps from the encoder with those from the decoder at the corresponding spatial resolution, allowing the decoder to refine the segmentation map with the information from the encoder.
 
-## ****PyTorch Implementation of U-Net for Image Segmentation****
+## \***\*PyTorch Implementation of U-Net for Image Segmentation\*\***
 
-In this tutorial, I will guide you through the step-by-step implementation of U-Net in PyTorch for image segmentation tasks. 
+In this tutorial, I will guide you through the step-by-step implementation of U-Net in PyTorch for image segmentation tasks.
 
 The implementation will cover the following steps:
 
@@ -73,7 +73,6 @@ The implementation will cover the following steps:
 The double convolution block is a basic building block of the U-Net architecture. It consists of two 3x3 convolutional layers, each followed by a rectified linear unit (ReLU) activation function. This block is used multiple times throughout the encoder and decoder to extract and process features from the input image. Here's the implementation of the double convolution block in PyTorch:
 
 > In this implementation, I have also included batch normalization so as to improve the performance and training speed of neural networks.
-> 
 
 ```python
 import torch
@@ -82,7 +81,7 @@ import torch.nn as nn
 class DoubleConvBlock(nn.Module):
     """ A convolutional block in the UNet architecture.
 
-    This block consists of two convolutional layers with batch 
+    This block consists of two convolutional layers with batch
 		normalization followed by a ReLU activation function.
     """
 
@@ -105,7 +104,7 @@ class DoubleConvBlock(nn.Module):
 										nn.BatchNorm2d(out_channels)
 				            nn.ReLU(inplace=True)
 					        )
-		
+
     def forward(self, x) -> torch.Tensor:
         x = self.conv(x)
         return x
@@ -119,7 +118,7 @@ The encoder is part of the U-Net architecture that downsamples the input image a
 class Encoder(nn.Module):
     """The encoder part of the UNet architecture.
 
-    This consists of a series of convolutional blocks followed by 
+    This consists of a series of convolutional blocks followed by
 		maxpooling operations..
 
     Args:
@@ -166,7 +165,7 @@ class Decoder(nn.Module):
     Args:
         channels (List[int]): A list of channels for convolutionals block.
 				>>>channels = [1024, 512, 256, 128, 64]
-											
+
     """
 
     def __init__(self, channels: List[int]) -> None:
@@ -213,7 +212,7 @@ The final U-Net architecture consists of an encoder and decoder with skip connec
 
 ```python
 class UNet(nn.Module):
-    """The UNet architecture.   
+    """The UNet architecture.
 
     Args:
         out_channels (int): The number of output channels.
@@ -252,14 +251,14 @@ print(y.shape) #-> torch.Size([1, 1, 388, 388])
 
 ## Conclusion
 
-In conclusion, UNet is an incredibly useful and efficient architecture for semantic segmentation in computer vision. In this tutorial, we have covered a step-by-step guide on how to implement UNet in PyTorch from scratch. The guide covered the fundamental concepts of image segmentation, the architecture of UNet, and the PyTorch implementation of UNet for image segmentation tasks. 
+In conclusion, UNet is an incredibly useful and efficient architecture for semantic segmentation in computer vision. In this tutorial, we have covered a step-by-step guide on how to implement UNet in PyTorch from scratch. The guide covered the fundamental concepts of image segmentation, the architecture of UNet, and the PyTorch implementation of UNet for image segmentation tasks.
 
 I hope that this tutorial has helped you understand the basics of UNet and how to implement it in PyTorch for your own image segmentation projects. In the upcoming tutorial, I will cover the training part of UNet in PyTorch to complete the implementation process. Stay tuned.
 
 ## References:
 
-[1] Image segmentation. *Wikipedia*. [https://en.wikipedia.org/wiki/Image_segmentation](https://en.wikipedia.org/wiki/Image_segmentation)
+[1] Image segmentation. _Wikipedia_. [https://en.wikipedia.org/wiki/Image_segmentation](https://en.wikipedia.org/wiki/Image_segmentation)
 
-[2] Ronneberger, O., Fischer, P., & Brox, T. (2015). U-Net: Convolutional Networks for  Biomedical Image Segmentation. [ArXiv/abs/1505.04597](https://arxiv.org/abs/1505.04597)
+[2] Ronneberger, O., Fischer, P., & Brox, T. (2015). U-Net: Convolutional Networks for Biomedical Image Segmentation. [ArXiv/abs/1505.04597](https://arxiv.org/abs/1505.04597)
 
-[3] PyTorchUNet. *GitHub*. [PyTorchUNet : A PyTorch Implementation of UNet Architecture for Semantic Segmentation of Images from scratch.](https://github.com/bhimrazy/unet)
+[3] PyTorchUNet. _GitHub_. [PyTorchUNet : A PyTorch Implementation of UNet Architecture for Semantic Segmentation of Images from scratch.](https://github.com/bhimrazy/unet)

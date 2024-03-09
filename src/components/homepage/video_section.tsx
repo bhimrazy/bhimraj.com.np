@@ -37,7 +37,7 @@ export default function VideoSection({ videos }: { videos: any }) {
       </div>
       <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:ml-2">
         {videos.slice(0, 4).map((video, idx) => (
-          <Link href={video?.video_url} key={idx} target="_blank" >
+          <Link href={video?.video_url} key={idx} target="_blank">
             <div className="relative">
               <Image
                 className="rounded-lg transition-all hover:opacity-95 hover:shadow-md"
@@ -49,7 +49,7 @@ export default function VideoSection({ videos }: { videos: any }) {
                 height={1080}
                 loading="eager"
               />
-              <div className="absolute inset-y-0 inset-x-[41%] flex items-center">
+              <div className="absolute inset-x-[41%] inset-y-0 flex items-center">
                 <svg
                   className="h-16 w-16 text-gray-50 transition-all hover:text-red-500"
                   fill="currentColor"
@@ -65,12 +65,10 @@ export default function VideoSection({ videos }: { videos: any }) {
               </div>
             </div>
             <div className="flex flex-col space-y-1 py-2 text-gray-600">
-              <h2 className="text-lg font-bold line-clamp-1 hover:text-gray-800">
+              <h2 className="line-clamp-1 text-lg font-bold hover:text-gray-800">
                 {video?.title}
               </h2>
-              <p className="text-gray-700 line-clamp-2">
-                {video?.description}
-              </p>
+              <p className="line-clamp-2 text-gray-700">{video?.description}</p>
             </div>
           </Link>
         ))}
