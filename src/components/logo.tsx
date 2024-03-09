@@ -6,9 +6,10 @@ export default function Logo({ site_info }: { site_info: SiteInfo }) {
     <>
       <div className="relative h-8 w-32 transition dark:hidden">
         <Image
-          className="hidden h-full w-full object-cover"
+          className="h-full w-full object-cover"
           src={site_info?.logo}
-          layout="fill"
+          width={509}
+          height={128}
           alt="Logo"
           title="Logo"
         />
@@ -17,7 +18,8 @@ export default function Logo({ site_info }: { site_info: SiteInfo }) {
         <Image
           className="h-full w-full object-cover"
           src={site_info?.logo_white}
-          layout="fill"
+          width={509}
+          height={128}
           alt="Logo"
           title="Logo"
         />
