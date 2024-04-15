@@ -46,7 +46,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   });
   return { paths, fallback: false };
 };
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params }: { params: any }) => {
   const post = get_posts().find((post) => post.slug === params.slug);
   const { data: site_info } = getSiteInfo();
 

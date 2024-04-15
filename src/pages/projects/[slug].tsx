@@ -109,7 +109,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   });
   return { paths, fallback: false };
 };
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params }: { params: any }) => {
   const { data: site_info } = getSiteInfo();
   const project = getProjects().find((project) => project.slug === params.slug);
   return {

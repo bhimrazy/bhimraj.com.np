@@ -33,7 +33,7 @@ export default function Home({
 
 export const getStaticProps: GetStaticProps = async () => {
   const { data } = getSiteInfo();
-  const res = await fetch(process.env.YOUTUBE_API_URL);
+  const res = await fetch(process.env.YOUTUBE_API_URL!);
   const youtube_data = await res.json();
   const youtube_videos = youtube_data?.items.map((video) => {
     return {
