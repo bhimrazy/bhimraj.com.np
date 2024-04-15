@@ -10,13 +10,11 @@ export default function NewsLetter() {
     button: "Subscribe",
   };
   const [form, setForm] = useState<FormState>({ state: Form.Initial });
-  const inputEl = useRef(null);
+  const [email, setEmail] = useState("");
 
   const subscribe = async (e) => {
     e.preventDefault();
     setForm({ state: Form.Loading });
-
-    const email = inputEl.current.value;
     fetch(`/api/subscribe`, {
       method: "POST",
       headers: {
@@ -29,7 +27,7 @@ export default function NewsLetter() {
         const data = await res.json();
         if (res.ok) {
           // console.log("Success:", data);
-          inputEl.current.value = "";
+          setEmail("");
           setForm({
             state: Form.Success,
             message: `Hooray! You're now on the list.`,
@@ -65,7 +63,8 @@ export default function NewsLetter() {
           className="relative mx-auto max-w-2xl rounded border dark:border-none sm:w-96"
         >
           <input
-            ref={inputEl}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             aria-label="Email for newsletter"
             className="w-full rounded px-6 py-2 text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-600 focus:ring-offset-2 dark:bg-gray-900 dark:focus:ring-gray-800 dark:focus:ring-offset-gray-800"
             type="email"
