@@ -123,7 +123,7 @@ export default function Footer() {
       },
     ],
   };
-  const copyright = "© Bhimraj Yadav 2022 . All rights reserved.";
+  const copyright = "© Bhimraj Yadav 2024 . All rights reserved.";
   const policy = "Privacy Policy";
   return (
     <footer className="flex border-t dark:border-gray-800">

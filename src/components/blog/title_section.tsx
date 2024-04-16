@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import { Blog, SiteInfo } from "@/lib/types";
 import { getDate } from "@/utils/helpers";
 import Link from "next/link";
@@ -7,9 +8,10 @@ export default function TitleSection({
   blog,
   site_info,
 }: {
-  blog: Blog;
-  site_info: SiteInfo;
+  blog: Blog | any;
+  site_info: SiteInfo | any;
 }) {
+
   return (
     <div className="space-y-2 py-10 text-center sm:max-w-md lg:max-w-3xl">
       <div className="flex justify-start">
@@ -65,7 +67,7 @@ export default function TitleSection({
           by{" "}
           <Link
             className="font-medium text-blue-600"
-            href={site_info?.linkedin}
+            href={siteConfig.links.linkedin}
             target="_blank"
             rel="noreferrer"
           >

@@ -1,3 +1,4 @@
+"use client";
 import { Form, FormState } from "@/lib/types";
 import { useState, useRef } from "react";
 
