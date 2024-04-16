@@ -1,5 +1,5 @@
 import { Blog } from "@/lib/types";
-import { getDate } from "@/utils/helpers";
+import { formatDate, getReadingTime } from "@/lib/utils";
 import Link from "next/link";
 
 export default function BlogSection({ blogs }) {
@@ -28,18 +28,21 @@ export default function BlogSection({ blogs }) {
           .map((blog: Blog, idx) => (
             <article key={idx}>
               <div className="grid grid-cols-1 md:grid-cols-6">
-                <dl className="hidden md:block">
-                  <dt className="sr-only">Date</dt>
-                  <dd className="text-sm leading-6 text-gray-700 dark:text-slate-400">
-                    <time
-                      dateTime={new Date(
-                        blog?.data?.published_at
-                      ).toISOString()}
-                    >
-                      {getDate(blog?.data?.published_at)}
-                    </time>
-                  </dd>
-                </dl>
+                <div className="flex flex-col space-y-1">
+                  <dl className="hidden md:block">
+                    <dt className="sr-only">Date</dt>
+                    <dd className="text-sm leading-6 text-gray-700 dark:text-slate-400">
+                      <time
+                        dateTime={new Date(
+                          blog?.data?.published_at
+                        ).toISOString()}
+                      >
+                        {formatDate(blog?.data?.published_at)}
+                      </time>
+                    </dd>
+                  </dl>
+                  <p className="text-sm text-gray-500">{getReadingTime(blog.content)}</p>
+                </div>
                 <div className="md:col-span-5">
                   <Link href="/blog/[slug]/" as={`/blog/${blog.slug}/`}>
                     <h3 className="prose mb-4 text-xl font-bold tracking-tight text-slate-900 dark:text-slate-200">
