@@ -3,15 +3,10 @@ import { Key } from "react";
 
 export default function HeroSection() {
   const hero_content: { [key: string]: any } = {
-    greetings: "Hi there, I'm Bhimraj Yadav.",
+    greetings: "👋 Hi there, I'm Bhimraj Yadav!",
     tagline: "ML/DL Engineer | Django Developer | NextJs Developer",
-    description:
-      "I am a final year Computer Engineering Student at Kathford \
-                      International College of Engineering and Management. \
-                      I like exploring and researching Computer Vision projects ,\
-                      developing websites with NextJs and Tailwind CSS and \
-                      playing with AI tools.\
-                      ",
+    description: "💡 Passionate Software Engineer | 🧠 AI Engineer | 🌐 Research Enthusiast in Computer Vision & Generative AI.",
+    subDescription: "🌱 Always excited to collaborate on projects involving AI, healthcare, and innovative technologies.",
     cta: "Don't forget to sign my",
     cta_d: "guestbook!",
     buttons: [
@@ -25,18 +20,15 @@ export default function HeroSection() {
   return (
     <section className="flex flex-col justify-center space-y-6 pb-10 pt-32 text-left  font-inter dark:text-gray-200">
       <div className="flex flex-col space-y-2">
-        <span className="md:text-lg">{hero_content?.greetings}</span>
+        <span className="md:text-base font-medium">{hero_content?.greetings}</span>
         <h1 className="max-w-3xl text-xl font-bold sm:text-2xl md:text-4xl ">
           {hero_content?.tagline}
         </h1>
       </div>
-      <p className="md:text-normal max-w-3xl">{hero_content?.description}</p>
-      {/* <p className="space-x-1 py-1 md:text-lg">
-        <span>{hero_content?.cta}</span>
-        <span className="cursor-pointer border-b-2 border-dotted border-gray-200 py-1 transition-all hover:border-gray-300 hover:text-indigo-600">
-          {hero_content?.cta_d}
-        </span>
-      </p> */}
+      <div className="flex flex-col gap-1">
+        <p className="md:text-sm max-w-3xl hover:text-gray-800">{hero_content?.description}</p>
+        <p className="md:text-sm max-w-3xl hover:text-gray-800">{hero_content?.subDescription}</p>
+      </div>
       <div className="flex flex-col gap-2 py-4 sm:flex-row">
         {hero_content?.buttons.map(
           (button: { title: string; link: string }, idx: Key) => (

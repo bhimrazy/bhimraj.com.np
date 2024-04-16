@@ -42,7 +42,7 @@ export default function TitleSection({
           .map((tag: string, i) => (
             <span
               key={i}
-              className="text transitio cursor-pointer whitespace-nowrap bg-gray-200 p-2 text-2xs font-medium uppercase tracking-wider hover:bg-gray-200/80 hover:shadow-sm dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-700/80"
+              className="transition cursor-pointer whitespace-nowrap bg-gray-200 p-2 text-2xs font-medium uppercase tracking-wider hover:bg-gray-200/80 hover:shadow-sm dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-700/80"
             >
               {tag}
             </span>
