@@ -2,12 +2,13 @@
   <img src="https://user-images.githubusercontent.com/46085301/145169259-0ad36299-c8ae-460b-ac66-5cb7940f3c51.png" height="75"/>
   <br/>
   <b>BHIMRAJ YADAV</b><br/>
-<p align="center">✨ My portfolio built with Next.js, Tailwind, Prisma, and Vercel.</p>
+<p align="center">✨💡 Software Engineer | 🌍 Opensource Contributor |
+🌐 Research Enthusiast in Computer Vision & Generative AI.✨</p>
 </p>
 
 ## Preview
 
-![Homepage](https://user-images.githubusercontent.com/46085301/145170356-af335df1-e8ef-4e32-988f-71da6770dfef.png)
+![Homepage](public/landing-page.jpg)
 
 # Tech Stack Used
 
