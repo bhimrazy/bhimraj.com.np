@@ -3,10 +3,12 @@ import { Key } from "react";
 
 export default function HeroSection() {
   const hero_content: { [key: string]: any } = {
-    greetings: "👋 Hi there, I'm Bhimraj Yadav!",
+    greetings: "👋 Hi, I'm Bhimraj Yadav!",
     tagline: "ML/DL Engineer | Django Developer | NextJs Developer",
-    description: "💡 Passionate Software Engineer | 🧠 AI Engineer | 🌐 Research Enthusiast in Computer Vision & Generative AI.",
-    subDescription: "🌱 Always excited to collaborate on projects involving AI, healthcare, and innovative technologies.",
+    description:
+      "💡 Passionate Software Engineer | 🧠 AI Engineer | 🌍 Opensource Contributor |\n 🌐 Research Enthusiast in Computer Vision & Generative AI.",
+    subDescription:
+      "🌱 Always excited to collaborate on projects involving AI, healthcare, and innovative technologies.",
     cta: "Don't forget to sign my",
     cta_d: "guestbook!",
     buttons: [
@@ -18,16 +20,22 @@ export default function HeroSection() {
     ],
   };
   return (
-    <section className="flex flex-col justify-center space-y-6 pb-10 pt-32 text-left  font-inter dark:text-gray-200">
+    <section className="font-inter flex flex-col justify-center space-y-6 pb-10 pt-32  text-left dark:text-gray-200">
       <div className="flex flex-col space-y-2">
-        <span className="md:text-base font-medium">{hero_content?.greetings}</span>
-        <h1 className="max-w-3xl text-xl font-bold sm:text-2xl md:text-4xl ">
+        <span className="font-medium md:text-base">
+          {hero_content?.greetings}
+        </span>
+        <h1 className="max-w-2xl whitespace-pre-line text-xl font-bold sm:text-2xl md:text-4xl ">
           {hero_content?.tagline}
         </h1>
       </div>
-      <div className="flex flex-col gap-1">
-        <p className="md:text-sm max-w-3xl hover:text-gray-800">{hero_content?.description}</p>
-        <p className="md:text-sm max-w-3xl hover:text-gray-800">{hero_content?.subDescription}</p>
+      <div className="flex flex-col gap-2">
+        <p className="max-w-3xl whitespace-pre-line hover:text-gray-800 md:text-sm">
+          {hero_content?.description}
+        </p>
+        <p className="max-w-3xl hover:text-gray-800 md:text-sm">
+          {hero_content?.subDescription}
+        </p>
       </div>
       <div className="flex flex-col gap-2 py-4 sm:flex-row">
         {hero_content?.buttons.map(
