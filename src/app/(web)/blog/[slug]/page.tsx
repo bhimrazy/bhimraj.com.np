@@ -39,10 +39,15 @@ export default function BlogPage({ params: { slug } }: Props) {
         <article className="flex flex-col items-center justify-center">
           <TitleSection blog={post} site_info={site_info} />
 
-          <div
-            className="prose prose-slate col-span-5 max-w-xs overflow-hidden whitespace-normal break-words dark:prose-invert dark:text-slate-400 dark:prose-p:text-gray-300 dark:prose-li:text-gray-300 sm:max-w-md lg:max-w-3xl"
-            dangerouslySetInnerHTML={{ __html: post_content }}
-          ></div>
+          {/* blog content */}
+          <div className="grid grid-cols-1 lg:grid-cols-5 w-full">
+            <div
+              className="prose prose-slate overflow-hidden whitespace-normal break-words dark:prose-invert dark:text-slate-400 dark:prose-p:text-gray-300 dark:prose-li:text-gray-300 max-w-none lg:col-span-4"
+              dangerouslySetInnerHTML={{ __html: post_content }}
+            ></div>
+            <div className="flex flex-row flex-wrap gap-4">
+            </div>
+          </div>
         </article>
       </section>
     </main>
