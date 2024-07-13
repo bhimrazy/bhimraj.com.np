@@ -3,7 +3,7 @@
   <br/>
   <b>BHIMRAJ YADAV</b><br/>
 <p align="center">✨ My portfolio built with Next.js, Tailwind, Prisma, and Vercel.</p>
-</P>
+</p>
 
 ## Preview
 ![Homepage](https://user-images.githubusercontent.com/46085301/145170356-af335df1-e8ef-4e32-988f-71da6770dfef.png)
