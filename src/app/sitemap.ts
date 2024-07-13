@@ -1,6 +1,5 @@
 import { siteConfig } from "@/config/site";
-import { getPosts } from "@/lib/blog-api";
-import { getProjects } from "@/lib/info";
+import { allBlogPosts, allProjects } from "content-collections";
 
 export default async function sitemap() {
     const baseUrl = siteConfig.url;
@@ -19,18 +18,18 @@ export default async function sitemap() {
         }) ?? [];
 
     // Get all posts slugs
-    const postsUrls = getPosts().map((post) => {
+    const postsUrls = allBlogPosts.map((post) => {
         return {
-            url: `${baseUrl}/blog/${post.slug}`,
-            lastModified: new Date(post.data?.updated_at || post.data?.published_at),
+            url: `${baseUrl}/blog/${post._meta.path}`,
+            lastModified: new Date(post.updatedAt || post.publishedAt),
         };
     }) || [];
 
     // Get all projects slugs
-    const projectsUrls = getProjects().map((post) => {
+    const projectsUrls = allProjects.map((post) => {
         return {
-            url: `${baseUrl}/blog/${post.slug}`,
-            lastModified: new Date(post.data?.updated_at || post.data?.published_at),
+            url: `${baseUrl}/blog/${post._meta.path}`,
+            lastModified: new Date(post.updatedAt || post.publishedAt),
         };
     }) ?? [];
 
