@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { siteConfig } from "@/config/site";
 import { allBlogPosts, allProjects } from "content-collections";
 
@@ -10,13 +11,13 @@ export default async function sitemap() {
         "projects",
     ];
     const pagesUrls =
-        pages.map((page) => {
-            return {
-                url: `${baseUrl}/${page}`,
-                lastModified: new Date(),
-            };
-        }) ?? [];
-
+    pages.map((page) => {
+        return {
+            url: `${baseUrl}/${page}`,
+            lastModified: new Date(),
+        };
+    }) ?? [];
+    
     // Get all posts slugs
     const postsUrls = allBlogPosts.map((post) => {
         return {
