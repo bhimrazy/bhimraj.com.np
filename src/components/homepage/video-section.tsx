@@ -1,7 +1,32 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function VideoSection({ videos }: { videos: any }) {
+type YoutubeData = {
+  items: {
+    snippet: {
+      title: string;
+      description: string;
+      publishedAt: string;
+      thumbnails: {
+        default: {
+          url: string;
+        };
+      };
+    };
+    id: {
+      videoId: string;
+    };
+  }[];
+};
+
+type Video = {
+  title: string;
+  description: string;
+  published_at: string;
+  thumbnail_url: string;
+  video_url: string;
+};
+export default async function VideoSection() {
   const video_content = {
     title: "Most Viewed Videos",
     description: "Videos on what I'm building and learning.",
@@ -27,6 +52,21 @@ export default function VideoSection({ videos }: { videos: any }) {
       },
     ],
   };
+
+  const res = await fetch(process.env.YOUTUBE_API_URL!);
+  const youtubeData:YoutubeData = await res.json();
+  const videos: Video[] = youtubeData?.items.map((video) => {
+    return {
+      title: video?.snippet?.title,
+      description: video?.snippet?.description,
+      published_at: video?.snippet?.publishedAt,
+      thumbnail_url: video?.snippet?.thumbnails?.default?.url.replace(
+        "default",
+        "maxresdefault"
+      ),
+      video_url: "https://www.youtube.com/watch?v=" + video?.id?.videoId,
+    };
+  });
   return (
     <section className="flex flex-col justify-center space-y-8 py-2 text-left dark:invert">
       <div className="flex flex-col space-y-2">
@@ -36,7 +76,7 @@ export default function VideoSection({ videos }: { videos: any }) {
         <p className="text-gray-500">{video_content?.description}</p>
       </div>
       <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:ml-2">
-        {videos.slice(0, 4).map((video: any, idx: number) => (
+        {videos.slice(0, 4).map((video, idx: number) => (
           <Link href={video?.video_url} key={idx} target="_blank" passHref>
             <div className="relative">
               <Image

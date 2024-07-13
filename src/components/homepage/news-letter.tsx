@@ -1,6 +1,6 @@
 "use client";
 import { Form, FormState } from "@/lib/types";
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 export default function NewsLetter() {
   const newsletter_content = {
@@ -13,7 +13,7 @@ export default function NewsLetter() {
   const [form, setForm] = useState<FormState>({ state: Form.Initial });
   const [email, setEmail] = useState("");
 
-  const subscribe = async (e: any) => {
+  const subscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     setForm({ state: Form.Loading });
     fetch(`/api/subscribe`, {
