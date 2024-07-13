@@ -77,9 +77,9 @@ export default function ProjectDetail({ params: { slug } }: Props) {
               </Link>
             </div>
             <div className="flex flex-row space-x-2">
-              {project?.tags.map((tag: string, i) => (
+              {project?.tags.map((tag: string) => (
                 <span
-                  key={i}
+                  key={tag}
                   className="bg-gray-200 p-2 text-xs font-medium uppercase tracking-wider dark:bg-slate-700 dark:text-slate-200"
                 >
                   {tag}
