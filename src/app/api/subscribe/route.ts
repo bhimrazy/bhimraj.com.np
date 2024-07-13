@@ -31,7 +31,13 @@ export async function POST(req: Request) {
 
         return Response.json({ message: 'Success' });
 
-    } catch (error: any) {
-        return Response.json({ error: error.message || error.toString() }, { status: 500 });
+    } catch (error: unknown) {
+        let errorMessage: string;
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        } else {
+            errorMessage = String(error);
+        }
+        return Response.json({ error: errorMessage }, { status: 500 });
     }
 }
