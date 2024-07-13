@@ -19,7 +19,7 @@ export function formatDate(dateOrString: Date | string): string {
     day: "numeric",
     year: "numeric",
   };
-  return date.toLocaleDateString("en-US", options);
+  return date?.toLocaleDateString("en-US", options);
 }
 
 /**
