@@ -1,17 +1,13 @@
 import { AvatarIcon } from "@/components/avatar";
 import { siteConfig } from "@/config/site";
-import { Blog, SiteInfo } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
-import { getDate } from "@/utils/helpers";
 import Link from "next/link";
 import React from "react";
 
 export default function TitleSection({
   blog,
-  site_info,
 }: {
-  blog: Blog | any;
-  site_info: SiteInfo | any;
+  blog: typeof import("content-collections").allBlogPosts[number] ;
 }) {
 
   return (
@@ -38,8 +34,7 @@ export default function TitleSection({
         </Link>
       </div>
       <div className="flex flex-row flex-wrap gap-4">
-        {blog?.data?.tags
-          .split(",")
+        {blog?.tags
           .slice(0, 4)
           .map((tag: string, i) => (
             <span
@@ -51,17 +46,17 @@ export default function TitleSection({
           ))}
       </div>
       <h1 className="text-left text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-200 sm:text-4xl">
-        {blog?.data?.title}
+        {blog?.title}
       </h1>
       <div className="flex flex-row flex-wrap gap-2 text-left">
         <span>
-          {blog?.data?.updated_at ? "Last updated:" : "Published on:"}
+          {blog?.updatedAt ? "Last updated:" : "Published on:"}
         </span>
         <dl>
           <dt className="sr-only">Date</dt>
           <dd className="font-medium text-slate-700 dark:text-slate-700">
-            <time dateTime={blog?.data?.updated_at ?? blog?.data?.published_at}>
-              {formatDate(blog?.data?.updated_at ?? blog?.data?.published_at)}
+            <time dateTime={blog?.updatedAt ?? blog?.publishedAt}>
+              {formatDate(blog?.updatedAt ?? blog?.publishedAt)}
             </time>
           </dd>
         </dl>

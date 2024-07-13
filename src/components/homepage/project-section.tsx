@@ -1,8 +1,9 @@
 import { Project } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
+import { allProjects } from "content-collections";
 
-export default function ProjectSection({ projects }) {
+export default function ProjectSection() {
   const featured_content = {
     title: "Featured Projects",
     description: "Some projects that I'm proud of.",
@@ -28,27 +29,27 @@ export default function ProjectSection({ projects }) {
       </div>
 
       <div className="flex flex-col gap-6 sm:ml-2">
-        {projects.slice(0, 3).map((project: Project, idx) => (
+        {allProjects.slice(0, 3).map((project, idx) => (
           <Link
             key={idx}
             href="/projects/[slug]/"
-            as={`/projects/${project.slug}/`}
+            as={`/projects/${project._meta.path}/`}
             className="flex flex-col justify-between sm:flex-row"
           >
             <div className="flex max-w-2xl flex-col space-y-1 py-2 text-gray-600">
               <h2 className="text-xl font-bold hover:text-gray-800">
-                {project?.data?.title}
+                {project?.title}
               </h2>
               <p className="line-clamp-2 max-w-lg text-gray-700">
-                {project?.data?.description}
+                {project?.description}
               </p>
             </div>
             <div className="relative aspect-video h-48 overflow-hidden rounded-lg border transition-all hover:shadow sm:h-24">
               <Image
-                src={project?.data?.image}
+                src={project?.image}
                 placeholder="blur"
-                blurDataURL={project?.data?.image}
-                alt={project?.data?.title}
+                blurDataURL={project?.image}
+                alt={project?.title}
                 width={192}
                 height={108}
                 loading="eager"

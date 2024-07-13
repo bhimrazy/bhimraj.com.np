@@ -1,10 +1,10 @@
-import { getProjects, getSiteInfo } from "@/lib/info";
 import Link from "next/link";
-// import { useSiteUrl } from "@/lib/helper";
+import { allProjects } from "content-collections";
+import { siteConfig } from "@/config/site";
 
 export async function generateStaticParams() {
-  const paths = getProjects().map((project) => ({
-    slug: project.slug,
+  const paths = allProjects.map((project) => ({
+    slug: project._meta.path,
   }));
 
   return paths;
@@ -16,17 +16,8 @@ type Props = {
   };
 };
 export default function ProjectDetail({ params: { slug } }: Props) {
-  const { data: site_info } = getSiteInfo();
-  const project = getProjects().find((project) => project.slug === slug);
-  const meta_data = {
-    title: project?.data?.title + " | Bhimraj Yadav",
-    description: project?.data?.description,
-    image: project?.data?.image,
-    // url: useSiteUrl(),
-    createdAt: project?.data?.published_at,
-  };
-
-  const project_content = project?.content.split("\n").splice(1).join("\n");
+  const project = allProjects.find((project) => project._meta.path === slug);
+  const projectContent = project?.html.split("\n").splice(1).join("\n") || "";
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col space-y-10 px-4 xl:px-0">
       <div className="absolute -top-28 left-0 hidden h-full w-28 -rotate-45 bg-gradient-to-r from-indigo-600/80 via-sky-600/75 to-purple-600/80 blur-[150px] dark:block md:left-1/2  lg:left-3/4"></div>
@@ -55,7 +46,7 @@ export default function ProjectDetail({ params: { slug } }: Props) {
               </Link>
             </div>
             <div className="flex flex-row space-x-2">
-              {project?.data?.tags.split(",").map((tag: string, i) => (
+              {project?.tags.map((tag: string, i) => (
                 <span
                   key={i}
                   className="bg-gray-200 p-2 text-xs font-medium uppercase tracking-wider dark:bg-slate-700 dark:text-slate-200"
@@ -65,14 +56,14 @@ export default function ProjectDetail({ params: { slug } }: Props) {
               ))}
             </div>
             <h1 className="text-left text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-200 sm:text-4xl">
-              {project?.data?.title}
+              {project?.title}
             </h1>
             <div className="flex flex-row space-x-2 text-left">
               <span>
                 by{" "}
                 <Link
                   className="text-blue-600"
-                  href={site_info?.github}
+                  href={siteConfig.links.github}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -83,8 +74,8 @@ export default function ProjectDetail({ params: { slug } }: Props) {
               <dl>
                 <dt className="sr-only">Date</dt>
                 <dd className="text-slate-700 dark:text-slate-400">
-                  <time dateTime={project?.data?.published_at}>
-                    {project?.data?.published_at}
+                  <time dateTime={project?.publishedAt}>
+                    {project?.publishedAt}
                   </time>
                 </dd>
               </dl>
@@ -93,8 +84,8 @@ export default function ProjectDetail({ params: { slug } }: Props) {
 
           <div className="flex w-full flex-col items-center ">
             <div
-              className="prose prose-slate max-w-xs overflow-hidden whitespace-normal break-words dark:prose-invert dark:text-slate-400 sm:max-w-md lg:max-w-2xl"
-              dangerouslySetInnerHTML={{ __html: project_content }}
+              className="prose prose-slate max-w-xs overflow-hidden whitespace-normal break-words dark:prose-invert dark:text-slate-400 sm:max-w-md lg:max-w-4xl"
+              dangerouslySetInnerHTML={{ __html: projectContent }}
             ></div>
           </div>
         </article>

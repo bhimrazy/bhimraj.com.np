@@ -1,12 +1,13 @@
 import { Project } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
+import { allProjects } from "content-collections";
 
-export default function ProjectSection({ projects }) {
+export default function ProjectSection() {
   const projects_content = {
     title: "Projects",
     description: "Some of my recent projects",
-    projects,
+    projects: allProjects,
   };
   return (
     <section className="relative flex flex-col py-10">
@@ -19,17 +20,17 @@ export default function ProjectSection({ projects }) {
         </p>
       </div>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        {projects_content?.projects.map((project: Project, idx) => (
+        {projects_content?.projects.map((project, idx) => (
           <Link
             key={idx}
             href="/projects/[slug]/"
-            as={`/projects/${project.slug}/`}
+            as={`/projects/${project._meta.path}/`}
             className={`${idx === 0 ? "md:col-span-2" : ""}`}
           >
             <article className="bg-gray-50 p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:bg-slate-800">
               <div className="flex flex-col space-y-4">
                 <div className="flex flex-row space-x-2">
-                  {project?.data?.tags.split(",").map((tag: string, i) => (
+                  {project?.tags.map((tag, i) => (
                     <span
                       key={i}
                       className="bg-gray-200 p-2 text-xs font-medium uppercase tracking-wider dark:bg-slate-700 dark:text-slate-200"
@@ -47,22 +48,22 @@ export default function ProjectSection({ projects }) {
                     <Image
                       loading="eager"
                       className="h-full w-full object-cover"
-                      src={project?.data?.image}
-                      blurDataURL={project?.data?.image}
+                      src={project?.image}
+                      blurDataURL={project?.image}
                       height={1080}
                       width={1920}
-                      alt={project?.data?.title}
+                      alt={project?.title}
                     />
                   </div>
                   <div className="flex flex-col space-y-1">
                     <h3 className="prose mb-4 text-xl font-bold tracking-tight text-slate-900 dark:text-slate-200">
-                      {project?.data?.title}
+                      {project?.title}
                     </h3>
                     <dl>
                       <dt className="sr-only">Date</dt>
                       <dd className="text-sm font-semibold leading-6 text-gray-700 dark:text-slate-400">
-                        <time dateTime={project?.data?.published_at}>
-                          {project?.data?.published_at}
+                        <time dateTime={project?.publishedAt}>
+                          {project?.publishedAt}
                         </time>
                       </dd>
                     </dl>
@@ -71,12 +72,12 @@ export default function ProjectSection({ projects }) {
                         idx === 0 ? "line-clamp-4" : "line-clamp-2"
                       } mb-6 text-gray-600 dark:text-slate-400`}
                     >
-                      {project?.data?.description}
+                      {project?.description}
                     </p>
                     <div className="flex justify-end pt-2">
                       <Link
                         href="/projects/[slug]/"
-                        as={`/projects/${project.slug}/`}
+                        as={`/projects/${project._meta.path}/`}
                         className="group inline-flex h-9 items-center whitespace-nowrap rounded-full bg-slate-100 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white dark:focus:ring-slate-500"
                       >
                         Read more
