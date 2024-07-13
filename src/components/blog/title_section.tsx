@@ -1,5 +1,7 @@
+import { AvatarIcon } from "@/components/avatar";
 import { siteConfig } from "@/config/site";
 import { Blog, SiteInfo } from "@/lib/types";
+import { formatDate } from "@/lib/utils";
 import { getDate } from "@/utils/helpers";
 import Link from "next/link";
 import React from "react";
@@ -13,7 +15,7 @@ export default function TitleSection({
 }) {
 
   return (
-    <div className="space-y-2 py-10 text-center sm:max-w-md lg:max-w-3xl">
+    <div className="space-y-2 py-10 text-center">
       <div className="flex justify-start">
         <Link
           href="/blog"
@@ -51,7 +53,7 @@ export default function TitleSection({
       <h1 className="text-left text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-200 sm:text-4xl">
         {blog?.data?.title}
       </h1>
-      <div className="flex flex-row space-x-2 text-left">
+      <div className="flex flex-row flex-wrap gap-2 text-left">
         <span>
           {blog?.data?.updated_at ? "Last updated:" : "Published on:"}
         </span>
@@ -59,19 +61,20 @@ export default function TitleSection({
           <dt className="sr-only">Date</dt>
           <dd className="font-medium text-slate-700 dark:text-slate-700">
             <time dateTime={blog?.data?.updated_at ?? blog?.data?.published_at}>
-              {getDate(blog?.data?.updated_at ?? blog?.data?.published_at)}
+              {formatDate(blog?.data?.updated_at ?? blog?.data?.published_at)}
             </time>
           </dd>
         </dl>
-        <span>
-          by{" "}
+        <span className="inline-flex items-center space-x-2">
+          <span>by</span>
           <Link
-            className="font-medium text-blue-600"
+            className="font-medium text-blue-600 inline-flex space-x-1 items-center"
             href={siteConfig.links.linkedin}
             target="_blank"
             rel="noreferrer"
           >
-            @bhimrazy
+            <AvatarIcon />
+            <span>{siteConfig.author.name}</span>
           </Link>
         </span>
       </div>
