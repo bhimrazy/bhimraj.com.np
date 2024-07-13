@@ -31,7 +31,7 @@ export function formatDate(dateOrString: Date | string): string {
  */
 export function getReadingTime(
   text: string,
-  wordsPerMinute: number = 300,
+  wordsPerMinute = 300,
 ): string {
   const words = text
     .replace(/<[^>]+>/g, "")
@@ -48,7 +48,7 @@ export function getReadingTime(
  * @param maxLength The maximum length of the slug. Defaults to 50 if not provided.
  * @returns The slug generated from the input string with the specified maximum length.
  */
-export function slugify(text: string, maxLength: number = 50): string {
+export function slugify(text: string, maxLength = 50): string {
   let slug = text
     .toLowerCase() // Convert to lowercase
     .trim() // Trim whitespace
