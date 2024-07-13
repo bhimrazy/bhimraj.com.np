@@ -1,10 +1,10 @@
 ---
 title: "How to Build and Deploy an Image Recognition App using FastAPI and PyTorch ?"
-published_at: "2021-11-24"
 description: "Learn how to create an image recognition application based on the FastAPI framework and PyTorch which uses pretrained DenseNet 121 model to detect the Image."
-tags: "Deep Learning,PyTorch,FastAPI"
+publishedAt: "2021-11-24"
+tags: [Deep Learning, PyTorch, FastAPI]
 image: "/projects/how-to-build-and-deploy-an-image-recognition-app-using-fastapi-and-pytorch.png"
-link: "https://github.com/bhimrazy/Image-Recognition-App-using-FastAPI-and-PyTorch"
+githubLink: "https://github.com/bhimrazy/Image-Recognition-App-using-FastAPI-and-PyTorch"
 ---
 
 # How to Build and Deploy an Image Recognition App using FastAPI and PyTorch ?
@@ -17,7 +17,7 @@ This is an image recognition application based on the FastAPI framework and PyTo
   <b>Image Recognition App using FastAPI and PyTorch</b><br/>
 In this project, I have tried to build and deploy an Image Recognition App using FastAPI and
 PyTorch.
-</P>
+</p>
 
 ## Tutorial <img src="https://user-images.githubusercontent.com/46085301/143214249-d6244995-1fdb-4c3f-b721-e65403a89607.gif" alt="Youtube gif" height="30"/>
 

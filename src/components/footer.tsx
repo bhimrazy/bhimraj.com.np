@@ -123,7 +123,7 @@ export default function Footer() {
       },
     ],
   };
-  const copyright = "© Bhimraj Yadav 2022 . All rights reserved.";
+  const copyright = "© Bhimraj Yadav 2024 . All rights reserved.";
   const policy = "Privacy Policy";
   return (
     <footer className="flex border-t dark:border-gray-800">
@@ -132,10 +132,8 @@ export default function Footer() {
           <nav>
             <ul className="flex justify-center space-x-4 text-sm font-medium text-gray-700 md:text-base">
               {footer_navs.map((item, idx) => (
-                <Link key={idx} href={item?.link}>
-                  <a>
-                    <li>{item?.title}</li>
-                  </a>
+                <Link key={idx} href={item?.link} passHref>
+                  <li>{item?.title}</li>
                 </Link>
               ))}
             </ul>
@@ -151,10 +149,8 @@ export default function Footer() {
                 key={idx}
                 className="transition-all hover:opacity-95 hover:drop-shadow"
               >
-                <Link href={item?.url}>
-                  <a target="_blank" rel="noreferrer">
-                    {item?.icon}
-                  </a>
+                <Link href={item?.url} target="_blank" rel="noreferrer">
+                  {item?.icon}
                 </Link>
               </li>
             ))}

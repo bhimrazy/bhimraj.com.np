@@ -10,9 +10,9 @@ export default function Home() {
         <meta name="application-name" content="Bhimraj Yadav" />
       </Head>
       <main className="relative w-full max-w-lg">
-        <div className="absolute top-4 left-4 h-72 w-72 animate-blob rounded-full bg-purple-300 opacity-50 mix-blend-multiply blur-xl filter"></div>
-        <div className="animation-delay-2000 absolute top-0 right-4 h-72 w-72 animate-blob rounded-full bg-yellow-300 opacity-50 mix-blend-multiply blur-xl filter"></div>
-        <div className="animation-delay-4000 absolute top-20  left-28 h-72 w-72 animate-blob rounded-full bg-pink-300 opacity-50 mix-blend-multiply blur-xl filter"></div>
+        <div className="absolute left-4 top-4 h-72 w-72 animate-blob rounded-full bg-purple-300 opacity-50 mix-blend-multiply blur-xl filter"></div>
+        <div className="animation-delay-2000 absolute right-4 top-0 h-72 w-72 animate-blob rounded-full bg-yellow-300 opacity-50 mix-blend-multiply blur-xl filter"></div>
+        <div className="animation-delay-4000 absolute left-28  top-20 h-72 w-72 animate-blob rounded-full bg-pink-300 opacity-50 mix-blend-multiply blur-xl filter"></div>
         <div className="flex h-full w-full flex-col items-center space-y-2 rounded-2xl bg-gray-100/20 p-8 backdrop-blur-md">
           <Image
             src={profilePic}
@@ -23,7 +23,7 @@ export default function Home() {
             loading="eager"
             className="rounded-full object-center drop-shadow-sm saturate-100 filter"
           />
-          <h1 className="pt-4 pb-2 text-5xl font-semibold text-gray-800">
+          <h1 className="pb-2 pt-4 text-5xl font-semibold text-gray-800">
             Bhimraj Yadav
           </h1>
           <p className="text-lg font-light text-gray-700">

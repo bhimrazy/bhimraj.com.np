@@ -1,17 +1,17 @@
 ---
 title: "Covidologist : A Disease Detection Web App to assist radiologists to detect the presence of COVID-19."
-published_at: "2022-08-06"
+publishedAt: "2022-08-06"
 description: "The main purpose of this project is to automate the process of COVID-19 diagnosis and help radiologists, doctors and patients in their process by saving their precious time. So, by using a trained model on COVID chest-X-ray images, It assists medical staff and radiologists to detect the presence/sign of COVID in the chest-x-ray images reducing the workloads and speeding up the diagnosis."
-tags: "Deep Learning,PyTorch,FastAPI"
+tags: [Deep Learning, PyTorch, FastAPI]
 image: "/projects/covidologist-detect-presence-of-covid-19.png"
-link: "https://github.com/bhimrazy/covidologist"
+githubLink: "https://github.com/bhimrazy/covidologist"
 ---
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/46085301/183135654-42cb6a4b-bf27-4e10-b2de-e6be196b2b96.png" height="150"/>
   <br/>
 A Disease Detection Web App to assist radiologists to detect the presence of COVID-19.
-</P>
+</p>
 
 ## Description
 
@@ -71,7 +71,7 @@ Run my Project
 
 <p align="center">
 Figure : Deployment Architeture of Covidologist
-</P>
+</p>
 
 ## Sample images
 
@@ -82,9 +82,9 @@ Figure : Deployment Architeture of Covidologist
      <td>COVID Negative</td>
   </tr>
   <tr>
-    <td><img src="https://user-images.githubusercontent.com/46085301/183252884-12c123bb-4611-4fd4-9a98-6d69389c5650.jpg" width=300 height=300></td>
-    <td><img src="https://user-images.githubusercontent.com/46085301/183252895-b60d4106-2f55-46cd-93fd-673bae34b9f6.jpg" width=300 height=300></td>
-    <td><img src="https://user-images.githubusercontent.com/46085301/183252943-c429de0f-bf21-4551-bbd8-ea7afbb1c76c.png" width=300 height=300></td>
+    <td><img src="https://user-images.githubusercontent.com/46085301/183252884-12c123bb-4611-4fd4-9a98-6d69389c5650.jpg" width="300" height="300"></td>
+    <td><img src="https://user-images.githubusercontent.com/46085301/183252895-b60d4106-2f55-46cd-93fd-673bae34b9f6.jpg" width="300" height="300"></td>
+    <td><img src="https://user-images.githubusercontent.com/46085301/183252943-c429de0f-bf21-4551-bbd8-ea7afbb1c76c.png" width="300" height="300"></td>
   </tr>
  </table>
 
@@ -94,9 +94,9 @@ Figure : Deployment Architeture of Covidologist
 
 ## 📚 RESOURCES
 
-◆ PyTorch: <https://pytorch.org> <br/>
-◆ FastAPI: <https://fastapi.tiangolo.com> <br/>
-◆ COVIDx CXR-2 Dataset: <https://www.kaggle.com/datasets/andyczhao/covidx-cxr2>
+◆ PyTorch: [https://pytorch.org](https://pytorch.org) <br/>
+◆ FastAPI: [https://fastapi.tiangolo.com](https://fastapi.tiangolo.com) <br/>
+◆ COVIDx CXR-2 Dataset: [https://www.kaggle.com/datasets/andyczhao/covidx-cxr2](https://www.kaggle.com/datasets/andyczhao/covidx-cxr2)
 
 ## Author
 

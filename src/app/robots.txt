@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+
+Sitemap: https://bhimraj.com.np/sitemap.xml
