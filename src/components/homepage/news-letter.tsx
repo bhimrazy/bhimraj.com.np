@@ -13,7 +13,7 @@ export default function NewsLetter() {
   const [form, setForm] = useState<FormState>({ state: Form.Initial });
   const [email, setEmail] = useState("");
 
-  const subscribe = async (e) => {
+  const subscribe = async (e: any) => {
     e.preventDefault();
     setForm({ state: Form.Loading });
     fetch(`/api/subscribe`, {

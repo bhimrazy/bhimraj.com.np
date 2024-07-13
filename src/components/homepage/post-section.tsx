@@ -66,7 +66,7 @@ export default function PostSection() {
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {post_content?.posts.map((post, idx) => (
-          <Link href={post?.link} key={idx} target="_blank">
+          <Link href={post?.link} key={idx} target="_blank" passHref>
             <article className="shadow-xs flex flex-col overflow-hidden rounded-lg border transition-all hover:shadow-lg dark:border-gray-900">
               <div className="overflow-hidden rounded-lg">
                 <Image

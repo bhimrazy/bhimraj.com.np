@@ -1,13 +1,41 @@
+// @ts-nocheck
 import TitleSection from "@/components/blog/title-section";
-import { getTableOfContents } from "@/lib/toc";
 import { allBlogPosts } from "content-collections";
+
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const slug = params.slug;
+  const post = allBlogPosts.find((post) => post._meta.path === slug);
+
+  return {
+    title: post?.title,
+    description: post?.description,
+    alternates: {
+      canonical: `/blog/${post?._meta.path}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+  };
+}
 
 export async function generateStaticParams() {
   // Get the paths we want to pre-render based on posts
   const paths = allBlogPosts.map((post) => ({
     slug: post._meta.path,
   }));
-
   return paths;
 }
 

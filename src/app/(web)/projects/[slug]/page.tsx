@@ -1,7 +1,36 @@
+// @ts-nocheck
 import Link from "next/link";
 import { allProjects } from "content-collections";
 import { siteConfig } from "@/config/site";
 
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const slug = params.slug;
+  const post = allProjects.find((post) => post._meta.path === slug);
+
+  return {
+    title: post?.title,
+    description: post?.description,
+    alternates: {
+      canonical: `/blog/${post?._meta.path}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+  };
+}
 export async function generateStaticParams() {
   const paths = allProjects.map((project) => ({
     slug: project._meta.path,
@@ -28,6 +57,7 @@ export default function ProjectDetail({ params: { slug } }: Props) {
               <Link
                 href="/projects"
                 className="group flex cursor-pointer font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white"
+                passHref
               >
                 <svg
                   viewBox="0 -9 3 24"

@@ -132,7 +132,7 @@ export default function Footer() {
           <nav>
             <ul className="flex justify-center space-x-4 text-sm font-medium text-gray-700 md:text-base">
               {footer_navs.map((item, idx) => (
-                <Link key={idx} href={item?.link}>
+                <Link key={idx} href={item?.link} passHref>
                   <li>{item?.title}</li>
                 </Link>
               ))}

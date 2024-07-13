@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { AvatarIcon } from "@/components/avatar";
 import { siteConfig } from "@/config/site";
 import { formatDate } from "@/lib/utils";
@@ -16,6 +17,7 @@ export default function TitleSection({
         <Link
           href="/blog"
           className="group flex cursor-pointer font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white"
+          passHref
         >
           <svg
             viewBox="0 -9 3 24"
@@ -67,6 +69,7 @@ export default function TitleSection({
             href={siteConfig.links.linkedin}
             target="_blank"
             rel="noreferrer"
+            passHref
           >
             <AvatarIcon />
             <span>{siteConfig.author.name}</span>

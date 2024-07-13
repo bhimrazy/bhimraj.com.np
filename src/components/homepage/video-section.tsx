@@ -36,8 +36,8 @@ export default function VideoSection({ videos }: { videos: any }) {
         <p className="text-gray-500">{video_content?.description}</p>
       </div>
       <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:ml-2">
-        {videos.slice(0, 4).map((video, idx) => (
-          <Link href={video?.video_url} key={idx} target="_blank">
+        {videos.slice(0, 4).map((video: any, idx: number) => (
+          <Link href={video?.video_url} key={idx} target="_blank" passHref>
             <div className="relative">
               <Image
                 className="rounded-lg transition-all hover:opacity-95 hover:shadow-md"

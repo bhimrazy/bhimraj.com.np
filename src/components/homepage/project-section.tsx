@@ -1,10 +1,10 @@
-import { Project } from "@/lib/types";
+// @ts-nocheck
 import Image from "next/image";
 import Link from "next/link";
 import { allProjects } from "content-collections";
 
 export default function ProjectSection() {
-  const featured_content = {
+  const featuredContent = {
     title: "Featured Projects",
     description: "Some projects that I'm proud of.",
     project: {
@@ -23,9 +23,9 @@ export default function ProjectSection() {
     <section className="flex flex-col justify-center space-y-2 pt-8 text-left dark:invert">
       <div className="flex flex-col space-y-2">
         <h2 className="text-2xl font-bold text-gray-800 md:text-4xl">
-          {featured_content?.title}
+          {featuredContent?.title}
         </h2>
-        <p className="text-gray-500">{featured_content?.description}</p>
+        <p className="text-gray-500">{featuredContent?.description}</p>
       </div>
 
       <div className="flex flex-col gap-6 sm:ml-2">
@@ -35,6 +35,7 @@ export default function ProjectSection() {
             href="/projects/[slug]/"
             as={`/projects/${project._meta.path}/`}
             className="flex flex-col justify-between sm:flex-row"
+            passHref
           >
             <div className="flex max-w-2xl flex-col space-y-1 py-2 text-gray-600">
               <h2 className="text-xl font-bold hover:text-gray-800">

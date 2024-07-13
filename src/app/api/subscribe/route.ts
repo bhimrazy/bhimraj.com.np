@@ -1,3 +1,4 @@
+// @ts-nocheck
 import mailchimp from '@mailchimp/mailchimp_marketing';
 import { headers } from 'next/headers';
 

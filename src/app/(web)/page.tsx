@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default async function Home() {
   const res = await fetch(process.env.YOUTUBE_API_URL!);
   const youtubeData = await res.json();
-  const youtubeVideos = youtubeData?.items.map((video) => {
+  const youtubeVideos = youtubeData?.items.map((video: any) => {
     return {
       title: video?.snippet?.title,
       description: video?.snippet?.description,

@@ -6,8 +6,8 @@ import { siteConfig } from "@/config/site";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 
-export default async function Header() {
-  const nav_items = [
+export default function Header() {
+  const navIitems = [
     { title: "Home", link: "/" },
     { title: "Blog", link: "/blog" },
     { title: "Projects", link: "/projects" },
@@ -19,6 +19,7 @@ export default async function Header() {
         href="https://consciousplanet.org/"
         rel="noreferrer"
         target="_blank"
+        passHref
       >
         <p className="z-[1] cursor-pointer bg-white/90 py-2 text-center text-sm font-normal tracking-widest text-lime-700 backdrop-blur transition hover:text-lime-800 dark:bg-slate-900/75 dark:text-white">
           {siteConfig.tagline}
@@ -26,12 +27,12 @@ export default async function Header() {
       </Link>
       <header className="sticky top-0 z-10 flex w-full flex-col place-content-center border-b border-t bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/75">
         <nav className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-5 xl:px-0">
-          <Link href="/">
+          <Link href="/" passHref>
             <Logo />
           </Link>
           <ul className="hidden space-x-2 font-medium text-slate-600 dark:text-slate-100 sm:flex sm:space-x-4 md:space-x-5 lg:space-x-6">
-            {nav_items.map((item, idx) => (
-              <Link href={item?.link} key={idx}>
+            {navIitems.map((item, idx) => (
+              <Link href={item?.link} key={idx} passHref>
                 <NavItem link={item.link} title={item.title} />
               </Link>
             ))}
