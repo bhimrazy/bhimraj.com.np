@@ -2,9 +2,6 @@
   <img src="https://user-images.githubusercontent.com/46085301/145169259-0ad36299-c8ae-460b-ac66-5cb7940f3c51.png" height="75"/>
   <br/>
   <b>BHIMRAJ YADAV</b><br/>
-<p align="center">✨💡 Software Engineer | 🌍 Opensource Contributor |
-🌐 Research Enthusiast in Computer Vision & Generative AI.✨</p>
-</p>
 
 ## Preview
 
