@@ -1,11 +1,8 @@
-
 import TitleSection from "@/components/blog/title-section";
 import { allBlogPosts } from "content-collections";
 import { Metadata } from "next";
 
-export async function generateMetadata({
-  params,
-}: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const slug = params.slug;
   const post = allBlogPosts.find((post) => post._meta.path === slug);
 

@@ -1,4 +1,3 @@
-
 import { formatDate, getReadingTime } from "@/lib/utils";
 import { allBlogPosts } from "content-collections";
 import Link from "next/link";
@@ -45,7 +44,11 @@ export default function BlogSection() {
                   </p>
                 </div>
                 <div className="md:col-span-5">
-                  <Link href="/blog/[slug]/" as={`/blog/${blog._meta.path}/`} passHref>
+                  <Link
+                    href="/blog/[slug]/"
+                    as={`/blog/${blog._meta.path}/`}
+                    passHref
+                  >
                     <h3 className="prose mb-4 text-xl font-bold tracking-tight text-slate-900 dark:text-slate-200">
                       {blog?.title}
                     </h3>

@@ -1,12 +1,9 @@
-
 import { siteConfig } from "@/config/site";
 import { allProjects } from "content-collections";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export async function generateMetadata({
-  params,
-}: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const slug = params.slug;
   const post = allProjects.find((post) => post._meta.path === slug);
 

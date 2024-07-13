@@ -1,8 +1,8 @@
 import Image from "next/image";
 
 export default function Logo() {
-  const LOGO_URL = "/logo.png"
-  const WHITE_LOGO_URL = "/logo-white.png"
+  const LOGO_URL = "/logo.png";
+  const WHITE_LOGO_URL = "/logo-white.png";
   return (
     <>
       <div className="relative h-8 w-32 transition dark:hidden">

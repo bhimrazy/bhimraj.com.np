@@ -1,17 +1,15 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import { siteConfig } from "@/config/site";
-import { GoogleAnalytics } from '@next/third-parties/google';
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata, Viewport } from "next";
-import { Inter } from 'next/font/google';
+import { Inter } from "next/font/google";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: siteConfig.name,
   metadataBase: new URL(siteConfig.url),
   description: siteConfig.description,
-  keywords: [
-    "ML/DL Engineer", "Django Developer", "NextJs Developer"
-  ],
+  keywords: ["ML/DL Engineer", "Django Developer", "NextJs Developer"],
   authors: [
     {
       name: "Bhimraj Yadav",
@@ -48,24 +46,26 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   manifest: `${siteConfig.url}/site.webmanifest`,
-}
+};
 
 const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-})
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
-}
+};
 
-export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
-      <body className="flex flex-col bg-white font-display antialiased dark:bg-slate-900 dark:text-white">
+      <body className="font-display flex flex-col bg-white antialiased dark:bg-slate-900 dark:text-white">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -77,5 +77,5 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
       </body>
       <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS!} />
     </html>
-  )
+  );
 }

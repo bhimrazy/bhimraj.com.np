@@ -4,11 +4,12 @@ import BlogSection from "src/components/blog/blog-section";
 
 export const metadata: Metadata = {
   title: "Blogs | " + siteConfig.name,
-  description: "This is the blogs page where you can find some of my recent published articles. ",
+  description:
+    "This is the blogs page where you can find some of my recent published articles. ",
   alternates: {
     canonical: "/blog",
-  }
-}
+  },
+};
 
 export default function Blog() {
   return (

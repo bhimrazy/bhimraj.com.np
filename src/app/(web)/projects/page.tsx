@@ -4,11 +4,12 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Projects | " + siteConfig.name,
-  description: "This is the projects page where you can find some of my recent projects with all the details.",
+  description:
+    "This is the projects page where you can find some of my recent projects with all the details.",
   alternates: {
     canonical: "/projects",
-  }
-}
+  },
+};
 export default function Projects() {
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col space-y-10 px-4 xl:px-0">

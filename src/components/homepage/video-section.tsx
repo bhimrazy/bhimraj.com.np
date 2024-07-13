@@ -54,7 +54,7 @@ export default async function VideoSection() {
   };
 
   const res = await fetch(process.env.YOUTUBE_API_URL!);
-  const youtubeData:YoutubeData = await res.json();
+  const youtubeData: YoutubeData = await res.json();
   const videos: Video[] = youtubeData?.items.map((video) => {
     return {
       title: video?.snippet?.title,
