@@ -1,6 +1,7 @@
-// @ts-nocheck
+
 import TitleSection from "@/components/blog/title-section";
 import { allBlogPosts } from "content-collections";
+import { Metadata } from "next";
 
 export async function generateMetadata({
   params,

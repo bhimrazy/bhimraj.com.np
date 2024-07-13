@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { formatDate, getReadingTime } from "@/lib/utils";
 import { allBlogPosts } from "content-collections";
 import Link from "next/link";

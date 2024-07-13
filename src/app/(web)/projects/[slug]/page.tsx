@@ -1,7 +1,8 @@
-// @ts-nocheck
-import Link from "next/link";
-import { allProjects } from "content-collections";
+
 import { siteConfig } from "@/config/site";
+import { allProjects } from "content-collections";
+import { Metadata } from "next";
+import Link from "next/link";
 
 export async function generateMetadata({
   params,

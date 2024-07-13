@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { AvatarIcon } from "@/components/avatar";
 import { siteConfig } from "@/config/site";
 import { formatDate } from "@/lib/utils";

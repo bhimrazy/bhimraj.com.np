@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { siteConfig } from "@/config/site";
 import { allBlogPosts, allProjects } from "content-collections";
 

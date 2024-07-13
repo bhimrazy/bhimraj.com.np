@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import mailchimp from '@mailchimp/mailchimp_marketing';
 import { headers } from 'next/headers';
 
@@ -24,14 +24,14 @@ export async function POST(req: Request) {
     }
 
     try {
-        await mailchimp.lists.addListMember(process.env.MAILCHIMP_AUDIENCE_ID, {
+        await mailchimp.lists.addListMember(process.env.MAILCHIMP_AUDIENCE_ID!, {
             email_address: email,
             status: 'subscribed'
         });
 
         return Response.json({ message: 'Success' });
 
-    } catch (error) {
+    } catch (error: any) {
         return Response.json({ error: error.message || error.toString() }, { status: 500 });
     }
 }

@@ -40,6 +40,7 @@
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.4.1",
     "@tailwindcss/typography": "^0.5.13",
+    "@types/mailchimp__mailchimp_marketing": "^3.0.20",
     "@types/node": "^20.14.10",
     "@types/react": "^18.3.3",
     "autoprefixer": "^10.4.19",
