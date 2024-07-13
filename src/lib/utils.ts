@@ -15,7 +15,7 @@ export function formatDate(dateOrString: Date | string): string {
   const date =
     typeof dateOrString === "string" ? new Date(dateOrString) : dateOrString;
   const options: Intl.DateTimeFormatOptions = {
-    month: "short",
+    month: "long",
     day: "numeric",
     year: "numeric",
   };

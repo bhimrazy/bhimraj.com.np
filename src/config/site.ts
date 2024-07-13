@@ -18,7 +18,12 @@
 
 export const siteConfig = {
     name: "Bhimraj Yadav – ML/DL Engineer, Python Developer, Creator.",
-    author: "Bhimraj Yadav",
+    author: {
+        name: "Bhimraj Yadav",
+        designation: "Software Engineer",
+        avatar: "/bhimraj-yadav.jpg",
+        summary: "ML/DL Engineer, Python Developer, Creator.",
+    },
     url: "https://bhimraj.com.np",
     ogImage: "https://bhimraj.com.np/opengraph-image.jpg",
     description:
