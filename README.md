@@ -34,8 +34,8 @@ Execute following commands.
 ```bash
 $ git clone https://github.com/bhimrazy/bhimraj.com.np.git
 $ cd bhimraj.com.np
-$ npm i
-$ npm run dev
+$ bun install
+$ bun dev
 ```
 
 Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
