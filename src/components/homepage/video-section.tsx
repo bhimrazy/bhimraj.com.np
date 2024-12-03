@@ -55,7 +55,7 @@ export default async function VideoSection() {
 
   const res = await fetch(process.env.YOUTUBE_API_URL!);
   const youtubeData: YoutubeData = await res.json();
-  const videos: Video[] = youtubeData?.items.map((video) => {
+  const videos: Video[] = youtubeData?.items?.map((video) => {
     return {
       title: video?.snippet?.title,
       description: video?.snippet?.description,
@@ -76,7 +76,7 @@ export default async function VideoSection() {
         <p className="text-gray-500">{video_content?.description}</p>
       </div>
       <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:ml-2">
-        {videos.slice(0, 4).map((video, idx: number) => (
+        {videos?.slice(0, 4).map((video, idx: number) => (
           <Link href={video?.video_url} key={idx} target="_blank" passHref>
             <div className="relative">
               <Image

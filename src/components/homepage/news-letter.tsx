@@ -27,11 +27,10 @@ export default function NewsLetter() {
       .then(async (res) => {
         const data = await res.json();
         if (res.ok) {
-          // console.log("Success:", data);
           setEmail("");
           setForm({
             state: Form.Success,
-            message: `Hooray! You're now on the list.`,
+            message: data?.message,
           });
         } else {
           // console.error(data?.error);
@@ -81,7 +80,7 @@ export default function NewsLetter() {
             {newsletter_content?.button}
           </button>
         </form>
-        <small className="text-green-600">{form.message}</small>
+        <small className={form.state === Form.Error ? " text-red-600" : "text-green-600"}>{form.message}</small>
       </div>
     </section>
   );
