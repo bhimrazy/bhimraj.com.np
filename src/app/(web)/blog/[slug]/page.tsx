@@ -1,4 +1,5 @@
 import TitleSection from "@/components/blog/title-section";
+import { siteConfig } from "@/config/site";
 import { allBlogPosts } from "content-collections";
 import { Metadata } from "next";
 
@@ -6,11 +7,43 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const slug = params.slug;
   const post = allBlogPosts.find((post) => post._meta.path === slug);
 
+  const title = post?.title;
+  const description = post?.description;
+  const blogURL = `/blog/${post?._meta.path}`;
+  const images = [
+    {
+      url: post?.image!,
+      width: 1920,
+      height: 1080,
+      alt: title,
+      type: "image/png",
+    }
+  ]
   return {
-    title: post?.title,
-    description: post?.description,
+    title: title,
+    description: description,
     alternates: {
-      canonical: `/blog/${post?._meta.path}`,
+      canonical: blogURL,
+    },
+    openGraph: {
+      type: "article",
+      locale: "en_US",
+      url: blogURL,
+      title: title,
+      authors: siteConfig.author.name,
+      description: description,
+      siteName: siteConfig.name,
+      images: images,
+      publishedTime: post?.publishedAt,
+      modifiedTime: post?.updatedAt,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: title,
+      description: description,
+      images: images,
+      creator: siteConfig.author.handle,
+      site: siteConfig.author.handle,
     },
     robots: {
       index: true,
