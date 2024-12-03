@@ -25,6 +25,15 @@ const nextConfig = {
       },
     ],
   },
+  redirects: async () => {
+    return [
+      {
+        source: "/blogs",
+        destination: "/blog",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = withContentCollections(nextConfig);

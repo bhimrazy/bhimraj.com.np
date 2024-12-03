@@ -1,15 +1,33 @@
+import { blog } from "@/config/blog";
 import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import BlogSection from "src/components/blog/blog-section";
 
+
 export const metadata: Metadata = {
-  title: "Blogs | " + siteConfig.name,
-  description:
-    "This is the blogs page where you can find some of my recent published articles. ",
+  title: blog.title,
+  description: blog.description,
   alternates: {
-    canonical: "/blog",
+    canonical: blog.url,
+  },
+  openGraph: {
+    type: "website",
+    url: blog.url,
+    title: blog.title,
+    description: blog.description,
+    siteName: siteConfig.name,
+    images: blog.images,
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: siteConfig.author.handle,
+    creator: siteConfig.author.handle,
+    title: blog.title,
+    description: blog.description,
+    images: blog.images,
   },
 };
+
 
 export default function Blog() {
   return (
