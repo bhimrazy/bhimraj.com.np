@@ -1,6 +1,7 @@
 export const siteConfig = {
   name: "Bhimraj Yadav – ML/DL Engineer, Python Developer, Creator.",
   author: {
+    handle: "@bhimrazy",
     name: "Bhimraj Yadav",
     designation: "Software Engineer",
     avatar: "/bhimraj-yadav.jpg",
