@@ -22,7 +22,7 @@
       "@/*": ["./src/*"],
       "content-collections": ["./.content-collections/generated"]
     },
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
