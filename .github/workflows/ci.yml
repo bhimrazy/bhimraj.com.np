@@ -21,7 +21,9 @@ jobs:
             --no-progress 
             --timeout 20
             --max-retries 2
+            --exclude "localhost"
             --exclude "linkedin.com"
+            --exclude "instagram.com"
             "**/*.md" 
             "**/*.mdx"
           fail: true
