@@ -44,7 +44,7 @@ export default function ProjectSection() {
                 {project?.description}
               </p>
             </div>
-            <div className="relative aspect-video h-48 overflow-hidden rounded-lg border transition-all hover:shadow-sm sm:h-24">
+            <div className="relative aspect-video h-48 overflow-hidden rounded-lg border transition-all hover:shadow-xs sm:h-24">
               <Image
                 src={project?.image}
                 placeholder="blur"

@@ -137,7 +137,7 @@ export default function PostSection() {
         ))}
       </div>
       <div>
-        <button className="rounded-lg border bg-white px-8 py-2 text-base font-semibold shadow-xs transition-all hover:shadow-sm dark:border-gray-900 dark:bg-gray-900">
+        <button className="rounded-lg border bg-white px-8 py-2 text-base font-semibold shadow-2xs transition-all hover:shadow-xs dark:border-gray-900 dark:bg-gray-900">
           {post_content?.see_more}
         </button>
       </div>

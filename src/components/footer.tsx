@@ -147,7 +147,7 @@ export default function Footer() {
             {social_contact?.social_media.map((item, idx) => (
               <li
                 key={idx}
-                className="transition-all hover:opacity-95 hover:drop-shadow-sm"
+                className="transition-all hover:opacity-95 hover:drop-shadow-xs"
               >
                 <Link href={item?.url} target="_blank" rel="noreferrer">
                   {item?.icon}

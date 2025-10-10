@@ -65,13 +65,13 @@ export default function NewsLetter() {
         </div>
         <form
           onSubmit={subscribe}
-          className="relative mx-auto max-w-2xl rounded-sm border sm:w-96 dark:border-none"
+          className="relative mx-auto max-w-2xl rounded-xs border sm:w-96 dark:border-none"
         >
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             aria-label="Email for newsletter"
-            className="w-full rounded-sm px-6 py-2 text-gray-700 focus:ring-1 focus:ring-gray-600 focus:ring-offset-2 focus:outline-hidden dark:bg-gray-900 dark:focus:ring-gray-800 dark:focus:ring-offset-gray-800"
+            className="w-full rounded-xs px-6 py-2 text-gray-700 focus:ring-1 focus:ring-gray-600 focus:ring-offset-2 focus:outline-hidden dark:bg-gray-900 dark:focus:ring-gray-800 dark:focus:ring-offset-gray-800"
             type="email"
             autoComplete="email"
             placeholder={newsletter_content?.input_placeholder}
@@ -80,7 +80,7 @@ export default function NewsLetter() {
 
           <button
             type="submit"
-            className="absolute inset-y-0 right-0 m-1 rounded-sm bg-gray-200 px-3 text-sm font-semibold text-gray-600 hover:bg-gray-200/80 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+            className="absolute inset-y-0 right-0 m-1 rounded-xs bg-gray-200 px-3 text-sm font-semibold text-gray-600 hover:bg-gray-200/80 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
           >
             {newsletter_content?.button}
           </button>

@@ -41,7 +41,7 @@ export default function HeroSection() {
         {hero_content.buttons.map(
           (button: { title: string; link: string }, idx: Key) => (
             <Link href={button.link} key={idx} passHref>
-              <button className="rounded-md border bg-white px-6 py-2 text-base font-medium text-gray-800 shadow-xs transition-all hover:shadow-md dark:border-gray-900 dark:bg-slate-800 dark:text-gray-200 dark:hover:text-gray-300 dark:hover:shadow-slate-800">
+              <button className="rounded-md border bg-white px-6 py-2 text-base font-medium text-gray-800 shadow-2xs transition-all hover:shadow-md dark:border-gray-900 dark:bg-slate-800 dark:text-gray-200 dark:hover:text-gray-300 dark:hover:shadow-slate-800">
                 {button.title}
               </button>
             </Link>

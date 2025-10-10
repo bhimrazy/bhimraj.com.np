@@ -27,7 +27,7 @@ export default function ProjectSection() {
             className={`${idx === 0 ? "md:col-span-2" : ""}`}
             passHref
           >
-            <article className="bg-gray-50 p-8 shadow-xs transition hover:-translate-y-1 hover:shadow-lg dark:bg-slate-800">
+            <article className="bg-gray-50 p-8 shadow-2xs transition hover:-translate-y-1 hover:shadow-lg dark:bg-slate-800">
               <div className="flex flex-col space-y-4">
                 <div className="flex flex-row space-x-2">
                   {project?.tags.map((tag, i) => (

@@ -37,7 +37,7 @@ export default function TitleSection({
         {blog?.tags.slice(0, 4).map((tag: string, i) => (
           <span
             key={i}
-            className="text-2xs cursor-pointer bg-gray-200 p-2 font-medium tracking-wider whitespace-nowrap uppercase transition hover:bg-gray-200/80 hover:shadow-xs dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-700/80"
+            className="text-2xs cursor-pointer bg-gray-200 p-2 font-medium tracking-wider whitespace-nowrap uppercase transition hover:bg-gray-200/80 hover:shadow-2xs dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-700/80"
           >
             {tag}
           </span>
