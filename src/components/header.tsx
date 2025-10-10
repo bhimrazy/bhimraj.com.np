@@ -1,13 +1,15 @@
+import Link from "next/link";
+
 import Logo from "@/components/logo";
 import { ModeToggle } from "@/components/mode-toggle";
 import NavItem from "@/components/nav-item";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { siteConfig } from "@/config/site";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
 
 export default function Header() {
-  const navIitems = [
+  const navItems = [
     { title: "Home", link: "/" },
     { title: "Blog", link: "/blog" },
     { title: "Projects", link: "/projects" },
@@ -31,21 +33,19 @@ export default function Header() {
             <Logo />
           </Link>
           <ul className="hidden space-x-2 font-medium text-slate-600 sm:flex sm:space-x-4 md:space-x-5 lg:space-x-6 dark:text-slate-100">
-            {navIitems.map((item, idx) => (
+            {navItems.map((item, idx) => (
               <Link href={item?.link} key={idx} passHref>
                 <NavItem link={item.link} title={item.title} />
               </Link>
             ))}
           </ul>
-          <div className="flex flex-row items-center space-x-3 divide-x divide-slate-600 dark:divide-slate-600">
+          <div className="flex flex-row items-center gap-2">
             {/* Github Logo */}
             <Button variant="ghost" size="icon">
               <GitHubLogoIcon className="h-5 w-5" />
             </Button>
-
-            <span className="pl-3">
-              <ModeToggle />
-            </span>
+            <Separator orientation="vertical" className="h-6" />
+            <ModeToggle />
           </div>
         </nav>
       </header>
