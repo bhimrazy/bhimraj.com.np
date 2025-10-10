@@ -1,9 +1,9 @@
-const { withContentCollections } = require("@content-collections/next");
+import type { NextConfig } from "next";
+import { withContentCollections } from "@content-collections/next";
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
+const nextConfig: NextConfig = {
   poweredByHeader: false,
+  typedRoutes: true,
   images: {
     unoptimized: true,
     formats: ["image/avif", "image/webp"],
@@ -41,4 +41,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withContentCollections(nextConfig);
+export default withContentCollections(nextConfig);

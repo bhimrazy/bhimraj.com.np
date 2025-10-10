@@ -14,15 +14,15 @@ export async function generateMetadata({
   const title = post?.title;
   const description = post?.description;
   const blogURL = `/blog/${post?._meta.path}`;
-  const images = [
+  const images = post?.image ? [
     {
-      url: post?.image!,
+      url: post.image,
       width: 1920,
       height: 1080,
       alt: title,
       type: "image/png",
     },
-  ];
+  ] : [];
   return {
     title: title,
     description: description,

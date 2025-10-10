@@ -33,9 +33,10 @@
         "@tailwindcss/typography": "^0.5.19",
         "@types/node": "^24.7.1",
         "@types/react": "^19.2.2",
+        "@types/rss": "^0.0.32",
         "autoprefixer": "^10.4.21",
-        "eslint": "^9.37.0",
-        "eslint-config-next": "^15.5.4",
+        "eslint": "^9",
+        "eslint-config-next": "15.5.4",
         "husky": "^9.1.7",
         "lint-staged": "^16.2.3",
         "postcss": "^8.5.6",
@@ -382,6 +383,8 @@
     "@types/react": ["@types/react@19.2.2", "", { "dependencies": { "csstype": "^3.0.2" } }, "sha512-6mDvHUFSjyT2B2yeNx2nUgMxh9LtOWvkhIU3uePn2I2oyNymUAX1NIsdgviM4CH+JSrp2D2hsMvJOkxY+0wNRA=="],
 
     "@types/resolve": ["@types/resolve@1.20.6", "", {}, "sha512-A4STmOXPhMUtHH+S6ymgE2GiBSMqf4oTvcQZMcHzokuTLVYzXTB8ttjcgxOVaAp2lGwEdzZ0J+cRbbeevQj1UQ=="],
+
+    "@types/rss": ["@types/rss@0.0.32", "", {}, "sha512-2oKNqKyUY4RSdvl5eZR1n2Q9yvw3XTe3mQHsFPn9alaNBxfPnbXBtGP8R0SV8pK1PrVnLul0zx7izbm5/gF5Qw=="],
 
     "@types/unist": ["@types/unist@3.0.2", "", {}, "sha512-dqId9J8K/vGi5Zr7oo212BGii5m3q5Hxlkwy3WpYuKPklmBEvsbMYYyLxAQpSffdLl/gdW0XUpKWFvYmyoWCoQ=="],
 
