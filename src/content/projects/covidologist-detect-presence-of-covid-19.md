@@ -15,7 +15,7 @@ A Disease Detection Web App to assist radiologists to detect the presence of COV
 
 ## Description
 
-> This project is a part of [KU HackFest 2022](https://www.kuhackfest.com)
+> This project is a part of **KU HackFest 2022**
 
 The main purpose of this project is to automate the process of COVID-19 diagnosis
 and help radiologists, doctors and patients in their process by saving their precious time.
