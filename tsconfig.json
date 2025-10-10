@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "target": "ES2017",
     "lib": ["dom", "dom.iterable", "es2023"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -19,14 +19,13 @@
       }
     ],
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["./src/*"],
       "content-collections": [
         "./.content-collections/generated",
         "./src/types/content-collections.d.ts"
       ]
     },
     "forceConsistentCasingInFileNames": true,
-    "target": "ES2017"
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

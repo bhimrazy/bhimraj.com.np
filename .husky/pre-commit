@@ -1,10 +1,11 @@
 #!/usr/bin/env sh
 set -e
 
-echo "Running pre-commit checks..."
-
+echo "🔎 Type checking the entire project..."
 bun run typecheck
-bun run lint
-bun run format:check
 
-echo "All checks passed!"
+echo "🧹 Running lint-staged..."
+bun run lint-staged
+
+echo "✅ Pre-commit checks passed!"
+
