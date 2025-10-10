@@ -3,7 +3,6 @@ import { withContentCollections } from "@content-collections/next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  typedRoutes: true,
   images: {
     unoptimized: true,
     formats: ["image/avif", "image/webp"],

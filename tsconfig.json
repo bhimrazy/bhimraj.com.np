@@ -20,10 +20,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "content-collections": [
-        "./.content-collections/generated",
-        "./src/types/content-collections.d.ts"
-      ]
+      "content-collections": ["./.content-collections/generated"]
     },
     "forceConsistentCasingInFileNames": true,
   },
