@@ -15,7 +15,7 @@ export default function Logo() {
           title="Logo"
         />
       </div>
-      <div className="relative hidden h-8 w-32 transition  dark:block">
+      <div className="relative hidden h-8 w-32 transition dark:block">
         <Image
           className="h-full w-full object-cover"
           src={WHITE_LOGO_URL}

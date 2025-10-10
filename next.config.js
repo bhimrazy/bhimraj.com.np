@@ -2,6 +2,8 @@ const { withContentCollections } = require("@content-collections/next");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
+  poweredByHeader: false,
   images: {
     unoptimized: true,
     formats: ["image/avif", "image/webp"],
@@ -24,6 +26,9 @@ const nextConfig = {
         hostname: "pbs.twimg.com",
       },
     ],
+  },
+  experimental: {
+    optimizePackageImports: ["clsx", "tailwind-merge"],
   },
   redirects: async () => {
     return [

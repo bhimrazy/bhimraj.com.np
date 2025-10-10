@@ -1,4 +1,4 @@
-User-Agent: *
+User-agent: *
 Allow: /
 
 Sitemap: https://bhimraj.com.np/sitemap.xml

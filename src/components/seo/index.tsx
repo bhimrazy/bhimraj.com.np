@@ -1,7 +1,7 @@
 import { SEOProps } from "@/lib/types";
 import Head from "next/head";
 import React from "react";
-import settings from "./settings";
+import { siteConfig } from "@/config/site";
 
 const socialTags = ({
   openGraphType,
@@ -12,26 +12,18 @@ const socialTags = ({
   createdAt,
   updatedAt,
 }: SEOProps) => {
-  const image = settings.meta.rootUrl + image_url;
+  const image = siteConfig.url + image_url;
   const metaTags = [
     { name: "twitter:card", content: "summary_large_image" },
     {
       name: "twitter:site",
-      content:
-        settings &&
-        settings.meta &&
-        settings.meta.social &&
-        settings.meta.social.twitter,
+      content: siteConfig.author?.handle,
     },
     { name: "twitter:title", content: title },
     { name: "twitter:description", content: description },
     {
       name: "twitter:creator",
-      content:
-        settings &&
-        settings.meta &&
-        settings.meta.social &&
-        settings.meta.social.twitter,
+      content: siteConfig.author?.handle,
     },
     { name: "twitter:image", content: image },
     { name: "twitter:image:src", content: image },
@@ -43,7 +35,7 @@ const socialTags = ({
     { name: "og:description", content: description },
     {
       name: "og:site_name",
-      content: settings && settings.meta && settings.meta.title,
+      content: siteConfig.name,
     },
     {
       name: "og:published_time",
@@ -57,14 +49,7 @@ const socialTags = ({
         ? new Date(updatedAt).toISOString()
         : new Date().toISOString(),
     },
-    {
-      name: "article:publisher",
-      content:
-        settings &&
-        settings.meta &&
-        settings.meta.social &&
-        settings.meta.social.twitter,
-    },
+    { name: "article:publisher", content: siteConfig.author?.handle },
     {
       name: "article:published_time",
       content: createdAt ? new Date(createdAt).toISOString() : "",
@@ -89,7 +74,7 @@ const SEO = (props: SEOProps) => {
     createdAt,
     updatedAt,
   } = props;
-  const image = settings.meta.rootUrl + image_url;
+  const image = siteConfig.url + image_url;
   let schema;
   if (schemaType) {
     schema = {
@@ -100,7 +85,7 @@ const SEO = (props: SEOProps) => {
           "@id": url,
           url: url,
           name: title,
-          isPartOf: { "@id": `${settings?.meta?.rootUrl}/#website` },
+          isPartOf: { "@id": `${siteConfig.url}/#website` },
           primaryImageOfPage: {
             "@id": `${image}/#primaryimage`,
           },
@@ -124,10 +109,10 @@ const SEO = (props: SEOProps) => {
         },
         {
           "@type": "WebSite",
-          "@id": `${settings?.meta?.rootUrl}/#website`,
-          url: settings?.meta?.rootUrl,
-          name: siteInfo?.title,
-          description: siteInfo?.description,
+          "@id": `${siteConfig.url}/#website`,
+          url: siteConfig.url,
+          name: siteInfo?.title ?? siteConfig.name,
+          description: siteInfo?.description ?? siteConfig.description,
           inLanguage: "en-US",
         },
       ],
@@ -138,10 +123,10 @@ const SEO = (props: SEOProps) => {
       "@graph": [
         {
           "@type": "WebSite",
-          "@id": `${settings?.meta?.rootUrl}/#website`,
-          url: settings?.meta?.rootUrl,
-          name: siteInfo?.title,
-          description: siteInfo?.description,
+          "@id": `${siteConfig.url}/#website`,
+          url: siteConfig.url,
+          name: siteInfo?.title ?? siteConfig.name,
+          description: siteInfo?.description ?? siteConfig.description,
           inLanguage: "en-US",
         },
       ],
@@ -177,14 +162,10 @@ const SEO = (props: SEOProps) => {
 };
 
 SEO.defaultProps = {
-  title: settings && settings.meta && settings.meta.title,
-  description: settings && settings.meta && settings.meta.description,
-  image:
-    settings &&
-    settings.meta &&
-    settings.meta.social &&
-    settings.meta.social.graphic,
-  url: settings && settings.meta && settings.meta.rootUrl,
+  title: siteConfig.name,
+  description: siteConfig.description,
+  image: siteConfig.ogImage,
+  url: siteConfig.url,
   openGraphType: "website",
 };
 

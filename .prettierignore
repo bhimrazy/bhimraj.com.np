@@ -1,0 +1,8 @@
+.next
+node_modules
+dist
+coverage
+.content-collections
+bun.lockb
+public
+

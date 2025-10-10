@@ -40,7 +40,6 @@ Run my Project
 
 - [x] Create a virtual environment
 - [x] Create FastAPI App
-
   - Install fast API
   - Install Uvicorn
   - Install Pytest
@@ -51,11 +50,9 @@ Run my Project
   - Create a main test file to test the home page route
 
 - [x] Pytorch Setup
-
   - Install torch & torchvision (use cpu version for small size)
 
 - [x] Prediction
-
   - Create a predict post route
   - Create a file utils.py
   - Test predict route

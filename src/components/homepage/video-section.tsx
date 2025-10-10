@@ -53,20 +53,32 @@ export default async function VideoSection() {
     ],
   };
 
-  const res = await fetch(process.env.YOUTUBE_API_URL!);
-  const youtubeData: YoutubeData = await res.json();
-  const videos: Video[] = youtubeData?.items?.map((video) => {
-    return {
-      title: video?.snippet?.title,
-      description: video?.snippet?.description,
-      published_at: video?.snippet?.publishedAt,
-      thumbnail_url: video?.snippet?.thumbnails?.default?.url.replace(
-        "default",
-        "maxresdefault"
-      ),
-      video_url: "https://www.youtube.com/watch?v=" + video?.id?.videoId,
-    };
-  });
+  let videos: Video[] = [];
+  try {
+    if (process.env.YOUTUBE_API_URL) {
+      const res = await fetch(process.env.YOUTUBE_API_URL, {
+        // Revalidate daily to avoid rate limits during build
+        next: { revalidate: 60 * 60 * 24 },
+      });
+      if (res.ok) {
+        const youtubeData: YoutubeData = await res.json();
+        videos = youtubeData?.items?.map((video) => {
+          return {
+            title: video?.snippet?.title,
+            description: video?.snippet?.description,
+            published_at: video?.snippet?.publishedAt,
+            thumbnail_url: video?.snippet?.thumbnails?.default?.url.replace(
+              "default",
+              "maxresdefault",
+            ),
+            video_url: "https://www.youtube.com/watch?v=" + video?.id?.videoId,
+          };
+        });
+      }
+    }
+  } catch {
+    // Ignore errors and fall back to static examples
+  }
   return (
     <section className="flex flex-col justify-center space-y-8 py-2 text-left dark:invert">
       <div className="flex flex-col space-y-2">
@@ -76,42 +88,46 @@ export default async function VideoSection() {
         <p className="text-gray-500">{video_content?.description}</p>
       </div>
       <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:ml-2">
-        {videos?.slice(0, 4).map((video, idx: number) => (
-          <Link href={video?.video_url} key={idx} target="_blank" passHref>
-            <div className="relative">
-              <Image
-                className="rounded-lg transition-all hover:opacity-95 hover:shadow-md"
-                src={video?.thumbnail_url}
-                placeholder="blur"
-                blurDataURL={video?.thumbnail_url}
-                alt={video?.title}
-                width={1920}
-                height={1080}
-                loading="eager"
-              />
-              <div className="absolute inset-x-[41%] inset-y-0 flex items-center">
-                <svg
-                  className="h-16 w-16 text-gray-50 transition-all hover:text-red-500"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+        {(videos?.length ? videos : video_content.videos)
+          ?.slice(0, 4)
+          .map((video, idx: number) => (
+            <Link href={video?.video_url} key={idx} target="_blank" passHref>
+              <div className="relative">
+                <Image
+                  className="rounded-lg transition-all hover:opacity-95 hover:shadow-md"
+                  src={video?.thumbnail_url}
+                  placeholder="blur"
+                  blurDataURL={video?.thumbnail_url}
+                  alt={video?.title}
+                  width={1920}
+                  height={1080}
+                  loading="eager"
+                />
+                <div className="absolute inset-x-[41%] inset-y-0 flex items-center">
+                  <svg
+                    className="h-16 w-16 text-gray-50 transition-all hover:text-red-500"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
               </div>
-            </div>
-            <div className="flex flex-col space-y-1 py-2 text-gray-600">
-              <h2 className="line-clamp-1 text-lg font-bold hover:text-gray-800">
-                {video?.title}
-              </h2>
-              <p className="line-clamp-2 text-gray-700">{video?.description}</p>
-            </div>
-          </Link>
-        ))}
+              <div className="flex flex-col space-y-1 py-2 text-gray-600">
+                <h2 className="line-clamp-1 text-lg font-bold hover:text-gray-800">
+                  {video?.title}
+                </h2>
+                <p className="line-clamp-2 text-gray-700">
+                  {video?.description}
+                </p>
+              </div>
+            </Link>
+          ))}
       </div>
     </section>
   );

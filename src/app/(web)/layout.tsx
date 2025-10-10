@@ -10,7 +10,7 @@ export default function Layout({ children }: Props) {
   return (
     <React.Fragment>
       <Header />
-      {children}
+      <div className="min-h-dvh">{children}</div>
       <Footer />
     </React.Fragment>
   );

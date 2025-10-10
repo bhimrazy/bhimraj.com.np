@@ -1,10 +1,14 @@
 import { siteConfig } from "@/config/site";
 import { allProjects } from "content-collections";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const slug = params.slug;
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
   const post = allProjects.find((post) => post._meta.path === slug);
 
   return {
@@ -37,17 +41,17 @@ export async function generateStaticParams() {
   return paths;
 }
 
-type Props = {
-  params: {
-    slug: string;
-  };
-};
-export default function ProjectDetail({ params: { slug } }: Props) {
+export default async function ProjectDetail({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
   const project = allProjects.find((project) => project._meta.path === slug);
   const projectContent = project?.html.split("\n").splice(1).join("\n") || "";
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col space-y-10 px-4 xl:px-0">
-      <div className="absolute -top-28 left-0 hidden h-full w-28 -rotate-45 bg-gradient-to-r from-indigo-600/80 via-sky-600/75 to-purple-600/80 blur-[150px] dark:block md:left-1/2  lg:left-3/4"></div>
+      <div className="absolute -top-28 left-0 hidden h-full w-28 -rotate-45 bg-linear-to-r from-indigo-600/80 via-sky-600/75 to-purple-600/80 blur-[150px] md:left-1/2 lg:left-3/4 dark:block"></div>
       <section className="flex flex-col py-6">
         <article className="flex flex-col">
           <div className="space-y-2 py-10 text-center">
@@ -77,13 +81,13 @@ export default function ProjectDetail({ params: { slug } }: Props) {
               {project?.tags.map((tag: string) => (
                 <span
                   key={tag}
-                  className="bg-gray-200 p-2 text-xs font-medium uppercase tracking-wider dark:bg-slate-700 dark:text-slate-200"
+                  className="bg-gray-200 p-2 text-xs font-medium tracking-wider uppercase dark:bg-slate-700 dark:text-slate-200"
                 >
                   {tag}
                 </span>
               ))}
             </div>
-            <h1 className="text-left text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-200 sm:text-4xl">
+            <h1 className="text-left text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-slate-200">
               {project?.title}
             </h1>
             <div className="flex flex-row space-x-2 text-left">
@@ -110,9 +114,9 @@ export default function ProjectDetail({ params: { slug } }: Props) {
             </div>
           </div>
 
-          <div className="flex w-full flex-col items-center ">
+          <div className="flex w-full flex-col items-center">
             <div
-              className="prose prose-slate max-w-xs overflow-hidden whitespace-normal break-words dark:prose-invert dark:text-slate-400 sm:max-w-md lg:max-w-4xl"
+              className="prose prose-slate dark:prose-invert max-w-xs overflow-hidden break-words whitespace-normal sm:max-w-md lg:max-w-4xl dark:text-slate-400"
               dangerouslySetInnerHTML={{ __html: projectContent }}
             ></div>
           </div>

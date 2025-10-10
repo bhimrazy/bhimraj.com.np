@@ -1,0 +1,6 @@
+{
+  "*.{js,ts,tsx,md,mdx,css,json}": [
+    "prettier --write",
+    "next lint --fix --file"
+  ]
+}

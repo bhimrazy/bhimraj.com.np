@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "Running pre-commit checks..."
+
+if command -v bun >/dev/null 2>&1; then
+  bunx --bun lint-staged
+else
+  npx lint-staged
+fi
+

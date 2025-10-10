@@ -9,7 +9,10 @@ const Container: React.FC<ContainerProps> = ({
   ...props
 }) => {
   return (
-    <div className={cn("container max-w-screen-lg", className)} {...props}>
+    <div
+      className={cn("container max-w-(--breakpoint-lg)", className)}
+      {...props}
+    >
       {children}
     </div>
   );
