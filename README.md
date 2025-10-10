@@ -200,7 +200,7 @@ Vercel will automatically deploy on every push to the main branch.
 
 ## 📝 License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is open source and available under the [MIT License](./LICENSE).
 
 ## 🤝 Contributing
 
@@ -210,7 +210,7 @@ While this is a personal portfolio, suggestions and bug reports are welcome! Fee
 
 - **Website**: [bhimraj.com.np](https://bhimraj.com.np)
 - **GitHub**: [@bhimrazy](https://github.com/bhimrazy)
-- **LinkedIn**: [Bhimraj Yadav](https://linkedin.com/in/bhimrzy)
+- **LinkedIn**: [Bhimraj Yadav](https://linkedin.com/in/bhimrazy)
 - **Twitter/X**: [@bhimrajyadav](https://twitter.com/bhimrazyadav)
 
 ---
