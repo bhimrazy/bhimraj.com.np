@@ -12,7 +12,8 @@
     "format:write": "prettier --write \"**/*.{js,ts,tsx,md,mdx,json,css}\" --cache",
     "format:check": "prettier --check \"**/*.{js,ts,tsx,md,mdx,json,css}\" --cache",
     "check": "bun run typecheck && bun run lint && bun run format:check && bun run build",
-    "prepare": "husky install"
+    "postinstall": "husky init",
+    "prepare": "husky"
   },
   "dependencies": {
     "@next/third-parties": "^15.5.4",
