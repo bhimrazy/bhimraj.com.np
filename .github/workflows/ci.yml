@@ -9,9 +9,26 @@ on:
     - cron: "0 0 * * *" # every day at midnight UTC
 
 jobs:
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Link Checker
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: |
+            --verbose 
+            --no-progress 
+            --accept 200,201,204,301,302,304,307,308,429
+            --timeout 20
+            --max-retries 2
+            --exclude-mail
+            "**/*.md" 
+            "**/*.mdx"
+          fail: true
+
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v5
