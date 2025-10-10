@@ -11,7 +11,7 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "bunx tsc --noEmit",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "format:write": "prettier --write \"**/*.{js,ts,tsx,md,mdx,json,css}\" --cache",
