@@ -46,3 +46,6 @@ yarn-error.log*
 
 # content collection
 .content-collections
+
+# TypeScript build info
+tsconfig.tsbuildinfo
