@@ -1,4 +1,3 @@
-
 ## What does this PR do?
 
 A brief description of the change.
@@ -13,4 +12,4 @@ Fixes # (issue)
 
 ---
 
-*Make sure you had fun contributing!* 🎉
+_Make sure you had fun contributing!_ 🎉
