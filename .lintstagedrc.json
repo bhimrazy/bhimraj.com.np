@@ -1,6 +1,9 @@
 {
-  "*.{js,ts,tsx,md,mdx,css,json}": [
-    "prettier --write",
-    "next lint --fix --file"
+  "*.{js,jsx,ts,tsx}": [
+    "eslint --fix",
+    "prettier --write"
+  ],
+  "*.{json,css,scss,md,mdx,yml,yaml}": [
+    "prettier --write"
   ]
 }

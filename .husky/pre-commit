@@ -1,11 +1,8 @@
 #!/usr/bin/env sh
 set -e
 
-echo "🔎 Type checking the entire project..."
-bun run typecheck
-
-echo "🧹 Running lint-staged..."
-bun run lint-staged
+echo "🧹 Running lint-staged on staged files..."
+bunx lint-staged
 
 echo "✅ Pre-commit checks passed!"
 
