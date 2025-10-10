@@ -65,7 +65,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
-      <body className="font-display flex flex-col bg-white antialiased dark:bg-slate-900 dark:text-white">
+      <body className="font-display flex min-h-dvh flex-col bg-white antialiased dark:bg-slate-900 dark:text-white">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -75,7 +75,9 @@ export default function RootLayout({
           {children}
         </ThemeProvider>
       </body>
-      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS!} />
+      {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
+      )}
     </html>
   );
 }

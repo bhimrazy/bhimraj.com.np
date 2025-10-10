@@ -1,7 +1,8 @@
-const { withContentCollections } = require("@content-collections/next");
+import type { NextConfig } from "next";
+import { withContentCollections } from "@content-collections/next";
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
+  poweredByHeader: false,
   images: {
     unoptimized: true,
     formats: ["image/avif", "image/webp"],
@@ -25,6 +26,9 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    optimizePackageImports: ["clsx", "tailwind-merge"],
+  },
   redirects: async () => {
     return [
       {
@@ -36,4 +40,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withContentCollections(nextConfig);
+export default withContentCollections(nextConfig);

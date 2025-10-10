@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "es2023"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -23,22 +19,11 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "content-collections": [
-        "./.content-collections/generated"
-      ]
+      "@/*": ["./src/*"],
+      "content-collections": ["./.content-collections/generated"]
     },
     "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

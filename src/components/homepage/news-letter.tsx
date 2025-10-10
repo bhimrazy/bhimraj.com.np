@@ -19,7 +19,12 @@ export default function NewsLetter() {
     fetch(`/api/subscribe`, {
       method: "POST",
       headers: {
-        Authorization: "Basic " + process.env.NEXT_PUBLIC_API_ROUTE_SECRET,
+        ...(process.env.NEXT_PUBLIC_API_ROUTE_SECRET
+          ? {
+              Authorization:
+                "Basic " + process.env.NEXT_PUBLIC_API_ROUTE_SECRET,
+            }
+          : {}),
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email: email }),
@@ -50,7 +55,7 @@ export default function NewsLetter() {
   };
 
   return (
-    <section className="pb-16 pt-10">
+    <section className="pt-10 pb-16">
       <div className="mx-auto flex flex-col space-y-6 rounded-lg border py-14 text-center dark:border-gray-900">
         <div className="space-y-1">
           <h2 className="text-2xl font-semibold">
@@ -60,13 +65,13 @@ export default function NewsLetter() {
         </div>
         <form
           onSubmit={subscribe}
-          className="relative mx-auto max-w-2xl rounded border dark:border-none sm:w-96"
+          className="relative mx-auto max-w-2xl rounded-xs border sm:w-96 dark:border-none"
         >
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             aria-label="Email for newsletter"
-            className="w-full rounded px-6 py-2 text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-600 focus:ring-offset-2 dark:bg-gray-900 dark:focus:ring-gray-800 dark:focus:ring-offset-gray-800"
+            className="w-full rounded-xs px-6 py-2 text-gray-700 focus:ring-1 focus:ring-gray-600 focus:ring-offset-2 focus:outline-hidden dark:bg-gray-900 dark:focus:ring-gray-800 dark:focus:ring-offset-gray-800"
             type="email"
             autoComplete="email"
             placeholder={newsletter_content?.input_placeholder}
@@ -75,12 +80,18 @@ export default function NewsLetter() {
 
           <button
             type="submit"
-            className="absolute inset-y-0 right-0 m-1 rounded bg-gray-200 px-3 text-sm font-semibold text-gray-600 hover:bg-gray-200/80 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+            className="absolute inset-y-0 right-0 m-1 rounded-xs bg-gray-200 px-3 text-sm font-semibold text-gray-600 hover:bg-gray-200/80 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
           >
             {newsletter_content?.button}
           </button>
         </form>
-        <small className={form.state === Form.Error ? " text-red-600" : "text-green-600"}>{form.message}</small>
+        <small
+          className={
+            form.state === Form.Error ? "text-red-600" : "text-green-600"
+          }
+        >
+          {form.message}
+        </small>
       </div>
     </section>
   );

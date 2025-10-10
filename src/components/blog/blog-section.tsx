@@ -11,7 +11,7 @@ export default function BlogSection() {
   return (
     <section className="relative flex flex-col py-6">
       <div className="space-y-1 py-10 text-center">
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-200 sm:text-4xl">
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-slate-200">
           {blogContent?.title}
         </h1>
         <p className="text-lg text-slate-700 dark:text-slate-400">
@@ -23,7 +23,7 @@ export default function BlogSection() {
           .sort(
             (a, b) =>
               Number(new Date(b?.publishedAt)) -
-              Number(new Date(a?.publishedAt))
+              Number(new Date(a?.publishedAt)),
           )
           .map((blog, idx) => (
             <article key={idx}>
@@ -40,7 +40,7 @@ export default function BlogSection() {
                     </dd>
                   </dl>
                   <p className="text-sm text-gray-500">
-                    {getReadingTime(blog.content)}
+                    {getReadingTime(blog.html)}
                   </p>
                 </div>
                 <div className="md:col-span-5">
@@ -59,7 +59,7 @@ export default function BlogSection() {
                   <Link
                     href="/blog/[slug]/"
                     as={`/blog/${blog._meta.path}/`}
-                    className="group inline-flex h-9 items-center whitespace-nowrap rounded-full bg-slate-100 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white dark:focus:ring-slate-500"
+                    className="group inline-flex h-9 items-center rounded-full bg-slate-100 px-3 text-sm font-semibold whitespace-nowrap text-slate-700 hover:bg-slate-200 hover:text-slate-900 focus:ring-2 focus:ring-slate-500 focus:outline-hidden dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white dark:focus:ring-slate-500"
                     passHref
                   >
                     Read more

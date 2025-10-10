@@ -7,19 +7,20 @@ const EmailSchema = z
   .email({ message: "Please enter a valid email address" });
 
 export async function POST(req: Request) {
-  // check for basic auth header
-  const authorization = headers().get("authorization");
+  // check for basic auth header (Next 15: headers() is async)
+  const requestHeaders = await headers();
+  const authorization = requestHeaders.get("authorization");
   if (!authorization || authorization.indexOf("Basic ") === -1) {
     return Response.json(
       { message: "Missing Authorization Header" },
-      { status: 401 }
+      { status: 401 },
     );
   }
   // verify auth credentials
   if (authorization.split(" ")[1] !== process.env.API_ROUTE_SECRET) {
     return Response.json(
       { message: "Invalid Authorization Header" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -29,7 +30,10 @@ export async function POST(req: Request) {
   // 1. Validate email address
   const emailValidation = EmailSchema.safeParse(email);
   if (!emailValidation.success) {
-    return Response.json({ error: emailValidation.error.message }, { status: 400 });
+    return Response.json(
+      { error: emailValidation.error.message },
+      { status: 400 },
+    );
   }
 
   // 2. Retrieve Mailchimp credentials from environment variables
@@ -63,18 +67,23 @@ export async function POST(req: Request) {
 
     const response = await res.json();
     if (response?.status === "subscribed") {
-      return Response.json({ message: "Horray 🎉! You have successfully subscribed!" }, { status: 201 });
+      return Response.json(
+        { message: "Horray 🎉! You have successfully subscribed!" },
+        { status: 201 },
+      );
+    } else if (response?.title === "Member Exists") {
+      return Response.json(
+        { error: "Uh oh, it looks like this email's already subscribed🧐" },
+        { status: 400 },
+      );
+    } else {
+      return Response.json(
+        { error: response?.title + " " + response?.detail },
+        {
+          status: response?.status === 400 ? 400 : 500,
+        },
+      );
     }
-    else if (response?.title === "Member Exists") {
-      return Response.json({ error: "Uh oh, it looks like this email's already subscribed🧐" }, { status: 400 });
-    }
-    else {
-      return Response.json({ error: response?.title + " " + response?.detail }, {
-        status
-          : response?.status === 400 ? 400 : 500
-      });
-    }
-
   } catch (error: unknown) {
     let errorMessage: string;
     if (error instanceof Error) {

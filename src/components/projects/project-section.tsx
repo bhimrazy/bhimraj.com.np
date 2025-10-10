@@ -11,7 +11,7 @@ export default function ProjectSection() {
   return (
     <section className="relative flex flex-col py-10">
       <div className="space-y-2 py-12 text-center">
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-200 sm:text-5xl">
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-5xl dark:text-slate-200">
           {projects_content?.title}
         </h1>
         <p className="text-base text-slate-700 dark:text-slate-400">
@@ -27,13 +27,13 @@ export default function ProjectSection() {
             className={`${idx === 0 ? "md:col-span-2" : ""}`}
             passHref
           >
-            <article className="bg-gray-50 p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:bg-slate-800">
+            <article className="bg-gray-50 p-8 shadow-2xs transition hover:-translate-y-1 hover:shadow-lg dark:bg-slate-800">
               <div className="flex flex-col space-y-4">
                 <div className="flex flex-row space-x-2">
                   {project?.tags.map((tag, i) => (
                     <span
                       key={i}
-                      className="bg-gray-200 p-2 text-xs font-medium uppercase tracking-wider dark:bg-slate-700 dark:text-slate-200"
+                      className="bg-gray-200 p-2 text-xs font-medium tracking-wider uppercase dark:bg-slate-700 dark:text-slate-200"
                     >
                       {tag}
                     </span>
@@ -41,7 +41,7 @@ export default function ProjectSection() {
                 </div>
                 <div
                   className={`grid grid-cols-1${
-                    idx === 0 ? " md:grid-cols-2" : ""
+                    idx === 0 ? "md:grid-cols-2" : ""
                   } gap-6`}
                 >
                   <div className="relative aspect-video">
@@ -61,7 +61,7 @@ export default function ProjectSection() {
                     </h3>
                     <dl>
                       <dt className="sr-only">Date</dt>
-                      <dd className="text-sm font-semibold leading-6 text-gray-700 dark:text-slate-400">
+                      <dd className="text-sm leading-6 font-semibold text-gray-700 dark:text-slate-400">
                         <time dateTime={project?.publishedAt}>
                           {project?.publishedAt}
                         </time>
@@ -78,7 +78,7 @@ export default function ProjectSection() {
                       <Link
                         href="/projects/[slug]/"
                         as={`/projects/${project._meta.path}/`}
-                        className="group inline-flex h-9 items-center whitespace-nowrap rounded-full bg-slate-100 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white dark:focus:ring-slate-500"
+                        className="group inline-flex h-9 items-center rounded-full bg-slate-100 px-3 text-sm font-semibold whitespace-nowrap text-slate-700 hover:bg-slate-200 hover:text-slate-900 focus:ring-2 focus:ring-slate-500 focus:outline-hidden dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white dark:focus:ring-slate-500"
                         passHref
                       >
                         Read more

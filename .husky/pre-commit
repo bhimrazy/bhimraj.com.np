@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+set -e
+
+echo "🧹 Running lint-staged on staged files..."
+bunx lint-staged
+
+echo "✅ Pre-commit checks passed!"

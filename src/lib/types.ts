@@ -34,7 +34,7 @@ export type Blog = {
     image: string;
     link: string;
   };
-  content: any;
+  content: unknown;
 };
 
 export type Project = {
@@ -47,7 +47,7 @@ export type Project = {
     image: string;
     link: string;
   };
-  content: any;
+  content: unknown;
 };
 
 export type SEOProps = {

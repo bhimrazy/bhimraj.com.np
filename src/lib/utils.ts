@@ -67,7 +67,7 @@ export function slugify(text: string, maxLength = 50): string {
  * @returns An array of objects containing the level and title of the headings.
  */
 export function extractTableOfContents(
-  content: string
+  content: string,
 ): { level: number; title: string; slug: string }[] {
   const headings: { level: number; title: string; slug: string }[] = [];
   const pattern = /<h([1-2])>(.*?)<\/h[1-2]>/gi;

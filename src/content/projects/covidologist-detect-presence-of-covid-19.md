@@ -15,7 +15,7 @@ A Disease Detection Web App to assist radiologists to detect the presence of COV
 
 ## Description
 
-> This project is a part of [KU HackFest 2022](https://www.kuhackfest.com)
+> This project was created for **KU HackFest 2022**
 
 The main purpose of this project is to automate the process of COVID-19 diagnosis
 and help radiologists, doctors and patients in their process by saving their precious time.
@@ -90,7 +90,9 @@ Figure : Deployment Architeture of Covidologist
 
 ## Preview
 
-[![covid 19 disease detection](https://user-images.githubusercontent.com/46085301/183138564-bdaaa457-5f31-47e5-889d-f7331a8ffebb.png)](https://covidologist.herokuapp.com/)
+> **Note:** The original Heroku deployment is no longer available. You can run the project locally following the installation instructions above.
+
+![covid 19 disease detection](https://user-images.githubusercontent.com/46085301/183138564-bdaaa457-5f31-47e5-889d-f7331a8ffebb.png)
 
 ## 📚 RESOURCES
 
