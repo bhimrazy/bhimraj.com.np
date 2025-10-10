@@ -210,8 +210,8 @@ While this is a personal portfolio, suggestions and bug reports are welcome! Fee
 
 - **Website**: [bhimraj.com.np](https://bhimraj.com.np)
 - **GitHub**: [@bhimrazy](https://github.com/bhimrazy)
-- **LinkedIn**: [Bhimraj Yadav](https://linkedin.com/in/bhimrazy)
-- **Twitter/X**: [@bhimrajyadav](https://twitter.com/bhimrazyadav)
+- **LinkedIn**: [@bhimrazy](https://linkedin.com/in/bhimrazy)
+- **Twitter/X**: [@bhimrazyadav](https://twitter.com/bhimrazyadav)
 
 ---
 
