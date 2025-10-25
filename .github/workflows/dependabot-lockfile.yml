@@ -28,15 +28,20 @@ jobs:
         uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies and update lockfile
-        run: bun install --no-save
+        run: bun install
 
       - name: Check for lockfile changes
         id: git-check
         run: |
-          if ! git diff --exit-code bun.lock; then
-            echo "changes=true" >> $GITHUB_OUTPUT
-          else
+          echo "Checking for changes in bun.lock..."
+          git status bun.lock
+          if git diff --quiet bun.lock; then
+            echo "No changes detected in bun.lock"
             echo "changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "Changes detected in bun.lock"
+            git diff bun.lock
+            echo "changes=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Commit and push lockfile
