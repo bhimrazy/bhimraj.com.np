@@ -1,0 +1,61 @@
+name: Update Dependabot Lockfile
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'package.json'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-lockfile:
+    runs-on: ubuntu-latest
+    # Only run on Dependabot PRs when package.json is modified
+    if: github.actor == 'dependabot[bot]'
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies and update lockfile
+        run: bun install --no-save
+
+      - name: Check for lockfile changes
+        id: git-check
+        run: |
+          if ! git diff --exit-code bun.lock; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push lockfile
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add bun.lock
+          git commit -m "chore: update bun.lock for dependabot changes"
+          git push
+
+      - name: Comment on PR
+        if: steps.git-check.outputs.changes == 'true'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.name,
+              body: '🔒 Lockfile (`bun.lock`) has been automatically updated to match the `package.json` changes.'
+            })
