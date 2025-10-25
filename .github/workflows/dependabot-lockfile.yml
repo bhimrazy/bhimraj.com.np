@@ -3,6 +3,8 @@ name: Update Dependabot Lockfile
 on:
   pull_request:
     branches: [main]
+    paths:
+      - 'package.json'
 
 permissions:
   contents: write
@@ -12,9 +14,7 @@ jobs:
   update-lockfile:
     runs-on: ubuntu-latest
     # Only run on Dependabot PRs when package.json is modified
-    if: |
-      github.actor == 'dependabot[bot]' &&
-      contains(github.event.pull_request.title, 'bump')
+    if: github.actor == 'dependabot[bot]'
 
     steps:
       - name: Checkout PR branch
