@@ -56,6 +56,6 @@ jobs:
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
-              repo: context.repo.repo,
+              repo: context.repo.name,
               body: '🔒 Lockfile (`bun.lock`) has been automatically updated to match the `package.json` changes.'
             })
