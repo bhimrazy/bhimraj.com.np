@@ -24,6 +24,7 @@ jobs:
             --exclude "localhost"
             --exclude "linkedin.com"
             --exclude "instagram.com"
+            --exclude "content-collections.dev"
             "**/*.md" 
             "**/*.mdx"
           fail: true
