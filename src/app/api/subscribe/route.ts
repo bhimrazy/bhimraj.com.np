@@ -78,7 +78,7 @@ export async function POST(req: Request) {
       );
     } else {
       return Response.json(
-        { error: response?.title + " " + response?.detail },
+        { error: `${response?.title} ${response?.detail}` },
         {
           status: response?.status === 400 ? 400 : 500,
         },

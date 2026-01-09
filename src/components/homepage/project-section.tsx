@@ -1,6 +1,6 @@
+import { allProjects } from "content-collections";
 import Image from "next/image";
 import Link from "next/link";
-import { allProjects } from "content-collections";
 
 export default function ProjectSection() {
   const featuredContent = {
@@ -21,23 +21,23 @@ export default function ProjectSection() {
   return (
     <section className="flex flex-col justify-center space-y-2 pt-8 text-left dark:invert">
       <div className="flex flex-col space-y-2">
-        <h2 className="text-2xl font-bold text-gray-800 md:text-4xl">
+        <h2 className="font-bold text-2xl text-gray-800 md:text-4xl">
           {featuredContent?.title}
         </h2>
         <p className="text-gray-500">{featuredContent?.description}</p>
       </div>
 
       <div className="flex flex-col gap-6 sm:ml-2">
-        {allProjects.slice(0, 3).map((project, idx) => (
+        {allProjects.slice(0, 3).map((project, _idx) => (
           <Link
-            key={idx}
+            key={project?._meta.path}
             href="/projects/[slug]/"
             as={`/projects/${project._meta.path}/`}
             className="flex flex-col justify-between sm:flex-row"
             passHref
           >
             <div className="flex max-w-2xl flex-col space-y-1 py-2 text-gray-600">
-              <h2 className="text-xl font-bold hover:text-gray-800">
+              <h2 className="font-bold text-xl hover:text-gray-800">
                 {project?.title}
               </h2>
               <p className="line-clamp-2 max-w-lg text-gray-700">

@@ -1,7 +1,7 @@
-import { siteConfig } from "@/config/site";
 import { allProjects } from "content-collections";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { siteConfig } from "@/config/site";
 
 export async function generateMetadata({
   params,
@@ -64,7 +64,10 @@ export default async function ProjectDetail({
                 <svg
                   viewBox="0 -9 3 24"
                   className="mr-3 h-6 w-auto overflow-visible text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300"
+                  role="img"
+                  aria-label="Back arrow"
                 >
+                  <title>Back arrow</title>
                   <path
                     d="M3 0L0 3L3 6"
                     fill="none"
@@ -81,13 +84,13 @@ export default async function ProjectDetail({
               {project?.tags.map((tag: string) => (
                 <span
                   key={tag}
-                  className="bg-gray-200 p-2 text-xs font-medium tracking-wider uppercase dark:bg-slate-700 dark:text-slate-200"
+                  className="bg-gray-200 p-2 font-medium text-xs uppercase tracking-wider dark:bg-slate-700 dark:text-slate-200"
                 >
                   {tag}
                 </span>
               ))}
             </div>
-            <h1 className="text-left text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-slate-200">
+            <h1 className="text-left font-extrabold text-3xl text-slate-900 tracking-tight sm:text-4xl dark:text-slate-200">
               {project?.title}
             </h1>
             <div className="flex flex-row space-x-2 text-left">
@@ -116,7 +119,8 @@ export default async function ProjectDetail({
 
           <div className="flex w-full flex-col items-center">
             <div
-              className="prose prose-slate dark:prose-invert max-w-xs overflow-hidden break-words whitespace-normal sm:max-w-md lg:max-w-4xl dark:text-slate-400"
+              className="prose prose-slate dark:prose-invert max-w-xs overflow-hidden whitespace-normal break-words sm:max-w-md lg:max-w-4xl dark:text-slate-400"
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: MDX content is trusted
               dangerouslySetInnerHTML={{ __html: projectContent }}
             ></div>
           </div>

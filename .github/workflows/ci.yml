@@ -6,33 +6,14 @@ on:
   pull_request:
     branches: [main, "release/*"]
   schedule:
-    - cron: "0 0 * * *" # every day at midnight UTC
+    # Link check daily, code checks still run on push/PR
+    - cron: "0 0 * * *"
 
 jobs:
-  link-check:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - name: Link Checker
-        uses: lycheeverse/lychee-action@v2
-        with:
-          args: |
-            --verbose 
-            --no-progress 
-            --timeout 20
-            --max-retries 2
-            --exclude "localhost"
-            --exclude "linkedin.com"
-            --exclude "instagram.com"
-            --exclude "content-collections.dev"
-            "**/*.md" 
-            "**/*.mdx"
-          fail: true
-
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v6
 
       - name: Setup Bun
@@ -52,11 +33,30 @@ jobs:
       - name: Type check
         run: bun run typecheck
 
-      - name: Lint
-        run: bun run lint
-
-      - name: Prettier check
-        run: bun run format:check
+      - name: Lint & format (Biome)
+        run: bun run biome ci .
 
       - name: Build
         run: bun run build
+
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Check documentation links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: |
+            --verbose 
+            --no-progress 
+            --timeout 20
+            --max-retries 2
+            --exclude "localhost"
+            --exclude "linkedin.com"
+            --exclude "instagram.com"
+            --exclude "content-collections.dev"
+            "**/*.md" 
+            "**/*.mdx"
+          fail: true

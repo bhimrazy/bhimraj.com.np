@@ -1,12 +1,11 @@
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-
 import Logo from "@/components/logo";
 import { ModeToggle } from "@/components/mode-toggle";
 import NavItem from "@/components/nav-item";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { siteConfig } from "@/config/site";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 export default function Header() {
   const navItems = [
@@ -23,7 +22,7 @@ export default function Header() {
         target="_blank"
         passHref
       >
-        <p className="z-1 cursor-pointer bg-white/90 py-2 text-center text-sm font-normal tracking-widest text-lime-700 backdrop-blur-xs transition hover:text-lime-800 dark:bg-slate-900/75 dark:text-white">
+        <p className="z-1 cursor-pointer bg-white/90 py-2 text-center font-normal text-lime-700 text-sm tracking-widest backdrop-blur-xs transition hover:text-lime-800 dark:bg-slate-900/75 dark:text-white">
           {siteConfig.tagline}
         </p>
       </Link>
@@ -33,8 +32,8 @@ export default function Header() {
             <Logo />
           </Link>
           <ul className="hidden space-x-2 font-medium text-slate-600 sm:flex sm:space-x-4 md:space-x-5 lg:space-x-6 dark:text-slate-100">
-            {navItems.map((item, idx) => (
-              <Link href={item?.link} key={idx} passHref>
+            {navItems.map((item, _idx) => (
+              <Link href={item?.link} key={item?.link} passHref>
                 <NavItem link={item.link} title={item.title} />
               </Link>
             ))}

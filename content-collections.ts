@@ -1,6 +1,6 @@
 import { defineCollection, defineConfig } from "@content-collections/core";
-import { z } from "zod";
 import { compileMarkdown } from "@content-collections/markdown";
+import { z } from "zod";
 
 const BlogPost = defineCollection({
   name: "BlogPost",

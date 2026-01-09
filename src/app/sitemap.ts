@@ -1,5 +1,5 @@
-import { siteConfig } from "@/config/site";
 import { allBlogPosts, allProjects } from "content-collections";
+import { siteConfig } from "@/config/site";
 
 export default async function sitemap() {
   const baseUrl = siteConfig.url.replace(/\/$/, "");
