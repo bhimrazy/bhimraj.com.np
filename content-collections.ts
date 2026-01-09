@@ -14,6 +14,7 @@ const BlogPost = defineCollection({
     tags: z.array(z.string()),
     image: z.string(),
     featured: z.boolean().default(false),
+    content: z.string(),
   }),
   transform: async (document, context) => {
     const html = await compileMarkdown(context, document);
@@ -37,6 +38,7 @@ const Project = defineCollection({
     image: z.string(),
     githubLink: z.string(),
     featured: z.boolean().default(false),
+    content: z.string(),
   }),
   transform: async (document, context) => {
     const html = await compileMarkdown(context, document);
