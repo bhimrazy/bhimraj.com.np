@@ -35,14 +35,14 @@
     "zod": "^4.3.5"
   },
   "devDependencies": {
-    "@content-collections/core": "^0.12.0",
+    "@content-collections/core": "^0.13.0",
     "@content-collections/markdown": "^0.1.4",
     "@content-collections/mdx": "^0.2.2",
     "@content-collections/next": "^0.2.10",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/typography": "^0.5.19",
-    "@types/node": "^24.10.1",
+    "@types/node": "^25.0.3",
     "@types/react": "^19.2.7",
     "@types/rss": "^0.0.32",
     "autoprefixer": "^10.4.23",
