@@ -75,12 +75,7 @@ export default function ProjectSection() {
                       {project?.description}
                     </p>
                     <div className="flex justify-end pt-2">
-                      <Link
-                        href="/projects/[slug]/"
-                        as={`/projects/${project._meta.path}/`}
-                        className="group inline-flex h-9 items-center rounded-full bg-slate-100 px-3 text-sm font-semibold whitespace-nowrap text-slate-700 hover:bg-slate-200 hover:text-slate-900 focus:ring-2 focus:ring-slate-500 focus:outline-hidden dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white dark:focus:ring-slate-500"
-                        passHref
-                      >
+                      <span className="group inline-flex h-9 items-center rounded-full bg-slate-100 px-3 text-sm font-semibold whitespace-nowrap text-slate-700 hover:bg-slate-200 hover:text-slate-900 focus:ring-2 focus:ring-slate-500 focus:outline-hidden dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white dark:focus:ring-slate-500">
                         Read more
                         <svg
                           className="ml-3 overflow-visible text-slate-300 group-hover:text-slate-400 dark:text-slate-500 dark:group-hover:text-slate-400"
@@ -95,7 +90,7 @@ export default function ProjectSection() {
                         >
                           <path d="M0 0L3 3L0 6"></path>
                         </svg>
-                      </Link>
+                      </span>
                     </div>
                   </div>
                 </div>
