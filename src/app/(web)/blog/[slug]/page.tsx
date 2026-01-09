@@ -1,7 +1,7 @@
-import TitleSection from "@/components/blog/title-section";
-import { siteConfig } from "@/config/site";
 import { allBlogPosts } from "content-collections";
 import type { Metadata } from "next";
+import TitleSection from "@/components/blog/title-section";
+import { siteConfig } from "@/config/site";
 
 export async function generateMetadata({
   params,
@@ -88,14 +88,16 @@ export default async function BlogPage({
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col space-y-10 px-4 xl:px-0">
       <div className="absolute -top-28 left-0 hidden h-full w-28 -rotate-45 bg-linear-to-r from-indigo-600/80 via-sky-600/75 to-purple-600/80 blur-[150px] md:left-1/2 lg:left-3/4 dark:block"></div>
-      <section className="py-6. flex flex-col">
+      <section className="flex flex-col py-6">
         <article className="mx-auto flex max-w-(--breakpoint-lg) flex-col items-center justify-center">
+          {/* biome-ignore lint/style/noNonNullAssertion: post is guaranteed to exist by getStaticPaths */}
           <TitleSection blog={post!} />
 
           {/* blog content */}
           <div className="">
             <div
-              className="prose prose-slate dark:prose-invert dark:prose-p:text-gray-300 dark:prose-li:text-gray-300 max-w-sm overflow-hidden break-words whitespace-normal sm:max-w-2xl lg:max-w-full dark:text-slate-400"
+              className="prose prose-slate dark:prose-invert max-w-sm overflow-hidden whitespace-normal break-words sm:max-w-2xl lg:max-w-full dark:prose-li:text-gray-300 dark:prose-p:text-gray-300 dark:text-slate-400"
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: MDX content is trusted
               dangerouslySetInnerHTML={{ __html: postContent }}
             ></div>
           </div>

@@ -1,9 +1,9 @@
+import type { Metadata } from "next";
 import ProjectSection from "@/components/projects/project-section";
 import { siteConfig } from "@/config/site";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Projects | " + siteConfig.name,
+  title: `Projects | ${siteConfig.name}`,
   description:
     "This is the projects page where you can find some of my recent projects with all the details.",
   alternates: {

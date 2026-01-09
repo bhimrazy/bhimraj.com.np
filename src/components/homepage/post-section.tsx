@@ -59,14 +59,14 @@ export default function PostSection() {
   return (
     <section className="flex flex-col justify-center space-y-8 py-2 text-left">
       <div className="flex flex-col space-y-2">
-        <h2 className="text-2xl font-bold text-gray-800 md:text-4xl">
+        <h2 className="font-bold text-2xl text-gray-800 md:text-4xl">
           {post_content?.title}
         </h2>
         <p className="text-gray-500">{post_content?.description}</p>
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {post_content?.posts.map((post, idx) => (
-          <Link href={post?.link} key={idx} target="_blank" passHref>
+        {post_content?.posts.map((post, _idx) => (
+          <Link href={post?.link} key={post?.link} target="_blank" passHref>
             <article className="flex flex-col overflow-hidden rounded-lg border shadow-2xs transition-all hover:shadow-lg dark:border-gray-900">
               <div className="overflow-hidden rounded-lg">
                 <Image
@@ -80,7 +80,7 @@ export default function PostSection() {
                 />
               </div>
               <div className="flex flex-col space-y-2 p-4 text-gray-600">
-                <h2 className="text-lg font-bold text-gray-800 hover:text-gray-900">
+                <h2 className="font-bold text-gray-800 text-lg hover:text-gray-900">
                   {post?.title}
                 </h2>
                 <span className="font-semibold text-gray-800">
@@ -94,7 +94,10 @@ export default function PostSection() {
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                       xmlns="http://www.w3.org/2000/svg"
+                      role="img"
+                      aria-label="Reading time"
                     >
+                      <title>Reading time</title>
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -111,7 +114,10 @@ export default function PostSection() {
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                       xmlns="http://www.w3.org/2000/svg"
+                      role="img"
+                      aria-label="Views count"
                     >
+                      <title>Views count</title>
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -137,7 +143,10 @@ export default function PostSection() {
         ))}
       </div>
       <div>
-        <button className="rounded-lg border bg-white px-8 py-2 text-base font-semibold shadow-2xs transition-all hover:shadow-xs dark:border-gray-900 dark:bg-gray-900">
+        <button
+          type="button"
+          className="rounded-lg border bg-white px-8 py-2 font-semibold text-base shadow-2xs transition-all hover:shadow-xs dark:border-gray-900 dark:bg-gray-900"
+        >
           {post_content?.see_more}
         </button>
       </div>

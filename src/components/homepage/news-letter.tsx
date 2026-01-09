@@ -1,6 +1,6 @@
 "use client";
-import { Form, FormState } from "@/lib/types";
 import { useState } from "react";
+import { Form, type FormState } from "@/lib/types";
 
 export default function NewsLetter() {
   const newsletter_content = {
@@ -21,8 +21,7 @@ export default function NewsLetter() {
       headers: {
         ...(process.env.NEXT_PUBLIC_API_ROUTE_SECRET
           ? {
-              Authorization:
-                "Basic " + process.env.NEXT_PUBLIC_API_ROUTE_SECRET,
+              Authorization: `Basic ${process.env.NEXT_PUBLIC_API_ROUTE_SECRET}`,
             }
           : {}),
         "Content-Type": "application/json",
@@ -58,7 +57,7 @@ export default function NewsLetter() {
     <section className="pt-10 pb-16">
       <div className="mx-auto flex flex-col space-y-6 rounded-lg border py-14 text-center dark:border-gray-900">
         <div className="space-y-1">
-          <h2 className="text-2xl font-semibold">
+          <h2 className="font-semibold text-2xl">
             {newsletter_content?.title}
           </h2>
           <p className="text-gray-600">{newsletter_content?.description}</p>
@@ -71,7 +70,7 @@ export default function NewsLetter() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             aria-label="Email for newsletter"
-            className="w-full rounded-xs px-6 py-2 text-gray-700 focus:ring-1 focus:ring-gray-600 focus:ring-offset-2 focus:outline-hidden dark:bg-gray-900 dark:focus:ring-gray-800 dark:focus:ring-offset-gray-800"
+            className="w-full rounded-xs px-6 py-2 text-gray-700 focus:outline-hidden focus:ring-1 focus:ring-gray-600 focus:ring-offset-2 dark:bg-gray-900 dark:focus:ring-gray-800 dark:focus:ring-offset-gray-800"
             type="email"
             autoComplete="email"
             placeholder={newsletter_content?.input_placeholder}
@@ -80,7 +79,7 @@ export default function NewsLetter() {
 
           <button
             type="submit"
-            className="absolute inset-y-0 right-0 m-1 rounded-xs bg-gray-200 px-3 text-sm font-semibold text-gray-600 hover:bg-gray-200/80 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+            className="absolute inset-y-0 right-0 m-1 rounded-xs bg-gray-200 px-3 font-semibold text-gray-600 text-sm hover:bg-gray-200/80 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
           >
             {newsletter_content?.button}
           </button>

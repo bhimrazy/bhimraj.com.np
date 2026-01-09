@@ -1,6 +1,6 @@
-import { formatDate, getReadingTime } from "@/lib/utils";
 import { allBlogPosts } from "content-collections";
 import Link from "next/link";
+import { formatDate, getReadingTime } from "@/lib/utils";
 
 export default function BlogSection() {
   const blogContent = {
@@ -11,7 +11,7 @@ export default function BlogSection() {
   return (
     <section className="relative flex flex-col py-6">
       <div className="space-y-1 py-10 text-center">
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-slate-200">
+        <h1 className="font-extrabold text-3xl text-slate-900 tracking-tight sm:text-4xl dark:text-slate-200">
           {blogContent?.title}
         </h1>
         <p className="text-lg text-slate-700 dark:text-slate-400">
@@ -26,12 +26,12 @@ export default function BlogSection() {
               Number(new Date(a?.publishedAt)),
           )
           .map((blog, idx) => (
-            <article key={idx}>
+            <article key={blog?._meta.path || idx}>
               <div className="grid grid-cols-1 md:grid-cols-6">
                 <div className="flex flex-col space-y-1">
                   <dl className="hidden md:block">
                     <dt className="sr-only">Date</dt>
-                    <dd className="text-sm leading-6 text-gray-700 dark:text-slate-400">
+                    <dd className="text-gray-700 text-sm leading-6 dark:text-slate-400">
                       <time
                         dateTime={new Date(blog?.publishedAt).toISOString()}
                       >
@@ -39,7 +39,7 @@ export default function BlogSection() {
                       </time>
                     </dd>
                   </dl>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-gray-500 text-sm">
                     {getReadingTime(blog.html)}
                   </p>
                 </div>
@@ -49,7 +49,7 @@ export default function BlogSection() {
                     as={`/blog/${blog._meta.path}/`}
                     passHref
                   >
-                    <h3 className="prose mb-4 text-xl font-bold tracking-tight text-slate-900 dark:text-slate-200">
+                    <h3 className="prose mb-4 font-bold text-slate-900 text-xl tracking-tight dark:text-slate-200">
                       {blog?.title}
                     </h3>
                   </Link>
@@ -59,7 +59,7 @@ export default function BlogSection() {
                   <Link
                     href="/blog/[slug]/"
                     as={`/blog/${blog._meta.path}/`}
-                    className="group inline-flex h-9 items-center rounded-full bg-slate-100 px-3 text-sm font-semibold whitespace-nowrap text-slate-700 hover:bg-slate-200 hover:text-slate-900 focus:ring-2 focus:ring-slate-500 focus:outline-hidden dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:hover:text-white dark:focus:ring-slate-500"
+                    className="group inline-flex h-9 items-center whitespace-nowrap rounded-full bg-slate-100 px-3 font-semibold text-slate-700 text-sm hover:bg-slate-200 hover:text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-500 dark:bg-slate-700 dark:text-slate-100 dark:focus:ring-slate-500 dark:hover:bg-slate-600 dark:hover:text-white"
                     passHref
                   >
                     Read more
@@ -73,7 +73,10 @@ export default function BlogSection() {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
+                      role="img"
+                      aria-label="Read more"
                     >
+                      <title>Read more</title>
                       <path d="M0 0L3 3L0 6"></path>
                     </svg>
                   </Link>

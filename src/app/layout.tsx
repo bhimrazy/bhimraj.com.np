@@ -1,9 +1,9 @@
-import { ThemeProvider } from "@/components/theme-provider";
-import { siteConfig } from "@/config/site";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { siteConfig } from "@/config/site";
+import "@/styles/globals.css";
 
 export const metadata: Metadata = {
   title: siteConfig.name,
@@ -65,7 +65,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
-      <body className="font-display flex min-h-dvh flex-col bg-white antialiased dark:bg-slate-900 dark:text-white">
+      <body className="flex min-h-dvh flex-col bg-white font-display antialiased dark:bg-slate-900 dark:text-white">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

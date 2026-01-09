@@ -49,9 +49,9 @@ export function slugify(text: string, maxLength = 50): string {
   let slug = text
     .toLowerCase() // Convert to lowercase
     .trim() // Trim whitespace
-    .replace(/[^a-z0-9\-]/g, "-") // Replace non-alphanumeric characters (except hyphens) with hyphens
-    .replace(/\-+/g, "-") // Replace multiple hyphens with single hyphen
-    .replace(/^\-|\-$/g, ""); // Remove leading and trailing hyphens
+    .replace(/[^a-z0-9-]/g, "-") // Replace non-alphanumeric characters (except hyphens) with hyphens
+    .replace(/-+/g, "-") // Replace multiple hyphens with single hyphen
+    .replace(/^-|-$/g, ""); // Remove leading and trailing hyphens
 
   // Truncate the slug if it exceeds the maximum length
   if (slug.length > maxLength) {
@@ -71,10 +71,11 @@ export function extractTableOfContents(
 ): { level: number; title: string; slug: string }[] {
   const headings: { level: number; title: string; slug: string }[] = [];
   const pattern = /<h([1-2])>(.*?)<\/h[1-2]>/gi;
-  let match;
+  let match: RegExpExecArray | null;
 
-  while ((match = pattern.exec(content)) !== null) {
-    const level = parseInt(match[1]);
+  match = pattern.exec(content);
+  while (match !== null) {
+    const level = parseInt(match[1], 10);
     const title = match[2].replace(/<[^>]*>?/gm, ""); // Remove HTML tags from title
     const slug = slugify(title);
 

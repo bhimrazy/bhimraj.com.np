@@ -1,7 +1,6 @@
-import { SEOProps } from "@/lib/types";
 import Head from "next/head";
-import React from "react";
 import { siteConfig } from "@/config/site";
+import type { SEOProps } from "@/lib/types";
 
 const socialTags = ({
   openGraphType,
@@ -75,7 +74,7 @@ const SEO = (props: SEOProps) => {
     updatedAt,
   } = props;
   const image = siteConfig.url + image_url;
-  let schema;
+  let schema: Record<string, unknown>;
   if (schemaType) {
     schema = {
       "@context": "https://schema.org",
@@ -153,6 +152,7 @@ const SEO = (props: SEOProps) => {
 
       <script
         type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD schema is trusted
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(schema),
         }}

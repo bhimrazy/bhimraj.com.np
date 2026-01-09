@@ -1,8 +1,8 @@
+import type { Metadata } from "next";
 import HeroSection from "@/components/homepage/hero-section";
 import NewsLetter from "@/components/homepage/news-letter";
 import ProjectSection from "@/components/homepage/project-section";
 import VideoSection from "@/components/homepage/video-section";
-import type { Metadata } from "next";
 export const metadata: Metadata = {
   alternates: {
     canonical: "/",

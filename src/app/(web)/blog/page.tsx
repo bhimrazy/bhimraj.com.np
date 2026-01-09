@@ -1,7 +1,7 @@
-import { blog } from "@/config/blog";
-import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import BlogSection from "@/components/blog/blog-section";
+import { blog } from "@/config/blog";
+import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: blog.title,
