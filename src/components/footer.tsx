@@ -123,7 +123,8 @@ export default function Footer() {
       },
     ],
   };
-  const copyright = "© Bhimraj Yadav 2024 . All rights reserved.";
+  const currentYear = new Date().getFullYear();
+  const copyright = `© Bhimraj Yadav ${currentYear} . All rights reserved.`;
   const policy = "Privacy Policy";
   return (
     <footer className="flex border-t dark:border-gray-800">
