@@ -7,6 +7,7 @@ const BlogPost = defineCollection({
   directory: "src/content/blog",
   include: "*.mdx",
   schema: z.object({
+    content: z.string(),
     title: z.string(),
     description: z.string(),
     publishedAt: z.string(),
@@ -29,6 +30,7 @@ const Project = defineCollection({
   directory: "src/content/projects",
   include: "*.md",
   schema: z.object({
+    content: z.string(),
     title: z.string(),
     description: z.string(),
     publishedAt: z.string(),
