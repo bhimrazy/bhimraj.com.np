@@ -119,7 +119,7 @@ export default function Footer() {
       },
       {
         title: "Twitter",
-        url: "https://twitter.com/bhimrazyadav",
+        url: "https://twitter.com/bhimrazy",
         icon: (
           <svg
             xmlns="http://www.w3.org/2000/svg"
