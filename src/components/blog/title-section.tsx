@@ -1,3 +1,4 @@
+import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { AvatarIcon } from "@/components/avatar";
 import { siteConfig } from "@/config/site";
@@ -13,25 +14,10 @@ export default function TitleSection({
       <div className="flex justify-start">
         <Link
           href="/blog"
-          className="group flex cursor-pointer font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white"
+          className="group flex cursor-pointer items-center font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white"
           passHref
         >
-          <svg
-            viewBox="0 -9 3 24"
-            className="mr-3 h-6 w-auto overflow-visible text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300"
-            role="img"
-            aria-label="Back arrow"
-          >
-            <title>Back arrow</title>
-            <path
-              d="M3 0L0 3L3 6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            ></path>
-          </svg>
+          <ChevronLeftIcon className="mr-1 h-4 w-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300" />
           Go back
         </Link>
       </div>
