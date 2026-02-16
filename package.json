@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",
-    "@content-collections/core": "^0.13.0",
+    "@content-collections/core": "^0.14.0",
     "@content-collections/next": "^0.2.10",
     "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^25.0.6",
