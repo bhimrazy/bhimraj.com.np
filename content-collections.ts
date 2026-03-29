@@ -50,5 +50,5 @@ const Project = defineCollection({
 });
 
 export default defineConfig({
-  collections: [BlogPost, Project],
+  content: [BlogPost, Project],
 });
