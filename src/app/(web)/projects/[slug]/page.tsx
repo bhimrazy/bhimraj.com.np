@@ -15,7 +15,7 @@ export async function generateMetadata({
     title: post?.title,
     description: post?.description,
     alternates: {
-      canonical: `/blog/${post?._meta.path}`,
+      canonical: `/projects/${post?._meta.path}`,
     },
     robots: {
       index: true,
