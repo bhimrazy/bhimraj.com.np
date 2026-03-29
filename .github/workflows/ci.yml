@@ -49,14 +49,15 @@ jobs:
         uses: lycheeverse/lychee-action@v2
         with:
           args: |
-            --verbose 
-            --no-progress 
+            --verbose
+            --no-progress
             --timeout 20
             --max-retries 2
+            --root-dir ./public
             --exclude "localhost"
             --exclude "linkedin.com"
             --exclude "instagram.com"
             --exclude "content-collections.dev"
-            "**/*.md" 
+            "**/*.md"
             "**/*.mdx"
           fail: true
