@@ -12,9 +12,10 @@ const markdownOptions = {
       rehypeShiki,
       {
         themes: {
-          dark: "catppuccin-mocha",
+          dark: "github-dark",
           light: "catppuccin-latte",
         },
+        defaultColor: false,
       },
     ] as Pluggable,
   ],

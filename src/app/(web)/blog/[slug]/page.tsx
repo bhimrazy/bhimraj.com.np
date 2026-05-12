@@ -1,5 +1,6 @@
 import { allBlogPosts } from "content-collections";
 import type { Metadata } from "next";
+import CodeCopyButtons from "@/components/blog/code-copy-buttons";
 import ShareSidebar from "@/components/blog/share-sidebar";
 import TitleSection from "@/components/blog/title-section";
 import Toc from "@/components/blog/toc";
@@ -100,9 +101,10 @@ export default async function BlogPostPage({
           {/* Center: article */}
           <article className="min-w-0">
             <TitleSection blog={post} />
+            <CodeCopyButtons />
 
             <div
-              className="prose dark:prose-invert wrap-break-word max-w-none overflow-hidden whitespace-normal prose-code:rounded prose-img:rounded-xl prose-pre:rounded-xl prose-img:border prose-pre:border prose-blockquote:border-l-(--site-accent) prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-headings:font-bold prose-headings:font-display prose-a:text-(--site-accent) prose-code:text-[13px] prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-li:text-(--site-text-secondary) prose-p:text-(--site-text-secondary) prose-pre:text-[13px] prose-blockquote:not-italic prose-p:leading-relaxed prose-headings:tracking-tight prose-a:no-underline prose-code:before:content-none prose-code:after:content-none hover:prose-a:underline dark:prose-img:border-(--site-border) dark:prose-pre:border-(--site-border) dark:prose-code:bg-(--site-bg-secondary) dark:prose-pre:bg-(--site-bg-secondary) dark:prose-code:text-(--site-text) dark:prose-headings:text-(--site-text) dark:prose-li:text-(--site-text-secondary) dark:prose-p:text-(--site-text-secondary) dark:prose-strong:text-(--site-text)"
+              className="prose dark:prose-invert wrap-break-word max-w-none overflow-hidden whitespace-normal prose-code:rounded prose-img:rounded-xl prose-pre:rounded-xl prose-img:border prose-pre:border prose-blockquote:border-l-(--site-accent) prose-pre:p-0 prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-headings:font-bold prose-headings:font-display prose-a:text-(--site-accent) prose-code:text-[13px] prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-li:text-(--site-text-secondary) prose-p:text-(--site-text-secondary) prose-pre:text-[13px] prose-blockquote:not-italic prose-p:leading-relaxed prose-headings:tracking-tight prose-a:no-underline prose-code:before:content-none prose-code:after:content-none hover:prose-a:underline dark:prose-img:border-(--site-border) dark:prose-pre:border-(--site-border) dark:prose-code:text-(--site-text) dark:prose-headings:text-(--site-text) dark:prose-li:text-(--site-text-secondary) dark:prose-p:text-(--site-text-secondary) dark:prose-strong:text-(--site-text)"
               // biome-ignore lint/security/noDangerouslySetInnerHtml: MDX content is trusted
               dangerouslySetInnerHTML={{ __html: post.html }}
             />

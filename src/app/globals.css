@@ -176,25 +176,7 @@
     border-radius: 3px;
   }
 
-  /* Shiki dual-theme: hide light blocks in dark mode and vice versa */
-  .dark .shiki.shiki-themes span {
-    color: var(--shiki-dark);
-    background-color: var(--shiki-dark-bg);
-  }
-  .shiki.shiki-themes .shiki-light {
-    display: block;
-  }
-  .shiki.shiki-themes .shiki-dark {
-    display: none;
-  }
-  .dark .shiki.shiki-themes .shiki-light {
-    display: none;
-  }
-  .dark .shiki.shiki-themes .shiki-dark {
-    display: block;
-  }
-
-  /* Shiki code block styling */
+  /* Shiki code block container */
   .shiki {
     overflow-x: auto;
     border-radius: 0.75rem;
@@ -210,5 +192,23 @@
     border-radius: 0;
     font-size: inherit;
     font-family: var(--font-mono);
+  }
+
+  /* Shiki dual-theme: generated code exposes both --shiki-light and --shiki-dark vars. */
+  .shiki,
+  .shiki span {
+    color: var(--shiki-light);
+    background-color: var(--shiki-light-bg);
+    font-style: var(--shiki-light-font-style);
+    font-weight: var(--shiki-light-font-weight);
+    text-decoration: var(--shiki-light-text-decoration);
+  }
+  .dark .shiki,
+  .dark .shiki span {
+    color: var(--shiki-dark);
+    background-color: var(--shiki-dark-bg);
+    font-style: var(--shiki-dark-font-style);
+    font-weight: var(--shiki-dark-font-weight);
+    text-decoration: var(--shiki-dark-text-decoration);
   }
 }
