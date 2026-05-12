@@ -6,9 +6,7 @@ import { siteConfig } from "@/config/site";
 export const metadata: Metadata = {
   title: blog.title,
   description: blog.description,
-  alternates: {
-    canonical: blog.url,
-  },
+  alternates: { canonical: blog.url },
   openGraph: {
     type: "website",
     url: blog.url,
@@ -29,9 +27,24 @@ export const metadata: Metadata = {
 
 export default function Blog() {
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-col space-y-10 px-4 xl:px-0">
-      <div className="absolute -top-28 left-0 hidden h-full w-28 -rotate-45 bg-linear-to-r from-indigo-600/80 via-sky-600/75 to-purple-600/80 blur-[150px] md:left-1/2 lg:left-3/4 dark:block"></div>
-      <BlogSection />
+    <main className="pt-28 pb-20">
+      <div className="mx-auto max-w-[1120px] px-6">
+        {/* Page header */}
+        <div className="mb-12">
+          <span className="mb-3 inline-block font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">
+            Blog
+          </span>
+          <h1 className="mb-3 font-bold font-display text-4xl text-site-text leading-tight sm:text-5xl">
+            Writing &amp; thinking
+          </h1>
+          <p className="max-w-lg text-base text-site-text-secondary">
+            Technical deep-dives on architecture, ML, open source, and building
+            in the open.
+          </p>
+        </div>
+
+        <BlogSection />
+      </div>
     </main>
   );
 }

@@ -1,7 +1,10 @@
 import { allBlogPosts } from "content-collections";
 import type { Metadata } from "next";
+import ShareSidebar from "@/components/blog/share-sidebar";
 import TitleSection from "@/components/blog/title-section";
+import Toc from "@/components/blog/toc";
 import { siteConfig } from "@/config/site";
+import { extractToc } from "@/lib/toc";
 
 export async function generateMetadata({
   params,
@@ -9,10 +12,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = allBlogPosts.find((post) => post._meta.path === slug);
+  const post = allBlogPosts.find((p) => p._meta.path === slug);
 
-  const title = post?.title;
-  const description = post?.description;
   const blogURL = `/blog/${post?._meta.path}`;
   const images = post?.image
     ? [
@@ -20,25 +21,24 @@ export async function generateMetadata({
           url: post.image,
           width: 1920,
           height: 1080,
-          alt: title,
+          alt: post.title,
           type: "image/png",
         },
       ]
     : [];
+
   return {
-    title: title,
-    description: description,
-    alternates: {
-      canonical: blogURL,
-    },
+    title: post?.title,
+    description: post?.description,
+    alternates: { canonical: blogURL },
     keywords: post?.tags,
     openGraph: {
-      title: title,
-      description: description,
+      title: post?.title,
+      description: post?.description,
       url: blogURL,
       siteName: siteConfig.name,
       authors: siteConfig.author.name,
-      images: images,
+      images,
       publishedTime: post?.publishedAt,
       modifiedTime: post?.updatedAt,
       type: "article",
@@ -46,10 +46,10 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: title,
-      description: description,
+      title: post?.title,
+      description: post?.description,
       creator: siteConfig.author.handle,
-      images: images,
+      images,
       site: siteConfig.author.handle,
     },
     robots: {
@@ -69,40 +69,67 @@ export async function generateMetadata({
   };
 }
 
-export async function generateStaticParams() {
-  // Get the paths we want to pre-render based on posts
-  const paths = allBlogPosts.map((post) => ({
-    slug: post._meta.path,
-  }));
-  return paths;
+export function generateStaticParams() {
+  return allBlogPosts.map((post) => ({ slug: post._meta.path }));
 }
 
-export default async function BlogPage({
+export default async function BlogPostPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = allBlogPosts.find((post) => post._meta.path === slug);
-  const postContent = post?.html.split("\n").splice(1).join("\n") || "";
-  return (
-    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col space-y-10 px-4 xl:px-0">
-      <div className="absolute -top-28 left-0 hidden h-full w-28 -rotate-45 bg-linear-to-r from-indigo-600/80 via-sky-600/75 to-purple-600/80 blur-[150px] md:left-1/2 lg:left-3/4 dark:block"></div>
-      <section className="flex flex-col py-6">
-        <article className="mx-auto flex max-w-(--breakpoint-lg) flex-col items-center justify-center">
-          {/* biome-ignore lint/style/noNonNullAssertion: post is guaranteed to exist by getStaticPaths */}
-          <TitleSection blog={post!} />
+  // biome-ignore lint/style/noNonNullAssertion: guaranteed by generateStaticParams
+  const post = allBlogPosts.find((p) => p._meta.path === slug)!;
 
-          {/* blog content */}
-          <div className="">
+  const tocItems = extractToc(post.html);
+  const postUrl = `${siteConfig.url}/blog/${post._meta.path}`;
+
+  return (
+    <main className="pt-24 pb-20">
+      <div className="mx-auto max-w-[1120px] px-6">
+        {/* 3-column layout: TOC | Article | Share */}
+        <div className="gap-10 lg:grid lg:grid-cols-[200px_1fr_52px]">
+          {/* Left: sticky TOC */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-24">
+              <Toc items={tocItems} />
+            </div>
+          </aside>
+
+          {/* Center: article */}
+          <article className="min-w-0">
+            <TitleSection blog={post} />
+
             <div
-              className="prose prose-slate dark:prose-invert max-w-sm overflow-hidden whitespace-normal break-words sm:max-w-2xl lg:max-w-full dark:prose-li:text-gray-300 dark:prose-p:text-gray-300 dark:text-slate-400"
+              className="prose dark:prose-invert wrap-break-word max-w-none overflow-hidden whitespace-normal prose-code:rounded prose-img:rounded-xl prose-pre:rounded-xl prose-img:border prose-pre:border prose-blockquote:border-l-(--site-accent) prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-headings:font-bold prose-headings:font-display prose-a:text-(--site-accent) prose-code:text-[13px] prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-li:text-(--site-text-secondary) prose-p:text-(--site-text-secondary) prose-pre:text-[13px] prose-blockquote:not-italic prose-p:leading-relaxed prose-headings:tracking-tight prose-a:no-underline prose-code:before:content-none prose-code:after:content-none hover:prose-a:underline dark:prose-img:border-(--site-border) dark:prose-pre:border-(--site-border) dark:prose-code:bg-(--site-bg-secondary) dark:prose-pre:bg-(--site-bg-secondary) dark:prose-code:text-(--site-text) dark:prose-headings:text-(--site-text) dark:prose-li:text-(--site-text-secondary) dark:prose-p:text-(--site-text-secondary) dark:prose-strong:text-(--site-text)"
               // biome-ignore lint/security/noDangerouslySetInnerHtml: MDX content is trusted
-              dangerouslySetInnerHTML={{ __html: postContent }}
-            ></div>
-          </div>
-        </article>
-      </section>
+              dangerouslySetInnerHTML={{ __html: post.html }}
+            />
+          </article>
+
+          {/* Right: sticky share buttons */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-24">
+              <ShareSidebar title={post.title} url={postUrl} />
+            </div>
+          </aside>
+        </div>
+
+        {/* Mobile: share row below article */}
+        <div
+          className="mt-12 flex items-center gap-3 border-t pt-8 lg:hidden"
+          style={{ borderColor: "var(--site-border)" }}
+        >
+          <span
+            className="font-mono text-xs"
+            style={{ color: "var(--site-text-tertiary)" }}
+          >
+            Share:
+          </span>
+          <ShareSidebar title={post.title} url={postUrl} />
+        </div>
+      </div>
     </main>
   );
 }

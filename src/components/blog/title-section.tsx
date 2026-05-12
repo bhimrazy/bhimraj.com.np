@@ -1,61 +1,84 @@
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
+import Image from "next/image";
 import Link from "next/link";
-import { AvatarIcon } from "@/components/avatar";
+import { Badge } from "@/components/ui/badge";
 import { siteConfig } from "@/config/site";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getReadingTime } from "@/lib/utils";
 
-export default function TitleSection({
-  blog,
-}: {
-  blog: typeof import("content-collections").allBlogPosts[number];
-}) {
+type BlogPost = typeof import("content-collections").allBlogPosts[number];
+
+export default function TitleSection({ blog }: { blog: BlogPost }) {
+  const date = blog.updatedAt ?? blog.publishedAt;
+  const dateLabel = blog.updatedAt ? "Updated" : "Published";
+
   return (
-    <div className="space-y-2 py-10 text-center">
-      <div className="flex justify-start">
-        <Link
-          href="/blog"
-          className="group flex cursor-pointer items-center font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white"
-          passHref
-        >
-          <ChevronLeftIcon className="mr-1 h-4 w-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300" />
-          Go back
-        </Link>
-      </div>
-      <div className="flex flex-row flex-wrap gap-4">
-        {blog?.tags.slice(0, 4).map((tag: string, _i) => (
-          <span
-            key={tag}
-            className="cursor-pointer whitespace-nowrap bg-gray-200 p-2 font-medium text-2xs uppercase tracking-wider transition hover:bg-gray-200/80 hover:shadow-2xs dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-700/80"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-      <h1 className="text-left font-extrabold text-3xl text-slate-900 tracking-tight sm:text-4xl dark:text-slate-200">
-        {blog?.title}
+    <div className="mb-10">
+      {/* Back link */}
+      <Link
+        href="/blog"
+        className="mb-8 inline-flex items-center gap-1.5 text-site-text-secondary text-sm transition-colors hover:text-(--site-text)"
+      >
+        <ChevronLeftIcon className="h-4 w-4" />
+        All posts
+      </Link>
+
+      {/* Tags */}
+      {blog.tags.length > 0 && (
+        <div className="mb-4 flex flex-wrap gap-2">
+          {blog.tags.slice(0, 4).map((tag) => (
+            <Badge
+              key={tag}
+              variant="secondary"
+              className="rounded-md bg-site-accent-subtle font-mono text-[10px] text-site-accent"
+              style={{ border: "none" }}
+            >
+              {tag}
+            </Badge>
+          ))}
+        </div>
+      )}
+
+      {/* Title */}
+      <h1 className="mb-5 font-bold font-display text-3xl text-site-text leading-tight sm:text-4xl">
+        {blog.title}
       </h1>
-      <div className="flex flex-row flex-wrap gap-2 text-left">
-        <span>{blog?.updatedAt ? "Last updated:" : "Published on:"}</span>
-        <dl>
-          <dt className="sr-only">Date</dt>
-          <dd className="font-medium text-slate-700 dark:text-slate-700">
-            <time dateTime={blog?.updatedAt ?? blog?.publishedAt}>
-              {formatDate(blog?.updatedAt ?? blog?.publishedAt)}
-            </time>
-          </dd>
-        </dl>
-        <span className="inline-flex items-center space-x-2">
-          <span>by</span>
-          <Link
-            className="inline-flex items-center space-x-1 font-medium text-blue-600"
+
+      {/* Meta row */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-site-border border-b pb-8 text-sm">
+        {/* Author */}
+        <div className="flex items-center gap-2">
+          <Image
+            src="/bhimraj-yadav.jpg"
+            alt={siteConfig.author.name}
+            width={28}
+            height={28}
+            className="rounded-full object-cover ring-2 ring-site-border"
+          />
+          <a
             href={siteConfig.links.linkedin}
             target="_blank"
-            rel="noreferrer"
-            passHref
+            rel="noopener noreferrer"
+            className="font-medium text-site-text transition-colors hover:text-(--site-accent)"
           >
-            <AvatarIcon />
-            <span>{siteConfig.author.name}</span>
-          </Link>
+            {siteConfig.author.name}
+          </a>
+        </div>
+
+        <span className="text-site-border">·</span>
+
+        {/* Date */}
+        <time
+          dateTime={date}
+          className="font-mono text-site-text-tertiary text-xs"
+        >
+          {dateLabel} {formatDate(date)}
+        </time>
+
+        <span className="text-site-border">·</span>
+
+        {/* Reading time */}
+        <span className="font-mono text-site-text-tertiary text-xs">
+          {getReadingTime(blog.html)}
         </span>
       </div>
     </div>

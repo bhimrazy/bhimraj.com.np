@@ -1,6 +1,24 @@
 import { defineCollection, defineConfig } from "@content-collections/core";
 import { compileMarkdown } from "@content-collections/markdown";
+import rehypeShiki from "@shikijs/rehype";
+import rehypeSlug from "rehype-slug";
+import type { Pluggable } from "unified";
 import { z } from "zod";
+
+const markdownOptions = {
+  rehypePlugins: [
+    rehypeSlug,
+    [
+      rehypeShiki,
+      {
+        themes: {
+          dark: "catppuccin-mocha",
+          light: "catppuccin-latte",
+        },
+      },
+    ] as Pluggable,
+  ],
+};
 
 const BlogPost = defineCollection({
   name: "BlogPost",
@@ -17,11 +35,8 @@ const BlogPost = defineCollection({
     featured: z.boolean().default(false),
   }),
   transform: async (document, context) => {
-    const html = await compileMarkdown(context, document);
-    return {
-      ...document,
-      html,
-    };
+    const html = await compileMarkdown(context, document, markdownOptions);
+    return { ...document, html };
   },
 });
 
@@ -41,11 +56,8 @@ const Project = defineCollection({
     featured: z.boolean().default(false),
   }),
   transform: async (document, context) => {
-    const html = await compileMarkdown(context, document);
-    return {
-      ...document,
-      html,
-    };
+    const html = await compileMarkdown(context, document, markdownOptions);
+    return { ...document, html };
   },
 });
 

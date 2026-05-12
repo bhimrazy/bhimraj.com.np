@@ -1,6 +1,6 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { DM_Sans, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
@@ -9,13 +9,14 @@ export const metadata: Metadata = {
   title: siteConfig.name,
   metadataBase: new URL(siteConfig.url),
   description: siteConfig.description,
-  keywords: ["ML/DL Engineer", "Django Developer", "NextJs Developer"],
-  authors: [
-    {
-      name: "Bhimraj Yadav",
-      url: "https://bhimraj.com.np",
-    },
+  keywords: [
+    "Software Engineer",
+    "OSS Contributor",
+    "ML/DL Engineer",
+    "Python Developer",
+    "Next.js Developer",
   ],
+  authors: [{ name: "Bhimraj Yadav", url: "https://bhimraj.com.np" }],
   creator: "bhimrazy",
   openGraph: {
     type: "website",
@@ -48,15 +49,29 @@ export const metadata: Metadata = {
   manifest: `${siteConfig.url}/site.webmanifest`,
 };
 
-const inter = Inter({
+/* next/font variables — use unique names to avoid conflict with @theme entries */
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-space-grotesk",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-dm-sans",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-jetbrains-mono",
 });
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
+    { media: "(prefers-color-scheme: light)", color: "#fafaf9" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f0d0a" },
   ],
 };
 
@@ -64,11 +79,16 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
-      <body className="flex min-h-dvh flex-col bg-white font-display antialiased dark:bg-slate-900 dark:text-white">
+    <html
+      lang="en"
+      className={`${spaceGrotesk.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
+    >
+      <body className="flex min-h-dvh flex-col antialiased">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
