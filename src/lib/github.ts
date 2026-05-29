@@ -1,14 +1,33 @@
+import { Effect, Schedule } from "effect";
 import { cacheLife, cacheTag } from "next/cache";
+import { z } from "zod";
+import {
+  fetchEffect,
+  HttpError,
+  isRetryableHttpError,
+  jsonEffect,
+} from "@/lib/http";
+import { logger } from "@/lib/logger";
 
 const GITHUB_API = "https://api.github.com";
+const DEFAULT_TIMEOUT_MS = 5000;
+const DEFAULT_RETRIES = 2;
+const CONTRIBUTIONS_CONCURRENCY = 3;
+const log = logger.withPrefix("[github]");
 
-interface RepoResponse {
-  stargazers_count: number;
-}
+const repoSchema = z.object({
+  stargazers_count: z.number().int().nonnegative(),
+});
 
-interface SearchResponse {
-  items: RepoResponse[];
-}
+const searchSchema = z.object({
+  items: z.array(repoSchema),
+});
+
+const contributorEntrySchema = z.object({
+  author: z.object({ login: z.string() }).nullable(),
+  total: z.number().int().nonnegative().optional(),
+  weeks: z.array(z.object({ c: z.number().int().nonnegative() })),
+});
 
 interface GitHubStarsOptions {
   /** Fetch stars for a single repo instead of summing across all the user's repos. */
@@ -43,31 +62,121 @@ export async function getGitHubStars(
 
   const url = repo
     ? `${GITHUB_API}/repos/${username}/${repo}`
-    : `${GITHUB_API}/search/repositories?q=user:${username}+stars:>0&sort=updated&order=desc&per_page=100`;
+    : `${GITHUB_API}/search/repositories?${new URLSearchParams({
+        order: "desc",
+        per_page: "100",
+        q: `user:${username} stars:>0`,
+        sort: "updated",
+      })}`;
+  const logContext = { repo, username };
 
-  try {
-    const res = await fetch(url);
-    if (!res.ok) return fallback;
+  const program = fetchEffect(url, {
+    headers: {
+      Accept: "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+  }).pipe(
+    Effect.retry({
+      schedule: Schedule.spaced("400 millis"),
+      times: DEFAULT_RETRIES,
+      while: isRetryableHttpError,
+    }),
+    Effect.flatMap((res) =>
+      repo
+        ? jsonEffect(res, repoSchema).pipe(
+            Effect.map((data) => data.stargazers_count),
+          )
+        : jsonEffect(res, searchSchema).pipe(
+            Effect.map((data) =>
+              data.items.reduce((sum, r) => sum + r.stargazers_count, 0),
+            ),
+          ),
+    ),
+    Effect.tapError((error) =>
+      Effect.sync(() => {
+        log.warn(
+          "stars request failed",
+          {
+            ...logContext,
+            status: error.status,
+          },
+          error,
+        );
+      }),
+    ),
+    Effect.catchAll(() => Effect.succeed(fallback)),
+  );
 
-    if (repo) {
-      const data: RepoResponse = await res.json();
-      return data.stargazers_count;
-    }
-
-    const data: SearchResponse = await res.json();
-    return data.items.reduce((sum, r) => sum + r.stargazers_count, 0);
-  } catch {
-    return fallback;
-  }
+  return Effect.runPromise(program);
 }
 
-interface ContributorEntry {
-  author: { login: string } | null;
-  total: number;
-  weeks: { c: number }[];
+function parseContributors(body: string) {
+  return Effect.try({
+    try: () => JSON.parse(body) as unknown,
+    catch: () => new HttpError("Invalid GitHub contributors JSON"),
+  }).pipe(
+    Effect.flatMap((json) => {
+      const parsed = z.array(contributorEntrySchema).safeParse(json);
+      if (!parsed.success) {
+        return Effect.fail(new HttpError("Invalid GitHub contributors data"));
+      }
+      return Effect.succeed(parsed.data);
+    }),
+  );
 }
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+function fetchRepoContributors(repo: string, username: string) {
+  const url = new URL(
+    "graphs/contributors-data",
+    `https://github.com/${repo}/`,
+  );
+
+  return fetchEffect(
+    url,
+    {
+      cache: "no-store",
+      headers: {
+        Accept: "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+      },
+    },
+    DEFAULT_TIMEOUT_MS,
+  ).pipe(
+    Effect.flatMap((res) => {
+      if (res.status === 202) {
+        return Effect.fail(
+          new HttpError("GitHub contributors data is warming", {
+            retryable: true,
+            status: res.status,
+          }),
+        );
+      }
+
+      return Effect.tryPromise({
+        try: () => res.text(),
+        catch: () => new HttpError("GitHub contributors response failed"),
+      });
+    }),
+    Effect.flatMap((body) => {
+      const trimmedBody = body.trim();
+      if (!trimmedBody) {
+        return Effect.fail(
+          new HttpError("GitHub contributors data is empty", {
+            retryable: true,
+          }),
+        );
+      }
+      return parseContributors(trimmedBody);
+    }),
+    Effect.map((data) => {
+      const entry = data.find(
+        (c) => c.author?.login.toLowerCase() === username.toLowerCase(),
+      );
+      if (!entry) return 0;
+      return entry.total ?? entry.weeks.reduce((sum, w) => sum + w.c, 0);
+    }),
+  );
+}
 
 /**
  * Returns a single repo's commit count for `username`, matching the number
@@ -75,7 +184,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
  *
  * This hits the same endpoint the Insights UI renders from, which needs no
  * auth and isn't bound by the REST API's 60/hour limit. GitHub responds with
- * HTTP 202 (and an empty body) while it warms its stats cache, so we poll
+ * HTTP 202 (and an empty body) while it warms its stats cache, so Effect polls
  * until the data is ready. Counts are for the default branch only, and the
  * contributor list is capped at the top contributors — a user outside that
  * set reads as 0.
@@ -85,39 +194,30 @@ async function fetchRepoCommits(
   username: string,
   maxRetries: number,
   delayMs: number,
-): Promise<number> {
-  const url = `https://github.com/${repo}/graphs/contributors-data`;
+): Promise<number | null> {
+  const logContext = { repo, username };
+  const program = fetchRepoContributors(repo, username).pipe(
+    Effect.retry({
+      schedule: Schedule.spaced(`${delayMs} millis`),
+      times: maxRetries,
+      while: isRetryableHttpError,
+    }),
+    Effect.tapError((error) =>
+      Effect.sync(() => {
+        log.warn(
+          "contributions request failed",
+          {
+            ...logContext,
+            status: error.status,
+          },
+          error,
+        );
+      }),
+    ),
+    Effect.catchAll(() => Effect.succeed(null)),
+  );
 
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    const res = await fetch(url, {
-      headers: {
-        Accept: "application/json",
-        "X-Requested-With": "XMLHttpRequest",
-      },
-      cache: "no-store",
-    });
-
-    if (res.status === 202) {
-      await sleep(delayMs);
-      continue;
-    }
-    if (!res.ok) return 0;
-
-    const body = (await res.text()).trim();
-    if (!body) {
-      await sleep(delayMs);
-      continue;
-    }
-
-    const data: ContributorEntry[] = JSON.parse(body);
-    const entry = data.find(
-      (c) => c.author?.login.toLowerCase() === username.toLowerCase(),
-    );
-    if (!entry) return 0;
-    return entry.total ?? entry.weeks.reduce((sum, w) => sum + w.c, 0);
-  }
-
-  return 0;
+  return Effect.runPromise(program);
 }
 
 /**
@@ -140,15 +240,22 @@ export async function getGitHubContributions(
   cacheTag("github-contributions");
 
   try {
-    const entries = await Promise.all(
-      repos.map(
-        async (repo) =>
-          [repo, await fetchRepoCommits(repo, username, 5, 1500)] as const,
+    const entries = await Effect.runPromise(
+      Effect.all(
+        repos.map((repo) =>
+          Effect.promise(
+            async () =>
+              [repo, await fetchRepoCommits(repo, username, 2, 500)] as const,
+          ),
+        ),
+        { concurrency: CONTRIBUTIONS_CONCURRENCY },
       ),
     );
-    const total = entries.reduce((sum, [, count]) => sum + count, 0);
-    return total || fallback;
-  } catch {
+    const total = entries.reduce((sum, [, count]) => sum + (count ?? 0), 0);
+    const hasResolvedRepo = entries.some(([, count]) => count !== null);
+    return hasResolvedRepo ? total : fallback;
+  } catch (error) {
+    log.warn("contributions request error", { username }, error);
     return fallback;
   }
 }
