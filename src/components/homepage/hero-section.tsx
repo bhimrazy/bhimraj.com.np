@@ -1,18 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/config/site";
+import { getGitHubStars } from "@/lib/github";
 import AuroraBg from "./aurora-bg";
 
 const yearsExp = new Date().getFullYear() - 2022;
 
-const STATS = [
-  { value: `${yearsExp}+`, label: "Years Experience" },
-  { value: "200+", label: "OSS Contributions" },
-  { value: "3+", label: "OSS Frameworks" },
-  { value: "1", label: "IEEE Publication" },
-];
+export default async function HeroSection() {
+  const githubStars = await getGitHubStars(siteConfig.author.username, 200);
 
-export default function HeroSection() {
+  const STATS = [
+    { value: `${yearsExp}+`, label: "Years Experience" },
+    { value: "300+", label: "OSS Contributions" },
+    { value: `${githubStars}+`, label: "GitHub Stars" },
+    { value: "1", label: "IEEE Publication" },
+  ];
   return (
     <section className="relative pt-44 pb-20">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -112,7 +115,7 @@ export default function HeroSection() {
             </div>
 
             {/* Location chip */}
-            <div className="absolute -right-4 -bottom-4 rounded-xl border border-site-border bg-site-card px-4 py-3 shadow-lg backdrop-blur-md">
+            <div className="absolute -right-4 -bottom-4 rounded-xl border border-site-border bg-site-card px-4 py-3 backdrop-blur-md">
               <p className="mb-0.5 font-mono text-[11px] text-site-text-tertiary">
                 Currently based in
               </p>
