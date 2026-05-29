@@ -1,3 +1,4 @@
+import { Container } from "@/components/container";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -46,8 +47,8 @@ const EXPERIENCES = [
 
 export default function ExperienceSection() {
   return (
-    <section className="border-site-border border-t py-20">
-      <div className="mx-auto max-w-[1120px] px-6">
+    <section className="py-20">
+      <Container>
         {/* Section header */}
         <div className="mb-12">
           <span className="font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">
@@ -123,7 +124,7 @@ export default function ExperienceSection() {
             </Card>
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

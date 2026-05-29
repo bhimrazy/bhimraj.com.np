@@ -13,6 +13,7 @@ const GITHUB_API = "https://api.github.com";
 const DEFAULT_TIMEOUT_MS = 5000;
 const DEFAULT_RETRIES = 2;
 const CONTRIBUTIONS_CONCURRENCY = 3;
+const CONTRIBUTORS_REVALIDATE_SECONDS = 60 * 60 * 24; // 24 hours
 const log = logger.withPrefix("[github]");
 
 const repoSchema = z.object({
@@ -125,7 +126,10 @@ function parseContributors(body: string) {
   );
 }
 
-function fetchRepoContributors(repo: string, username: string) {
+function fetchRepoContributors(
+  repo: string,
+  username: string,
+): Effect.Effect<number, HttpError> {
   const url = new URL(
     "graphs/contributors-data",
     `https://github.com/${repo}/`,
@@ -134,10 +138,14 @@ function fetchRepoContributors(repo: string, username: string) {
   return fetchEffect(
     url,
     {
-      cache: "no-store",
+      cache: "force-cache",
       headers: {
         Accept: "application/json",
         "X-Requested-With": "XMLHttpRequest",
+      },
+      next: {
+        revalidate: CONTRIBUTORS_REVALIDATE_SECONDS,
+        tags: [`github-contributors:${repo}`],
       },
     },
     DEFAULT_TIMEOUT_MS,

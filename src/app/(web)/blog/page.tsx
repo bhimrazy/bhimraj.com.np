@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import BlogSection from "@/components/blog/blog-section";
+import { Container } from "@/components/container";
 import { blog } from "@/config/blog";
 import { siteConfig } from "@/config/site";
 
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
 export default function Blog() {
   return (
     <main className="pt-28 pb-20">
-      <div className="mx-auto max-w-[1120px] px-6">
+      <Container>
         {/* Page header */}
         <div className="mb-12">
           <span className="mb-3 inline-block font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">
@@ -44,7 +45,7 @@ export default function Blog() {
         </div>
 
         <BlogSection />
-      </div>
+      </Container>
     </main>
   );
 }

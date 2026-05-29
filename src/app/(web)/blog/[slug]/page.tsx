@@ -4,6 +4,7 @@ import CodeCopyButtons from "@/components/blog/code-copy-buttons";
 import ShareSidebar from "@/components/blog/share-sidebar";
 import TitleSection from "@/components/blog/title-section";
 import Toc from "@/components/blog/toc";
+import { Container } from "@/components/container";
 import { siteConfig } from "@/config/site";
 import { extractToc } from "@/lib/toc";
 
@@ -88,7 +89,7 @@ export default async function BlogPostPage({
 
   return (
     <main className="pt-24 pb-20">
-      <div className="mx-auto max-w-[1120px] px-6">
+      <Container>
         {/* 3-column layout: TOC | Article | Share */}
         <div className="gap-10 lg:grid lg:grid-cols-[200px_1fr_52px]">
           {/* Left: sticky TOC */}
@@ -131,7 +132,7 @@ export default async function BlogPostPage({
           </span>
           <ShareSidebar title={post.title} url={postUrl} />
         </div>
-      </div>
+      </Container>
     </main>
   );
 }

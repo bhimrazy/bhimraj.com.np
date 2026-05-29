@@ -1,5 +1,6 @@
 import { allBlogPosts } from "content-collections";
 import Link from "next/link";
+import { Container } from "@/components/container";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, getReadingTime } from "@/lib/utils";
 
@@ -11,8 +12,8 @@ const sortedPosts = [...allBlogPosts]
 
 export default function BlogPreview() {
   return (
-    <section className="border-site-border border-t py-20">
-      <div className="mx-auto max-w-[1120px] px-6">
+    <section className="py-20">
+      <Container>
         {/* Section header */}
         <div className="mb-12">
           <span className="font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">
@@ -74,7 +75,7 @@ export default function BlogPreview() {
             All posts →
           </Link>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

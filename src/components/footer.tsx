@@ -1,5 +1,6 @@
 import { cacheLife } from "next/cache";
 import Link from "next/link";
+import { Container } from "@/components/container";
 import { siteConfig } from "@/config/site";
 
 const SOCIAL_LINKS = [
@@ -24,7 +25,7 @@ export default async function Footer() {
 
   return (
     <footer className="mt-auto border-site-border border-t">
-      <div className="mx-auto max-w-[1120px] px-6 py-12">
+      <Container className="py-12">
         <div className="flex flex-wrap items-start justify-between gap-8">
           {/* Brand */}
           <div>
@@ -75,7 +76,7 @@ export default async function Footer() {
           <span>© {year} Bhimraj Yadav. All rights reserved.</span>
           <span>Built with passion and open source.</span>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }

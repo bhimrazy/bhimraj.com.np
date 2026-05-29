@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Container } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, type FormState } from "@/lib/types";
@@ -43,8 +44,8 @@ export default function NewsLetter() {
   };
 
   return (
-    <section className="border-site-border border-t py-20">
-      <div className="mx-auto max-w-[1120px] px-6">
+    <section className="py-20">
+      <Container>
         <div className="rounded-2xl border border-site-border bg-site-card px-8 py-14 text-center">
           <span className="mb-3 inline-block font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">
             Newsletter
@@ -92,7 +93,7 @@ export default function NewsLetter() {
             </p>
           )}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

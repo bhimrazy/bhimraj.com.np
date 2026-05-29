@@ -5,6 +5,7 @@ import HeroSection from "@/components/homepage/hero-section";
 import NewsLetter from "@/components/homepage/news-letter";
 import OSSPreview from "@/components/homepage/oss-preview";
 import ResearchPreview from "@/components/homepage/research-preview";
+import { SectionSeparator } from "@/components/section-separator";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -14,10 +15,15 @@ export default function Home() {
   return (
     <main>
       <HeroSection />
+      <SectionSeparator />
       <ExperienceSection />
+      <SectionSeparator />
       <OSSPreview />
+      <SectionSeparator />
       <BlogPreview />
+      <SectionSeparator />
       <ResearchPreview />
+      <SectionSeparator />
       <NewsLetter />
     </main>
   );

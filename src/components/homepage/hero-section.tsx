@@ -1,6 +1,7 @@
 import { cacheLife } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
+import { Container } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { ossRepos } from "@/config/oss";
 import { siteConfig } from "@/config/site";
@@ -29,7 +30,7 @@ export default async function HeroSection() {
         <AuroraBg />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-280 px-6">
+      <Container className="relative z-10">
         <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-[1fr_300px]">
           {/* Left: content */}
           <div>
@@ -158,7 +159,7 @@ export default async function HeroSection() {
             </div>
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
