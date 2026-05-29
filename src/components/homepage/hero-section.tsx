@@ -8,7 +8,9 @@ import AuroraBg from "./aurora-bg";
 const yearsExp = new Date().getFullYear() - 2022;
 
 export default async function HeroSection() {
-  const githubStars = await getGitHubStars(siteConfig.author.username, 200);
+  const githubStars = await getGitHubStars(siteConfig.author.username, {
+    fallback: 200,
+  });
 
   const STATS = [
     { value: `${yearsExp}+`, label: "Years Experience" },
