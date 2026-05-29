@@ -1,3 +1,4 @@
+import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 
@@ -15,7 +16,10 @@ const NAV_LINKS = [
   { label: "Projects", href: "/projects" },
 ];
 
-export default function Footer() {
+export default async function Footer() {
+  "use cache";
+  cacheLife("days");
+
   const year = new Date().getFullYear();
 
   return (

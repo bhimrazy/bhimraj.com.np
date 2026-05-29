@@ -1,20 +1,25 @@
+import { cacheLife } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ossRepos } from "@/config/oss";
 import { siteConfig } from "@/config/site";
-import { getGitHubStars } from "@/lib/github";
+import { getGitHubContributions, getGitHubStars } from "@/lib/github";
 import AuroraBg from "./aurora-bg";
 
-const yearsExp = new Date().getFullYear() - 2022;
-
 export default async function HeroSection() {
-  const githubStars = await getGitHubStars(siteConfig.author.username, {
-    fallback: 200,
-  });
+  "use cache";
+  cacheLife("hours");
+
+  const yearsExp = new Date().getFullYear() - 2022;
+  const [githubStars, contributions] = await Promise.all([
+    getGitHubStars(siteConfig.author.username, { fallback: 200 }),
+    getGitHubContributions(siteConfig.author.username, ossRepos, 300),
+  ]);
 
   const STATS = [
     { value: `${yearsExp}+`, label: "Years Experience" },
-    { value: "300+", label: "OSS Contributions" },
+    { value: `${contributions}+`, label: "OSS Contributions" },
     { value: `${githubStars}+`, label: "GitHub Stars" },
     { value: "1", label: "IEEE Publication" },
   ];
