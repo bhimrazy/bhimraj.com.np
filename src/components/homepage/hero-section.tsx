@@ -40,7 +40,7 @@ export default function HeroSection() {
               </span>
             </h1>
 
-            <p className="mb-8 max-w-[520px] text-[17px] text-site-text-secondary leading-relaxed">
+            <p className="mb-8 max-w-130 text-[17px] text-site-text-secondary leading-relaxed">
               I&apos;m <strong className="text-site-text">Bhimraj Yadav</strong>{" "}
               — Software Engineer at Fetchly Labs, Consultant at StableCluster,
               Tier 2 OSS contributor at Lightning AI, and AI Researcher. I build
@@ -85,7 +85,7 @@ export default function HeroSection() {
 
             {/* Photo frame */}
             <div
-              className="relative h-[330px] w-[268px] overflow-hidden rounded-2xl border border-site-border shadow-2xl"
+              className="relative h-82.5 w-67 overflow-hidden rounded-2xl border border-site-border shadow-2xl"
               style={{
                 boxShadow:
                   "0 40px 80px rgba(0,0,0,0.3), 0 0 60px var(--site-accent-subtle)",
