@@ -14,7 +14,7 @@ const STATS = [
 
 export default function HeroSection() {
   return (
-    <section className="relative pt-44 pb-28">
+    <section className="relative pt-44 pb-20">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <AuroraBg />
       </div>
@@ -133,14 +133,11 @@ export default function HeroSection() {
         </div>
 
         {/* Stats row */}
-        <div
-          className="mt-20 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-site-border bg-site-border sm:grid-cols-4"
-          style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.05)" }}
-        >
+        <div className="mt-20 grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-site-border shadow-xl/2 sm:grid-cols-4">
           {STATS.map((stat) => (
             <div
               key={stat.label}
-              className="flex flex-col items-center justify-center bg-site-card px-6 py-7 text-center"
+              className="flex flex-col items-center justify-center bg-site-card px-8 py-9 text-center"
             >
               <span className="font-bold font-display text-2xl text-site-text">
                 {stat.value}
