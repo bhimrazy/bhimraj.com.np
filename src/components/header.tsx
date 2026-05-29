@@ -71,7 +71,7 @@ export default function Header() {
   }, [activeHref, moveIndicator]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 py-3 sm:py-4">
+    <header className="fixed inset-x-0 top-0 z-50 py-2">
       <div
         className={cn(
           "pointer-events-none absolute inset-0 transition-all duration-300",
