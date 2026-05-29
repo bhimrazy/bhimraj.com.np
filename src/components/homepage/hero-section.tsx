@@ -18,7 +18,7 @@ export default function HeroSection() {
         <AuroraBg />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-[1120px] px-6">
+      <div className="relative z-10 mx-auto max-w-280 px-6">
         {/* Main hero grid */}
         <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-[1fr_300px]">
           {/* Left: content */}
@@ -42,10 +42,10 @@ export default function HeroSection() {
 
             <p className="mb-8 max-w-[520px] text-[17px] text-site-text-secondary leading-relaxed">
               I&apos;m <strong className="text-site-text">Bhimraj Yadav</strong>{" "}
-              — Software Engineer at Fetchly Labs, Tier 2 OSS contributor at
-              Lightning AI, and AI researcher. I build production systems and
-              explore computer vision &amp; generative AI. Based in Kathmandu,
-              Nepal.
+              — Software Engineer at Fetchly Labs, Consultant at StableCluster,
+              Tier 2 OSS contributor at Lightning AI, and AI Researcher. I build
+              production systems and explore computer vision &amp; generative
+              AI. Based in Kathmandu, Nepal.
             </p>
 
             <div className="flex flex-wrap gap-3">
