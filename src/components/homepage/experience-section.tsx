@@ -24,24 +24,14 @@ const EXPERIENCES = [
     tech: ["PyTorch", "LitServe", "LitData", "LitGPT"],
   },
   {
-    role: "AI/ML Researcher",
-    company: "IEEE Published",
-    location: "Academic",
-    period: "2024",
-    current: false,
+    role: "Consultant",
+    company: "StableCluster",
+    location: "Remote",
+    period: "Present",
+    current: true,
     description:
-      "Published comparative study on deep learning models for semantic segmentation of pores in SEM images in IEEE Access.",
-    tech: ["Deep Learning", "Computer Vision", "Segmentation"],
-  },
-  {
-    role: "Vice President",
-    company: "KathFOSS Community",
-    location: "Kathmandu",
-    period: "2022",
-    current: false,
-    description:
-      "Led the Kathford Free & Open Source Software community, organizing events and mentoring students in open source.",
-    tech: ["Community", "Open Source", "Leadership"],
+      "Consulting on cloud infrastructure, deployment workflows, and production-ready systems for AI and software teams.",
+    tech: ["Cloud", "DevOps", "AI Infrastructure"],
   },
 ] as const;
 
@@ -68,7 +58,7 @@ export default function ExperienceSection() {
           {EXPERIENCES.map((exp) => (
             <Card
               key={`${exp.company}-${exp.role}`}
-              className="border border-site-border bg-site-card px-8 py-7"
+              className="border border-site-border bg-site-card px-8 py-7 shadow-none transition-colors duration-200 hover:border-site-border-hover dark:border-white/7 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:shadow-[0_18px_50px_rgba(0,0,0,0.18)] dark:hover:border-site-border-hover"
             >
               <CardContent className="p-0">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

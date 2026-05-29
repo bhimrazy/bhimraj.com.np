@@ -65,7 +65,7 @@ export default async function HeroSection() {
               <Button
                 asChild
                 variant="ghost"
-                className="rounded-lg border border-site-border px-6 text-site-text-secondary hover:border-site-border-hover hover:bg-site-bg-secondary hover:text-site-text"
+                className="rounded-lg border border-site-border bg-site-card/40 px-6 text-site-text-secondary hover:border-site-border-hover hover:bg-site-bg-secondary hover:text-site-text dark:border-white/10 dark:bg-site-bg-secondary/60 dark:text-site-text-secondary dark:hover:border-site-accent/40 dark:hover:bg-site-accent-subtle dark:hover:text-site-text"
               >
                 <Link href="/blog">Read the Blog</Link>
               </Button>
