@@ -11,6 +11,8 @@
     "lint:fix": "biome lint --write .",
     "format:write": "biome format --write .",
     "format:check": "biome format .",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "check": "biome check && bun run build",
     "prepare": "husky",
     "knip": "knip"
@@ -49,6 +51,7 @@
     "lint-staged": "^17.0.5",
     "postcss": "^8.5.15",
     "tailwindcss": "^4.3.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.7"
   }
 }
