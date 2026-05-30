@@ -6,6 +6,7 @@ import {
   Heading,
   Hr,
   Html,
+  Link,
   Preview,
   Row,
   Section,
@@ -28,11 +29,11 @@ export type FeedbackEmailProps = {
 function MetaRow({ label, value }: { label: string; value?: string }) {
   if (!value) return null;
   return (
-    <Row className="mb-1">
-      <Column className="w-[96px] align-top text-[12px] text-warm-muted">
+    <Row>
+      <Column className="w-[84px] py-1.5 align-top text-[12px] text-warm-muted">
         {label}
       </Column>
-      <Column className="break-words text-[13px] text-warm-text">
+      <Column className="break-words py-1.5 text-[13px] text-warm-text">
         {value}
       </Column>
     </Row>
@@ -52,21 +53,46 @@ export function FeedbackEmail(props: FeedbackEmailProps) {
               <Text className="m-0 mb-3 font-semibold text-[12px] text-warm-accent uppercase tracking-[1.5px]">
                 New feedback
               </Text>
-              <Heading className="m-0 mb-5 font-display font-bold text-[22px] text-warm-text">
+              <Heading className="m-0 font-display font-bold text-[22px] text-warm-text">
                 {who}
               </Heading>
+              {props.email ? (
+                <Text className="m-0 mt-1 text-[14px] text-warm-muted">
+                  Reply to{" "}
+                  <Link
+                    href={`mailto:${props.email}`}
+                    className="font-medium text-warm-accent no-underline"
+                  >
+                    {props.email}
+                  </Link>
+                </Text>
+              ) : (
+                <Text className="m-0 mt-1 text-[14px] text-warm-muted">
+                  No email — anonymous
+                </Text>
+              )}
 
-              <Section className="mb-6 rounded-xl border border-warm-border bg-warm-bg px-5 py-4">
+              {props.reason ? (
+                <Text className="m-0 mt-5 mb-0 inline-block rounded-full border border-warm-border bg-warm-bg px-3 py-1.5 text-[12px] text-warm-muted">
+                  Looking for{" "}
+                  <span className="font-semibold text-warm-text">
+                    {props.reason}
+                  </span>
+                </Text>
+              ) : null}
+
+              <Section className="mt-5 rounded-xl border border-warm-border bg-warm-bg px-5 py-4">
                 <Text className="m-0 whitespace-pre-wrap text-[15px] text-warm-text leading-[1.65]">
                   {props.message}
                 </Text>
               </Section>
 
-              <Hr className="my-0 border-warm-border" />
+              <Hr className="my-7 border-warm-border" />
 
-              <Section className="mt-6">
-                <MetaRow label="Looking for" value={props.reason} />
-                <MetaRow label="Email" value={props.email} />
+              <Text className="m-0 mb-2 font-semibold text-[11px] text-warm-muted uppercase tracking-[0.8px]">
+                Context
+              </Text>
+              <Section>
                 <MetaRow label="Page" value={props.path} />
                 <MetaRow label="Referrer" value={props.referrer} />
                 <MetaRow label="IP" value={props.ip} />
