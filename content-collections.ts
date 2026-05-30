@@ -13,7 +13,7 @@ const markdownOptions = {
       {
         themes: {
           dark: "github-dark",
-          light: "catppuccin-latte",
+          light: "github-light",
         },
         defaultColor: false,
       },

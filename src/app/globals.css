@@ -176,40 +176,45 @@
     background: var(--site-border);
     border-radius: 3px;
   }
+}
 
-  /* Shiki code block container */
-  .shiki {
-    overflow-x: auto;
-    border-radius: 0.75rem;
-    padding: 1.25rem 1.5rem;
-    font-size: 0.8125rem;
-    line-height: 1.7;
-    border: 1px solid var(--site-border);
-    margin: 1.5rem 0;
-  }
-  .shiki code {
-    background: none;
-    padding: 0;
-    border-radius: 0;
-    font-size: inherit;
-    font-family: var(--font-mono);
-  }
-
-  /* Shiki dual-theme: generated code exposes both --shiki-light and --shiki-dark vars. */
-  .shiki,
-  .shiki span {
-    color: var(--shiki-light);
-    background-color: var(--shiki-light-bg);
-    font-style: var(--shiki-light-font-style);
-    font-weight: var(--shiki-light-font-weight);
-    text-decoration: var(--shiki-light-text-decoration);
-  }
-  .dark .shiki,
-  .dark .shiki span {
-    color: var(--shiki-dark);
-    background-color: var(--shiki-dark-bg);
-    font-style: var(--shiki-dark-font-style);
-    font-weight: var(--shiki-dark-font-weight);
-    text-decoration: var(--shiki-dark-text-decoration);
-  }
+/*
+ * Shiki code blocks — defined unlayered so they win over Tailwind Typography's
+ * `prose` pre styles. Those defaults live in the utilities layer, which beats
+ * @layer base regardless of selector specificity; unlayered rules outrank all layers.
+ * Generated code exposes --shiki-light / --shiki-dark token vars (defaultColor: false).
+ */
+.shiki {
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  padding: 1.5rem 1.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  border: 1px solid var(--site-border);
+  margin: 1.5rem 0;
+  background-color: var(--site-card-bg);
+  color: var(--shiki-light);
+}
+.shiki code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  font-family: var(--font-mono);
+}
+.shiki span {
+  color: var(--shiki-light);
+  font-style: var(--shiki-light-font-style);
+  font-weight: var(--shiki-light-font-weight);
+  text-decoration: var(--shiki-light-text-decoration);
+}
+.dark .shiki {
+  background-color: var(--site-card-bg);
+  color: var(--shiki-dark);
+}
+.dark .shiki span {
+  color: var(--shiki-dark);
+  font-style: var(--shiki-dark-font-style);
+  font-weight: var(--shiki-dark-font-weight);
+  text-decoration: var(--shiki-dark-text-decoration);
 }
