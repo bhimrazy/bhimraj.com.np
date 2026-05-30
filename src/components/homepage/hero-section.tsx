@@ -52,7 +52,7 @@ export default async function HeroSection() {
               — Software Engineer at Fetchly Labs, Tier 2 OSS contributor at
               Lightning AI, Consultant at StableCluster, and AI Researcher. I
               build production systems and explore computer vision &amp;
-              generative AI. Based in Kathmandu, Nepal.
+              generative AI.
             </p>
 
             <div className="flex flex-wrap gap-3">
