@@ -86,7 +86,7 @@ export default function Header() {
         }}
       />
 
-      <nav className="relative mx-auto flex h-12 w-full max-w-screen-xl items-center justify-between px-4 sm:px-6">
+      <nav className="relative mx-auto flex h-12 w-full max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Wordmark */}
         <Link
           href="/"
