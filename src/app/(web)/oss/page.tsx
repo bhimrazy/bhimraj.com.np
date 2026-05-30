@@ -116,7 +116,8 @@ export default async function OSSPage() {
     getFeaturedRepoStats(featuredRepo),
   ]);
 
-  const yearsActive = new Date().getFullYear() - OSS_START_YEAR;
+  const currentYear = monthly.at(-1)?.year ?? OSS_START_YEAR;
+  const yearsActive = currentYear - OSS_START_YEAR;
 
   const stats = [
     {
