@@ -24,7 +24,7 @@ export default async function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-auto border-site-border border-t">
+    <footer className="mt-auto border-site-border/50 border-t dark:border-white/4">
       <Container className="py-12">
         <div className="flex flex-wrap items-start justify-between gap-8">
           {/* Brand */}
@@ -72,7 +72,7 @@ export default async function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-site-border border-t pt-6 text-site-text-tertiary text-xs">
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-site-border/50 border-t pt-6 text-site-text-tertiary text-xs dark:border-white/4">
           <span>© {year} Bhimraj Yadav. All rights reserved.</span>
           <span>Built with passion and open source.</span>
         </div>

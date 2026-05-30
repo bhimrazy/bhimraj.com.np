@@ -76,7 +76,7 @@ export default function Header() {
         className={cn(
           "pointer-events-none absolute inset-0 transition-all duration-300",
           scrolled
-            ? "border-(--site-border) border-b backdrop-blur-xl"
+            ? "border-site-border/50 border-b backdrop-blur-xl dark:border-white/4"
             : "border-transparent border-b",
         )}
         style={{
