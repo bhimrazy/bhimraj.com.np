@@ -75,7 +75,7 @@ export async function getGitHubStars(
     ? `${GITHUB_API}/repos/${username}/${repo}`
     : `${GITHUB_API}/search/repositories?${new URLSearchParams({
         order: "desc",
-        per_page: "100",
+        per_page: "500",
         q: `user:${username} stars:>0`,
         sort: "updated",
       })}`;

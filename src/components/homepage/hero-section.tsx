@@ -14,7 +14,7 @@ export default async function HeroSection() {
 
   const yearsExp = new Date().getFullYear() - 2022;
   const [githubStars, contributions] = await Promise.all([
-    getGitHubStars(siteConfig.author.username, { fallback: 200 }),
+    getGitHubStars(siteConfig.author.username, { fallback: 600 }),
     getGitHubContributions(siteConfig.author.username, ossRepos, 300),
   ]);
 
