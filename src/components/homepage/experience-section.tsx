@@ -1,7 +1,9 @@
 import Image from "next/image";
 import { Container } from "@/components/container";
+import { ossRepos } from "@/config/oss";
 import { siteConfig } from "@/config/site";
 import {
+  getGitHubContributions,
   getLightningAIEcosystemStats,
   type LightningAIEcosystemStats,
 } from "@/lib/github";
@@ -108,15 +110,29 @@ function CompanyLogo({ logo, company }: { logo: Logo; company: string }) {
   );
 }
 
-function EcosystemStatsRow({ stats }: { stats: LightningAIEcosystemStats }) {
+function EcosystemStatsRow({
+  stats,
+  totalCommits,
+}: {
+  stats: LightningAIEcosystemStats;
+  totalCommits: number;
+}) {
   return (
-    <div className="mt-1 border-site-border border-t pt-3">
+    <div className="mt-1">
       <p className="mb-2.5 font-mono text-[10px] text-site-text-tertiary uppercase tracking-[1.2px]">
         Contributing to the ecosystem
       </p>
 
       {/* Summary stats */}
-      <div className="mb-2.5 flex flex-wrap items-center gap-x-4 gap-y-1">
+      <div className="mb-2.5 flex flex-wrap items-center gap-1.5">
+        {totalCommits > 0 && (
+          <>
+            <span className="font-mono font-semibold text-site-accent text-xs">
+              {totalCommits}+ contributions
+            </span>
+            <span className="text-site-text-tertiary text-xs">·</span>
+          </>
+        )}
         <span className="font-mono font-semibold text-site-accent text-xs">
           {stats.totalPrs} PRs merged
         </span>
@@ -124,7 +140,7 @@ function EcosystemStatsRow({ stats }: { stats: LightningAIEcosystemStats }) {
 
       {/* Top repos */}
       <div className="flex flex-wrap gap-1.5">
-        {stats.repos.slice(0, 3).map((repo) => (
+        {stats.repos.slice(0, 4).map((repo) => (
           <a
             key={repo.name}
             href={`https://github.com/${repo.fullName}/pulls?q=is%3Apr+author%3Abhimrazy+is%3Amerged&${UTM}`}
@@ -141,13 +157,22 @@ function EcosystemStatsRow({ stats }: { stats: LightningAIEcosystemStats }) {
             </span>
           </a>
         ))}
+        {stats.repos.length > 4 && (
+          <span className="inline-flex items-center rounded-md border border-site-border bg-site-bg-tertiary px-2 py-0.5 font-mono text-[11px] text-site-text-tertiary dark:border-white/6 dark:bg-white/3">
+            +{stats.repos.length - 4} more
+          </span>
+        )}
       </div>
     </div>
   );
 }
 
 export default async function ExperienceSection() {
-  const lightningStats = await getLightningAIEcosystemStats("bhimrazy");
+  const lightningRepos = ossRepos.filter((r) => r.startsWith("Lightning-AI/"));
+  const [lightningStats, totalCommits] = await Promise.all([
+    getLightningAIEcosystemStats("bhimrazy"),
+    getGitHubContributions("bhimrazy", lightningRepos),
+  ]);
 
   return (
     <section className="py-20">
@@ -229,21 +254,26 @@ export default async function ExperienceSection() {
                     {exp.description}
                   </p>
 
-                  {/* Tech tags */}
-                  <div className="flex flex-wrap gap-2">
-                    {exp.tech.map((t) => (
-                      <span
-                        key={t}
-                        className="rounded-md border border-site-border bg-site-bg-tertiary px-2.5 py-1 font-mono text-[11px] text-site-text-secondary transition-colors hover:border-site-accent/40 hover:bg-site-accent-subtle hover:text-site-accent dark:border-white/6 dark:bg-white/3"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
+                  {/* Tech tags — hidden for Lightning AI (shown in ecosystem row below) */}
+                  {!exp.lightningStats && (
+                    <div className="flex flex-wrap gap-2">
+                      {exp.tech.map((t) => (
+                        <span
+                          key={t}
+                          className="rounded-md border border-site-border bg-site-bg-tertiary px-2.5 py-1 font-mono text-[11px] text-site-text-secondary transition-colors hover:border-site-accent/40 hover:bg-site-accent-subtle hover:text-site-accent dark:border-white/6 dark:bg-white/3"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Lightning AI ecosystem stats */}
                   {exp.lightningStats && (
-                    <EcosystemStatsRow stats={lightningStats} />
+                    <EcosystemStatsRow
+                      stats={lightningStats}
+                      totalCommits={totalCommits}
+                    />
                   )}
                 </div>
               </div>
