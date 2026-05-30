@@ -2,9 +2,11 @@ import { allBlogPosts } from "content-collections";
 import type { Metadata } from "next";
 import CodeCopyButtons from "@/components/blog/code-copy-buttons";
 import ShareSidebar from "@/components/blog/share-sidebar";
+import SponsorCard from "@/components/blog/sponsor-card";
 import TitleSection from "@/components/blog/title-section";
 import Toc from "@/components/blog/toc";
 import { Container } from "@/components/container";
+import { ads } from "@/config/ads";
 import { siteConfig } from "@/config/site";
 import { extractToc } from "@/lib/toc";
 
@@ -92,10 +94,11 @@ export default async function BlogPostPage({
       <Container>
         {/* 3-column layout: TOC | Article | Share */}
         <div className="gap-10 lg:grid lg:grid-cols-[200px_1fr_52px]">
-          {/* Left: sticky TOC */}
+          {/* Left: sticky TOC + sponsor */}
           <aside className="hidden lg:block">
             <div className="sticky top-24">
               <Toc items={tocItems} />
+              {ads[0]?.enabled && <SponsorCard ad={ads[0]} />}
             </div>
           </aside>
 
