@@ -10,7 +10,10 @@ if (key) {
     // pageleave — so App Router route changes are tracked without a manual
     // capture in a provider.
     defaults: "2025-05-24",
-    // No anonymous person profiles: cheaper, and we only identify on intent.
+    // Don't create persistent person records for anonymous visitors — this
+    // site never calls identify(), so "identified_only" means no profiles
+    // are ever stored. Events still flow; you get aggregate counts/funnels,
+    // just no per-visitor tracking. Cheaper and more privacy-respecting.
     person_profiles: "identified_only",
     // Session replay is intentionally off — the feedback widget collects
     // name/email/message and we don't want that on tape.
