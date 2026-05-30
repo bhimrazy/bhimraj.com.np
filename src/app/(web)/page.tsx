@@ -1,21 +1,32 @@
 import type { Metadata } from "next";
+import BlogPreview from "@/components/homepage/blog-preview";
+import ExperienceSection from "@/components/homepage/experience-section";
+import FeaturedProject from "@/components/homepage/featured-project";
 import HeroSection from "@/components/homepage/hero-section";
 import NewsLetter from "@/components/homepage/news-letter";
-import ProjectSection from "@/components/homepage/project-section";
-import VideoSection from "@/components/homepage/video-section";
+import OSSPreview from "@/components/homepage/oss-preview";
+import ResearchPreview from "@/components/homepage/research-preview";
+import { SectionSeparator } from "@/components/section-separator";
+
 export const metadata: Metadata = {
-  alternates: {
-    canonical: "/",
-  },
+  alternates: { canonical: "/" },
 };
 
-export default async function Home() {
+export default function Home() {
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-col space-y-10 px-4 xl:px-0">
+    <main>
       <HeroSection />
-      {/* <PostSection /> */}
-      <ProjectSection />
-      <VideoSection />
+      <SectionSeparator />
+      <ExperienceSection />
+      <SectionSeparator />
+      <OSSPreview />
+      <SectionSeparator />
+      <FeaturedProject />
+      <SectionSeparator />
+      <BlogPreview />
+      <SectionSeparator />
+      <ResearchPreview />
+      <SectionSeparator />
       <NewsLetter />
     </main>
   );

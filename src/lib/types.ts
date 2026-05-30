@@ -1,11 +1,6 @@
-export enum Form {
-  Initial,
-  Loading,
-  Success,
-  Error,
-}
+import type { allProjects } from "content-collections";
 
-export type FormState = {
-  state: Form;
-  message?: string;
+export type Project = (typeof allProjects)[number] & {
+  liveLink?: string;
+  updatedAt?: string;
 };

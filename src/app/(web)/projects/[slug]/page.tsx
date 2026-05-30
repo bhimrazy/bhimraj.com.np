@@ -1,7 +1,38 @@
+import { ChevronLeftIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
 import { allProjects } from "content-collections";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
+import { Container } from "@/components/container";
+import { Badge } from "@/components/ui/badge";
 import { siteConfig } from "@/config/site";
+import type { Project } from "@/lib/types";
+import { formatDate } from "@/lib/utils";
+
+const UTM =
+  "utm_source=bhimraj.com.np&utm_medium=portfolio&utm_campaign=projects";
+function withUtm(url: string) {
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}${UTM}`;
+}
+
+function ExternalLinkIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+    </svg>
+  );
+}
 
 export async function generateMetadata({
   params,
@@ -9,13 +40,30 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = allProjects.find((post) => post._meta.path === slug);
+  const project = allProjects.find((p) => p._meta.path === slug);
+
+  const projectURL = `/projects/${project?._meta.path}`;
 
   return {
-    title: post?.title,
-    description: post?.description,
-    alternates: {
-      canonical: `/projects/${post?._meta.path}`,
+    title: project?.title,
+    description: project?.description,
+    alternates: { canonical: projectURL },
+    keywords: project?.tags,
+    openGraph: {
+      title: project?.title,
+      description: project?.description,
+      url: projectURL,
+      siteName: siteConfig.name,
+      images: project?.image ? [{ url: project.image }] : [],
+      type: "article",
+      locale: "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project?.title,
+      description: project?.description,
+      creator: siteConfig.author.handle,
+      images: project?.image ? [project.image] : [],
     },
     robots: {
       index: true,
@@ -23,22 +71,12 @@ export async function generateMetadata({
       "max-snippet": -1,
       "max-image-preview": "large",
       "max-video-preview": -1,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
     },
   };
 }
-export async function generateStaticParams() {
-  const paths = allProjects.map((project) => ({
-    slug: project._meta.path,
-  }));
 
-  return paths;
+export function generateStaticParams() {
+  return allProjects.map((project) => ({ slug: project._meta.path }));
 }
 
 export default async function ProjectDetail({
@@ -47,85 +85,94 @@ export default async function ProjectDetail({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const project = allProjects.find((project) => project._meta.path === slug);
-  const projectContent = project?.html.split("\n").splice(1).join("\n") || "";
+  // biome-ignore lint/style/noNonNullAssertion: guaranteed by generateStaticParams
+  const project = allProjects.find((p) => p._meta.path === slug)! as Project;
+
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col space-y-10 px-4 xl:px-0">
-      <div className="absolute -top-28 left-0 hidden h-full w-28 -rotate-45 bg-linear-to-r from-indigo-600/80 via-sky-600/75 to-purple-600/80 blur-[150px] md:left-1/2 lg:left-3/4 dark:block"></div>
-      <section className="flex flex-col py-6">
-        <article className="flex flex-col">
-          <div className="space-y-2 py-10 text-center">
-            <div className="flex justify-start">
-              <Link
-                href="/projects"
-                className="group flex cursor-pointer font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white"
-                passHref
-              >
-                <svg
-                  viewBox="0 -9 3 24"
-                  className="mr-3 h-6 w-auto overflow-visible text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300"
-                  role="img"
-                  aria-label="Back arrow"
-                >
-                  <title>Back arrow</title>
-                  <path
-                    d="M3 0L0 3L3 6"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  ></path>
-                </svg>
-                Go back to projects
-              </Link>
-            </div>
-            <div className="flex flex-row space-x-2">
-              {project?.tags.map((tag: string) => (
-                <span
+    <main className="pt-24 pb-20">
+      <Container>
+        <div className="mx-auto max-w-3xl">
+          {/* Back */}
+          <Link
+            href="/projects"
+            className="mb-10 inline-flex items-center gap-1.5 text-site-text-secondary text-sm transition-colors hover:text-site-text"
+          >
+            <ChevronLeftIcon className="h-4 w-4" />
+            All projects
+          </Link>
+
+          {/* Tags */}
+          {project.tags.length > 0 && (
+            <div className="mb-4 flex flex-wrap gap-2">
+              {project.tags.map((tag) => (
+                <Badge
                   key={tag}
-                  className="bg-gray-200 p-2 font-medium text-xs uppercase tracking-wider dark:bg-slate-700 dark:text-slate-200"
+                  variant="secondary"
+                  className="rounded-md border-transparent bg-site-accent-subtle font-mono text-[10px] text-site-accent"
                 >
                   {tag}
-                </span>
+                </Badge>
               ))}
             </div>
-            <h1 className="text-left font-extrabold text-3xl text-slate-900 tracking-tight sm:text-4xl dark:text-slate-200">
-              {project?.title}
-            </h1>
-            <div className="flex flex-row space-x-2 text-left">
-              <span>
-                by{" "}
-                <Link
-                  className="text-blue-600"
-                  href={siteConfig.links.github}
+          )}
+
+          {/* Title */}
+          <h1 className="mb-4 font-bold font-display text-3xl text-site-text leading-tight sm:text-4xl">
+            {project.title}
+          </h1>
+
+          {/* Meta row */}
+          <div className="mb-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-site-border border-b pb-8 text-sm">
+            <time
+              dateTime={project.publishedAt}
+              className="font-mono text-site-text-tertiary text-xs"
+            >
+              {formatDate(project.publishedAt)}
+            </time>
+            <span className="text-site-border">·</span>
+            <div className="flex items-center gap-3">
+              <a
+                href={withUtm(project.githubLink)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-mono text-site-text-secondary text-xs transition-colors hover:text-site-text"
+              >
+                <GitHubLogoIcon className="h-3.5 w-3.5" />
+                GitHub
+              </a>
+              {project.liveLink && (
+                <a
+                  href={withUtm(project.liveLink)}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 font-mono text-site-accent text-xs transition-colors hover:opacity-80"
                 >
-                  @bhimrazy
-                </Link>
-              </span>
-              <span>on</span>
-              <dl>
-                <dt className="sr-only">Date</dt>
-                <dd className="text-slate-700 dark:text-slate-400">
-                  <time dateTime={project?.publishedAt}>
-                    {project?.publishedAt}
-                  </time>
-                </dd>
-              </dl>
+                  <ExternalLinkIcon className="h-3.5 w-3.5" />
+                  Lightning AI
+                </a>
+              )}
             </div>
           </div>
 
-          <div className="flex w-full flex-col items-center">
-            <div
-              className="prose prose-slate dark:prose-invert max-w-xs overflow-hidden whitespace-normal break-words sm:max-w-md lg:max-w-4xl dark:text-slate-400"
-              // biome-ignore lint/security/noDangerouslySetInnerHtml: MDX content is trusted
-              dangerouslySetInnerHTML={{ __html: projectContent }}
-            ></div>
+          {/* OG image */}
+          <div className="relative mb-10 aspect-2/1 w-full overflow-hidden rounded-xl border border-site-border">
+            <Image
+              src={project.image}
+              alt={project.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 768px"
+            />
           </div>
-        </article>
-      </section>
+
+          {/* Content */}
+          <div
+            className="prose dark:prose-invert wrap-break-word max-w-none prose-headings:scroll-mt-24 overflow-hidden whitespace-normal prose-code:rounded prose-img:rounded-xl prose-pre:rounded-xl prose-img:border prose-pre:border prose-blockquote:border-l-site-accent prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-headings:font-bold prose-headings:font-display prose-a:text-site-accent prose-code:text-[13px] prose-h2:text-2xl prose-h3:text-xl prose-li:text-site-text-secondary prose-p:text-site-text-secondary prose-pre:text-[13px] prose-blockquote:not-italic prose-p:leading-relaxed prose-headings:tracking-tight prose-a:no-underline prose-code:before:content-none prose-code:after:content-none hover:prose-a:underline dark:prose-img:border-site-border dark:prose-pre:border-site-border dark:prose-code:text-site-text dark:prose-headings:text-site-text dark:prose-li:text-site-text-secondary dark:prose-p:text-site-text-secondary dark:prose-strong:text-site-text"
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: MDX content is trusted
+            dangerouslySetInnerHTML={{ __html: project.html }}
+          />
+        </div>
+      </Container>
     </main>
   );
 }

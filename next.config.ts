@@ -2,7 +2,13 @@ import { withContentCollections } from "@content-collections/next";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
   poweredByHeader: false,
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
   images: {
     unoptimized: true,
     formats: ["image/avif", "image/webp"],
@@ -23,6 +29,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "pbs.twimg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "opengraph.githubassets.com",
       },
     ],
   },

@@ -1,97 +1,95 @@
 "use client";
+
 import { useState } from "react";
-import { Form, type FormState } from "@/lib/types";
+import { toast } from "sonner";
+import { Container } from "@/components/container";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { capture } from "@/lib/analytics";
 
 export default function NewsLetter() {
-  const newsletter_content = {
-    title: "Subscribe to the NewsLetter",
-    description:
-      "Get emails from me about web development, tech, and early access to new articles.",
-    input_placeholder: "example@email.com",
-    button: "Subscribe",
-  };
-  const [form, setForm] = useState<FormState>({ state: Form.Initial });
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [website, setWebsite] = useState("");
 
   const subscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    setForm({ state: Form.Loading });
-    fetch(`/api/subscribe`, {
-      method: "POST",
-      headers: {
-        ...(process.env.NEXT_PUBLIC_API_ROUTE_SECRET
-          ? {
-              Authorization: `Basic ${process.env.NEXT_PUBLIC_API_ROUTE_SECRET}`,
-            }
-          : {}),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: email }),
-    })
-      .then(async (res) => {
-        const data = await res.json();
-        if (res.ok) {
-          setEmail("");
-          setForm({
-            state: Form.Success,
-            message: data?.message,
-          });
-        } else {
-          // console.error(data?.error);
-          setForm({
-            state: Form.Error,
-            message: data?.error,
-          });
-        }
-      })
-      .catch((error) => {
-        console.error(error?.error);
-        setForm({
-          state: Form.Error,
-          message: error?.error,
-        });
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, website }),
       });
+      const data = await res.json();
+
+      if (res.ok) {
+        setEmail("");
+        capture("newsletter_submitted", { result: "success" });
+        toast.success(
+          data?.message ?? "🎉 You're in! Please check your inbox.",
+        );
+      } else {
+        capture("newsletter_submitted", { result: "error" });
+        toast.error(data?.error ?? "Something went wrong. Please try again.");
+      }
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <section className="pt-10 pb-16">
-      <div className="mx-auto flex flex-col space-y-6 rounded-lg border py-14 text-center dark:border-gray-900">
-        <div className="space-y-1">
-          <h2 className="font-semibold text-2xl">
-            {newsletter_content?.title}
+    <section className="py-20">
+      <Container>
+        <div className="rounded-2xl border border-site-border/50 bg-site-card px-8 py-14 text-center dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary">
+          <span className="mb-3 inline-block font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">
+            Newsletter
+          </span>
+          <h2 className="mb-3 font-bold font-display text-2xl text-site-text">
+            Stay in the loop
           </h2>
-          <p className="text-gray-600">{newsletter_content?.description}</p>
-        </div>
-        <form
-          onSubmit={subscribe}
-          className="relative mx-auto max-w-2xl rounded-xs border sm:w-96 dark:border-none"
-        >
-          <input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            aria-label="Email for newsletter"
-            className="w-full rounded-xs px-6 py-2 text-gray-700 focus:outline-hidden focus:ring-1 focus:ring-gray-600 focus:ring-offset-2 dark:bg-gray-900 dark:focus:ring-gray-800 dark:focus:ring-offset-gray-800"
-            type="email"
-            autoComplete="email"
-            placeholder={newsletter_content?.input_placeholder}
-            required
-          />
+          <p className="mx-auto mb-8 max-w-sm text-base text-site-text-secondary">
+            Thoughts on software engineering, OSS, AI research, and what
+            I&apos;m building — delivered occasionally.
+          </p>
 
-          <button
-            type="submit"
-            className="absolute inset-y-0 right-0 m-1 rounded-xs bg-gray-200 px-3 font-semibold text-gray-600 text-sm hover:bg-gray-200/80 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+          <form
+            onSubmit={subscribe}
+            className="mx-auto flex max-w-sm flex-col gap-3 sm:flex-row"
           >
-            {newsletter_content?.button}
-          </button>
-        </form>
-        <small
-          className={
-            form.state === Form.Error ? "text-red-600" : "text-green-600"
-          }
-        >
-          {form.message}
-        </small>
-      </div>
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="john.doe@example.com"
+              required
+              aria-label="Email for newsletter"
+              className="flex-1 rounded-lg border border-site-border/50 bg-site-bg text-site-text text-sm placeholder:text-site-text-tertiary focus-visible:border-site-accent/40 focus-visible:ring-site-accent/15 dark:border-white/6 dark:bg-site-bg-secondary"
+              disabled={loading}
+            />
+            <Input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              className="sr-only"
+            />
+            <Button
+              type="submit"
+              disabled={loading}
+              className="cursor-pointer rounded-lg border-0 bg-site-accent px-6 font-semibold text-white hover:bg-site-accent/85"
+            >
+              {loading ? "Subscribing…" : "Subscribe"}
+            </Button>
+          </form>
+        </div>
+      </Container>
     </section>
   );
 }
