@@ -108,7 +108,7 @@ export default async function BlogPostPage({
             <CodeCopyButtons />
 
             <div
-              className="prose dark:prose-invert wrap-break-word max-w-none prose-headings:scroll-mt-24 overflow-hidden whitespace-normal prose-code:rounded prose-img:rounded-xl prose-pre:rounded-xl prose-img:border prose-pre:border prose-blockquote:border-l-(--site-accent) prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-headings:font-bold prose-headings:font-display prose-a:text-(--site-accent) prose-code:text-[13px] prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-li:text-(--site-text-secondary) prose-p:text-(--site-text-secondary) prose-pre:text-[13px] prose-blockquote:not-italic prose-p:leading-relaxed prose-headings:tracking-tight prose-a:no-underline prose-code:before:content-none prose-code:after:content-none hover:prose-a:underline dark:prose-img:border-(--site-border) dark:prose-pre:border-(--site-border) dark:prose-code:text-(--site-text) dark:prose-headings:text-(--site-text) dark:prose-li:text-(--site-text-secondary) dark:prose-p:text-(--site-text-secondary) dark:prose-strong:text-(--site-text)"
+              className="prose dark:prose-invert wrap-break-word max-w-none prose-headings:scroll-mt-24 overflow-hidden whitespace-normal prose-code:rounded prose-img:rounded-xl prose-pre:rounded-xl prose-img:border prose-pre:border prose-blockquote:border-l-site-accent prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-headings:font-bold prose-headings:font-display prose-a:text-site-accent prose-code:text-[13px] prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-li:text-site-text-secondary prose-p:text-site-text-secondary prose-pre:text-[13px] prose-blockquote:not-italic prose-p:leading-relaxed prose-headings:tracking-tight prose-a:no-underline prose-code:before:content-none prose-code:after:content-none hover:prose-a:underline dark:prose-img:border-site-border dark:prose-pre:border-site-border dark:prose-code:text-site-text dark:prose-headings:text-site-text dark:prose-li:text-site-text-secondary dark:prose-p:text-site-text-secondary dark:prose-strong:text-site-text"
               // biome-ignore lint/security/noDangerouslySetInnerHtml: MDX content is trusted
               dangerouslySetInnerHTML={{ __html: post.html }}
             />
@@ -123,14 +123,8 @@ export default async function BlogPostPage({
         </div>
 
         {/* Mobile: share row below article */}
-        <div
-          className="mt-12 flex items-center gap-3 border-t pt-8 lg:hidden"
-          style={{ borderColor: "var(--site-border)" }}
-        >
-          <span
-            className="font-mono text-xs"
-            style={{ color: "var(--site-text-tertiary)" }}
-          >
+        <div className="mt-12 flex items-center gap-3 border-site-border border-t pt-8 lg:hidden">
+          <span className="font-mono text-site-text-tertiary text-xs">
             Share:
           </span>
           <ShareSidebar title={post.title} url={postUrl} />
