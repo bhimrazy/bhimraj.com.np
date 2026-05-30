@@ -13,7 +13,7 @@ export default function BlogSection() {
         <Link
           key={post._meta.path}
           href={`/blog/${post._meta.path}/`}
-          className="group relative overflow-hidden rounded-xl border border-site-border bg-site-card px-7 py-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-site-border-hover hover:shadow-xl/5 dark:border-white/7 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:hover:border-white/12 dark:hover:shadow-site-accent-subtle"
+          className="group relative overflow-hidden rounded-xl border border-site-border bg-site-card px-7 py-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-site-border-hover hover:shadow-xl/5 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:hover:border-white/10 dark:hover:shadow-site-accent-subtle"
         >
           <span className="pointer-events-none absolute -top-16 -right-12 size-40 rounded-full bg-site-accent-subtle opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-100" />
           <div className="relative flex items-start justify-between gap-4">

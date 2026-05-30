@@ -85,7 +85,7 @@ export default function ResearchPage() {
               rel="noopener noreferrer"
               className="group block"
             >
-              <Card className="relative overflow-hidden border border-site-border bg-site-card transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-site-border-hover group-hover:shadow-xl/5 dark:border-white/7 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:group-hover:border-white/12 dark:group-hover:shadow-site-accent-subtle">
+              <Card className="relative overflow-hidden border border-site-border bg-site-card transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-site-border-hover group-hover:shadow-xl/5 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:group-hover:border-white/10 dark:group-hover:shadow-site-accent-subtle">
                 <span className="pointer-events-none absolute -top-16 -right-12 size-40 rounded-full bg-site-accent-subtle opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-100" />
                 <CardContent className="relative p-6">
                   <div className="flex gap-5">
@@ -145,7 +145,7 @@ export default function ResearchPage() {
           {READING_NOTES.map((note) => (
             <Card
               key={note.title}
-              className="border border-site-border bg-site-card dark:border-white/7 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary"
+              className="border border-site-border bg-site-card dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary"
             >
               <CardContent className="p-5">
                 <h3 className="mb-1 font-display font-semibold text-site-text text-sm leading-snug">

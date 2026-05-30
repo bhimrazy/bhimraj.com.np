@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata: Metadata = {
@@ -138,7 +137,7 @@ export default function OSSPage() {
               rel="noopener noreferrer"
               className="group block"
             >
-              <Card className="border border-site-border bg-site-card transition-all duration-200 group-hover:-translate-y-0.5">
+              <Card className="relative overflow-hidden border border-site-border/50 bg-site-card transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-site-border-hover group-hover:shadow-xl/5 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:group-hover:border-white/10 dark:group-hover:shadow-site-accent-subtle">
                 <CardContent className="p-6">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="flex-1">
@@ -146,13 +145,9 @@ export default function OSSPage() {
                         <h3 className="font-display font-semibold text-base text-site-text">
                           {c.project}
                         </h3>
-                        <Badge
-                          variant="secondary"
-                          className="rounded-md bg-site-accent-subtle font-mono text-[10px] text-site-accent"
-                          style={{ border: "none" }}
-                        >
+                        <span className="rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[10px] text-site-accent">
                           {c.org}
-                        </Badge>
+                        </span>
                       </div>
                       <p className="mb-3 text-site-text-secondary text-sm leading-relaxed">
                         {c.description}

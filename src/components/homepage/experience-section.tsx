@@ -212,7 +212,7 @@ export default async function ExperienceSection() {
               </span>
 
               {/* Card */}
-              <div className="relative overflow-hidden rounded-xl border border-site-border bg-site-card px-6 py-5 shadow-site-accent-subtle transition-all duration-200 hover:-translate-y-0.5 hover:border-site-border-hover hover:shadow-xl/5 dark:border-white/7 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:hover:border-white/12 dark:hover:shadow-site-accent-subtle">
+              <div className="relative overflow-hidden rounded-xl border border-site-border bg-site-card px-6 py-5 shadow-site-accent-subtle transition-all duration-200 hover:-translate-y-0.5 hover:border-site-border-hover hover:shadow-xl/5 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:hover:border-white/10 dark:hover:shadow-site-accent-subtle">
                 {/* Hover glow */}
                 <span className="pointer-events-none absolute -top-16 -right-12 size-40 rounded-full bg-site-accent-subtle opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-100" />
 
