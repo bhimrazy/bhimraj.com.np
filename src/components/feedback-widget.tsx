@@ -19,8 +19,10 @@ import {
   writeMemory,
 } from "@/lib/feedback-widget-storage";
 
-const AUTO_OPEN_MS = 25_000;
-const SCROLL_TRIGGER = 0.8;
+// Eligibility is gated by shouldAutoOpen() — skips dismissed/submitted
+// visitors and caps lifetime auto-opens. These two just pick when to fire:
+const AUTO_OPEN_MS = 25_000; // fire after 25s on the page…
+const SCROLL_TRIGGER = 0.8; // …or after scrolling 80% down — whichever is first
 
 const REASONS = [
   "Your work / OSS",
@@ -39,6 +41,8 @@ export default function FeedbackWidget() {
   const [website, setWebsite] = useState(""); // honeypot
   const [wantsReply, setWantsReply] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const openRef = useRef(open);
+  openRef.current = open;
 
   // Restore any in-progress draft from a previous visit.
   useEffect(() => {
@@ -48,19 +52,27 @@ export default function FeedbackWidget() {
   // Auto-expand once for engaged visitors, respecting prior interactions.
   useEffect(() => {
     if (!shouldAutoOpen(readMemory())) return;
-    let done = false;
-    const trigger = () => {
-      if (done) return;
-      done = true;
+
+    let fired = false;
+    let timer = 0;
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      if (max > 0 && window.scrollY / max >= SCROLL_TRIGGER) tryAutoOpen();
+    };
+    function tryAutoOpen() {
+      if (fired) return;
+      fired = true;
+      window.clearTimeout(timer);
+      window.removeEventListener("scroll", onScroll);
+      // Re-check at fire time: the visitor may have opened or dismissed the
+      // widget while the timer/scroll was pending — don't reopen or waste a nudge.
+      if (openRef.current || !shouldAutoOpen(readMemory())) return;
       const mem = readMemory();
       writeMemory({ status: "seen", autoOpens: mem.autoOpens + 1 });
       setOpen(true);
-    };
-    const timer = window.setTimeout(trigger, AUTO_OPEN_MS);
-    const onScroll = () => {
-      const max = document.body.scrollHeight - window.innerHeight;
-      if (max > 0 && window.scrollY / max >= SCROLL_TRIGGER) trigger();
-    };
+    }
+
+    timer = window.setTimeout(tryAutoOpen, AUTO_OPEN_MS);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.clearTimeout(timer);

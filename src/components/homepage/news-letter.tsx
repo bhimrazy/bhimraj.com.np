@@ -25,7 +25,9 @@ export default function NewsLetter() {
 
       if (res.ok) {
         setEmail("");
-        toast.success(data?.message ?? "🎉 You're subscribed!");
+        toast.success(
+          data?.message ?? "🎉 You're in! Please check your inbox.",
+        );
       } else {
         toast.error(data?.error ?? "Something went wrong. Please try again.");
       }

@@ -78,7 +78,7 @@ export async function POST(req: Request) {
       .catch((err) => console.error("[subscribe] welcome email", err));
 
     return Response.json(
-      { message: "🎉 You're subscribed! Check your inbox." },
+      { message: "🎉 You're in! I just sent a little hello to your inbox." },
       { status: 201 },
     );
   } catch (err) {

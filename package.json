@@ -15,7 +15,8 @@
     "test:watch": "vitest",
     "check": "biome check && bun run build",
     "prepare": "husky",
-    "knip": "knip"
+    "knip": "knip",
+    "email:preview": "bun run src/emails/preview.ts"
   },
   "dependencies": {
     "@content-collections/markdown": "^0.1.4",
