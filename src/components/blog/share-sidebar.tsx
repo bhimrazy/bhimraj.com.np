@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { capture } from "@/lib/analytics";
 
 interface ShareSidebarProps {
   title: string;
@@ -16,6 +17,7 @@ export default function ShareSidebar({ title, url }: ShareSidebarProps) {
   const copyLink = () => {
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
+      capture("blog_link_copied", { slug: window.location.pathname });
       setTimeout(() => setCopied(false), 2000);
     });
   };

@@ -11,6 +11,8 @@ type EventProps = {
   feedback_dismissed: undefined;
   feedback_submitted: { reason: string | null; has_email: boolean };
   newsletter_submitted: { result: "success" | "error" };
+  code_copied: { slug: string };
+  blog_link_copied: { slug: string };
 };
 
 /** Thin, typed wrapper over posthog.capture — no-ops if PostHog isn't loaded. */

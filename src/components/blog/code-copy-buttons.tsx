@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { capture } from "@/lib/analytics";
 
 /**
  * Mounts after the article renders and injects a copy button into every
@@ -56,6 +57,7 @@ export default function CodeCopyButtons() {
         const code = pre.querySelector("code");
         const text = code?.innerText ?? pre.innerText;
         await navigator.clipboard.writeText(text);
+        capture("code_copied", { slug: window.location.pathname });
         btn.innerHTML = checkIcon();
         btn.style.color = "var(--site-accent)";
         btn.style.borderColor = "var(--site-accent)";
