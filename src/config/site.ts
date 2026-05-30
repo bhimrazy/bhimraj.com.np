@@ -18,4 +18,5 @@ export const siteConfig = {
     github: "https://github.com/bhimrazy",
     linkedin: "https://www.linkedin.com/in/bhimrazy",
   },
+  utmParams: "utm_source=bhimraj.com.np&utm_medium=referral",
 };

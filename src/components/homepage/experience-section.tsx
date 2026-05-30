@@ -1,5 +1,10 @@
 import Image from "next/image";
 import { Container } from "@/components/container";
+import { siteConfig } from "@/config/site";
+import {
+  getLightningAIEcosystemStats,
+  type LightningAIEcosystemStats,
+} from "@/lib/github";
 
 type Logo =
   | { src: string; srcDark: string; mono?: never }
@@ -15,7 +20,10 @@ type Experience = {
   description: string;
   tech: readonly string[];
   logo: Logo;
+  lightningStats?: true;
 };
+
+const UTM = siteConfig.utmParams;
 
 const EXPERIENCES: readonly Experience[] = [
   {
@@ -38,12 +46,13 @@ const EXPERIENCES: readonly Experience[] = [
     period: "2024 — Present",
     current: true,
     description:
-      "200+ contributions across PyTorch Lightning, LitServe, LitData, and LitGPT. Enhanced OpenAI compatibility, added encryption support, and MosaicML integration.",
-    tech: ["PyTorch", "LitServe", "LitData", "LitGPT"],
+      "Active contributor across the Lightning AI ecosystem — spanning data pipelines, model serving, training frameworks, and LLM tooling.",
+    tech: ["PyTorch Lightning", "LitData", "LitServe", "LitGPT"],
     logo: {
       src: "/logos/lightning-light.svg",
       srcDark: "/logos/lightning-dark.svg",
     },
+    lightningStats: true,
   },
   {
     role: "Consultant",
@@ -61,6 +70,11 @@ const EXPERIENCES: readonly Experience[] = [
     },
   },
 ] as const;
+
+function formatStars(n: number): string {
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
+  return String(n);
+}
 
 function CompanyLogo({ logo, company }: { logo: Logo; company: string }) {
   if (logo.mono) {
@@ -94,7 +108,47 @@ function CompanyLogo({ logo, company }: { logo: Logo; company: string }) {
   );
 }
 
-export default function ExperienceSection() {
+function EcosystemStatsRow({ stats }: { stats: LightningAIEcosystemStats }) {
+  return (
+    <div className="mt-1 border-site-border border-t pt-3">
+      <p className="mb-2.5 font-mono text-[10px] text-site-text-tertiary uppercase tracking-[1.2px]">
+        Contributing to the ecosystem
+      </p>
+
+      {/* Summary stats */}
+      <div className="mb-2.5 flex flex-wrap items-center gap-x-4 gap-y-1">
+        <span className="font-mono font-semibold text-site-accent text-xs">
+          {stats.totalPrs} PRs merged
+        </span>
+      </div>
+
+      {/* Top repos */}
+      <div className="flex flex-wrap gap-1.5">
+        {stats.repos.slice(0, 3).map((repo) => (
+          <a
+            key={repo.name}
+            href={`https://github.com/${repo.fullName}/pulls?q=is%3Apr+author%3Abhimrazy+is%3Amerged&${UTM}`}
+            target="_blank"
+            rel="nofollow noopener noreferrer"
+            className="group/repo inline-flex items-center gap-1.5 rounded-md border border-site-border bg-site-bg-tertiary px-2 py-0.5 font-mono text-[11px] text-site-text-secondary transition-colors hover:border-site-accent/40 hover:bg-site-accent-subtle hover:text-site-accent dark:border-white/6 dark:bg-white/3"
+          >
+            <span>{repo.name}</span>
+            <span className="text-site-text-tertiary group-hover/repo:text-site-accent/60">
+              {repo.prs} PRs
+            </span>
+            <span className="text-site-text-tertiary group-hover/repo:text-site-accent/60">
+              ★ {formatStars(repo.stars)}
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default async function ExperienceSection() {
+  const lightningStats = await getLightningAIEcosystemStats("bhimrazy");
+
   return (
     <section className="py-20">
       <Container>
@@ -186,6 +240,11 @@ export default function ExperienceSection() {
                       </span>
                     ))}
                   </div>
+
+                  {/* Lightning AI ecosystem stats */}
+                  {exp.lightningStats && (
+                    <EcosystemStatsRow stats={lightningStats} />
+                  )}
                 </div>
               </div>
             </div>

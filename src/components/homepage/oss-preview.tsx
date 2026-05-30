@@ -1,42 +1,25 @@
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { Container } from "@/components/container";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { ossRepos } from "@/config/oss";
+import { siteConfig } from "@/config/site";
+import { getLightningAIEcosystemStats, getOSSStats } from "@/lib/github";
 
-const REPOS = [
-  {
-    name: "receipt-ocr",
-    description:
-      "Efficient OCR engine for receipt processing using FastAPI and PyTorch",
-    stars: 195,
-    forks: 40,
-    lang: "Python",
-    org: null,
-    href: "https://github.com/bhimrazy/receipt-ocr",
-  },
-  {
-    name: "LitServe",
-    description:
-      "Enhanced OpenAI compatibility & blazing-fast AI model inference",
-    stars: null,
-    forks: null,
-    lang: "Python",
-    org: "Lightning AI",
-    href: "https://github.com/Lightning-AI/LitServe",
-  },
-  {
-    name: "LitData",
-    description: "Encryption support and MosaicML StreamingDataset integration",
-    stars: null,
-    forks: null,
-    lang: "Python",
-    org: "Lightning AI",
-    href: "https://github.com/Lightning-AI/litdata",
-  },
-] as const;
+const UTM = siteConfig.utmParams;
 
-export default function OSSPreview() {
+function formatStars(n: number): string {
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
+  return String(n);
+}
+
+export default async function OSSPreview() {
+  const [{ repos }, { totalPrs, totalCommits }] = await Promise.all([
+    getLightningAIEcosystemStats("bhimrazy"),
+    getOSSStats("bhimrazy", ossRepos),
+  ]);
+
+  const topRepos = repos.slice(0, 3);
+
   return (
     <section className="py-20">
       <Container>
@@ -49,41 +32,44 @@ export default function OSSPreview() {
             Contributing to the ecosystem
           </h2>
           <p className="mt-3 max-w-lg text-base text-site-text-secondary">
-            50+ PRs merged across Lightning AI projects. Building tools
-            developers love.
+            {totalCommits > 0 ? `${totalCommits}+` : "300+"} contributions and{" "}
+            {totalPrs > 0 ? totalPrs : "220+"} PRs merged across the open source
+            ecosystem.
           </p>
         </div>
 
         {/* Repo cards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {REPOS.map((repo) => (
+          {topRepos.map((repo) => (
             <a
               key={repo.name}
-              href={repo.href}
+              href={`https://github.com/${repo.fullName}/pulls?q=is%3Apr+author%3Abhimrazy+is%3Amerged&${UTM}`}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="nofollow noopener noreferrer"
               className="group block"
             >
-              <Card className="h-full border border-site-border bg-site-card transition-all duration-200 group-hover:-translate-y-0.5">
-                <CardContent className="p-6">
+              <div className="relative h-full overflow-hidden rounded-xl border border-site-border bg-site-card px-6 py-5 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-site-border-hover group-hover:shadow-xl/5 dark:border-white/7 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:group-hover:border-white/12 dark:group-hover:shadow-site-accent-subtle">
+                {/* Hover glow */}
+                <span className="pointer-events-none absolute -top-16 -right-12 size-40 rounded-full bg-site-accent-subtle opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-100" />
+
+                <div className="relative flex h-full flex-col">
                   {/* Icon + org badge */}
-                  <div className="mb-3 flex items-center gap-2">
-                    <GitHubLogoIcon className="h-4 w-4 text-site-text-tertiary" />
-                    {repo.org && (
-                      <Badge
-                        variant="secondary"
-                        className="rounded-md bg-site-accent-subtle font-mono text-[10px] text-site-accent"
-                        style={{ border: "none" }}
-                      >
-                        {repo.org}
-                      </Badge>
-                    )}
+                  <div className="mb-3 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <GitHubLogoIcon className="h-4 w-4 text-site-text-tertiary" />
+                      <span className="rounded-full bg-site-accent-subtle px-2.5 py-0.5 font-mono font-semibold text-[10px] text-site-accent uppercase tracking-[0.5px]">
+                        Lightning AI
+                      </span>
+                    </div>
+                    <span className="font-mono font-semibold text-[11px] text-site-accent">
+                      {repo.prs} PRs
+                    </span>
                   </div>
 
                   <h3 className="mb-2 font-display font-semibold text-base text-site-text">
                     {repo.name}
                   </h3>
-                  <p className="mb-4 text-site-text-secondary text-sm leading-relaxed">
+                  <p className="mb-4 flex-1 text-site-text-secondary text-sm leading-relaxed">
                     {repo.description}
                   </p>
 
@@ -94,13 +80,13 @@ export default function OSSPreview() {
                         className="h-2.5 w-2.5 rounded-full"
                         style={{ background: "#3572A5" }}
                       />
-                      {repo.lang}
+                      Python
                     </span>
-                    {repo.stars != null && <span>★ {repo.stars}</span>}
-                    {repo.forks != null && <span>⑂ {repo.forks}</span>}
+                    <span>★ {formatStars(repo.stars)}</span>
+                    <span>⑂ {formatStars(repo.forks)}</span>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </a>
           ))}
         </div>
