@@ -185,7 +185,7 @@ export default async function OSSPage() {
         </div>
 
         {/* Stats */}
-        <div className="mb-16 grid grid-cols-2 overflow-hidden rounded-xl bg-site-border sm:grid-cols-4">
+        <div className="mb-16 grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-site-border shadow-lg/2 transition-shadow duration-200 hover:shadow-xl/5 sm:grid-cols-4">
           {stats.map((stat) => (
             <div
               key={stat.label}
