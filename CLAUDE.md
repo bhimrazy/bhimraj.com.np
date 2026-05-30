@@ -32,7 +32,7 @@ Font variables (loaded via `next/font/google` in `layout.tsx`):
 - `--font-body` → DM Sans (body text)
 - `--font-mono` → JetBrains Mono (code, labels)
 
-In Tailwind v4 use shorthand syntax: `text-(--site-accent)` not `text-[var(--site-accent)]`.
+All `--site-*` vars are registered in `@theme` as `--color-site-*`, so use the Tailwind token directly: `text-site-accent`, `border-site-border`, `bg-site-card`, etc. Never use `text-(--site-accent)` or `text-[var(--site-accent)]`.
 
 ## Architecture
 ```
