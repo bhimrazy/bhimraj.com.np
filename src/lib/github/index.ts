@@ -4,6 +4,8 @@ export {
   type MonthlyContribution,
 } from "./contributions";
 export {
+  type ContributedRepo,
+  getContributedRepos,
   getLightningAIEcosystemStats,
   getOSSStats,
   type LightningAIEcosystemStats,

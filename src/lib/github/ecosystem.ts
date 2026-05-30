@@ -6,7 +6,7 @@ import {
   REQUEST_CONCURRENCY,
   searchMergedPrCount,
 } from "./client";
-import { getGitHubContributions } from "./contributions";
+import { getGitHubContributions, getRepoCommitCount } from "./contributions";
 import { ecosystemRepoSchema } from "./schemas";
 
 export type LightningAIRepoStat = {
@@ -79,6 +79,81 @@ export async function getLightningAIEcosystemStats(
     totalPrs,
     repos: [...repos].sort((a, b) => b.prs - a.prs),
   };
+}
+
+/** A repo the user has contributed to, with live commit/PR/star counts. */
+export type ContributedRepo = {
+  name: string;
+  fullName: string;
+  org: string;
+  description: string;
+  commits: number;
+  prs: number;
+  stars: number;
+  forks: number;
+};
+
+/**
+ * Builds contribution cards for every repo in `repos` where the user has more
+ * than one commit, sorted by commit count. Each card carries the repo's own
+ * description plus live commit, merged-PR, star, and fork counts.
+ *
+ * Cached for an hour via `use cache` and tagged `github-contributed-repos`.
+ */
+export async function getContributedRepos(
+  username: string,
+  repos: string[],
+): Promise<ContributedRepo[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("github-contributed-repos");
+
+  const cards = await Effect.runPromise(
+    Effect.all(
+      repos.map((fullName) =>
+        Effect.promise(async () => {
+          const [meta, prs, commits] = await Promise.all([
+            Effect.runPromise(
+              githubJson(
+                `${GITHUB_API}/repos/${fullName}`,
+                ecosystemRepoSchema,
+              ).pipe(
+                Effect.catchAll(() =>
+                  Effect.succeed({
+                    stargazers_count: 0,
+                    forks_count: 0,
+                    description: null,
+                  }),
+                ),
+              ),
+            ),
+            Effect.runPromise(
+              searchMergedPrCount(
+                `author:${username} repo:${fullName} is:pr is:merged`,
+              ).pipe(Effect.catchAll(() => Effect.succeed(0))),
+            ),
+            getRepoCommitCount(fullName, username),
+          ]);
+          const [org, name] = fullName.split("/");
+          return {
+            name,
+            fullName,
+            org,
+            description: meta.description ?? "",
+            commits,
+            prs,
+            stars: meta.stargazers_count,
+            forks: meta.forks_count,
+          } satisfies ContributedRepo;
+        }),
+      ),
+      { concurrency: REQUEST_CONCURRENCY },
+    ),
+  );
+
+  return cards
+    .filter((c) => c.commits > 1)
+    .sort((a, b) => b.commits - a.commits || b.prs - a.prs);
 }
 
 export type OSSStats = {

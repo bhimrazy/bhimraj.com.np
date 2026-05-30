@@ -126,6 +126,15 @@ function fetchRepoWeeks(
 const sumWeeks = (weeks: ContributionWeek[]): number =>
   weeks.reduce((sum, w) => sum + w.c, 0);
 
+/** A single repo's commit count for `username` (0 if the repo fails to resolve). */
+export async function getRepoCommitCount(
+  repo: string,
+  username: string,
+): Promise<number> {
+  const weeks = await fetchRepoWeeks(repo, username, 2, 500);
+  return weeks ? sumWeeks(weeks) : 0;
+}
+
 /**
  * Sums a user's commit contributions across the given repos.
  *

@@ -2,13 +2,13 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { ContributionGraph } from "@/components/oss/contribution-graph";
+import { Timeline } from "@/components/oss/timeline";
 import { Card, CardContent } from "@/components/ui/card";
-import { featuredRepo, ossRepos } from "@/config/oss";
+import { ossRepos } from "@/config/oss";
 import { siteConfig } from "@/config/site";
 import {
-  getFeaturedRepoStats,
+  getContributedRepos,
   getGitHubStars,
-  getLightningAIEcosystemStats,
   getMonthlyContributions,
   getOSSStats,
 } from "@/lib/github";
@@ -24,96 +24,24 @@ const USERNAME = "bhimrazy";
 const OSS_START_YEAR = 2022;
 const UTM = siteConfig.utmParams;
 
-/** Curated narrative + highlights, merged with live GitHub numbers by repo slug. */
-const CONTRIB_COPY: Record<
-  string,
-  { org: string; description: string; highlights: readonly string[] }
-> = {
-  "Lightning-AI/LitServe": {
-    org: "Lightning AI",
-    description:
-      "Enhanced the OpenAI API compatibility layer, enabling drop-in replacement for existing integrations, plus improvements to request handling and response streaming.",
-    highlights: [
-      "OpenAI compatibility",
-      "Streaming responses",
-      "Auth middleware",
-    ],
-  },
-  "Lightning-AI/litdata": {
-    org: "Lightning AI",
-    description:
-      "Added AES encryption support for streaming datasets and integrated the MosaicML StreamingDataset format for cross-framework data loading.",
-    highlights: [
-      "AES encryption",
-      "MosaicML integration",
-      "Format compatibility",
-    ],
-  },
-  "Lightning-AI/pytorch-lightning": {
-    org: "Lightning AI",
-    description:
-      "Bug fixes, documentation improvements, and test-coverage enhancements across the core training loop.",
-    highlights: ["Bug fixes", "Test coverage", "Docs improvements"],
-  },
-  "Lightning-AI/litgpt": {
-    org: "Lightning AI",
-    description:
-      "Contributions to model evaluation pipelines and inference optimizations for large language models.",
-    highlights: ["Eval pipelines", "Inference optimization", "Model support"],
-  },
-  "bhimrazy/receipt-ocr": {
-    org: "bhimrazy",
-    description:
-      "Built and maintain an efficient OCR engine for receipt processing using FastAPI and PyTorch.",
-    highlights: ["FastAPI", "PyTorch", "Self-authored"],
-  },
-};
-
-const TIMELINE = [
-  {
-    year: "2024",
-    event: "Reached Tier 2 OSS Contributor status at Lightning AI",
-  },
-  {
-    year: "2023",
-    event: "Merged 50th PR at Lightning AI — LitData encryption support",
-  },
-  { year: "2023", event: "receipt-ocr crossed 100 GitHub stars" },
-  {
-    year: "2022",
-    event: "First contribution to PyTorch Lightning — started OSS journey",
-  },
-  { year: "2022", event: "Led KathFOSS community as Vice President" },
-] as const;
-
 function formatCount(n: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
   return String(n);
 }
 
-type ContribCard = {
-  name: string;
-  fullName: string;
-  url: string;
-  org: string;
-  description: string;
-  highlights: readonly string[];
-  prs: number | null;
-  stars: number;
-  forks: number;
-};
-
-function mergedPrsUrl(fullName: string): string {
+function repoUrl(fullName: string, org: string): string {
+  if (org.toLowerCase() === USERNAME.toLowerCase()) {
+    return `https://github.com/${fullName}?${UTM}`;
+  }
   return `https://github.com/${fullName}/pulls?q=is%3Apr+author%3A${USERNAME}+is%3Amerged&${UTM}`;
 }
 
 export default async function OSSPage() {
-  const [ecosystem, oss, monthly, ownStars, ownRepo] = await Promise.all([
-    getLightningAIEcosystemStats(USERNAME),
+  const [contributions, oss, monthly, ownStars] = await Promise.all([
+    getContributedRepos(USERNAME, ossRepos),
     getOSSStats(USERNAME, ossRepos),
     getMonthlyContributions(USERNAME, ossRepos),
     getGitHubStars(USERNAME),
-    getFeaturedRepoStats(featuredRepo),
   ]);
 
   const currentYear = monthly.at(-1)?.year ?? OSS_START_YEAR;
@@ -135,36 +63,6 @@ export default async function OSSPage() {
     },
     { value: `${yearsActive}`, label: "Years Active" },
   ];
-
-  const contributions: ContribCard[] = ecosystem.repos.map((r) => {
-    const copy = CONTRIB_COPY[r.fullName];
-    return {
-      name: r.name,
-      fullName: r.fullName,
-      url: mergedPrsUrl(r.fullName),
-      org: copy?.org ?? "Lightning AI",
-      description: copy?.description ?? r.description,
-      highlights: copy?.highlights ?? [],
-      prs: r.prs,
-      stars: r.stars,
-      forks: r.forks,
-    };
-  });
-
-  if (ownRepo) {
-    const copy = CONTRIB_COPY[ownRepo.fullName];
-    contributions.push({
-      name: ownRepo.name,
-      fullName: ownRepo.fullName,
-      url: `${ownRepo.url}?${UTM}`,
-      org: copy?.org ?? USERNAME,
-      description: copy?.description ?? ownRepo.description,
-      highlights: copy?.highlights ?? [],
-      prs: null,
-      stars: ownRepo.stars,
-      forks: ownRepo.forks,
-    });
-  }
 
   return (
     <main className="pt-28 pb-20">
@@ -209,15 +107,26 @@ export default async function OSSPage() {
           <ContributionGraph data={monthly} />
         </div>
 
-        {/* Contributions */}
+        {/* Timeline */}
         <h2 className="mb-6 font-bold font-display text-2xl text-site-text">
+          Journey
+        </h2>
+        <div className="mb-16">
+          <Timeline />
+        </div>
+
+        {/* Contributions */}
+        <h2 className="mb-2 font-bold font-display text-2xl text-site-text">
           Key Contributions
         </h2>
-        <div className="mb-16 flex flex-col gap-4">
+        <p className="mb-6 text-site-text-secondary text-sm">
+          Every repo where I have more than one contribution — live from GitHub.
+        </p>
+        <div className="flex flex-col gap-4">
           {contributions.map((c) => (
             <a
               key={c.fullName}
-              href={c.url}
+              href={repoUrl(c.fullName, c.org)}
               target="_blank"
               rel="nofollow noopener noreferrer"
               className="group block"
@@ -235,24 +144,17 @@ export default async function OSSPage() {
                           {c.org}
                         </span>
                       </div>
-                      <p className="mb-3 text-site-text-secondary text-sm leading-relaxed">
-                        {c.description}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {c.highlights.map((h) => (
-                          <span
-                            key={h}
-                            className="rounded-md bg-site-bg-tertiary px-2 py-0.5 font-mono text-[11px] text-site-text-secondary"
-                          >
-                            {h}
-                          </span>
-                        ))}
-                      </div>
+                      {c.description && (
+                        <p className="text-site-text-secondary text-sm leading-relaxed">
+                          {c.description}
+                        </p>
+                      )}
                     </div>
                     <div className="flex shrink-0 items-center gap-4 font-mono text-site-text-tertiary text-xs sm:flex-col sm:items-end sm:gap-1.5 sm:text-right">
-                      {c.prs != null && c.prs > 0 && (
-                        <span className="text-site-accent">{c.prs} PRs</span>
-                      )}
+                      <span className="text-site-accent">
+                        {c.commits} commits
+                      </span>
+                      {c.prs > 0 && <span>{c.prs} PRs</span>}
                       <span>★ {formatCount(c.stars)}</span>
                       <span>⑂ {formatCount(c.forks)}</span>
                     </div>
@@ -260,25 +162,6 @@ export default async function OSSPage() {
                 </CardContent>
               </Card>
             </a>
-          ))}
-        </div>
-
-        {/* Timeline */}
-        <h2 className="mb-6 font-bold font-display text-2xl text-site-text">
-          Timeline
-        </h2>
-        <div className="flex flex-col gap-4">
-          {TIMELINE.map((item) => (
-            <div key={item.event} className="flex gap-5">
-              <span className="w-12 shrink-0 font-mono text-site-accent text-sm">
-                {item.year}
-              </span>
-              <div className="flex-1 border-site-border border-l pb-4 pl-5">
-                <p className="text-site-text-secondary text-sm leading-relaxed">
-                  {item.event}
-                </p>
-              </div>
-            </div>
           ))}
         </div>
       </Container>
