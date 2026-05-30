@@ -122,7 +122,7 @@ export default async function OSSPage() {
         <p className="mb-6 text-site-text-secondary text-sm">
           Every repo where I have more than one contribution — live from GitHub.
         </p>
-        <div className="flex flex-col gap-4">
+        <div className="grid gap-4 sm:grid-cols-2">
           {contributions.map((c) => (
             <a
               key={c.fullName}
@@ -131,33 +131,29 @@ export default async function OSSPage() {
               rel="nofollow noopener noreferrer"
               className="group block"
             >
-              <Card className="relative overflow-hidden border border-site-border/50 bg-site-card transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-site-border-hover group-hover:shadow-xl/5 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:group-hover:border-white/10 dark:group-hover:shadow-site-accent-subtle">
-                <CardContent className="p-6">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div className="flex-1">
-                      <div className="mb-2 flex flex-wrap items-center gap-2">
-                        <GitHubLogoIcon className="h-4 w-4 text-site-text-tertiary" />
-                        <h3 className="font-display font-semibold text-base text-site-text">
-                          {c.name}
-                        </h3>
-                        <span className="rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[10px] text-site-accent">
-                          {c.org}
-                        </span>
-                      </div>
-                      {c.description && (
-                        <p className="text-site-text-secondary text-sm leading-relaxed">
-                          {c.description}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex shrink-0 items-center gap-4 font-mono text-site-text-tertiary text-xs sm:flex-col sm:items-end sm:gap-1.5 sm:text-right">
-                      <span className="text-site-accent">
-                        {c.commits} commits
-                      </span>
-                      {c.prs > 0 && <span>{c.prs} PRs</span>}
-                      <span>★ {formatCount(c.stars)}</span>
-                      <span>⑂ {formatCount(c.forks)}</span>
-                    </div>
+              <Card className="relative h-full overflow-hidden border border-site-border/50 bg-site-card transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-site-border-hover group-hover:shadow-xl/5 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:group-hover:border-white/10 dark:group-hover:shadow-site-accent-subtle">
+                <CardContent className="flex h-full flex-col p-5">
+                  <div className="mb-2 flex items-center gap-2">
+                    <GitHubLogoIcon className="h-3.5 w-3.5 shrink-0 text-site-text-tertiary" />
+                    <h3 className="truncate font-display font-semibold text-[15px] text-site-text">
+                      {c.name}
+                    </h3>
+                    <span className="ml-auto shrink-0 rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[10px] text-site-accent">
+                      {c.org}
+                    </span>
+                  </div>
+                  {c.description && (
+                    <p className="mb-3 line-clamp-2 text-[13px] text-site-text-secondary leading-relaxed">
+                      {c.description}
+                    </p>
+                  )}
+                  <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] text-site-text-tertiary">
+                    <span className="text-site-accent">
+                      {c.commits} commits
+                    </span>
+                    {c.prs > 0 && <span>{c.prs} PRs</span>}
+                    <span>★ {formatCount(c.stars)}</span>
+                    <span>⑂ {formatCount(c.forks)}</span>
                   </div>
                 </CardContent>
               </Card>
