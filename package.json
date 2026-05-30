@@ -25,6 +25,7 @@
     "@radix-ui/react-icons": "^1.3.2",
     "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.4",
+    "@react-email/components": "^1.0.12",
     "@shikijs/rehype": "^4.1.0",
     "@tailwindcss/postcss": "^4.3.0",
     "class-variance-authority": "^0.7.1",
@@ -36,6 +37,7 @@
     "react-dom": "^19.2.6",
     "rehype-slug": "^6.0.0",
     "resend": "^6.12.4",
+    "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^4.4.3"

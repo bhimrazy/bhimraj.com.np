@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { feedbackEmail } from "@/lib/email-templates";
+import { FeedbackEmail } from "@/emails/feedback-email";
 import { rateLimit } from "@/lib/rate-limit";
 import { resend, resendConfig } from "@/lib/resend";
 import { getClientIp } from "@/lib/security";
@@ -8,14 +8,7 @@ const FeedbackSchema = z.object({
   message: z.string().trim().min(1).max(2000),
   reason: z.string().trim().max(200).optional(),
   name: z.string().trim().max(100).optional(),
-  email: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .email()
-    .max(254)
-    .optional()
-    .or(z.literal("")),
+  email: z.email().max(254).toLowerCase().optional().or(z.literal("")),
   path: z.string().max(512).optional(),
   referrer: z.string().max(1024).optional(),
   // Honeypot.
@@ -66,22 +59,20 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { subject, html } = feedbackEmail({
-      message: data.message,
-      reason: data.reason,
-      name: data.name,
-      email: data.email || undefined,
-      path: data.path,
-      referrer: data.referrer,
-      ip,
-      userAgent: req.headers.get("user-agent") ?? "unknown",
-    });
-
     const { error } = await resend.emails.send({
       from: resendConfig.fromEmail,
       to: resendConfig.notifyEmail,
-      subject,
-      html,
+      subject: `Feedback from ${data.name || "a visitor"}`,
+      react: FeedbackEmail({
+        message: data.message,
+        reason: data.reason,
+        name: data.name,
+        email: data.email || undefined,
+        path: data.path,
+        referrer: data.referrer,
+        ip,
+        userAgent: req.headers.get("user-agent") ?? "unknown",
+      }),
       ...(data.email ? { replyTo: data.email } : {}),
     });
 

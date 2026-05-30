@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { welcomeEmail } from "@/lib/email-templates";
+import { WelcomeEmail } from "@/emails/welcome-email";
 import { rateLimit } from "@/lib/rate-limit";
 import { resend, resendConfig } from "@/lib/resend";
 import { getClientIp } from "@/lib/security";
 
 const SubscribeSchema = z.object({
-  email: z.string().trim().toLowerCase().email().max(254),
+  email: z.email().max(254).toLowerCase(),
   // Honeypot: real users never see or fill this.
   website: z.string().optional(),
 });
@@ -68,13 +68,12 @@ export async function POST(req: Request) {
 
     // Best-effort welcome email; don't fail the subscribe if it can't send
     // (e.g. sending domain not yet verified in Resend).
-    const { subject, html } = welcomeEmail();
     resend.emails
       .send({
         from: resendConfig.fromEmail,
         to: parsed.data.email,
-        subject,
-        html,
+        subject: "You're subscribed 🎉",
+        react: WelcomeEmail(),
       })
       .catch((err) => console.error("[subscribe] welcome email", err));
 

@@ -1,19 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { Container } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, type FormState } from "@/lib/types";
 
 export default function NewsLetter() {
-  const [form, setForm] = useState<FormState>({ state: Form.Initial });
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [website, setWebsite] = useState("");
 
   const subscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    setForm({ state: Form.Loading });
+    setLoading(true);
 
     try {
       const res = await fetch("/api/subscribe", {
@@ -25,15 +25,14 @@ export default function NewsLetter() {
 
       if (res.ok) {
         setEmail("");
-        setForm({ state: Form.Success, message: data?.message });
+        toast.success(data?.message ?? "🎉 You're subscribed!");
       } else {
-        setForm({ state: Form.Error, message: data?.error });
+        toast.error(data?.error ?? "Something went wrong. Please try again.");
       }
     } catch {
-      setForm({
-        state: Form.Error,
-        message: "Something went wrong. Please try again.",
-      });
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,9 +63,9 @@ export default function NewsLetter() {
               required
               aria-label="Email for newsletter"
               className="flex-1 rounded-lg border border-site-border/50 bg-site-bg text-site-text text-sm placeholder:text-site-text-tertiary focus-visible:border-site-accent/40 focus-visible:ring-site-accent/15 dark:border-white/6 dark:bg-site-bg-secondary"
-              disabled={form.state === Form.Loading}
+              disabled={loading}
             />
-            <input
+            <Input
               type="text"
               name="website"
               tabIndex={-1}
@@ -78,20 +77,12 @@ export default function NewsLetter() {
             />
             <Button
               type="submit"
-              disabled={form.state === Form.Loading}
+              disabled={loading}
               className="cursor-pointer rounded-lg border-0 bg-site-accent px-6 font-semibold text-white hover:bg-site-accent/85"
             >
-              {form.state === Form.Loading ? "Subscribing…" : "Subscribe"}
+              {loading ? "Subscribing…" : "Subscribe"}
             </Button>
           </form>
-
-          {form.message && (
-            <p
-              className={`mt-4 text-sm ${form.state === Form.Error ? "text-red-400" : "text-site-accent"}`}
-            >
-              {form.message}
-            </p>
-          )}
         </div>
       </Container>
     </section>

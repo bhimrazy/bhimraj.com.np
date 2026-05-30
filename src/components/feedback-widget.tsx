@@ -2,12 +2,12 @@
 
 import {
   ChatBubbleIcon,
-  CheckCircledIcon,
   Cross2Icon,
   PaperPlaneIcon,
 } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,7 +18,6 @@ import {
   writeDraft,
   writeMemory,
 } from "@/lib/feedback-widget-storage";
-import { Form, type FormState } from "@/lib/types";
 
 const AUTO_OPEN_MS = 25_000;
 const SCROLL_TRIGGER = 0.8;
@@ -32,7 +31,7 @@ const REASONS = [
 
 export default function FeedbackWidget() {
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState<FormState>({ state: Form.Initial });
+  const [loading, setLoading] = useState(false);
   const [reason, setReason] = useState<string>("");
   const [message, setMessage] = useState("");
   const [name, setName] = useState("");
@@ -96,7 +95,7 @@ export default function FeedbackWidget() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
-    setForm({ state: Form.Loading });
+    setLoading(true);
 
     try {
       const res = await fetch("/api/feedback", {
@@ -117,15 +116,20 @@ export default function FeedbackWidget() {
       if (res.ok) {
         writeMemory({ status: "submitted" });
         writeDraft("");
-        setForm({ state: Form.Success, message: data?.message });
+        setOpen(false);
+        setMessage("");
+        setReason("");
+        setName("");
+        setEmail("");
+        setWantsReply(false);
+        toast.success(data?.message ?? "Thanks — I read every note 🙏");
       } else {
-        setForm({ state: Form.Error, message: data?.error });
+        toast.error(data?.error ?? "Something went wrong. Please try again.");
       }
     } catch {
-      setForm({
-        state: Form.Error,
-        message: "Something went wrong. Please try again.",
-      });
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -163,112 +167,91 @@ export default function FeedbackWidget() {
             </button>
           </div>
 
-          {form.state === Form.Success ? (
-            <div className="flex flex-col items-center gap-2 px-6 py-10 text-center">
-              <CheckCircledIcon className="size-9 text-site-accent" />
-              <p className="font-medium text-site-text text-sm">
-                {form.message}
-              </p>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setOpen(false)}
-                className="mt-1 text-site-text-secondary"
-              >
-                Close
-              </Button>
-            </div>
-          ) : (
-            <form onSubmit={submit} className="space-y-3 px-4 py-4">
-              <div className="flex flex-wrap gap-1.5">
-                {REASONS.map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => setReason(reason === r ? "" : r)}
-                    className={`rounded-full border px-2.5 py-1 font-medium text-xs transition-colors ${
-                      reason === r
-                        ? "border-site-accent/40 bg-site-accent-subtle text-site-accent"
-                        : "border-site-border/60 text-site-text-secondary hover:border-site-border-hover hover:text-site-text dark:border-white/8"
-                    }`}
-                  >
-                    {r}
-                  </button>
-                ))}
-              </div>
-
-              <Textarea
-                ref={textareaRef}
-                value={message}
-                onChange={(e) => {
-                  setMessage(e.target.value);
-                  writeDraft(e.target.value);
-                }}
-                maxLength={2000}
-                rows={3}
-                required
-                placeholder="What were you looking for, or any feedback?"
-                className="resize-none bg-site-bg text-sm dark:bg-site-bg-secondary"
-              />
-
-              <Input
-                type="text"
-                name="website"
-                tabIndex={-1}
-                autoComplete="off"
-                aria-hidden="true"
-                value={website}
-                onChange={(e) => setWebsite(e.target.value)}
-                className="sr-only"
-              />
-
-              {wantsReply ? (
-                <div className="space-y-2">
-                  <Input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    maxLength={100}
-                    placeholder="Name (optional)"
-                    className="bg-site-bg text-sm dark:bg-site-bg-secondary"
-                  />
-                  <Input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    maxLength={254}
-                    placeholder="Email for a reply"
-                    className="bg-site-bg text-sm dark:bg-site-bg-secondary"
-                  />
-                </div>
-              ) : (
+          <form onSubmit={submit} className="space-y-3 px-4 py-4">
+            <div className="flex flex-wrap gap-1.5">
+              {REASONS.map((r) => (
                 <button
+                  key={r}
                   type="button"
-                  onClick={() => setWantsReply(true)}
-                  className="font-medium text-site-accent text-xs hover:underline"
+                  onClick={() => setReason(reason === r ? "" : r)}
+                  className={`rounded-full border px-2.5 py-1 font-medium text-xs transition-colors ${
+                    reason === r
+                      ? "border-site-accent/40 bg-site-accent-subtle text-site-accent"
+                      : "border-site-border/60 text-site-text-secondary hover:border-site-border-hover hover:text-site-text dark:border-white/8"
+                  }`}
                 >
-                  Want a reply? Add your email →
+                  {r}
                 </button>
-              )}
+              ))}
+            </div>
 
-              {form.state === Form.Error && form.message && (
-                <p className="text-red-400 text-xs">{form.message}</p>
-              )}
+            <Textarea
+              ref={textareaRef}
+              value={message}
+              onChange={(e) => {
+                setMessage(e.target.value);
+                writeDraft(e.target.value);
+              }}
+              maxLength={2000}
+              rows={3}
+              required
+              placeholder="What were you looking for, or any feedback?"
+              className="resize-none bg-site-bg text-sm dark:bg-site-bg-secondary"
+            />
 
-              <Button
-                type="submit"
-                disabled={form.state === Form.Loading || !message.trim()}
-                className="w-full cursor-pointer gap-1.5 rounded-lg border-0 bg-site-accent font-semibold text-white hover:bg-site-accent/85"
+            <Input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              className="sr-only"
+            />
+
+            {wantsReply ? (
+              <div className="space-y-2">
+                <Input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  maxLength={100}
+                  placeholder="Name (optional)"
+                  className="bg-site-bg text-sm dark:bg-site-bg-secondary"
+                />
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  maxLength={254}
+                  placeholder="Email for a reply"
+                  className="bg-site-bg text-sm dark:bg-site-bg-secondary"
+                />
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setWantsReply(true)}
+                className="font-medium text-site-accent text-xs hover:underline"
               >
-                <PaperPlaneIcon className="size-3.5" />
-                {form.state === Form.Loading ? "Sending…" : "Send"}
-              </Button>
+                Want a reply? Add your email →
+              </button>
+            )}
 
-              <p className="text-center text-[11px] text-site-text-tertiary">
-                Anonymous unless you add your email.
-              </p>
-            </form>
-          )}
+            <Button
+              type="submit"
+              disabled={loading || !message.trim()}
+              className="w-full cursor-pointer gap-1.5 rounded-lg border-0 bg-site-accent font-semibold text-white hover:bg-site-accent/85"
+            >
+              <PaperPlaneIcon className="size-3.5" />
+              {loading ? "Sending…" : "Send"}
+            </Button>
+
+            <p className="text-center text-[11px] text-site-text-tertiary">
+              Anonymous unless you add your email.
+            </p>
+          </form>
         </div>
       ) : (
         <button

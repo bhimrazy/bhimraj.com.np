@@ -71,5 +71,17 @@
         "organizeImports": "on"
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["src/emails/**"],
+      "linter": {
+        "rules": {
+          "nursery": {
+            "useSortedClasses": "off"
+          }
+        }
+      }
+    }
+  ]
 }

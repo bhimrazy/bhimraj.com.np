@@ -1,4 +1,4 @@
-export type WidgetStatus = "new" | "seen" | "dismissed" | "submitted";
+type WidgetStatus = "new" | "seen" | "dismissed" | "submitted";
 
 export type WidgetMemory = {
   status: WidgetStatus;
