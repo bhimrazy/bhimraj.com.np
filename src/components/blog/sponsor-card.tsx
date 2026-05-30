@@ -19,8 +19,7 @@ export default function SponsorCard({ ad }: { ad: AdConfig }) {
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="group block overflow-hidden rounded-lg border transition-colors duration-200 hover:border-(--site-border-hover)"
-        style={{ borderColor: "var(--site-border)" }}
+        className="group block overflow-hidden rounded-lg border border-site-border transition-colors duration-200 hover:border-site-border-hover"
       >
         <div className="relative aspect-4/5 w-full overflow-hidden">
           <Image
@@ -32,14 +31,11 @@ export default function SponsorCard({ ad }: { ad: AdConfig }) {
             loading="lazy"
           />
         </div>
-        <div
-          className="px-2.5 py-2"
-          style={{ background: "var(--site-card-bg)" }}
-        >
-          <p className="font-display font-semibold text-(--site-text) text-[11px] leading-tight">
+        <div className="bg-site-card px-2.5 py-2">
+          <p className="font-display font-semibold text-[11px] text-site-text leading-tight">
             {ad.name}
           </p>
-          <p className="mt-0.5 font-mono text-(--site-text-tertiary) text-[9px] leading-snug">
+          <p className="mt-0.5 font-mono text-[9px] text-site-text-tertiary leading-snug">
             {ad.tagline}
           </p>
         </div>
