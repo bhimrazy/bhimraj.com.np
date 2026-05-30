@@ -98,6 +98,8 @@ export default async function HeroSection() {
                 className="object-cover"
                 priority
                 sizes="268px"
+                // height={266}
+                // width={328}
               />
               <div
                 className="absolute inset-0 opacity-10"
