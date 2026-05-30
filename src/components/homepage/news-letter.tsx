@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Container } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { capture } from "@/lib/analytics";
 
 export default function NewsLetter() {
   const [loading, setLoading] = useState(false);
@@ -25,10 +26,12 @@ export default function NewsLetter() {
 
       if (res.ok) {
         setEmail("");
+        capture("newsletter_submitted", { result: "success" });
         toast.success(
           data?.message ?? "🎉 You're in! Please check your inbox.",
         );
       } else {
+        capture("newsletter_submitted", { result: "error" });
         toast.error(data?.error ?? "Something went wrong. Please try again.");
       }
     } catch {

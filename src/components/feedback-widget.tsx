@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { capture } from "@/lib/analytics";
 import {
   readDraft,
   readMemory,
@@ -70,6 +71,7 @@ export default function FeedbackWidget() {
       const mem = readMemory();
       writeMemory({ status: "seen", autoOpens: mem.autoOpens + 1 });
       setOpen(true);
+      capture("feedback_auto_opened");
     }
 
     timer = window.setTimeout(tryAutoOpen, AUTO_OPEN_MS);
@@ -87,12 +89,14 @@ export default function FeedbackWidget() {
   const openManually = () => {
     if (readMemory().status === "new") writeMemory({ status: "seen" });
     setOpen(true);
+    capture("feedback_opened");
   };
 
   const dismiss = useCallback(() => {
     if (readMemory().status !== "submitted")
       writeMemory({ status: "dismissed" });
     setOpen(false);
+    capture("feedback_dismissed");
   }, []);
 
   useEffect(() => {
@@ -128,6 +132,10 @@ export default function FeedbackWidget() {
       if (res.ok) {
         writeMemory({ status: "submitted" });
         writeDraft("");
+        capture("feedback_submitted", {
+          reason: reason || null,
+          has_email: Boolean(email.trim()),
+        });
         setOpen(false);
         setMessage("");
         setReason("");
