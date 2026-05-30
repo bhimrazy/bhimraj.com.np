@@ -9,7 +9,7 @@ Personal portfolio, blog, and OSS journal — source for [bhimraj.com.np](https:
 
 ## Screenshots
 
-<!-- Add screenshots here -->
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ec5604ed-65d5-47d5-9cd2-a04ce358258b" />
 
 ## Stack
 
