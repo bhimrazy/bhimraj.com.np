@@ -40,6 +40,16 @@ const contributorEntrySchema = z.object({
   weeks: z.array(z.object({ c: z.number().int().nonnegative() })),
 });
 
+const featuredRepoSchema = z.object({
+  stargazers_count: z.number().int().nonnegative(),
+  forks_count: z.number().int().nonnegative(),
+  description: z.string().nullable(),
+  language: z.string().nullable(),
+  html_url: z.string(),
+});
+
+const stargazersSchema = z.array(z.object({ starred_at: z.string() }));
+
 interface GitHubStarsOptions {
   /** Fetch stars for a single repo instead of summing across all the user's repos. */
   repo?: string;
@@ -449,4 +459,129 @@ export async function getOSSStats(
     totalCommits,
     totalPrs: prCounts.reduce((sum, n) => sum + n, 0),
   };
+}
+
+export type StarPoint = { t: number; stars: number };
+
+export type FeaturedRepoStats = {
+  name: string;
+  fullName: string;
+  description: string;
+  stars: number;
+  forks: number;
+  language: string | null;
+  url: string;
+  history: StarPoint[];
+};
+
+const STAR_HISTORY_MAX_PAGES = 12;
+const STAR_HISTORY_POINTS = 40;
+
+/**
+ * Downsamples sorted star timestamps into a cumulative growth series of at most
+ * `STAR_HISTORY_POINTS` evenly-spaced points. The final point is bumped to the
+ * repo's reported total in case pagination was capped.
+ */
+function buildStarHistory(
+  timestamps: number[],
+  totalStars: number,
+): StarPoint[] {
+  const n = timestamps.length;
+  if (n === 0) return [];
+  if (n === 1) return [{ t: timestamps[0], stars: totalStars }];
+
+  const sampleCount = Math.min(STAR_HISTORY_POINTS, n);
+  const points: StarPoint[] = [];
+  for (let i = 0; i < sampleCount; i++) {
+    const idx = Math.round((i / (sampleCount - 1)) * (n - 1));
+    points.push({ t: timestamps[idx], stars: idx + 1 });
+  }
+  points[points.length - 1].stars = Math.max(
+    points[points.length - 1].stars,
+    totalStars,
+  );
+  return points;
+}
+
+/**
+ * Returns a self-authored repo's current stats plus a cumulative star-growth
+ * series, used for the homepage "Featured Project" spotlight.
+ *
+ * Star timestamps come from the stargazers endpoint with the `star+json` media
+ * type, paginated 100-at-a-time up to `STAR_HISTORY_MAX_PAGES`. Cached hourly
+ * via `use cache` and tagged for on-demand revalidation. Returns `null` if the
+ * repo metadata can't be fetched.
+ *
+ * @param fullName - "owner/repo" slug (e.g. "bhimrazy/receipt-ocr")
+ */
+export async function getFeaturedRepoStats(
+  fullName: string,
+): Promise<FeaturedRepoStats | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("github-featured-repo");
+
+  const program = Effect.gen(function* () {
+    const repo = yield* fetchEffect(`${GITHUB_API}/repos/${fullName}`, {
+      headers: {
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    }).pipe(Effect.flatMap((res) => jsonEffect(res, featuredRepoSchema)));
+
+    const pageCount = Math.min(
+      Math.ceil(repo.stargazers_count / 100),
+      STAR_HISTORY_MAX_PAGES,
+    );
+    const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
+
+    const starPages = yield* Effect.all(
+      pages.map((page) =>
+        fetchEffect(
+          `${GITHUB_API}/repos/${fullName}/stargazers?${new URLSearchParams({
+            per_page: "100",
+            page: String(page),
+          })}`,
+          {
+            headers: {
+              Accept: "application/vnd.github.star+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+            },
+          },
+        ).pipe(
+          Effect.flatMap((res) => jsonEffect(res, stargazersSchema)),
+          Effect.catchAll(() => Effect.succeed([] as { starred_at: string }[])),
+        ),
+      ),
+      { concurrency: CONTRIBUTIONS_CONCURRENCY },
+    );
+
+    const timestamps = starPages
+      .flat()
+      .map((s) => new Date(s.starred_at).getTime())
+      .filter((t) => Number.isFinite(t))
+      .sort((a, b) => a - b);
+
+    return {
+      name: fullName.split("/")[1] ?? fullName,
+      fullName,
+      description: repo.description ?? "",
+      stars: repo.stargazers_count,
+      forks: repo.forks_count,
+      language: repo.language,
+      url: repo.html_url,
+      history: buildStarHistory(timestamps, repo.stargazers_count),
+    } satisfies FeaturedRepoStats;
+  });
+
+  return Effect.runPromise(
+    program.pipe(
+      Effect.tapError((error) =>
+        Effect.sync(() =>
+          log.warn("featured repo request failed", { fullName }, error),
+        ),
+      ),
+      Effect.catchAll(() => Effect.succeed(null)),
+    ),
+  );
 }
