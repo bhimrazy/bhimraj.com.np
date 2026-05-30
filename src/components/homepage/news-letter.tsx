@@ -66,17 +66,16 @@ export default function NewsLetter() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              placeholder="john.doe@example.com"
               required
               aria-label="Email for newsletter"
-              className="flex-1 rounded-lg border border-site-border bg-site-bg-secondary text-site-text text-sm"
+              className="flex-1 rounded-lg border border-site-border/50 bg-site-bg text-site-text text-sm placeholder:text-site-text-tertiary focus-visible:border-site-accent/40 focus-visible:ring-site-accent/15 dark:border-white/6 dark:bg-site-bg-secondary"
               disabled={form.state === Form.Loading}
             />
             <Button
               type="submit"
               disabled={form.state === Form.Loading}
-              className="rounded-lg bg-site-accent px-6 font-semibold text-white"
-              style={{ border: "none" }}
+              className="cursor-pointer rounded-lg border-0 bg-site-accent px-6 font-semibold text-white hover:bg-site-accent/85"
             >
               {form.state === Form.Loading ? "Subscribing…" : "Subscribe"}
             </Button>
@@ -84,10 +83,7 @@ export default function NewsLetter() {
 
           {form.message && (
             <p
-              className="mt-4 text-sm"
-              style={{
-                color: form.state === Form.Error ? "#ef4444" : "#22c55e",
-              }}
+              className={`mt-4 text-sm ${form.state === Form.Error ? "text-red-400" : "text-site-accent"}`}
             >
               {form.message}
             </p>
