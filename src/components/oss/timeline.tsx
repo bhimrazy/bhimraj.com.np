@@ -83,6 +83,25 @@ const TIMELINE: TimelineItem[] = [
     title: "Became a Tier 2 OSS Contributor at Lightning AI",
     body: "Recognized as a Tier 2 OSS Contributor — the result of a year of steady work across LitData, LitServe, and the wider ecosystem.",
   },
+  {
+    date: "Oct 2025",
+    title: "100th commit to LitData",
+    body: "Crossed 100 commits to LitData — by now my home base in the ecosystem, from streaming datasets to releases.",
+  },
+  {
+    date: "Dec 2025",
+    title: "50th commit to PyTorch Lightning",
+    body: "Hit 50 commits to PyTorch Lightning itself — the framework that started it all for me.",
+  },
+  {
+    date: "Jan 2026",
+    title: "Cut my first PyTorch Lightning release",
+    body: "Owned a release of the core framework end to end — Lightning v2.6.1.",
+    link: {
+      label: "PyTorch Lightning v2.6.1 release notes",
+      href: "https://github.com/Lightning-AI/pytorch-lightning/releases/tag/2.6.1",
+    },
+  },
 ];
 
 export function Timeline() {

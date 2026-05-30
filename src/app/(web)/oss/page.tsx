@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 const USERNAME = "bhimrazy";
-const OSS_START_YEAR = 2022;
+const OSS_START_YEAR = 2024;
 const UTM = siteConfig.utmParams;
 
 function formatCount(n: number): string {
@@ -61,7 +61,7 @@ export default async function OSSPage() {
       value: ownStars > 0 ? `${formatCount(ownStars)}+` : "200+",
       label: "Stars Earned",
     },
-    { value: `${yearsActive}`, label: "Years Active" },
+    { value: `${yearsActive}+`, label: "Years Active" },
   ];
 
   return (
