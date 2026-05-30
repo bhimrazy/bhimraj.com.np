@@ -16,7 +16,7 @@ export default function TitleSection({ blog }: { blog: BlogPost }) {
       {/* Back link */}
       <Link
         href="/blog"
-        className="mb-8 inline-flex items-center gap-1.5 text-site-text-secondary text-sm transition-colors hover:text-(--site-text)"
+        className="mb-8 inline-flex items-center gap-1.5 text-site-text-secondary text-sm transition-colors hover:text-site-text"
       >
         <ChevronLeftIcon className="h-4 w-4" />
         All posts
@@ -29,8 +29,7 @@ export default function TitleSection({ blog }: { blog: BlogPost }) {
             <Badge
               key={tag}
               variant="secondary"
-              className="rounded-md bg-site-accent-subtle font-mono text-[10px] text-site-accent"
-              style={{ border: "none" }}
+              className="rounded-md border-transparent bg-site-accent-subtle font-mono text-[10px] text-site-accent"
             >
               {tag}
             </Badge>
@@ -58,7 +57,7 @@ export default function TitleSection({ blog }: { blog: BlogPost }) {
             href={siteConfig.links.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-site-text transition-colors hover:text-(--site-accent)"
+            className="font-medium text-site-text transition-colors hover:text-site-accent"
           >
             {siteConfig.author.name}
           </a>
