@@ -1,3 +1,4 @@
+import FeedbackWidget from "@/components/feedback-widget";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 
@@ -11,6 +12,7 @@ export default function Layout({ children }: Props) {
       <Header />
       <div className="min-h-dvh">{children}</div>
       <Footer />
+      <FeedbackWidget />
     </>
   );
 }

@@ -9,6 +9,7 @@ import { Form, type FormState } from "@/lib/types";
 export default function NewsLetter() {
   const [form, setForm] = useState<FormState>({ state: Form.Initial });
   const [email, setEmail] = useState("");
+  const [website, setWebsite] = useState("");
 
   const subscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,15 +18,8 @@ export default function NewsLetter() {
     try {
       const res = await fetch("/api/subscribe", {
         method: "POST",
-        headers: {
-          ...(process.env.NEXT_PUBLIC_API_ROUTE_SECRET
-            ? {
-                Authorization: `Basic ${process.env.NEXT_PUBLIC_API_ROUTE_SECRET}`,
-              }
-            : {}),
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, website }),
       });
       const data = await res.json();
 
@@ -71,6 +65,16 @@ export default function NewsLetter() {
               aria-label="Email for newsletter"
               className="flex-1 rounded-lg border border-site-border/50 bg-site-bg text-site-text text-sm placeholder:text-site-text-tertiary focus-visible:border-site-accent/40 focus-visible:ring-site-accent/15 dark:border-white/6 dark:bg-site-bg-secondary"
               disabled={form.state === Form.Loading}
+            />
+            <input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              className="sr-only"
             />
             <Button
               type="submit"
