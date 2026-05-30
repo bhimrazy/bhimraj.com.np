@@ -21,7 +21,12 @@ export const ecosystemRepoSchema = z.object({
 export const contributorEntrySchema = z.object({
   author: z.object({ login: z.string() }).nullable(),
   total: z.number().int().nonnegative().optional(),
-  weeks: z.array(z.object({ c: z.number().int().nonnegative() })),
+  weeks: z.array(
+    z.object({
+      w: z.number().int().nonnegative(),
+      c: z.number().int().nonnegative(),
+    }),
+  ),
 });
 
 export const featuredRepoSchema = z.object({

@@ -1,6 +1,17 @@
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
+import { ContributionGraph } from "@/components/oss/contribution-graph";
 import { Card, CardContent } from "@/components/ui/card";
+import { featuredRepo, ossRepos } from "@/config/oss";
+import { siteConfig } from "@/config/site";
+import {
+  getFeaturedRepoStats,
+  getGitHubStars,
+  getLightningAIEcosystemStats,
+  getMonthlyContributions,
+  getOSSStats,
+} from "@/lib/github";
 
 export const metadata: Metadata = {
   title: "Open Source Journey — Bhimraj Yadav",
@@ -9,68 +20,54 @@ export const metadata: Metadata = {
   alternates: { canonical: "/oss" },
 };
 
-const STATS = [
-  { value: "200+", label: "Total Contributions" },
-  { value: "50+", label: "PRs Merged" },
-  { value: "4", label: "Major Projects" },
-  { value: "2", label: "Years Active" },
-] as const;
+const USERNAME = "bhimrazy";
+const OSS_START_YEAR = 2022;
+const UTM = siteConfig.utmParams;
 
-const CONTRIBUTIONS = [
-  {
-    project: "LitServe",
+/** Curated narrative + highlights, merged with live GitHub numbers by repo slug. */
+const CONTRIB_COPY: Record<
+  string,
+  { org: string; description: string; highlights: readonly string[] }
+> = {
+  "Lightning-AI/LitServe": {
     org: "Lightning AI",
-    url: "https://github.com/Lightning-AI/LitServe",
     description:
-      "Enhanced OpenAI API compatibility layer, enabling drop-in replacement for existing integrations. Improved request handling and response streaming.",
-    prs: 18,
+      "Enhanced the OpenAI API compatibility layer, enabling drop-in replacement for existing integrations, plus improvements to request handling and response streaming.",
     highlights: [
       "OpenAI compatibility",
       "Streaming responses",
       "Auth middleware",
     ],
   },
-  {
-    project: "LitData",
+  "Lightning-AI/litdata": {
     org: "Lightning AI",
-    url: "https://github.com/Lightning-AI/litdata",
     description:
-      "Added AES encryption support for streaming datasets and integrated MosaicML StreamingDataset format for cross-framework data loading.",
-    prs: 14,
+      "Added AES encryption support for streaming datasets and integrated the MosaicML StreamingDataset format for cross-framework data loading.",
     highlights: [
       "AES encryption",
       "MosaicML integration",
       "Format compatibility",
     ],
   },
-  {
-    project: "PyTorch Lightning",
+  "Lightning-AI/pytorch-lightning": {
     org: "Lightning AI",
-    url: "https://github.com/Lightning-AI/pytorch-lightning",
     description:
-      "Bug fixes, documentation improvements, and test coverage enhancements across the core training loop.",
-    prs: 12,
+      "Bug fixes, documentation improvements, and test-coverage enhancements across the core training loop.",
     highlights: ["Bug fixes", "Test coverage", "Docs improvements"],
   },
-  {
-    project: "LitGPT",
+  "Lightning-AI/litgpt": {
     org: "Lightning AI",
-    url: "https://github.com/Lightning-AI/litgpt",
     description:
       "Contributions to model evaluation pipelines and inference optimizations for large language models.",
-    prs: 8,
     highlights: ["Eval pipelines", "Inference optimization", "Model support"],
   },
-  {
-    project: "receipt-ocr",
+  "bhimrazy/receipt-ocr": {
     org: "bhimrazy",
-    url: "https://github.com/bhimrazy/receipt-ocr",
     description:
-      "Built and maintain an efficient OCR engine for receipt processing using FastAPI and PyTorch. 195 stars, 40 forks.",
-    prs: null,
-    highlights: ["FastAPI", "PyTorch", "195 ★"],
+      "Built and maintain an efficient OCR engine for receipt processing using FastAPI and PyTorch.",
+    highlights: ["FastAPI", "PyTorch", "Self-authored"],
   },
-] as const;
+};
 
 const TIMELINE = [
   {
@@ -89,7 +86,85 @@ const TIMELINE = [
   { year: "2022", event: "Led KathFOSS community as Vice President" },
 ] as const;
 
-export default function OSSPage() {
+function formatCount(n: number): string {
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
+  return String(n);
+}
+
+type ContribCard = {
+  name: string;
+  fullName: string;
+  url: string;
+  org: string;
+  description: string;
+  highlights: readonly string[];
+  prs: number | null;
+  stars: number;
+  forks: number;
+};
+
+function mergedPrsUrl(fullName: string): string {
+  return `https://github.com/${fullName}/pulls?q=is%3Apr+author%3A${USERNAME}+is%3Amerged&${UTM}`;
+}
+
+export default async function OSSPage() {
+  const [ecosystem, oss, monthly, ownStars, ownRepo] = await Promise.all([
+    getLightningAIEcosystemStats(USERNAME),
+    getOSSStats(USERNAME, ossRepos),
+    getMonthlyContributions(USERNAME, ossRepos),
+    getGitHubStars(USERNAME),
+    getFeaturedRepoStats(featuredRepo),
+  ]);
+
+  const yearsActive = new Date().getFullYear() - OSS_START_YEAR;
+
+  const stats = [
+    {
+      value:
+        oss.totalCommits > 0 ? `${formatCount(oss.totalCommits)}+` : "300+",
+      label: "Contributions",
+    },
+    {
+      value: oss.totalPrs > 0 ? `${oss.totalPrs}` : "220+",
+      label: "PRs Merged",
+    },
+    {
+      value: ownStars > 0 ? `${formatCount(ownStars)}+` : "200+",
+      label: "Stars Earned",
+    },
+    { value: `${yearsActive}`, label: "Years Active" },
+  ];
+
+  const contributions: ContribCard[] = ecosystem.repos.map((r) => {
+    const copy = CONTRIB_COPY[r.fullName];
+    return {
+      name: r.name,
+      fullName: r.fullName,
+      url: mergedPrsUrl(r.fullName),
+      org: copy?.org ?? "Lightning AI",
+      description: copy?.description ?? r.description,
+      highlights: copy?.highlights ?? [],
+      prs: r.prs,
+      stars: r.stars,
+      forks: r.forks,
+    };
+  });
+
+  if (ownRepo) {
+    const copy = CONTRIB_COPY[ownRepo.fullName];
+    contributions.push({
+      name: ownRepo.name,
+      fullName: ownRepo.fullName,
+      url: `${ownRepo.url}?${UTM}`,
+      org: copy?.org ?? USERNAME,
+      description: copy?.description ?? ownRepo.description,
+      highlights: copy?.highlights ?? [],
+      prs: null,
+      stars: ownRepo.stars,
+      forks: ownRepo.forks,
+    });
+  }
+
   return (
     <main className="pt-28 pb-20">
       <Container>
@@ -103,13 +178,14 @@ export default function OSSPage() {
           </h1>
           <p className="max-w-2xl text-lg text-site-text-secondary leading-relaxed">
             Contributing to open source has shaped how I write software, think
-            about APIs, and collaborate at scale. Here&apos;s the story.
+            about APIs, and collaborate at scale. Here&apos;s the story — with
+            live numbers straight from GitHub.
           </p>
         </div>
 
         {/* Stats */}
         <div className="mb-16 grid grid-cols-2 overflow-hidden rounded-xl bg-site-border sm:grid-cols-4">
-          {STATS.map((stat) => (
+          {stats.map((stat) => (
             <div
               key={stat.label}
               className="flex flex-col items-center justify-center bg-site-card px-6 py-8 text-center"
@@ -124,17 +200,25 @@ export default function OSSPage() {
           ))}
         </div>
 
+        {/* Contribution graph */}
+        <h2 className="mb-6 font-bold font-display text-2xl text-site-text">
+          Activity
+        </h2>
+        <div className="mb-16">
+          <ContributionGraph data={monthly} />
+        </div>
+
         {/* Contributions */}
         <h2 className="mb-6 font-bold font-display text-2xl text-site-text">
           Key Contributions
         </h2>
         <div className="mb-16 flex flex-col gap-4">
-          {CONTRIBUTIONS.map((c) => (
+          {contributions.map((c) => (
             <a
-              key={c.project}
+              key={c.fullName}
               href={c.url}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="nofollow noopener noreferrer"
               className="group block"
             >
               <Card className="relative overflow-hidden border border-site-border/50 bg-site-card transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-site-border-hover group-hover:shadow-xl/5 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:group-hover:border-white/10 dark:group-hover:shadow-site-accent-subtle">
@@ -142,8 +226,9 @@ export default function OSSPage() {
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="flex-1">
                       <div className="mb-2 flex flex-wrap items-center gap-2">
+                        <GitHubLogoIcon className="h-4 w-4 text-site-text-tertiary" />
                         <h3 className="font-display font-semibold text-base text-site-text">
-                          {c.project}
+                          {c.name}
                         </h3>
                         <span className="rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[10px] text-site-accent">
                           {c.org}
@@ -163,11 +248,13 @@ export default function OSSPage() {
                         ))}
                       </div>
                     </div>
-                    {c.prs != null && (
-                      <div className="shrink-0 text-right font-mono text-site-text-tertiary text-xs">
-                        {c.prs} PRs merged
-                      </div>
-                    )}
+                    <div className="flex shrink-0 items-center gap-4 font-mono text-site-text-tertiary text-xs sm:flex-col sm:items-end sm:gap-1.5 sm:text-right">
+                      {c.prs != null && c.prs > 0 && (
+                        <span className="text-site-accent">{c.prs} PRs</span>
+                      )}
+                      <span>★ {formatCount(c.stars)}</span>
+                      <span>⑂ {formatCount(c.forks)}</span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

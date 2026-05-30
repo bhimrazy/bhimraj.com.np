@@ -1,4 +1,8 @@
-export { getGitHubContributions } from "./contributions";
+export {
+  getGitHubContributions,
+  getMonthlyContributions,
+  type MonthlyContribution,
+} from "./contributions";
 export {
   getLightningAIEcosystemStats,
   getOSSStats,
