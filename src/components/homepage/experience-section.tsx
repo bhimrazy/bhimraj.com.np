@@ -157,11 +157,12 @@ function EcosystemStatsRow({
             </span>
           </a>
         ))}
-        {stats.repos.length > 4 && (
-          <span className="inline-flex items-center rounded-md border border-site-border bg-site-bg-tertiary px-2 py-0.5 font-mono text-[11px] text-site-text-tertiary dark:border-white/6 dark:bg-white/3">
-            +{stats.repos.length - 4} more
-          </span>
-        )}
+        <a
+          href={`/oss`}
+          className="inline-flex items-center rounded-md border border-site-border bg-site-bg-tertiary px-2 py-0.5 font-mono text-[11px] text-site-text-tertiary transition-colors hover:border-site-accent/40 hover:bg-site-accent-subtle hover:text-site-accent dark:border-white/6 dark:bg-white/3"
+        >
+          & more
+        </a>
       </div>
     </div>
   );
@@ -260,7 +261,7 @@ export default async function ExperienceSection() {
                       {exp.tech.map((t) => (
                         <span
                           key={t}
-                          className="rounded-md border border-site-border bg-site-bg-tertiary px-2.5 py-1 font-mono text-[11px] text-site-text-secondary transition-colors hover:border-site-accent/40 hover:bg-site-accent-subtle hover:text-site-accent dark:border-white/6 dark:bg-white/3"
+                          className="rounded-md border border-site-border bg-site-bg-tertiary px-2 py-0.5 font-mono text-[11px] text-site-text-secondary transition-colors hover:border-site-accent/40 hover:bg-site-accent-subtle hover:text-site-accent dark:border-white/6 dark:bg-white/3"
                         >
                           {t}
                         </span>
