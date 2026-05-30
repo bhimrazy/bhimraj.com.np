@@ -1,14 +1,13 @@
 import { allBlogPosts } from "content-collections";
 import Link from "next/link";
 import { Container } from "@/components/container";
-import { Badge } from "@/components/ui/badge";
 import { formatDate, getReadingTime } from "@/lib/utils";
 
 const sortedPosts = [...allBlogPosts]
   .sort(
     (a, b) => Number(new Date(b.publishedAt)) - Number(new Date(a.publishedAt)),
   )
-  .slice(0, 3);
+  .slice(0, 2);
 
 export default function BlogPreview() {
   return (
@@ -28,7 +27,7 @@ export default function BlogPreview() {
         </div>
 
         {/* Post list */}
-        <div className="overflow-hidden rounded-xl bg-site-border">
+        <div className="divide-y divide-site-border/50 overflow-hidden rounded-xl border border-site-border/50 dark:divide-white/3 dark:border-white/4">
           {sortedPosts.map((post) => (
             <Link
               key={post._meta.path}
@@ -48,14 +47,12 @@ export default function BlogPreview() {
                     {getReadingTime(post.html)}
                   </span>
                   {post.tags?.slice(0, 2).map((tag: string) => (
-                    <Badge
+                    <span
                       key={tag}
-                      variant="secondary"
-                      className="rounded-md bg-site-accent-subtle font-mono text-[10px] text-site-accent"
-                      style={{ border: "none" }}
+                      className="rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[10px] text-site-accent"
                     >
                       {tag}
-                    </Badge>
+                    </span>
                   ))}
                 </div>
               </div>

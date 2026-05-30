@@ -1,6 +1,5 @@
 import { allBlogPosts } from "content-collections";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { formatDate, getReadingTime } from "@/lib/utils";
 
 const sortedPosts = [...allBlogPosts].sort(
@@ -14,9 +13,10 @@ export default function BlogSection() {
         <Link
           key={post._meta.path}
           href={`/blog/${post._meta.path}/`}
-          className="site-card-hover group block rounded-xl border border-site-border px-7 py-6 transition-all duration-200 hover:-translate-y-0.5"
+          className="group relative overflow-hidden rounded-xl border border-site-border bg-site-card px-7 py-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-site-border-hover hover:shadow-xl/5 dark:border-white/7 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:hover:border-white/12 dark:hover:shadow-site-accent-subtle"
         >
-          <div className="flex items-start justify-between gap-4">
+          <span className="pointer-events-none absolute -top-16 -right-12 size-40 rounded-full bg-site-accent-subtle opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-100" />
+          <div className="relative flex items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
               <h2 className="mb-2 font-display font-semibold text-lg text-site-text leading-snug">
                 {post.title}
@@ -33,14 +33,12 @@ export default function BlogSection() {
                   {getReadingTime(post.html)}
                 </span>
                 {post.tags.slice(0, 3).map((tag) => (
-                  <Badge
+                  <span
                     key={tag}
-                    variant="secondary"
-                    className="rounded-md bg-site-accent-subtle font-mono text-[10px] text-site-accent"
-                    style={{ border: "none" }}
+                    className="rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[10px] text-site-accent"
                   >
                     {tag}
-                  </Badge>
+                  </span>
                 ))}
               </div>
             </div>

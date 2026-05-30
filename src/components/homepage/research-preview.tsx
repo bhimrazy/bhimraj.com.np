@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Container } from "@/components/container";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function ResearchPreview() {
@@ -22,8 +21,9 @@ export default function ResearchPreview() {
         </div>
 
         <Link href="/research" className="group block">
-          <Card className="border border-site-border bg-site-card transition-all duration-200 group-hover:-translate-y-0.5">
-            <CardContent className="p-6">
+          <Card className="relative overflow-hidden border border-site-border bg-site-card transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-site-border-hover group-hover:shadow-xl/5 dark:border-white/7 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:group-hover:border-white/12 dark:group-hover:shadow-site-accent-subtle">
+            <span className="pointer-events-none absolute -top-16 -right-12 size-40 rounded-full bg-site-accent-subtle opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-100" />
+            <CardContent className="relative p-6">
               <div className="flex gap-5">
                 {/* Accent bar */}
                 <div
@@ -35,17 +35,9 @@ export default function ResearchPreview() {
                 />
 
                 <div>
-                  <Badge
-                    variant="secondary"
-                    className="mb-3 rounded-md font-mono text-[11px]"
-                    style={{
-                      background: "rgba(34, 197, 94, 0.12)",
-                      color: "#22c55e",
-                      border: "none",
-                    }}
-                  >
+                  <span className="mb-3 inline-block rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[11px] text-site-accent">
                     IEEE Access · 2024
-                  </Badge>
+                  </span>
 
                   <h3 className="mb-2 font-display font-semibold text-base text-site-text leading-snug">
                     A Comparative Study of State-of-the-Art Deep Learning Models
