@@ -9,7 +9,7 @@ if (key) {
     // `defaults` wires up SPA-aware pageviews, autocapture, web vitals and
     // pageleave — so App Router route changes are tracked without a manual
     // capture in a provider.
-    defaults: "2025-05-24",
+    defaults: "2026-01-30",
     // Don't create persistent person records for anonymous visitors — this
     // site never calls identify(), so "identified_only" means no profiles
     // are ever stored. Events still flow; you get aggregate counts/funnels,
