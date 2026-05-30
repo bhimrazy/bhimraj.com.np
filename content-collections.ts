@@ -54,11 +54,17 @@ const Project = defineCollection({
     tags: z.array(z.string()),
     image: z.string(),
     githubLink: z.string(),
+    liveLink: z.string().optional(),
     featured: z.boolean().default(false),
   }),
   transform: async (document, context) => {
     const html = await compileMarkdown(context, document, markdownOptions);
-    return { ...document, html };
+    return {
+      ...document,
+      html,
+      liveLink: document.liveLink,
+      updatedAt: document.updatedAt,
+    };
   },
 });
 

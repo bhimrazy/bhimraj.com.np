@@ -1,107 +1,98 @@
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { allProjects } from "content-collections";
-import Image from "next/image";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import type { Project } from "@/lib/types";
+
+function ExternalLinkIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+    </svg>
+  );
+}
+
+const UTM =
+  "utm_source=bhimraj.com.np&utm_medium=portfolio&utm_campaign=projects";
+
+function withUtm(url: string) {
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}${UTM}`;
+}
 
 export default function ProjectSection() {
-  const projects_content = {
-    title: "Projects",
-    description: "Some of my recent projects",
-    projects: allProjects,
-  };
+  const projects = [...(allProjects as Project[])].sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+  );
+
   return (
-    <section className="relative flex flex-col py-10">
-      <div className="space-y-2 py-12 text-center">
-        <h1 className="font-extrabold text-3xl text-slate-900 tracking-tight sm:text-5xl dark:text-slate-200">
-          {projects_content?.title}
-        </h1>
-        <p className="text-base text-slate-700 dark:text-slate-400">
-          {projects_content?.description}
-        </p>
-      </div>
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        {projects_content?.projects.map((project, idx) => (
-          <Link
-            key={project?._meta.path}
-            href="/projects/[slug]/"
-            as={`/projects/${project._meta.path}/`}
-            className={`${idx === 0 ? "md:col-span-2" : ""}`}
-            passHref
-          >
-            <article className="bg-gray-50 p-8 shadow-2xs transition hover:-translate-y-1 hover:shadow-lg dark:bg-slate-800">
-              <div className="flex flex-col space-y-4">
-                <div className="flex flex-row space-x-2">
-                  {project?.tags.map((tag, _i) => (
-                    <span
-                      key={tag}
-                      className="bg-gray-200 p-2 font-medium text-xs uppercase tracking-wider dark:bg-slate-700 dark:text-slate-200"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <div
-                  className={`grid grid-cols-1${
-                    idx === 0 ? "md:grid-cols-2" : ""
-                  } gap-6`}
-                >
-                  <div className="relative aspect-video">
-                    <Image
-                      loading="eager"
-                      className="h-full w-full object-cover"
-                      src={project?.image}
-                      blurDataURL={project?.image}
-                      height={1080}
-                      width={1920}
-                      alt={project?.title}
-                    />
-                  </div>
-                  <div className="flex flex-col space-y-1">
-                    <h3 className="prose mb-4 font-bold text-slate-900 text-xl tracking-tight dark:text-slate-200">
-                      {project?.title}
-                    </h3>
-                    <dl>
-                      <dt className="sr-only">Date</dt>
-                      <dd className="font-semibold text-gray-700 text-sm leading-6 dark:text-slate-400">
-                        <time dateTime={project?.publishedAt}>
-                          {project?.publishedAt}
-                        </time>
-                      </dd>
-                    </dl>
-                    <p
-                      className={`${
-                        idx === 0 ? "line-clamp-4" : "line-clamp-2"
-                      } mb-6 text-gray-600 dark:text-slate-400`}
-                    >
-                      {project?.description}
-                    </p>
-                    <div className="flex justify-end pt-2">
-                      <span className="group inline-flex h-9 items-center whitespace-nowrap rounded-full bg-slate-100 px-3 font-semibold text-slate-700 text-sm hover:bg-slate-200 hover:text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-500 dark:bg-slate-700 dark:text-slate-100 dark:focus:ring-slate-500 dark:hover:bg-slate-600 dark:hover:text-white">
-                        Read more
-                        <svg
-                          className="ml-3 overflow-visible text-slate-300 group-hover:text-slate-400 dark:text-slate-500 dark:group-hover:text-slate-400"
-                          width="3"
-                          height="6"
-                          viewBox="0 0 3 6"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          role="img"
-                          aria-label="Read more"
-                        >
-                          <title>Read more</title>
-                          <path d="M0 0L3 3L0 6"></path>
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </article>
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {projects.map((project) => (
+        <div
+          key={project._meta.path}
+          className="group relative flex flex-col overflow-hidden rounded-xl border border-site-border bg-site-card px-5 py-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-site-border-hover hover:shadow-xl/5 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:hover:border-white/10 dark:hover:shadow-site-accent-subtle"
+        >
+          {/* Tags */}
+          <div className="mb-3 flex flex-wrap gap-1.5">
+            {project.tags.map((tag) => (
+              <Badge
+                key={tag}
+                variant="secondary"
+                className="rounded-md border-transparent bg-site-accent-subtle font-mono text-[10px] text-site-accent"
+              >
+                {tag}
+              </Badge>
+            ))}
+          </div>
+
+          {/* Title */}
+          <Link href={`/projects/${project._meta.path}`}>
+            <h3 className="mb-2 font-display font-semibold text-base text-site-text leading-snug transition-colors hover:text-site-accent">
+              {project.title}
+            </h3>
           </Link>
-        ))}
-      </div>
-    </section>
+
+          {/* Description */}
+          <p className="mb-4 line-clamp-3 grow text-site-text-secondary text-sm leading-relaxed">
+            {project.description}
+          </p>
+
+          {/* Links */}
+          <div className="flex items-center gap-4 border-site-border/50 border-t pt-4">
+            <a
+              href={withUtm(project.githubLink)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 font-mono text-site-text-tertiary text-xs transition-colors hover:text-site-text"
+            >
+              <GitHubLogoIcon className="h-3.5 w-3.5" />
+              GitHub
+            </a>
+            {project.liveLink && (
+              <a
+                href={withUtm(project.liveLink)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-mono text-site-accent text-xs transition-colors hover:text-site-accent-hover"
+              >
+                <ExternalLinkIcon className="h-3.5 w-3.5" />
+                Lightning AI
+              </a>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
