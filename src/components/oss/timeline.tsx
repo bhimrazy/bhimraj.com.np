@@ -20,6 +20,18 @@ type TimelineItem = {
 const TIMELINE: TimelineItem[] = [
   {
     date: "Mar 2024",
+    title: "Joined the Lightning AI Studios Publisher Program",
+    body: "Invited into the Publisher Program to collaborate with the team and build Studios — my first foothold in the Lightning AI ecosystem.",
+    quotes: [
+      {
+        text: "We're excited for you to collaborate with us and build some great Studios.",
+        author: "Corey Strausman",
+        role: "Lightning AI",
+      },
+    ],
+  },
+  {
+    date: "Mar 2024",
     title: "Published my first Lightning Studio",
     body: "My first public artifact in the Lightning AI ecosystem — and the spark that pulled me toward contributing upstream.",
     link: {
