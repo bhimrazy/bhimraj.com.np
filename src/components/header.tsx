@@ -16,8 +16,8 @@ import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
-  { label: "Blog", href: "/blog" },
   { label: "Open Source", href: "/oss" },
+  { label: "Blog", href: "/blog" },
   { label: "Research", href: "/research" },
   { label: "Projects", href: "/projects" },
 ];
