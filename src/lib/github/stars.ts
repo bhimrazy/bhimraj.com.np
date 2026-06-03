@@ -1,6 +1,7 @@
 import { Effect, Schedule } from "effect";
 import { cacheLife, cacheTag } from "next/cache";
 import { isRetryableHttpError } from "@/lib/http";
+import { CACHE_REVALIDATE, CACHE_TAGS } from "./cache";
 import { GITHUB_API, githubJson, log, REQUEST_CONCURRENCY } from "./client";
 import {
   featuredRepoSchema,
@@ -43,14 +44,16 @@ export async function getGitHubStars(
   options: GitHubStarsOptions = {},
 ): Promise<number> {
   "use cache";
-  cacheLife("hours");
+  cacheLife({ revalidate: CACHE_REVALIDATE.stars });
+  cacheTag(CACHE_TAGS.stars);
 
   const { repo, fallback = 0 } = options;
 
+  const revalidate = CACHE_REVALIDATE.stars;
   const stars = repo
-    ? githubJson(`${GITHUB_API}/repos/${username}/${repo}`, repoSchema).pipe(
-        Effect.map((data) => data.stargazers_count),
-      )
+    ? githubJson(`${GITHUB_API}/repos/${username}/${repo}`, repoSchema, {
+        next: { revalidate, tags: [CACHE_TAGS.stars] },
+      }).pipe(Effect.map((data) => data.stargazers_count))
     : githubJson(
         `${GITHUB_API}/search/repositories?${new URLSearchParams({
           order: "desc",
@@ -59,6 +62,7 @@ export async function getGitHubStars(
           sort: "updated",
         })}`,
         searchSchema,
+        { next: { revalidate, tags: [CACHE_TAGS.stars] } },
       ).pipe(
         Effect.map((data) =>
           data.items.reduce((sum, r) => sum + r.stargazers_count, 0),
@@ -112,13 +116,16 @@ export async function getFeaturedRepoStats(
   fullName: string,
 ): Promise<FeaturedRepoStats | null> {
   "use cache";
-  cacheLife("hours");
-  cacheTag("github-featured-repo");
+  cacheLife({ revalidate: CACHE_REVALIDATE.featuredRepo });
+  cacheTag(CACHE_TAGS.featuredRepo);
+
+  const revalidate = CACHE_REVALIDATE.featuredRepo;
 
   const program = Effect.gen(function* () {
     const repo = yield* githubJson(
       `${GITHUB_API}/repos/${fullName}`,
       featuredRepoSchema,
+      { next: { revalidate, tags: [CACHE_TAGS.featuredRepo] } },
     );
 
     const pageCount = Math.min(
@@ -135,7 +142,10 @@ export async function getFeaturedRepoStats(
             page: String(page),
           })}`,
           stargazersSchema,
-          { headers: { Accept: "application/vnd.github.star+json" } },
+          {
+            headers: { Accept: "application/vnd.github.star+json" },
+            next: { revalidate, tags: [CACHE_TAGS.featuredRepo] },
+          },
         ).pipe(
           Effect.catchAll(() => Effect.succeed([] as { starred_at: string }[])),
         ),

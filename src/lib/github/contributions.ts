@@ -2,11 +2,11 @@ import { Effect, Schedule } from "effect";
 import { cacheLife, cacheTag } from "next/cache";
 import { z } from "zod";
 import { fetchEffect, HttpError, isRetryableHttpError } from "@/lib/http";
+import { CACHE_REVALIDATE, CACHE_TAGS } from "./cache";
 import { log, REQUEST_CONCURRENCY } from "./client";
 import { contributorEntrySchema } from "./schemas";
 
 const DEFAULT_TIMEOUT_MS = 5000;
-const CONTRIBUTORS_REVALIDATE_SECONDS = 60 * 60 * 24; // 24 hours
 
 /** A single week of commit activity: `w` is the week-start (epoch seconds), `c` the commit count. */
 export type ContributionWeek = { w: number; c: number };
@@ -44,8 +44,8 @@ function fetchRepoContributorWeeks(
         "X-Requested-With": "XMLHttpRequest",
       },
       next: {
-        revalidate: CONTRIBUTORS_REVALIDATE_SECONDS,
-        tags: [`github-contributors:${repo}`],
+        revalidate: CACHE_REVALIDATE.repoContributors,
+        tags: [CACHE_TAGS.repoContributors(repo)],
       },
     },
     DEFAULT_TIMEOUT_MS,
@@ -151,8 +151,8 @@ export async function getGitHubContributions(
   fallback = 0,
 ): Promise<number> {
   "use cache";
-  cacheLife("hours");
-  cacheTag("github-contributions");
+  cacheLife({ revalidate: CACHE_REVALIDATE.contributions });
+  cacheTag(CACHE_TAGS.contributions);
 
   try {
     const entries = await Effect.runPromise(
@@ -203,8 +203,8 @@ export async function getMonthlyContributions(
   repos: string[],
 ): Promise<MonthlyContribution[]> {
   "use cache";
-  cacheLife("hours");
-  cacheTag("github-monthly-contributions");
+  cacheLife({ revalidate: CACHE_REVALIDATE.monthlyContributions });
+  cacheTag(CACHE_TAGS.monthlyContributions);
 
   const now = new Date();
   const buckets: MonthlyContribution[] = [];

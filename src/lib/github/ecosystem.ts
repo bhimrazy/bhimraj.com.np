@@ -1,5 +1,6 @@
 import { Effect } from "effect";
 import { cacheLife, cacheTag } from "next/cache";
+import { CACHE_REVALIDATE, CACHE_TAGS } from "./cache";
 import {
   GITHUB_API,
   githubJson,
@@ -34,8 +35,10 @@ export async function getLightningAIEcosystemStats(
   username: string,
 ): Promise<LightningAIEcosystemStats> {
   "use cache";
-  cacheLife("hours");
-  cacheTag("github-lightning-ecosystem");
+  cacheLife({ revalidate: CACHE_REVALIDATE.lightningEcosystem });
+  cacheTag(CACHE_TAGS.lightningEcosystem);
+
+  const revalidate = CACHE_REVALIDATE.lightningEcosystem;
 
   const fetchTotalPrs = searchMergedPrCount(
     `author:${username} org:Lightning-AI is:pr is:merged`,
@@ -44,7 +47,9 @@ export async function getLightningAIEcosystemStats(
   const fetchRepoStats = Effect.all(
     LIGHTNING_AI_REPOS.map(({ name, fullName }) =>
       Effect.all([
-        githubJson(`${GITHUB_API}/repos/${fullName}`, ecosystemRepoSchema).pipe(
+        githubJson(`${GITHUB_API}/repos/${fullName}`, ecosystemRepoSchema, {
+          next: { revalidate, tags: [CACHE_TAGS.lightningEcosystem] },
+        }).pipe(
           Effect.catchAll(() =>
             Effect.succeed({
               stargazers_count: 0,
@@ -105,8 +110,10 @@ export async function getContributedRepos(
   repos: string[],
 ): Promise<ContributedRepo[]> {
   "use cache";
-  cacheLife("hours");
-  cacheTag("github-contributed-repos");
+  cacheLife({ revalidate: CACHE_REVALIDATE.contributedRepos });
+  cacheTag(CACHE_TAGS.contributedRepos);
+
+  const revalidate = CACHE_REVALIDATE.contributedRepos;
 
   const cards = await Effect.runPromise(
     Effect.all(
@@ -117,6 +124,9 @@ export async function getContributedRepos(
               githubJson(
                 `${GITHUB_API}/repos/${fullName}`,
                 ecosystemRepoSchema,
+                {
+                  next: { revalidate, tags: [CACHE_TAGS.contributedRepos] },
+                },
               ).pipe(
                 Effect.catchAll(() =>
                   Effect.succeed({
@@ -170,8 +180,8 @@ export async function getOSSStats(
   repos: string[],
 ): Promise<OSSStats> {
   "use cache";
-  cacheLife("hours");
-  cacheTag("github-oss-stats");
+  cacheLife({ revalidate: CACHE_REVALIDATE.ossStats });
+  cacheTag(CACHE_TAGS.ossStats);
 
   // External repos = those not owned by the user themselves
   const externalRepos = repos.filter(
