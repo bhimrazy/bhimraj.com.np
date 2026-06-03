@@ -38,6 +38,9 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     optimizePackageImports: ["clsx", "tailwind-merge"],
+    cpus: 2, // hard cap: ≤2 workers
+    staticGenerationMaxConcurrency: 2, // ≤2 pages rendering per worker
+    staticGenerationRetryCount: 1, // retry a flaky GitHub fetch once
   },
   redirects: async () => {
     return [
