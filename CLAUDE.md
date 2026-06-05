@@ -1,72 +1,52 @@
 # bhimraj.com.np — Claude Code Context
 
 ## Stack
-- **Framework**: Next.js (App Router, RSC)
-- **Runtime**: Bun
-- **Styling**: Tailwind CSS v4 + shadcn/ui (`new-york` style, `cssVariables: false`)
-- **Content**: `@content-collections` for blog posts and projects (MDX/Markdown)
-- **Linting**: Biome (replaces ESLint + Prettier)
-- **Type checking**: TypeScript 6
+- **Monorepo**: Turborepo + Bun workspaces (`apps/*`, `packages/*`)
+- **Framework**: Next.js 16 (App Router, RSC), Tailwind CSS v4 + shadcn/ui
+- **Content**: `@content-collections` (MDX/Markdown) for blog + projects
+- **Tooling**: Biome (lint/format), TypeScript 6, syncpack (version policy), Vitest
 
-## Commands
+## Layout
+```
+apps/web                 # the Next.js site
+packages/github          # @bhimrazy/github — GitHub data layer + snapshot
+packages/utils           # @bhimrazy/utils  — shared createLogger()
+```
+
+## Commands (run from root; Turbo fans out per workspace)
 ```bash
-bun dev          # dev server
-bun build        # production build
-bun typecheck    # tsc --noEmit
-bun lint         # biome lint
-bun format:write # biome format --write .
-bun knip         # unused exports check
+bun dev            # dev server
+bun run build      # production build
+bun typecheck      # tsc across workspaces
+bun test           # vitest
+bun lint           # biome lint
+bun run knip       # unused-code check
+bun run lint:versions  # syncpack — one version per dependency across workspaces
+bun run sync       # regenerate the GitHub snapshot (needs GITHUB_TOKEN for full data)
 ```
 
-## Design System
-The site uses a **warm-dark** design as the default dark theme with an **amber** accent.
+## GitHub data is a snapshot, not a live fetch
+The site never calls GitHub at build/request time. `packages/github` fetches
+everything once via the `sync` command and writes `data/snapshot.json`
+(committed). Pages read it through pure accessors (`getOSSStats()`,
+`getGitHubStars()`, …) from `@bhimrazy/github`. A daily GitHub Action
+(`.github/workflows/sync-github.yml`) reruns `sync` and opens a PR when the
+data changed. Fetch targets live in `packages/github/src/config.ts`.
 
-CSS custom properties (defined in `src/app/globals.css`):
-- `--site-bg` / `--site-bg-secondary` / `--site-bg-tertiary` — background layers
-- `--site-text` / `--site-text-secondary` / `--site-text-tertiary` — text hierarchy
-- `--site-accent` / `--site-accent-hover` / `--site-accent-subtle` — amber accent
-- `--site-border` / `--site-border-hover` / `--site-card-bg` — surfaces
+## Design system (warm-dark default, amber accent)
+Tokens in `apps/web/src/app/globals.css`, registered in `@theme` as
+`--color-site-*`. Use the Tailwind token directly — `text-site-accent`,
+`border-site-border`, `bg-site-card` — never `text-[var(--site-accent)]`.
+Fonts (via `next/font` in `layout.tsx`): `--font-display` Space Grotesk,
+`--font-body` DM Sans, `--font-mono` JetBrains Mono.
 
-Font variables (loaded via `next/font/google` in `layout.tsx`):
-- `--font-display` → Space Grotesk (headings)
-- `--font-body` → DM Sans (body text)
-- `--font-mono` → JetBrains Mono (code, labels)
-
-All `--site-*` vars are registered in `@theme` as `--color-site-*`, so use the Tailwind token directly: `text-site-accent`, `border-site-border`, `bg-site-card`, etc. Never use `text-(--site-accent)` or `text-[var(--site-accent)]`.
-
-## Architecture
-```
-src/
-  app/
-    (web)/          # Main site with Header + Footer layout
-      page.tsx      # Homepage
-      blog/         # Blog list + post pages
-      projects/     # Projects pages
-      oss/          # OSS Journey page
-      research/     # Research & reading notes
-    api/subscribe/  # Newsletter subscription endpoint
-    globals.css     # Design tokens + Tailwind base
-    layout.tsx      # Root layout with fonts + ThemeProvider
-  components/
-    homepage/       # Hero, Experience, OSSPreview, BlogPreview, ResearchPreview, Newsletter
-    blog/           # Blog-specific components
-    projects/       # Project components
-    ui/             # shadcn/ui components (Button, Card, Badge, Input, etc.)
-  config/
-    site.ts         # Site-wide constants (name, URL, links)
-  content/          # MDX blog posts and project markdown files
-  lib/
-    utils.ts        # cn(), formatDate(), getReadingTime()
-    types.ts        # Form state enum
-```
-
-## Key Conventions
-- **Server components by default** — use `"use client"` only for interactivity/animations
-- **shadcn/ui for UI primitives** — Button, Card, Badge, Input, Separator, etc.
-- **CSS vars for theming** — never hardcode colors, always use `--site-*` vars
-- **No inline comments** unless the WHY is non-obvious
-- **Biome** for all formatting (not Prettier) — run `bun format:write` before committing
-- **Content Collections** — blog posts live in `src/content/blog/*.mdx`, projects in `src/content/projects/*.md`
+## Conventions
+- Server components by default; `"use client"` only for interactivity.
+- shadcn/ui for primitives; never hardcode colors — use `--site-*` tokens.
+- Biome for all formatting; run `bun format:write` before committing.
+- Keep one version of each dependency across workspaces (`bun run lint:versions`).
 
 ## Persona
-Bhimraj Yadav — Software Engineer at Fetchly Labs, Tier 2 OSS contributor at Lightning AI (200+ contributions across PyTorch Lightning, LitServe, LitData, LitGPT), IEEE-published researcher. Based in Kathmandu, Nepal.
+Bhimraj Yadav — Software Engineer at Fetchly Labs, Tier 2 OSS contributor at
+Lightning AI (PyTorch Lightning, LitServe, LitData, LitGPT), IEEE-published
+researcher, based in Kathmandu, Nepal.

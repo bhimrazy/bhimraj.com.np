@@ -13,16 +13,15 @@ Personal portfolio, blog, and OSS journal — source for [bhimraj.com.np](https:
 
 ## Stack
 
-| | |
-|---|---|
-| **Framework** | Next.js 16 (App Router, RSC) |
-| **Runtime** | Bun |
-| **Styling** | Tailwind CSS v4 + shadcn/ui |
-| **Content** | Content Collections (MDX/Markdown) |
-| **Email** | Resend + React Email |
-| **Analytics** | PostHog + Google Analytics |
-| **Linting** | Biome |
-| **Deployment** | Vercel |
+A **Turborepo + Bun workspaces** monorepo. Next.js 16 (App Router, RSC),
+Tailwind CSS v4 + shadcn/ui, Content Collections (MDX), Resend + React Email,
+PostHog, Biome — deployed on Vercel.
+
+```
+apps/web                 # the Next.js site
+packages/github          # @bhimrazy/github — GitHub data layer + daily snapshot
+packages/utils           # @bhimrazy/utils  — shared logger
+```
 
 ## Getting started
 
@@ -30,7 +29,7 @@ Personal portfolio, blog, and OSS journal — source for [bhimraj.com.np](https:
 git clone https://github.com/bhimrazy/bhimraj.com.np.git
 cd bhimraj.com.np
 bun install
-cp .env.example .env.local   # fill in your keys
+cp apps/web/.env.example apps/web/.env.local   # fill in your keys
 bun dev
 ```
 
@@ -39,48 +38,22 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Commands
 
 ```bash
-bun dev            # dev server
-bun run build      # production build
-bun typecheck      # tsc --noEmit
-bun lint           # biome lint
-bun format:write   # biome format --write .
-bun knip           # unused exports check
-bun email:preview  # render email templates to .email-preview/
+bun dev                # dev server
+bun run build          # production build
+bun typecheck          # tsc across workspaces
+bun test               # vitest
+bun lint               # biome lint
+bun run knip           # unused-code check
+bun run lint:versions  # one version per dependency across workspaces
+bun run sync           # regenerate the GitHub snapshot
 ```
 
-## Environment variables
+## GitHub data
 
-Copy `.env.example` to `.env.local` and fill in:
-
-| Variable | Purpose |
-|---|---|
-| `RESEND_API_KEY` | Resend — newsletter + feedback emails |
-| `RESEND_AUDIENCE_ID` | Resend audience for subscribers |
-| `RESEND_FROM_EMAIL` | Verified sender address |
-| `FEEDBACK_NOTIFY_EMAIL` | Where feedback notifications go |
-| `NEXT_PUBLIC_POSTHOG_KEY` | PostHog project key |
-| `NEXT_PUBLIC_POSTHOG_HOST` | PostHog region host |
-| `NEXT_PUBLIC_GOOGLE_ANALYTICS` | GA4 measurement ID |
-
-## Project structure
-
-```
-src/
-  app/
-    (web)/          # Main site (Header + Footer layout)
-    api/            # subscribe + feedback routes
-    globals.css     # Design tokens + Tailwind base
-    layout.tsx      # Root layout
-  components/
-    homepage/       # Hero, Experience, OSS preview, Blog preview, Newsletter
-    blog/           # Blog components (ToC, share, code-copy)
-    oss/            # Timeline, contribution graph
-    ui/             # shadcn/ui primitives
-  config/site.ts    # Site-wide constants
-  content/          # MDX blog posts + project markdown
-  emails/           # React Email templates (welcome, feedback)
-  lib/              # Utilities, analytics, rate-limit, security
-```
+The site reads GitHub stats from a committed snapshot
+(`packages/github/data/snapshot.json`) instead of fetching live — accurate,
+fast, and rate-limit free. A daily GitHub Action regenerates it and opens a PR
+when the numbers change.
 
 ## License
 
