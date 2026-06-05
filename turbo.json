@@ -3,7 +3,21 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": [
+        "NEXT_PUBLIC_POSTHOG_KEY",
+        "NEXT_PUBLIC_POSTHOG_HOST",
+        "NEXT_PUBLIC_GOOGLE_ANALYTICS"
+      ],
+      "passThroughEnv": [
+        "RESEND_API_KEY",
+        "RESEND_AUDIENCE_ID",
+        "RESEND_FROM_EMAIL",
+        "FEEDBACK_NOTIFY_EMAIL",
+        "MAILCHIMP_API_SERVER",
+        "MAILCHIMP_AUDIENCE_ID",
+        "YOUTUBE_API_URL"
+      ]
     },
     "typecheck": {
       "dependsOn": ["^build"]
