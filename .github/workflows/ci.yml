@@ -59,7 +59,7 @@ jobs:
             --no-progress
             --timeout 20
             --max-retries 2
-            --root-dir ./public
+            --root-dir ./apps/web/public
             --exclude "localhost"
             --exclude "linkedin.com"
             --exclude "instagram.com"
