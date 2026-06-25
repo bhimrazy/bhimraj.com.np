@@ -104,14 +104,6 @@ export default async function OSSPage() {
           <ContributionGraph data={monthly} />
         </div>
 
-        {/* Timeline */}
-        <h2 className="mb-6 font-bold font-display text-2xl text-site-text">
-          Journey
-        </h2>
-        <div className="mb-12">
-          <Timeline />
-        </div>
-
         {/* Contributions */}
         <h2 className="mb-2 font-bold font-display text-2xl text-site-text">
           Key Contributions
@@ -119,7 +111,7 @@ export default async function OSSPage() {
         <p className="mb-6 text-site-text-secondary text-sm">
           Every repo where I have more than one contribution — live from GitHub.
         </p>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="mb-12 grid gap-4 sm:grid-cols-2">
           {contributions.map((c) => (
             <a
               key={c.fullName}
@@ -156,6 +148,14 @@ export default async function OSSPage() {
               </Card>
             </a>
           ))}
+        </div>
+
+        {/* Timeline */}
+        <h2 className="mb-6 font-bold font-display text-2xl text-site-text">
+          Journey
+        </h2>
+        <div>
+          <Timeline />
         </div>
       </Container>
     </main>
