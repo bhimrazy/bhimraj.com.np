@@ -2,13 +2,19 @@ name: Sync GitHub snapshot
 
 on:
   schedule:
-    # 00:15 UTC daily = 06:00 AM Nepal time (NPT, UTC+5:45).
-    - cron: "15 0 * * *"
+    # Twice daily, 12h apart, in UTC (NPT = UTC+5:45):
+    #   00:15 UTC = 06:00 AM NPT, 12:15 UTC = 06:00 PM NPT.
+    - cron: "15 0,12 * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
   pull-requests: write
+
+# Skip husky hook installation: the create-pull-request commit must not
+# trigger the lint-staged pre-commit hook (biome errors on snapshot.json).
+env:
+  HUSKY: "0"
 
 concurrency:
   group: sync-github-snapshot
