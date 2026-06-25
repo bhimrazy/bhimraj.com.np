@@ -15,10 +15,10 @@ export default async function HeroSection() {
   const contributions = getGitHubContributions();
 
   const STATS = [
-    { value: `${yearsExp}+`, label: "Years Experience" },
     { value: `${contributions}+`, label: "OSS Contributions" },
     { value: `${githubStars}+`, label: "GitHub Stars" },
-    { value: "1", label: "IEEE Publication" },
+    { value: `${yearsExp}+`, label: "Years Building" },
+    { value: "IEEE", label: "Published Researcher" },
   ];
   return (
     <section className="relative pt-44 pb-20">
@@ -36,35 +36,34 @@ export default async function HeroSection() {
             </span>
 
             <h1 className="mb-5 font-bold font-display text-4xl text-site-text leading-[1.1] tracking-tight sm:text-5xl lg:text-[52px]">
-              Software Engineer
+              Building the open-source
               <br />
               <span className="text-site-text-secondary">
-                &amp; OSS Contributor
+                tools ML teams run in production.
               </span>
             </h1>
 
             <p className="mb-8 max-w-130 text-[17px] text-site-text-secondary leading-relaxed">
               I&apos;m <strong className="text-site-text">Bhimraj Yadav</strong>{" "}
-              — Software Engineer at Fetchly Labs, Tier 2 OSS contributor at
-              Lightning AI, Consultant at StableCluster, and AI Researcher. I
-              build production systems and explore computer vision &amp;
-              generative AI.
+              — a Tier 2 contributor at Lightning AI (PyTorch Lightning,
+              LitServe, LitData), IEEE-published in deep learning, and a
+              production engineer at Fetchly Labs. Building for the world from
+              Kathmandu, Nepal 🇳🇵.
             </p>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
               <Button
                 asChild
                 className="rounded-lg border-0 bg-site-accent px-6 font-semibold text-white hover:bg-site-accent/85"
               >
-                <Link href="/oss">Explore My OSS Journey</Link>
+                <Link href="/oss">Explore my OSS work →</Link>
               </Button>
-              <Button
-                asChild
-                variant="ghost"
-                className="rounded-lg border border-site-border bg-site-card/40 px-6 text-site-text-secondary hover:border-site-border-hover hover:bg-site-bg-secondary hover:text-site-text dark:border-white/10 dark:bg-site-bg-secondary/60 dark:text-site-text-secondary dark:hover:border-site-accent/40 dark:hover:bg-site-accent-subtle dark:hover:text-site-text"
+              <Link
+                href="/blog"
+                className="font-medium text-site-text-secondary text-sm transition-colors hover:text-site-text"
               >
-                <Link href="/blog">Read the Blog</Link>
-              </Button>
+                Read the blog
+              </Link>
             </div>
           </div>
 

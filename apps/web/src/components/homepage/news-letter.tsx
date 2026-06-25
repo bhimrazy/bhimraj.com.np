@@ -42,7 +42,7 @@ export default function NewsLetter() {
   };
 
   return (
-    <section className="py-20">
+    <section className="py-24">
       <Container>
         <div className="rounded-2xl border border-site-border/50 bg-site-card px-8 py-14 text-center dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary">
           <span className="mb-3 inline-block font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">

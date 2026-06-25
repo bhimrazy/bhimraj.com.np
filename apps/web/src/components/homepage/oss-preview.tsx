@@ -18,7 +18,7 @@ export default async function OSSPreview() {
   const topRepos = repos.slice(0, 3);
 
   return (
-    <section className="py-20">
+    <section className="py-28">
       <Container>
         {/* Section header */}
         <div className="mb-12">
