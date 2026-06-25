@@ -141,9 +141,12 @@ export default async function OSSPage() {
                 </span>
               </div>
 
-              {/* Description (wide screens only) */}
+              {/* Description (wide screens only) — capped width, full text on hover */}
               {c.description && (
-                <p className="hidden min-w-0 flex-1 truncate text-[13px] text-site-text-secondary md:block">
+                <p
+                  title={c.description}
+                  className="hidden min-w-0 shrink truncate text-[13px] text-site-text-secondary md:block md:max-w-xs lg:max-w-md"
+                >
                   {c.description}
                 </p>
               )}
