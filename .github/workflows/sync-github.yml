@@ -1,0 +1,54 @@
+name: Sync GitHub snapshot
+
+on:
+  schedule:
+    # 00:15 UTC daily = 06:00 AM Nepal time (NPT, UTC+5:45).
+    - cron: "15 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-github-snapshot
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Refresh snapshot
+        env:
+          # The default Actions token authenticates GitHub API requests
+          # (1,000 req/hr) — plenty for the handful of calls the sync makes,
+          # and enough to fetch full, accurate data.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bun run sync
+
+      # Only opens (or updates) a PR when snapshot.json actually changed.
+      # If the stats are identical, this is a no-op — no branch, no PR.
+      - name: Open pull request on change
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/github-snapshot
+          base: main
+          commit-message: "chore(data): refresh GitHub snapshot"
+          title: "chore(data): refresh GitHub snapshot"
+          body: |
+            Automated daily refresh of `packages/github/data/snapshot.json`.
+
+            Review the diff to see how the GitHub stats changed, then merge.
+          labels: automated, data
+          reviewers: bhimrazy
+          delete-branch: true
