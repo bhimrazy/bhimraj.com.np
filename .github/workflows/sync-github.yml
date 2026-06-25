@@ -38,7 +38,7 @@ jobs:
       # Only opens (or updates) a PR when snapshot.json actually changed.
       # If the stats are identical, this is a no-op — no branch, no PR.
       - name: Open pull request on change
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: chore/github-snapshot
