@@ -7,7 +7,10 @@ import type {
 } from "./fetchers/ecosystem";
 import type { FeaturedRepoStats } from "./fetchers/stars";
 
-export type { MonthlyContribution } from "./fetchers/contributions";
+export type {
+  MonthlyContribution,
+  MonthlyRepoContribution,
+} from "./fetchers/contributions";
 export type {
   ContributedRepo,
   LightningAIEcosystemStats,
@@ -83,11 +86,20 @@ const contributedRepoSchema = z.object({
   forks: z.number(),
 });
 
+const monthlyRepoContributionSchema = z.object({
+  repo: z.string(),
+  name: z.string(),
+  commits: z.number(),
+});
+
 const monthlyContributionSchema = z.object({
   label: z.string(),
   year: z.number(),
   month: z.number(),
   commits: z.number(),
+  // Optional for backward compatibility with snapshots written before the
+  // per-repo split existed; defaults to empty so existing data still parses.
+  byRepo: z.array(monthlyRepoContributionSchema).default([]),
 });
 
 /** Runtime guard used both when writing the snapshot and when reading it. */

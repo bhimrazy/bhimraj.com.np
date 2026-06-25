@@ -23,6 +23,7 @@ export type {
   LightningAIEcosystemStats,
   LightningAIRepoStat,
   MonthlyContribution,
+  MonthlyRepoContribution,
   OSSStats,
   StarPoint,
 } from "./types";
