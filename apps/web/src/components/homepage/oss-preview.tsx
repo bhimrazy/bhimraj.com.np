@@ -1,4 +1,8 @@
-import { getLightningAIEcosystemStats, getOSSStats } from "@bhimrazy/github";
+import {
+  getContributedRepos,
+  getLightningAIEcosystemStats,
+  getOSSStats,
+} from "@bhimrazy/github";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { Container } from "@/components/container";
@@ -14,6 +18,7 @@ function formatStars(n: number): string {
 export default async function OSSPreview() {
   const { repos } = getLightningAIEcosystemStats();
   const { totalPrs, totalCommits } = getOSSStats();
+  const contributedRepos = getContributedRepos();
 
   const topRepos = repos.slice(0, 3);
   const ecosystemStars = repos.reduce((sum, repo) => sum + repo.stars, 0);
@@ -22,7 +27,7 @@ export default async function OSSPreview() {
     { value: `${totalCommits}+`, label: "Contributions" },
     { value: `${totalPrs}+`, label: "PRs Merged" },
     { value: formatStars(ecosystemStars), label: "Ecosystem Stars" },
-    { value: String(repos.length), label: "Projects" },
+    { value: `${contributedRepos.length}+`, label: "Repos Contributed" },
   ];
 
   return (
