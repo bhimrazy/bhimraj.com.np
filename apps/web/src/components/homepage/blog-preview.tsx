@@ -1,7 +1,7 @@
 import { allBlogPosts } from "content-collections";
 import Link from "next/link";
 import { Container } from "@/components/container";
-import { formatDate, getReadingTime } from "@/lib/utils";
+import { getReadingTime } from "@/lib/utils";
 
 const sortedPosts = [...allBlogPosts]
   .sort(
@@ -11,7 +11,7 @@ const sortedPosts = [...allBlogPosts]
 
 export default function BlogPreview() {
   return (
-    <section className="py-20">
+    <section className="py-24">
       <Container>
         {/* Section header */}
         <div className="mb-12">
@@ -39,10 +39,6 @@ export default function BlogPreview() {
                   {post.title}
                 </h3>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-site-text-tertiary text-sm">
-                    {formatDate(post.publishedAt)}
-                  </span>
-                  <span className="text-site-text-tertiary">·</span>
                   <span className="text-site-text-tertiary text-sm">
                     {getReadingTime(post.html)}
                   </span>
