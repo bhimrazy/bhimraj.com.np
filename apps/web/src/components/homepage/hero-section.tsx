@@ -17,8 +17,8 @@ export default async function HeroSection() {
   const STATS = [
     { value: `${contributions}+`, label: "OSS Contributions" },
     { value: `${githubStars}+`, label: "GitHub Stars" },
-    { value: `${yearsExp}+`, label: "Years Building" },
-    { value: "IEEE", label: "Published Researcher" },
+    { value: `${yearsExp}+`, label: "Years Experience" },
+    { value: "1", label: "IEEE Publication" },
   ];
   return (
     <section className="relative pt-44 pb-20">
@@ -36,19 +36,19 @@ export default async function HeroSection() {
             </span>
 
             <h1 className="mb-5 font-bold font-display text-4xl text-site-text leading-[1.1] tracking-tight sm:text-5xl lg:text-[52px]">
-              Building the open-source
+              Software Engineer
               <br />
               <span className="text-site-text-secondary">
-                tools ML teams run in production.
+                &amp; OSS Contributor
               </span>
             </h1>
 
             <p className="mb-8 max-w-130 text-[17px] text-site-text-secondary leading-relaxed">
               I&apos;m <strong className="text-site-text">Bhimraj Yadav</strong>{" "}
-              — a Tier 2 contributor at Lightning AI (PyTorch Lightning,
-              LitServe, LitData), IEEE-published in deep learning, and a
-              production engineer at Fetchly Labs. Building for the world from
-              Kathmandu, Nepal 🇳🇵.
+              — Software Engineer at Fetchly Labs, Tier 2 OSS contributor at
+              Lightning AI, Consultant at StableCluster, and AI Researcher. I
+              build production systems and explore computer vision &amp;
+              generative AI.
             </p>
 
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
