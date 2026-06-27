@@ -2,9 +2,9 @@ name: Sync GitHub snapshot
 
 on:
   schedule:
-    # Twice daily, 12h apart, in UTC (NPT = UTC+5:45):
-    #   00:15 UTC = 06:00 AM NPT, 12:15 UTC = 06:00 PM NPT.
-    - cron: "15 0,12 * * *"
+    # Once daily, in UTC (NPT = UTC+5:45):
+    #   09:15 UTC = 03:00 PM NPT.
+    - cron: "15 9 * * *"
   workflow_dispatch:
 
 permissions:
