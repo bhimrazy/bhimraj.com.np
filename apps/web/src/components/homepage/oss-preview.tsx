@@ -16,22 +16,50 @@ export default async function OSSPreview() {
   const { totalPrs, totalCommits } = getOSSStats();
 
   const topRepos = repos.slice(0, 3);
+  const ecosystemStars = repos.reduce((sum, repo) => sum + repo.stars, 0);
+
+  const stats = [
+    { value: `${totalCommits}+`, label: "Contributions" },
+    { value: `${totalPrs}+`, label: "PRs Merged" },
+    { value: formatStars(ecosystemStars), label: "Ecosystem Stars" },
+    { value: String(repos.length), label: "Projects" },
+  ];
 
   return (
-    <section className="py-28">
-      <Container>
-        {/* Section header */}
-        <div className="mb-12">
+    <section className="relative overflow-hidden border-site-border/40 border-y bg-site-bg-secondary/30 py-32 dark:bg-white/1.5">
+      {/* Full-bleed accent line — marks this as the page's centerpiece */}
+      <div className="pointer-events-none absolute top-0 left-1/2 h-px w-2/3 -translate-x-1/2 bg-linear-to-r from-transparent via-site-accent/40 to-transparent" />
+
+      <Container className="relative">
+        {/* Section header — centered to break the section rhythm */}
+        <div className="mx-auto mb-12 max-w-2xl text-center">
           <span className="font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">
             Open Source
           </span>
-          <h2 className="mt-2 font-bold font-display text-3xl text-site-text leading-tight">
+          <h2 className="mt-2 font-bold font-display text-3xl text-site-text leading-tight sm:text-4xl">
             Contributing to the ecosystem
           </h2>
-          <p className="mt-3 max-w-lg text-base text-site-text-secondary">
-            {totalCommits}+ contributions and {totalPrs} PRs merged across the
-            open source ecosystem.
+          <p className="mt-3 text-base text-site-text-secondary">
+            Merged work across PyTorch Lightning, LitServe, LitData, and the
+            wider open-source ecosystem.
           </p>
+        </div>
+
+        {/* Stats band — the OSS data is the strongest asset, rendered large */}
+        <div className="mb-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-site-border/50 bg-site-border/30 sm:grid-cols-4 dark:border-white/5 dark:bg-white/5">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="bg-site-card px-6 py-7 text-center dark:bg-site-bg"
+            >
+              <div className="font-bold font-display text-3xl text-site-text sm:text-4xl">
+                {stat.value}
+              </div>
+              <div className="mt-1.5 font-mono text-[11px] text-site-text-tertiary uppercase tracking-[1px]">
+                {stat.label}
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Repo cards */}
@@ -72,10 +100,7 @@ export default async function OSSPreview() {
                   {/* Meta */}
                   <div className="flex items-center gap-4 text-site-text-tertiary text-xs">
                     <span className="flex items-center gap-1.5">
-                      <span
-                        className="h-2.5 w-2.5 rounded-full"
-                        style={{ background: "#3572A5" }}
-                      />
+                      <span className="h-2.5 w-2.5 rounded-full bg-[#3572A5]" />
                       Python
                     </span>
                     <span>★ {formatStars(repo.stars)}</span>

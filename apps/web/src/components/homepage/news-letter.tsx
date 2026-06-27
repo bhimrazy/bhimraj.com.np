@@ -52,8 +52,8 @@ export default function NewsLetter() {
             Stay in the loop
           </h2>
           <p className="mx-auto mb-8 max-w-sm text-base text-site-text-secondary">
-            Thoughts on software engineering, OSS, AI research, and what
-            I&apos;m building — delivered occasionally.
+            Notes on software engineering, OSS, and AI research — sent only when
+            I ship or learn something worth sharing. No filler.
           </p>
 
           <form
