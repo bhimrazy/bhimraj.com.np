@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-25T18:59:30.373Z",
+  "generatedAt": "2026-06-26T15:02:12.932Z",
   "stars": 703,
   "contributions": 422,
   "lightningCommits": 350,
@@ -194,7 +194,7 @@
         "fullName": "Lightning-AI/LitServe",
         "description": "A minimal Python framework for building custom AI inference servers with full control over logic, batching, and scaling.",
         "prs": 47,
-        "stars": 3899,
+        "stars": 3900,
         "forks": 292
       },
       {
@@ -202,16 +202,16 @@
         "fullName": "Lightning-AI/pytorch-lightning",
         "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
         "prs": 34,
-        "stars": 31202,
-        "forks": 3744
+        "stars": 31204,
+        "forks": 3746
       },
       {
         "name": "LitGPT",
         "fullName": "Lightning-AI/litgpt",
         "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
         "prs": 27,
-        "stars": 13439,
-        "forks": 1464
+        "stars": 13440,
+        "forks": 1463
       }
     ]
   },
@@ -233,8 +233,8 @@
       "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
       "commits": 87,
       "prs": 34,
-      "stars": 31202,
-      "forks": 3744
+      "stars": 31204,
+      "forks": 3746
     },
     {
       "name": "receipt-ocr",
@@ -253,7 +253,7 @@
       "description": "A minimal Python framework for building custom AI inference servers with full control over logic, batching, and scaling.",
       "commits": 56,
       "prs": 47,
-      "stars": 3899,
+      "stars": 3900,
       "forks": 292
     },
     {
@@ -263,8 +263,8 @@
       "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
       "commits": 41,
       "prs": 27,
-      "stars": 13439,
-      "forks": 1464
+      "stars": 13440,
+      "forks": 1463
     },
     {
       "name": "utilities",
@@ -283,7 +283,7 @@
       "description": "Machine learning metrics for distributed, scalable PyTorch applications.",
       "commits": 16,
       "prs": 10,
-      "stars": 2445,
+      "stars": 2446,
       "forks": 498
     },
     {
@@ -293,8 +293,8 @@
       "description": "MinHash, LSH, LSH Forest, Weighted MinHash, HyperLogLog, HyperLogLog++, LSH Ensemble and HNSW",
       "commits": 15,
       "prs": 13,
-      "stars": 2936,
-      "forks": 316
+      "stars": 2937,
+      "forks": 317
     },
     {
       "name": "LitModels",
@@ -312,73 +312,407 @@
       "label": "Jul",
       "year": 2025,
       "month": 6,
-      "commits": 13
+      "commits": 13,
+      "byRepo": [
+        {
+          "repo": "Lightning-AI/litdata",
+          "name": "litdata",
+          "commits": 7
+        },
+        {
+          "repo": "Lightning-AI/LitServe",
+          "name": "LitServe",
+          "commits": 5
+        },
+        {
+          "repo": "Lightning-AI/pytorch-lightning",
+          "name": "pytorch-lightning",
+          "commits": 1
+        }
+      ]
     },
     {
       "label": "Aug",
       "year": 2025,
       "month": 7,
-      "commits": 26
+      "commits": 26,
+      "byRepo": [
+        {
+          "repo": "Lightning-AI/pytorch-lightning",
+          "name": "pytorch-lightning",
+          "commits": 14
+        },
+        {
+          "repo": "Lightning-AI/litdata",
+          "name": "litdata",
+          "commits": 8
+        },
+        {
+          "repo": "bhimrazy/receipt-ocr",
+          "name": "receipt-ocr",
+          "commits": 4
+        }
+      ]
     },
     {
       "label": "Sep",
       "year": 2025,
       "month": 8,
-      "commits": 11
+      "commits": 11,
+      "byRepo": [
+        {
+          "repo": "Lightning-AI/pytorch-lightning",
+          "name": "pytorch-lightning",
+          "commits": 6
+        },
+        {
+          "repo": "Lightning-AI/litdata",
+          "name": "litdata",
+          "commits": 2
+        },
+        {
+          "repo": "bhimrazy/receipt-ocr",
+          "name": "receipt-ocr",
+          "commits": 2
+        },
+        {
+          "repo": "Lightning-AI/LitServe",
+          "name": "LitServe",
+          "commits": 1
+        }
+      ]
     },
     {
       "label": "Oct",
       "year": 2025,
       "month": 9,
-      "commits": 36
+      "commits": 36,
+      "byRepo": [
+        {
+          "repo": "bhimrazy/receipt-ocr",
+          "name": "receipt-ocr",
+          "commits": 19
+        },
+        {
+          "repo": "Lightning-AI/pytorch-lightning",
+          "name": "pytorch-lightning",
+          "commits": 11
+        },
+        {
+          "repo": "Lightning-AI/litdata",
+          "name": "litdata",
+          "commits": 3
+        },
+        {
+          "repo": "Lightning-AI/LitServe",
+          "name": "LitServe",
+          "commits": 3
+        }
+      ]
     },
     {
       "label": "Nov",
       "year": 2025,
       "month": 10,
-      "commits": 37
+      "commits": 37,
+      "byRepo": [
+        {
+          "repo": "Lightning-AI/pytorch-lightning",
+          "name": "pytorch-lightning",
+          "commits": 12
+        },
+        {
+          "repo": "ekzhu/datasketch",
+          "name": "datasketch",
+          "commits": 11
+        },
+        {
+          "repo": "Lightning-AI/litgpt",
+          "name": "litgpt",
+          "commits": 9
+        },
+        {
+          "repo": "Lightning-AI/litdata",
+          "name": "litdata",
+          "commits": 5
+        }
+      ]
     },
     {
       "label": "Dec",
       "year": 2025,
       "month": 11,
-      "commits": 24
+      "commits": 24,
+      "byRepo": [
+        {
+          "repo": "Lightning-AI/pytorch-lightning",
+          "name": "pytorch-lightning",
+          "commits": 10
+        },
+        {
+          "repo": "ekzhu/datasketch",
+          "name": "datasketch",
+          "commits": 4
+        },
+        {
+          "repo": "Lightning-AI/LitServe",
+          "name": "LitServe",
+          "commits": 3
+        },
+        {
+          "repo": "Lightning-AI/litgpt",
+          "name": "litgpt",
+          "commits": 3
+        },
+        {
+          "repo": "Lightning-AI/litdata",
+          "name": "litdata",
+          "commits": 2
+        },
+        {
+          "repo": "Lightning-AI/torchmetrics",
+          "name": "torchmetrics",
+          "commits": 2
+        }
+      ]
     },
     {
       "label": "Jan",
       "year": 2026,
       "month": 0,
-      "commits": 39
+      "commits": 39,
+      "byRepo": [
+        {
+          "repo": "Lightning-AI/pytorch-lightning",
+          "name": "pytorch-lightning",
+          "commits": 11
+        },
+        {
+          "repo": "Lightning-AI/litdata",
+          "name": "litdata",
+          "commits": 6
+        },
+        {
+          "repo": "Lightning-AI/litgpt",
+          "name": "litgpt",
+          "commits": 6
+        },
+        {
+          "repo": "Lightning-AI/utilities",
+          "name": "utilities",
+          "commits": 6
+        },
+        {
+          "repo": "Lightning-AI/LitServe",
+          "name": "LitServe",
+          "commits": 4
+        },
+        {
+          "repo": "Lightning-AI/LitModels",
+          "name": "LitModels",
+          "commits": 3
+        },
+        {
+          "repo": "Lightning-AI/torchmetrics",
+          "name": "torchmetrics",
+          "commits": 2
+        },
+        {
+          "repo": "bhimrazy/receipt-ocr",
+          "name": "receipt-ocr",
+          "commits": 1
+        }
+      ]
     },
     {
       "label": "Feb",
       "year": 2026,
       "month": 1,
-      "commits": 19
+      "commits": 19,
+      "byRepo": [
+        {
+          "repo": "bhimrazy/receipt-ocr",
+          "name": "receipt-ocr",
+          "commits": 8
+        },
+        {
+          "repo": "Lightning-AI/utilities",
+          "name": "utilities",
+          "commits": 3
+        },
+        {
+          "repo": "Lightning-AI/LitServe",
+          "name": "LitServe",
+          "commits": 2
+        },
+        {
+          "repo": "Lightning-AI/litgpt",
+          "name": "litgpt",
+          "commits": 2
+        },
+        {
+          "repo": "Lightning-AI/torchmetrics",
+          "name": "torchmetrics",
+          "commits": 2
+        },
+        {
+          "repo": "Lightning-AI/LitModels",
+          "name": "LitModels",
+          "commits": 1
+        },
+        {
+          "repo": "Lightning-AI/pytorch-lightning",
+          "name": "pytorch-lightning",
+          "commits": 1
+        }
+      ]
     },
     {
       "label": "Mar",
       "year": 2026,
       "month": 2,
-      "commits": 27
+      "commits": 27,
+      "byRepo": [
+        {
+          "repo": "Lightning-AI/pytorch-lightning",
+          "name": "pytorch-lightning",
+          "commits": 8
+        },
+        {
+          "repo": "Lightning-AI/torchmetrics",
+          "name": "torchmetrics",
+          "commits": 7
+        },
+        {
+          "repo": "Lightning-AI/utilities",
+          "name": "utilities",
+          "commits": 4
+        },
+        {
+          "repo": "Lightning-AI/litdata",
+          "name": "litdata",
+          "commits": 3
+        },
+        {
+          "repo": "Lightning-AI/litgpt",
+          "name": "litgpt",
+          "commits": 3
+        },
+        {
+          "repo": "bhimrazy/receipt-ocr",
+          "name": "receipt-ocr",
+          "commits": 2
+        }
+      ]
     },
     {
       "label": "Apr",
       "year": 2026,
       "month": 3,
-      "commits": 10
+      "commits": 10,
+      "byRepo": [
+        {
+          "repo": "Lightning-AI/litgpt",
+          "name": "litgpt",
+          "commits": 3
+        },
+        {
+          "repo": "Lightning-AI/LitServe",
+          "name": "LitServe",
+          "commits": 2
+        },
+        {
+          "repo": "Lightning-AI/pytorch-lightning",
+          "name": "pytorch-lightning",
+          "commits": 2
+        },
+        {
+          "repo": "Lightning-AI/litdata",
+          "name": "litdata",
+          "commits": 1
+        },
+        {
+          "repo": "Lightning-AI/torchmetrics",
+          "name": "torchmetrics",
+          "commits": 1
+        },
+        {
+          "repo": "bhimrazy/receipt-ocr",
+          "name": "receipt-ocr",
+          "commits": 1
+        }
+      ]
     },
     {
       "label": "May",
       "year": 2026,
       "month": 4,
-      "commits": 25
+      "commits": 25,
+      "byRepo": [
+        {
+          "repo": "Lightning-AI/pytorch-lightning",
+          "name": "pytorch-lightning",
+          "commits": 10
+        },
+        {
+          "repo": "Lightning-AI/litgpt",
+          "name": "litgpt",
+          "commits": 4
+        },
+        {
+          "repo": "Lightning-AI/litdata",
+          "name": "litdata",
+          "commits": 3
+        },
+        {
+          "repo": "Lightning-AI/LitModels",
+          "name": "LitModels",
+          "commits": 3
+        },
+        {
+          "repo": "Lightning-AI/torchmetrics",
+          "name": "torchmetrics",
+          "commits": 2
+        },
+        {
+          "repo": "Lightning-AI/utilities",
+          "name": "utilities",
+          "commits": 2
+        },
+        {
+          "repo": "Lightning-AI/LitServe",
+          "name": "LitServe",
+          "commits": 1
+        }
+      ]
     },
     {
       "label": "Jun",
       "year": 2026,
       "month": 5,
-      "commits": 21
+      "commits": 21,
+      "byRepo": [
+        {
+          "repo": "Lightning-AI/litgpt",
+          "name": "litgpt",
+          "commits": 9
+        },
+        {
+          "repo": "Lightning-AI/LitServe",
+          "name": "LitServe",
+          "commits": 6
+        },
+        {
+          "repo": "Lightning-AI/utilities",
+          "name": "utilities",
+          "commits": 5
+        },
+        {
+          "repo": "Lightning-AI/LitLogger",
+          "name": "LitLogger",
+          "commits": 1
+        }
+      ]
     }
   ]
 }
