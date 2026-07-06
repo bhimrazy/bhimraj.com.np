@@ -172,7 +172,7 @@ export default async function ExperienceSection() {
   const totalCommits = getLightningCommits();
 
   return (
-    <section className="py-20">
+    <section className="py-24">
       <Container>
         {/* Section header */}
         <div className="mb-12">

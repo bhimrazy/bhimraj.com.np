@@ -36,13 +36,42 @@ export function ContributionGraph({ data }: { data: MonthlyContribution[] }) {
               className="group flex h-full flex-1 flex-col items-center justify-end gap-2"
             >
               <div className="relative flex w-full flex-1 items-end justify-center">
-                <span className="pointer-events-none absolute bottom-full left-1/2 mb-1.5 -translate-x-1/2 whitespace-nowrap rounded-md border border-site-border bg-site-bg-tertiary px-2 py-0.5 font-mono text-[10px] text-site-text opacity-0 transition-opacity duration-150 group-hover:opacity-100">
-                  {d.commits} · {d.label} {d.year}
-                </span>
+                {/* Hover breakdown card */}
+                <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 w-44 -translate-x-1/2 rounded-lg border border-site-border bg-site-card p-3 opacity-0 shadow-black/10 shadow-xl transition-opacity duration-150 group-hover:opacity-100 dark:border-white/8 dark:bg-site-bg-tertiary">
+                  <div className="flex items-baseline justify-between gap-2 border-site-border/60 border-b pb-1.5">
+                    <span className="font-display font-semibold text-site-text text-xs">
+                      {d.label} {d.year}
+                    </span>
+                    <span className="font-mono text-[11px] text-site-accent">
+                      {d.commits} commit{d.commits === 1 ? "" : "s"}
+                    </span>
+                  </div>
+                  {d.byRepo.length > 0 ? (
+                    <ul className="mt-2 space-y-1">
+                      {d.byRepo.map((r) => (
+                        <li
+                          key={r.repo}
+                          className="flex items-center justify-between gap-2 font-mono text-[11px]"
+                        >
+                          <span className="truncate text-site-text-secondary">
+                            {r.name}
+                          </span>
+                          <span className="shrink-0 text-site-text-tertiary">
+                            {r.commits}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="mt-2 font-mono text-[11px] text-site-text-tertiary">
+                      No contributions
+                    </p>
+                  )}
+                </div>
+
                 <div
                   className="w-full rounded-t-sm bg-linear-to-t from-site-accent/25 to-site-accent transition-all duration-200 group-hover:from-site-accent/40 group-hover:to-site-accent-hover"
                   style={{ height: `${heightPct}%` }}
-                  title={`${d.commits} commits in ${d.label} ${d.year}`}
                 />
               </div>
               <span className="font-mono text-[10px] text-site-text-tertiary">

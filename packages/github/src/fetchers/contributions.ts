@@ -163,6 +163,15 @@ export async function getGitHubContributions(
   }
 }
 
+/** One repo's share of a single month's commits. */
+export type MonthlyRepoContribution = {
+  /** "owner/repo" slug. */
+  repo: string;
+  /** Short repo name (the part after the slash). */
+  name: string;
+  commits: number;
+};
+
 /** One month's commit total, used for the OSS contribution graph. */
 export type MonthlyContribution = {
   /** Short month name, e.g. "Jan". */
@@ -171,6 +180,8 @@ export type MonthlyContribution = {
   /** Zero-based month index (0 = January). */
   month: number;
   commits: number;
+  /** Per-repo split of `commits`, highest first; empty when nothing resolved. */
+  byRepo: MonthlyRepoContribution[];
 };
 
 /**
@@ -187,15 +198,19 @@ export async function getMonthlyContributions(
 ): Promise<MonthlyContribution[]> {
   const now = new Date();
   const buckets: MonthlyContribution[] = [];
+  // Per-month, per-repo tallies kept alongside `buckets` until we finalize them.
+  const repoTallies: Map<string, number>[] = [];
   const indexByKey = new Map<string, number>();
   for (let i = 11; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     indexByKey.set(`${d.getFullYear()}-${d.getMonth()}`, buckets.length);
+    repoTallies.push(new Map());
     buckets.push({
       label: d.toLocaleString("en-US", { month: "short" }),
       year: d.getFullYear(),
       month: d.getMonth(),
       commits: 0,
+      byRepo: [],
     });
   }
 
@@ -203,20 +218,36 @@ export async function getMonthlyContributions(
     const perRepo = await Effect.runPromise(
       Effect.all(
         repos.map((repo) =>
-          Effect.promise(() => fetchRepoWeeks(repo, username, 2, 500)),
+          Effect.promise(
+            async () =>
+              [repo, await fetchRepoWeeks(repo, username, 2, 500)] as const,
+          ),
         ),
         { concurrency: REQUEST_CONCURRENCY },
       ),
     );
 
-    for (const weeks of perRepo) {
+    for (const [repo, weeks] of perRepo) {
       if (!weeks) continue;
       for (const week of weeks) {
         if (week.c <= 0) continue;
         const d = new Date(week.w * 1000);
         const idx = indexByKey.get(`${d.getFullYear()}-${d.getMonth()}`);
-        if (idx !== undefined) buckets[idx].commits += week.c;
+        if (idx === undefined) continue;
+        buckets[idx].commits += week.c;
+        const tally = repoTallies[idx];
+        tally.set(repo, (tally.get(repo) ?? 0) + week.c);
       }
+    }
+
+    for (let i = 0; i < buckets.length; i++) {
+      buckets[i].byRepo = [...repoTallies[i]]
+        .map(([repo, commits]) => ({
+          repo,
+          name: repo.split("/")[1] ?? repo,
+          commits,
+        }))
+        .sort((a, b) => b.commits - a.commits);
     }
   } catch (error) {
     log.warn("monthly contributions error", { username }, error);

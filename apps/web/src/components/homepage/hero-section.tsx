@@ -15,9 +15,9 @@ export default async function HeroSection() {
   const contributions = getGitHubContributions();
 
   const STATS = [
-    { value: `${yearsExp}+`, label: "Years Experience" },
     { value: `${contributions}+`, label: "OSS Contributions" },
     { value: `${githubStars}+`, label: "GitHub Stars" },
+    { value: `${yearsExp}+`, label: "Years Experience" },
     { value: "1", label: "IEEE Publication" },
   ];
   return (
@@ -51,20 +51,19 @@ export default async function HeroSection() {
               generative AI.
             </p>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
               <Button
                 asChild
                 className="rounded-lg border-0 bg-site-accent px-6 font-semibold text-white hover:bg-site-accent/85"
               >
-                <Link href="/oss">Explore My OSS Journey</Link>
+                <Link href="/oss">Explore my OSS work →</Link>
               </Button>
-              <Button
-                asChild
-                variant="ghost"
-                className="rounded-lg border border-site-border bg-site-card/40 px-6 text-site-text-secondary hover:border-site-border-hover hover:bg-site-bg-secondary hover:text-site-text dark:border-white/10 dark:bg-site-bg-secondary/60 dark:text-site-text-secondary dark:hover:border-site-accent/40 dark:hover:bg-site-accent-subtle dark:hover:text-site-text"
+              <Link
+                href="/blog"
+                className="font-medium text-site-text-secondary text-sm transition-colors hover:text-site-text"
               >
-                <Link href="/blog">Read the Blog</Link>
-              </Button>
+                Read the blog
+              </Link>
             </div>
           </div>
 

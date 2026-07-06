@@ -18,9 +18,7 @@ export default function Home() {
       <HeroSection />
       <SectionSeparator />
       <ExperienceSection />
-      <SectionSeparator />
       <OSSPreview />
-      <SectionSeparator />
       <FeaturedProject />
       <SectionSeparator />
       <BlogPreview />

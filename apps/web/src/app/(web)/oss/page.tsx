@@ -11,7 +11,6 @@ import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { ContributionGraph } from "@/components/oss/contribution-graph";
 import { Timeline } from "@/components/oss/timeline";
-import { Card, CardContent } from "@/components/ui/card";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -44,6 +43,8 @@ export default async function OSSPage() {
 
   const currentYear = monthly.at(-1)?.year ?? ossStartYear;
   const yearsActive = currentYear - ossStartYear;
+
+  const maxRepoCommits = Math.max(...contributions.map((c) => c.commits), 1);
 
   const stats = [
     {
@@ -104,14 +105,6 @@ export default async function OSSPage() {
           <ContributionGraph data={monthly} />
         </div>
 
-        {/* Timeline */}
-        <h2 className="mb-6 font-bold font-display text-2xl text-site-text">
-          Journey
-        </h2>
-        <div className="mb-12">
-          <Timeline />
-        </div>
-
         {/* Contributions */}
         <h2 className="mb-2 font-bold font-display text-2xl text-site-text">
           Key Contributions
@@ -119,43 +112,62 @@ export default async function OSSPage() {
         <p className="mb-6 text-site-text-secondary text-sm">
           Every repo where I have more than one contribution — live from GitHub.
         </p>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="mb-12 divide-y divide-site-border overflow-hidden rounded-xl border border-site-border bg-site-card dark:divide-white/4 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary">
           {contributions.map((c) => (
             <a
               key={c.fullName}
               href={repoUrl(c.fullName, c.org)}
               target="_blank"
               rel="nofollow noopener noreferrer"
-              className="group block"
+              className="group relative isolate flex flex-col gap-1.5 overflow-hidden px-4 py-3 sm:flex-row sm:items-center sm:gap-4 sm:px-5"
             >
-              <Card className="relative h-full overflow-hidden border border-site-border/50 bg-site-card transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-site-border-hover group-hover:shadow-xl/5 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:group-hover:border-white/10 dark:group-hover:shadow-site-accent-subtle">
-                <CardContent className="flex h-full flex-col p-5">
-                  <div className="mb-2 flex items-center gap-2">
-                    <GitHubLogoIcon className="h-3.5 w-3.5 shrink-0 text-site-text-tertiary" />
-                    <h3 className="truncate font-display font-semibold text-[15px] text-site-text">
-                      {c.name}
-                    </h3>
-                    <span className="ml-auto shrink-0 rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[10px] text-site-accent">
-                      {c.org}
-                    </span>
-                  </div>
-                  {c.description && (
-                    <p className="mb-3 line-clamp-2 text-[13px] text-site-text-secondary leading-relaxed">
-                      {c.description}
-                    </p>
-                  )}
-                  <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] text-site-text-tertiary">
-                    <span className="text-site-accent">
-                      {c.commits} commits
-                    </span>
-                    {c.prs > 0 && <span>{c.prs} PRs</span>}
-                    <span>★ {formatCount(c.stars)}</span>
-                    <span>⑂ {formatCount(c.forks)}</span>
-                  </div>
-                </CardContent>
-              </Card>
+              {/* Commit-volume bar — ranks repos at a glance */}
+              <span
+                aria-hidden
+                className="absolute inset-y-0 left-0 -z-10 bg-site-accent-subtle transition-all duration-300 group-hover:bg-site-accent/15"
+                style={{
+                  width: `${Math.max((c.commits / maxRepoCommits) * 100, 5)}%`,
+                }}
+              />
+
+              {/* Repo + org */}
+              <div className="flex items-center gap-2 sm:w-60 sm:shrink-0">
+                <GitHubLogoIcon className="h-3.5 w-3.5 shrink-0 text-site-text-tertiary transition-colors group-hover:text-site-accent" />
+                <h3 className="truncate font-display font-semibold text-[15px] text-site-text">
+                  {c.name}
+                </h3>
+                <span className="ml-auto shrink-0 rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[10px] text-site-accent sm:ml-0">
+                  {c.org}
+                </span>
+              </div>
+
+              {/* Description (wide screens only) — capped width, full text on hover */}
+              {c.description && (
+                <p
+                  title={c.description}
+                  className="hidden min-w-0 shrink truncate text-[13px] text-site-text-secondary md:block md:max-w-xs lg:max-w-md"
+                >
+                  {c.description}
+                </p>
+              )}
+
+              {/* Stats */}
+              <div className="flex items-center gap-x-3 font-mono text-[11px] text-site-text-tertiary sm:ml-auto sm:shrink-0">
+                <span className="text-site-accent">{c.commits} commits</span>
+                {c.prs > 0 && <span>{c.prs} PRs</span>}
+                <span>★ {formatCount(c.stars)}</span>
+                <span>⑂ {formatCount(c.forks)}</span>
+              </div>
             </a>
           ))}
+        </div>
+
+        {/* Timeline */}
+        <h2 className="mb-6 font-bold font-display text-2xl text-site-text">
+          Journey
+        </h2>
+        <div>
+          <Timeline />
         </div>
       </Container>
     </main>

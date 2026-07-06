@@ -26,13 +26,7 @@ export default function ResearchPreview() {
             <CardContent className="relative p-6">
               <div className="flex gap-5">
                 {/* Accent bar */}
-                <div
-                  className="w-1 shrink-0 rounded-full"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, var(--site-accent), transparent)",
-                  }}
-                />
+                <div className="w-1 shrink-0 rounded-full bg-linear-to-b from-site-accent to-transparent" />
 
                 <div>
                   <span className="mb-3 inline-block rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[11px] text-site-accent">
