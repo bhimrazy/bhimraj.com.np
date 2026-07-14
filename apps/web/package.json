@@ -39,7 +39,7 @@
     "@content-collections/core": "0.15.2",
     "@content-collections/next": "0.2.11",
     "@tailwindcss/typography": "0.5.20",
-    "@types/node": "25.9.1",
+    "@types/node": "26.1.1",
     "@types/react": "19.2.17",
     "knip": "6.26.0",
     "postcss": "8.5.16",
