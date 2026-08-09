@@ -6,6 +6,18 @@ on:
     #   09:15 UTC = 03:00 PM NPT.
     - cron: "15 9 * * *"
   workflow_dispatch:
+  # Changes to the data layer run the sync for real against GitHub — CI type
+  # checks and unit tests can't catch a fetcher that stopped resolving. These
+  # runs are validation only; the PR step below is gated to schedule/dispatch.
+  push:
+    branches: [main]
+    paths:
+      - "packages/github/**"
+      - ".github/workflows/sync-github.yml"
+  pull_request:
+    paths:
+      - "packages/github/**"
+      - ".github/workflows/sync-github.yml"
 
 permissions:
   contents: write
@@ -16,9 +28,11 @@ permissions:
 env:
   HUSKY: "0"
 
+# Keyed by ref so a validation run on a branch never queues behind the daily
+# job. Only validation runs are worth cancelling.
 concurrency:
-  group: sync-github-snapshot
-  cancel-in-progress: false
+  group: sync-github-snapshot-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   sync:
@@ -41,9 +55,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bun run sync
 
+      # Validation runs stop here: report what the sync would have written,
+      # then leave the snapshot alone.
+      - name: Report snapshot diff
+        if: github.event_name == 'push' || github.event_name == 'pull_request'
+        run: |
+          git --no-pager diff --stat -- packages/github/data/snapshot.json
+          git checkout -- packages/github/data/snapshot.json
+
       # Only opens (or updates) a PR when snapshot.json actually changed.
       # If the stats are identical, this is a no-op — no branch, no PR.
       - name: Open pull request on change
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
