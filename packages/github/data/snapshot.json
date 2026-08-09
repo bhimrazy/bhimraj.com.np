@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-08-09T09:57:44.242Z",
+  "generatedAt": "2026-08-09T12:18:11.696Z",
   "stars": 729,
-  "contributions": 429,
+  "contributions": 444,
   "lightningCommits": 372,
   "featuredRepo": {
     "name": "receipt-ocr",
@@ -14,7 +14,7 @@
     "history": []
   },
   "ossStats": {
-    "totalCommits": 429,
+    "totalCommits": 444,
     "totalPrs": 261
   },
   "lightningEcosystem": {
@@ -26,7 +26,7 @@
         "description": "Speed up model training by fixing data loading.",
         "prs": 96,
         "stars": 609,
-        "forks": 102
+        "forks": 103
       },
       {
         "name": "LitServe",
@@ -63,7 +63,7 @@
       "commits": 124,
       "prs": 96,
       "stars": 609,
-      "forks": 102
+      "forks": 103
     },
     {
       "name": "pytorch-lightning",
@@ -124,6 +124,16 @@
       "prs": 10,
       "stars": 2454,
       "forks": 509
+    },
+    {
+      "name": "datasketch",
+      "fullName": "ekzhu/datasketch",
+      "org": "ekzhu",
+      "description": "MinHash, LSH, LSH Forest, Weighted MinHash, HyperLogLog, HyperLogLog++, LSH Ensemble and HNSW",
+      "commits": 15,
+      "prs": 0,
+      "stars": 2950,
+      "forks": 319
     },
     {
       "name": "LitModels",
@@ -197,12 +207,17 @@
       "label": "Nov",
       "year": 2025,
       "month": 10,
-      "commits": 26,
+      "commits": 37,
       "byRepo": [
         {
           "repo": "Lightning-AI/pytorch-lightning",
           "name": "pytorch-lightning",
           "commits": 12
+        },
+        {
+          "repo": "ekzhu/datasketch",
+          "name": "datasketch",
+          "commits": 11
         },
         {
           "repo": "Lightning-AI/litgpt",
@@ -220,12 +235,17 @@
       "label": "Dec",
       "year": 2025,
       "month": 11,
-      "commits": 20,
+      "commits": 24,
       "byRepo": [
         {
           "repo": "Lightning-AI/pytorch-lightning",
           "name": "pytorch-lightning",
           "commits": 10
+        },
+        {
+          "repo": "ekzhu/datasketch",
+          "name": "datasketch",
+          "commits": 4
         },
         {
           "repo": "Lightning-AI/LitServe",
