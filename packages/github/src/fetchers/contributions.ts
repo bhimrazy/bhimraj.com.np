@@ -6,6 +6,11 @@ import { contributorEntrySchema } from "../schemas";
 
 const DEFAULT_TIMEOUT_MS = 5000;
 
+// A repo that gives up here contributes 0 commits, so back off generously:
+// exponential from 500ms gives GitHub ~15s to warm its stats cache.
+const CONTRIBUTORS_RETRIES = 5;
+const CONTRIBUTORS_BASE_DELAY_MS = 500;
+
 /** A single week of commit activity: `w` is the week-start (epoch seconds), `c` the commit count. */
 export type ContributionWeek = { w: number; c: number };
 
@@ -91,13 +96,11 @@ function fetchRepoContributorWeeks(
 function fetchRepoWeeks(
   repo: string,
   username: string,
-  maxRetries: number,
-  delayMs: number,
 ): Promise<ContributionWeek[] | null> {
   const program = fetchRepoContributorWeeks(repo, username).pipe(
     Effect.retry({
-      schedule: Schedule.spaced(`${delayMs} millis`),
-      times: maxRetries,
+      schedule: Schedule.exponential(`${CONTRIBUTORS_BASE_DELAY_MS} millis`),
+      times: CONTRIBUTORS_RETRIES,
       while: isRetryableHttpError,
     }),
     Effect.tapError((error) =>
@@ -123,7 +126,7 @@ export async function getRepoCommitCount(
   repo: string,
   username: string,
 ): Promise<number> {
-  const weeks = await fetchRepoWeeks(repo, username, 2, 500);
+  const weeks = await fetchRepoWeeks(repo, username);
   return weeks ? sumWeeks(weeks) : 0;
 }
 
@@ -144,8 +147,7 @@ export async function getGitHubContributions(
       Effect.all(
         repos.map((repo) =>
           Effect.promise(
-            async () =>
-              [repo, await fetchRepoWeeks(repo, username, 2, 500)] as const,
+            async () => [repo, await fetchRepoWeeks(repo, username)] as const,
           ),
         ),
         { concurrency: REQUEST_CONCURRENCY },
@@ -219,8 +221,7 @@ export async function getMonthlyContributions(
       Effect.all(
         repos.map((repo) =>
           Effect.promise(
-            async () =>
-              [repo, await fetchRepoWeeks(repo, username, 2, 500)] as const,
+            async () => [repo, await fetchRepoWeeks(repo, username)] as const,
           ),
         ),
         { concurrency: REQUEST_CONCURRENCY },
