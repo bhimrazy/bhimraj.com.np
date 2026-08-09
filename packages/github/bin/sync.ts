@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { createLogger } from "@bhimrazy/utils";
 import { mergeSnapshot } from "../src/merge";
 import { buildSnapshot } from "../src/snapshot";
 import { type GitHubSnapshot, snapshotSchema } from "../src/types";
@@ -8,6 +9,8 @@ import { type GitHubSnapshot, snapshotSchema } from "../src/types";
 const SNAPSHOT_PATH = fileURLToPath(
   new URL("../data/snapshot.json", import.meta.url),
 );
+
+const log = createLogger("[sync]");
 
 function readPrevious(): GitHubSnapshot | null {
   try {
@@ -22,9 +25,9 @@ function readPrevious(): GitHubSnapshot | null {
 
 async function main() {
   if (!process.env.GITHUB_TOKEN) {
-    console.warn(
-      "[sync] GITHUB_TOKEN not set — running unauthenticated (60 req/hr); data may be incomplete.",
-    );
+    log.warn("GITHUB_TOKEN not set — data may be incomplete", {
+      rateLimit: "60 req/hr (unauthenticated)",
+    });
   }
 
   const prev = readPrevious();
@@ -38,16 +41,16 @@ async function main() {
 
   // Anomalies are values that came back lower than the committed snapshot —
   // a partial fetch, not real data. The merge already clamped them.
-  if (anomalies.length > 0) {
-    console.warn(
-      `[sync] ${anomalies.length} regressed field(s) held at their previous values:`,
-    );
-    for (const { field, prev: before, next } of anomalies) {
-      console.warn(`  ${field}: ${next} → held at ${before}`);
-    }
+  for (const { field, prev: before, next } of anomalies) {
+    log.warn("regressed field held at its previous value", {
+      field,
+      fetched: next,
+      held: before,
+    });
   }
 
-  console.info("[sync] snapshot written", {
+  log.info("snapshot written", {
+    regressedFields: anomalies.length,
     generatedAt: snapshot.generatedAt,
     stars: `${prev?.stars ?? 0} → ${snapshot.stars}`,
     contributions: `${prev?.contributions ?? 0} → ${snapshot.contributions}`,
@@ -57,6 +60,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error("[sync] failed", error);
+  log.error("failed", {}, error);
   process.exit(1);
 });
