@@ -1,0 +1,79 @@
+---
+title: "The KV Cache from First Principles: Why Long Context Is a Memory Problem"
+description: "Every LLM serving trick — GQA, paged attention, MLA, cache offloading — exists because of one data structure. Here's the KV cache built up from the attention equation, with the actual arithmetic for why it dominates GPU memory."
+publishedAt: "2026-07-06"
+updatedAt: "2026-07-06"
+tags: ["LLM", "KV Cache", "Attention", "Inference", "AI Infrastructure"]
+image: "/blog/kv-cache/cover.png"
+featured: false
+---
+
+> **DRAFT** — move to `apps/web/src/content/blog/` to publish. Needs a cover image; the memory-math tables would benefit from a diagram.
+
+If you read about LLM inference for more than five minutes, you hit the term *KV cache*. It's the reason long context is expensive, the reason your 24 GB GPU can't serve many concurrent users, and the target of half the systems papers of the last three years. Yet most explanations hand-wave it. Let's build it from the attention equation and do the actual arithmetic.
+
+## Attention, minimally
+
+In self-attention, each token produces three vectors — query **Q**, key **K**, value **V** — and attends over all previous tokens ([Vaswani et al., 2017, arXiv:1706.03762](https://arxiv.org/abs/1706.03762)):
+
+```
+Attention(Q, K, V) = softmax(QKᵀ / √d) · V
+```
+
+The key observation for inference: when generating token *t+1*, the model needs the **K** and **V** vectors of *all* tokens 1…t — but those vectors depend only on those earlier tokens, which haven't changed. Recomputing them every step would make each generated token cost O(t) full forward passes. So we cache them. That's the entire idea: **the KV cache is memoization of the K and V projections, per token, per layer, per head.**
+
+The trade is classic space-for-time: decoding drops from quadratic recomputation to a lookup, and in exchange you hold a tensor that grows linearly with sequence length.
+
+## The arithmetic that ruins your day
+
+KV cache size per sequence:
+
+```
+2 (K and V) × layers × kv_heads × head_dim × seq_len × bytes_per_value
+```
+
+For Llama-2-7B-class models with classic multi-head attention (32 layers, 32 KV heads, head_dim 128, FP16): **512 KB per token**. A single 32k-token sequence: **16 GB** — more than the 14 GB the weights themselves take. Ten concurrent users at 4k context: another 20 GB. This is why "just increase the context window" is a hardware statement, and why decode is memory-bandwidth-bound: every generated token must read this entire, growing structure.
+
+## Everything since is an attack on that formula
+
+Each term in the formula has a research lineage attacking it:
+
+**Shrink `kv_heads` — MQA and GQA.** Multi-query attention shares one K/V head across all query heads ([Shazeer, 2019, arXiv:1911.02150](https://arxiv.org/abs/1911.02150)); grouped-query attention interpolates, sharing K/V among groups of query heads with near-zero quality loss ([Ainslie et al., 2023, arXiv:2305.13245](https://arxiv.org/abs/2305.13245)). Llama-3-8B uses 8 KV heads instead of 32 — a 4× cache reduction, which is why its cache is ~128 KB/token despite being a bigger model.
+
+**Compress the vectors — MLA.** DeepSeek-V2's multi-head latent attention caches a low-rank latent instead of full K/V, reporting a 93% KV-cache reduction versus its dense baseline ([DeepSeek-AI, 2024, arXiv:2405.04434](https://arxiv.org/abs/2405.04434)).
+
+**Shrink `bytes_per_value` — cache quantization.** FP8 or INT4 KV cache halves or quarters the footprint; supported natively in vLLM and TensorRT-LLM.
+
+**Stop wasting allocated-but-unused space — PagedAttention.** Contiguous max-length preallocation wasted 60–80% of KV memory in pre-2023 systems; vLLM's block-based paging cuts waste to <4% ([Kwon et al., SOSP 2023, arXiv:2309.06180](https://arxiv.org/abs/2309.06180)).
+
+**Reuse across requests — prefix caching.** Agent loops and chat resend the same system prompt and history every turn; SGLang's RadixAttention shares the cache for common prefixes across requests ([Zheng et al., 2023, arXiv:2312.07104](https://arxiv.org/abs/2312.07104)).
+
+**Evict — attention sinks.** StreamingLLM showed you can keep just the first few "sink" tokens plus a sliding window and stream millions of tokens with a fixed-size cache — at the cost of forgetting the middle ([Xiao et al., 2023, arXiv:2309.17453](https://arxiv.org/abs/2309.17453)).
+
+**Change the architecture — SSM hybrids.** The 2026 wave of hybrid models (Mamba-style layers interleaved with attention in Nemotron-3, Qwen3.6) exists largely because state-space layers carry *constant-size* state instead of a linearly growing cache — the KV problem solved by not having KVs ([Raschka, LLM Research Papers: The 2026 List](https://magazine.sebastianraschka.com/p/llm-research-papers-2026-part1)). And at the systems level, disaggregated serving stacks like llm-d treat the cache as a first-class distributed object — transferred between prefill and decode pools, offloaded to CPU and filesystem tiers ([llm-d blog](https://llm-d.ai/blog)).
+
+## The takeaway table
+
+| Lever | Technique | Typical saving |
+|---|---|---|
+| Fewer KV heads | MQA / GQA | 4–8× |
+| Compress vectors | MLA | up to ~13× |
+| Fewer bytes | FP8/INT4 KV cache | 2–4× |
+| No fragmentation | PagedAttention | ~2× effective capacity |
+| Reuse | Prefix caching | workload-dependent, huge for agents |
+| Evict | Sliding window + sinks | unbounded, lossy |
+| No cache | SSM/hybrid layers | constant state |
+
+Next time a serving framework flag says `--kv-cache-dtype fp8` or `--enable-prefix-caching`, you'll know exactly which term of the formula it's attacking — and what it costs you.
+
+## References
+
+1. Vaswani et al., *Attention Is All You Need*, 2017 — <https://arxiv.org/abs/1706.03762>
+2. Shazeer, *Fast Transformer Decoding: One Write-Head Is All You Need*, 2019 — <https://arxiv.org/abs/1911.02150>
+3. Ainslie et al., *GQA: Training Generalized Multi-Query Transformer Models*, 2023 — <https://arxiv.org/abs/2305.13245>
+4. DeepSeek-AI, *DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts Language Model*, 2024 — <https://arxiv.org/abs/2405.04434>
+5. Kwon et al., *Efficient Memory Management for LLM Serving with PagedAttention*, SOSP 2023 — <https://arxiv.org/abs/2309.06180>
+6. Zheng et al., *SGLang: Efficient Execution of Structured Language Model Programs*, 2023 — <https://arxiv.org/abs/2312.07104>
+7. Xiao et al., *Efficient Streaming Language Models with Attention Sinks*, 2023 — <https://arxiv.org/abs/2309.17453>
+8. Raschka, *LLM Research Papers: The 2026 List (January to May)* — <https://magazine.sebastianraschka.com/p/llm-research-papers-2026-part1>
+9. llm-d project blog — KV transfer, offloading, cache-aware routing — <https://llm-d.ai/blog>
