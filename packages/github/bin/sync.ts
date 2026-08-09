@@ -29,12 +29,23 @@ async function main() {
 
   const prev = readPrevious();
   const fresh = await buildSnapshot();
-  const merged = mergeSnapshot(fresh, prev);
+  const { snapshot: merged, anomalies } = mergeSnapshot(fresh, prev);
 
   // Validate before writing so a malformed snapshot never reaches the app.
   const snapshot = snapshotSchema.parse(merged);
 
   writeFileSync(SNAPSHOT_PATH, `${JSON.stringify(snapshot, null, 2)}\n`);
+
+  // Anomalies are values that came back lower than the committed snapshot —
+  // a partial fetch, not real data. The merge already clamped them.
+  if (anomalies.length > 0) {
+    console.warn(
+      `[sync] ${anomalies.length} regressed field(s) held at their previous values:`,
+    );
+    for (const { field, prev: before, next } of anomalies) {
+      console.warn(`  ${field}: ${next} → held at ${before}`);
+    }
+  }
 
   console.info("[sync] snapshot written", {
     generatedAt: snapshot.generatedAt,
