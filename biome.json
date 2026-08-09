@@ -13,7 +13,8 @@
       "!**/.content-collections/",
       "!**/out/",
       "!**/build/",
-      "!**/data/snapshot.json"
+      "!**/data/snapshot.json",
+      "!apps/web/public"
     ]
   },
   "formatter": {
