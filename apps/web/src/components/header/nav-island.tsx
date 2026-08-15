@@ -54,7 +54,7 @@ export function NavIsland({
   return (
     <ul
       onMouseLeave={() => moveIndicator(activeHref)}
-      className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 rounded-full border border-(--site-border) p-1 backdrop-blur-md md:flex"
+      className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 rounded-full border border-site-border p-1 backdrop-blur-md md:flex"
       style={{
         background: "color-mix(in srgb, var(--site-card-bg) 70%, transparent)",
         boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
@@ -64,7 +64,7 @@ export function NavIsland({
       <span
         aria-hidden
         className={cn(
-          "pointer-events-none absolute top-1 bottom-1 left-0 rounded-full bg-(--site-accent-subtle) ease-out",
+          "pointer-events-none absolute top-1 bottom-1 left-0 rounded-full bg-site-accent-subtle ease-out",
           indicator.animate && "transition-all duration-300",
         )}
         style={{
@@ -88,8 +88,8 @@ export function NavIsland({
             className={cn(
               "relative block rounded-full px-4 py-1.5 font-body font-medium text-sm transition-colors duration-200",
               link.href === activeHref
-                ? "text-(--site-text)"
-                : "text-(--site-text-secondary) hover:text-(--site-text)",
+                ? "text-site-text"
+                : "text-site-text-secondary hover:text-site-text",
             )}
           >
             {link.label}
