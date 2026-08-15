@@ -1,56 +1,56 @@
 {
-  "generatedAt": "2026-08-09T12:18:11.696Z",
-  "stars": 729,
-  "contributions": 444,
-  "lightningCommits": 372,
+  "generatedAt": "2026-08-15T09:42:07.246Z",
+  "stars": 731,
+  "contributions": 447,
+  "lightningCommits": 375,
   "featuredRepo": {
     "name": "receipt-ocr",
     "fullName": "bhimrazy/receipt-ocr",
     "description": "An efficient OCR engine for receipt image processing.",
-    "stars": 380,
+    "stars": 383,
     "forks": 58,
     "language": "Python",
     "url": "https://github.com/bhimrazy/receipt-ocr",
     "history": []
   },
   "ossStats": {
-    "totalCommits": 444,
-    "totalPrs": 261
+    "totalCommits": 447,
+    "totalPrs": 264
   },
   "lightningEcosystem": {
-    "totalPrs": 248,
+    "totalPrs": 251,
     "repos": [
       {
         "name": "LitData",
         "fullName": "Lightning-AI/litdata",
         "description": "Speed up model training by fixing data loading.",
         "prs": 96,
-        "stars": 609,
+        "stars": 611,
         "forks": 103
       },
       {
         "name": "LitServe",
         "fullName": "Lightning-AI/LitServe",
         "description": "A minimal Python framework for building custom AI inference servers with full control over logic, batching, and scaling.",
-        "prs": 49,
-        "stars": 3923,
-        "forks": 295
+        "prs": 51,
+        "stars": 3929,
+        "forks": 297
       },
       {
         "name": "PyTorch Lightning",
         "fullName": "Lightning-AI/pytorch-lightning",
         "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
         "prs": 47,
-        "stars": 31281,
-        "forks": 3772
+        "stars": 31286,
+        "forks": 3777
       },
       {
         "name": "LitGPT",
         "fullName": "Lightning-AI/litgpt",
         "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
-        "prs": 28,
-        "stars": 13612,
-        "forks": 1483
+        "prs": 29,
+        "stars": 13616,
+        "forks": 1487
       }
     ]
   },
@@ -62,7 +62,7 @@
       "description": "Speed up model training by fixing data loading.",
       "commits": 124,
       "prs": 96,
-      "stars": 609,
+      "stars": 611,
       "forks": 103
     },
     {
@@ -72,18 +72,18 @@
       "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
       "commits": 99,
       "prs": 47,
-      "stars": 31281,
-      "forks": 3772
+      "stars": 31286,
+      "forks": 3777
     },
     {
       "name": "LitServe",
       "fullName": "Lightning-AI/LitServe",
       "org": "Lightning-AI",
       "description": "A minimal Python framework for building custom AI inference servers with full control over logic, batching, and scaling.",
-      "commits": 63,
-      "prs": 49,
-      "stars": 3923,
-      "forks": 295
+      "commits": 65,
+      "prs": 51,
+      "stars": 3929,
+      "forks": 297
     },
     {
       "name": "receipt-ocr",
@@ -92,7 +92,7 @@
       "description": "An efficient OCR engine for receipt image processing.",
       "commits": 57,
       "prs": 17,
-      "stars": 380,
+      "stars": 383,
       "forks": 58
     },
     {
@@ -100,10 +100,10 @@
       "fullName": "Lightning-AI/litgpt",
       "org": "Lightning-AI",
       "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
-      "commits": 42,
-      "prs": 28,
-      "stars": 13612,
-      "forks": 1483
+      "commits": 43,
+      "prs": 29,
+      "stars": 13616,
+      "forks": 1487
     },
     {
       "name": "utilities",
@@ -122,7 +122,7 @@
       "description": "Machine learning metrics for distributed, scalable PyTorch applications.",
       "commits": 16,
       "prs": 10,
-      "stars": 2454,
+      "stars": 2458,
       "forks": 509
     },
     {
@@ -131,8 +131,8 @@
       "org": "ekzhu",
       "description": "MinHash, LSH, LSH Forest, Weighted MinHash, HyperLogLog, HyperLogLog++, LSH Ensemble and HNSW",
       "commits": 15,
-      "prs": 0,
-      "stars": 2950,
+      "prs": 13,
+      "stars": 2953,
       "forks": 319
     },
     {
@@ -534,17 +534,22 @@
       "label": "Aug",
       "year": 2026,
       "month": 7,
-      "commits": 8,
+      "commits": 11,
       "byRepo": [
         {
           "repo": "Lightning-AI/LitServe",
           "name": "LitServe",
-          "commits": 6
+          "commits": 8
         },
         {
           "repo": "Lightning-AI/pytorch-lightning",
           "name": "pytorch-lightning",
           "commits": 2
+        },
+        {
+          "repo": "Lightning-AI/litgpt",
+          "name": "litgpt",
+          "commits": 1
         }
       ]
     }
