@@ -1,6 +1,6 @@
 import FeedbackWidget from "@/components/feedback-widget";
 import Footer from "@/components/footer";
-import Header from "@/components/header";
+import Header from "@/components/header/header";
 import { Toaster } from "@/components/ui/sonner";
 
 type Props = {
