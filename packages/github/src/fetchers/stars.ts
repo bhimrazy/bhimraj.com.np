@@ -97,7 +97,9 @@ export type FeaturedRepoStats = {
  *
  * Star timestamps come from the stargazers endpoint with the `star+json` media
  * type, paginated 100-at-a-time up to `STAR_HISTORY_MAX_PAGES`. Returns `null`
- * if the repo metadata can't be fetched.
+ * if the repo metadata or any stargazer page can't be fetched — a partial page
+ * set would yield a plausible-looking but wrong curve, so the caller falls back
+ * to the last good snapshot instead.
  *
  * @param fullName - "owner/repo" slug (e.g. "bhimrazy/receipt-ocr")
  */
@@ -128,13 +130,14 @@ export async function getFeaturedRepoStats(
             headers: { Accept: "application/vnd.github.star+json" },
           },
         ).pipe(
-          // A dropped page silently truncates the star history — and an empty
-          // history hides the homepage chart entirely — so say so out loud.
-          Effect.catchAll((error) =>
-            Effect.sync(() => {
-              log.warn("stargazers page failed", { fullName, page }, error);
-              return [] as { starred_at: string }[];
-            }),
+          // Note the failing page, then let it propagate: a swallowed page
+          // yields a truncated series that `buildStarHistory` downsamples to
+          // the same 40 points as a complete one, which the snapshot merge
+          // then can't tell apart. Better no history than a silently wrong one.
+          Effect.tapError((error) =>
+            Effect.sync(() =>
+              log.warn("stargazers page failed", { fullName, page }, error),
+            ),
           ),
         ),
       ),
