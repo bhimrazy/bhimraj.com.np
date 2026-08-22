@@ -39,8 +39,15 @@ export function fetchEffect(
       if (res.ok) return res;
 
       throw new HttpError(`Request returned ${res.status}`, {
+        // GitHub answers a tripped secondary rate limit with 403, not 429 —
+        // the sync fans several fetchers out at once and does hit it. Retrying
+        // a genuine permission 403 costs two backed-off attempts and still
+        // ends in the same failure, so treat the whole status as retryable.
         retryable:
-          res.status === 408 || res.status === 429 || res.status >= 500,
+          res.status === 403 ||
+          res.status === 408 ||
+          res.status === 429 ||
+          res.status >= 500,
         status: res.status,
       });
     },
