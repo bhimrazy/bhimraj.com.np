@@ -128,7 +128,14 @@ export async function getFeaturedRepoStats(
             headers: { Accept: "application/vnd.github.star+json" },
           },
         ).pipe(
-          Effect.catchAll(() => Effect.succeed([] as { starred_at: string }[])),
+          // A dropped page silently truncates the star history — and an empty
+          // history hides the homepage chart entirely — so say so out loud.
+          Effect.catchAll((error) =>
+            Effect.sync(() => {
+              log.warn("stargazers page failed", { fullName, page }, error);
+              return [] as { starred_at: string }[];
+            }),
+          ),
         ),
       ),
       { concurrency: REQUEST_CONCURRENCY },
