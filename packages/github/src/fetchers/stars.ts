@@ -130,6 +130,11 @@ export async function getFeaturedRepoStats(
             headers: { Accept: "application/vnd.github.star+json" },
           },
         ).pipe(
+          Effect.retry({
+            schedule: Schedule.exponential("500 millis"),
+            times: DEFAULT_RETRIES,
+            while: isRetryableHttpError,
+          }),
           // Note the failing page, then let it propagate: a swallowed page
           // yields a truncated series that `buildStarHistory` downsamples to
           // the same 40 points as a complete one, which the snapshot merge
