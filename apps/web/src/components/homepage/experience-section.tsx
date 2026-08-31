@@ -19,6 +19,7 @@ type Experience = {
   period: string;
   current: boolean;
   description: string;
+  highlights: readonly string[];
   tech: readonly string[];
   logo: Logo;
   lightningStats?: true;
@@ -36,6 +37,11 @@ const EXPERIENCES: readonly Experience[] = [
     current: true,
     description:
       "Building production software and scalable systems at a custom software consultancy serving clients across the US.",
+    highlights: [
+      "Deliver full-stack features end to end — from API design to deployed UI — across multiple client products.",
+      "Own backend services in Python and modern React/Next.js frontends running on AWS.",
+      "Work directly with US-based clients to scope, estimate, and ship production systems.",
+    ],
     tech: ["Python", "React", "Next.js", "AWS"],
     logo: { src: "/logos/fetchly.svg", mono: true },
   },
@@ -48,6 +54,11 @@ const EXPERIENCES: readonly Experience[] = [
     current: true,
     description:
       "Active contributor across the Lightning AI ecosystem — spanning data pipelines, model serving, training frameworks, and LLM tooling.",
+    highlights: [
+      "Merged PRs across PyTorch Lightning, LitData, LitServe, and LitGPT — from bug fixes to new features.",
+      "Built and maintain LitServe example servers for vision-language models (Qwen2-VL, Llama 3.2 Vision, Phi-3 Vision).",
+      "Recognized as a Tier 2 contributor for sustained, ecosystem-wide contributions.",
+    ],
     tech: ["PyTorch Lightning", "LitData", "LitServe", "LitGPT"],
     logo: {
       src: "/logos/lightning-light.svg",
@@ -64,6 +75,10 @@ const EXPERIENCES: readonly Experience[] = [
     current: true,
     description:
       "Consulting on cloud infrastructure, deployment workflows, and production-ready systems for AI and software teams.",
+    highlights: [
+      "Advise teams on cloud architecture, CI/CD pipelines, and deployment workflows.",
+      "Help productionize AI workloads — model serving, GPU infrastructure, and observability.",
+    ],
     tech: ["Cloud", "DevOps", "AI Infrastructure"],
     logo: {
       src: "/logos/stablecluster-blue.svg",
@@ -250,6 +265,42 @@ export default async function ExperienceSection() {
                   <p className="max-w-2xl text-site-text-secondary text-sm leading-relaxed">
                     {exp.description}
                   </p>
+
+                  {/* Expandable highlights — native <details>, no client JS */}
+                  {exp.highlights.length > 0 && (
+                    <details className="group/details details-animated -mt-1">
+                      <summary className="inline-flex cursor-pointer select-none list-none items-center gap-1.5 font-mono text-[11px] text-site-text-tertiary uppercase tracking-[1px] transition-colors hover:text-site-accent [&::-webkit-details-marker]:hidden">
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 12 12"
+                          className="size-3 transition-transform duration-200 group-open/details:rotate-90"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M4.5 2.5 8 6l-3.5 3.5" />
+                        </svg>
+                        <span className="group-open/details:hidden">
+                          More details
+                        </span>
+                        <span className="hidden group-open/details:inline">
+                          Less details
+                        </span>
+                      </summary>
+                      <ul className="mt-3 max-w-2xl space-y-2 border-site-border border-l pl-4">
+                        {exp.highlights.map((highlight) => (
+                          <li
+                            key={highlight}
+                            className="relative text-site-text-secondary text-sm leading-relaxed before:absolute before:top-2 before:left-[-18.5px] before:size-1.25 before:rounded-full before:bg-site-accent/60"
+                          >
+                            {highlight}
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
 
                   {/* Tech tags — hidden for Lightning AI (shown in ecosystem row below) */}
                   {!exp.lightningStats && (
