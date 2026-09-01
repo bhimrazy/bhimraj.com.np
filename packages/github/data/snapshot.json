@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-08-22T18:58:39.531Z",
-  "stars": 767,
-  "contributions": 448,
-  "lightningCommits": 376,
+  "generatedAt": "2026-09-01T09:32:02.126Z",
+  "stars": 995,
+  "contributions": 453,
+  "lightningCommits": 381,
   "featuredRepo": {
     "name": "receipt-ocr",
     "fullName": "bhimrazy/receipt-ocr",
     "description": "An efficient OCR engine for receipt image processing.",
-    "stars": 416,
-    "forks": 60,
+    "stars": 643,
+    "forks": 80,
     "language": "Python",
     "url": "https://github.com/bhimrazy/receipt-ocr",
     "history": [
@@ -17,169 +17,169 @@
         "stars": 1
       },
       {
-        "t": 1722489999000,
-        "stars": 12
+        "t": 1724617641000,
+        "stars": 17
       },
       {
-        "t": 1726977412000,
-        "stars": 22
+        "t": 1732269208000,
+        "stars": 34
       },
       {
-        "t": 1731587772000,
-        "stars": 33
+        "t": 1736898038000,
+        "stars": 50
       },
       {
-        "t": 1735858766000,
-        "stars": 44
+        "t": 1742686251000,
+        "stars": 67
       },
       {
-        "t": 1738862398000,
-        "stars": 54
+        "t": 1748992279000,
+        "stars": 83
       },
       {
-        "t": 1742406471000,
-        "stars": 65
+        "t": 1753606001000,
+        "stars": 100
       },
       {
-        "t": 1745617591000,
-        "stars": 75
+        "t": 1756352628000,
+        "stars": 116
       },
       {
-        "t": 1749513179000,
-        "stars": 86
-      },
-      {
-        "t": 1751824334000,
-        "stars": 97
-      },
-      {
-        "t": 1755487942000,
-        "stars": 107
-      },
-      {
-        "t": 1757244607000,
-        "stars": 118
-      },
-      {
-        "t": 1759323718000,
-        "stars": 129
-      },
-      {
-        "t": 1760675902000,
-        "stars": 139
+        "t": 1759906056000,
+        "stars": 133
       },
       {
         "t": 1762838823000,
-        "stars": 150
+        "stars": 149
       },
       {
-        "t": 1764474866000,
-        "stars": 161
+        "t": 1765657510000,
+        "stars": 166
       },
       {
-        "t": 1766596843000,
-        "stars": 171
-      },
-      {
-        "t": 1768785456000,
+        "t": 1769034146000,
         "stars": 182
       },
       {
-        "t": 1770734134000,
-        "stars": 193
+        "t": 1772569581000,
+        "stars": 199
       },
       {
-        "t": 1773189544000,
-        "stars": 203
+        "t": 1775746377000,
+        "stars": 215
       },
       {
-        "t": 1775150894000,
-        "stars": 214
+        "t": 1778935743000,
+        "stars": 231
       },
       {
-        "t": 1777434642000,
-        "stars": 224
+        "t": 1780010043000,
+        "stars": 248
       },
       {
-        "t": 1779160339000,
-        "stars": 235
+        "t": 1780021836000,
+        "stars": 264
       },
       {
-        "t": 1780007810000,
-        "stars": 246
+        "t": 1780040161000,
+        "stars": 281
       },
       {
-        "t": 1780013127000,
-        "stars": 256
+        "t": 1780066379000,
+        "stars": 297
       },
       {
-        "t": 1780032850000,
-        "stars": 267
-      },
-      {
-        "t": 1780038336000,
-        "stars": 278
-      },
-      {
-        "t": 1780046448000,
-        "stars": 288
-      },
-      {
-        "t": 1780066997000,
-        "stars": 299
-      },
-      {
-        "t": 1780087539000,
-        "stars": 310
-      },
-      {
-        "t": 1780115944000,
-        "stars": 320
+        "t": 1780099437000,
+        "stars": 314
       },
       {
         "t": 1780200255000,
-        "stars": 331
+        "stars": 330
       },
       {
-        "t": 1780950307000,
-        "stars": 342
+        "t": 1781564139000,
+        "stars": 347
       },
       {
-        "t": 1782217546000,
-        "stars": 352
-      },
-      {
-        "t": 1783346076000,
+        "t": 1783730962000,
         "stars": 363
       },
       {
-        "t": 1785129051000,
-        "stars": 373
+        "t": 1786720966000,
+        "stars": 380
       },
       {
-        "t": 1787136271000,
-        "stars": 384
+        "t": 1787336166000,
+        "stars": 396
       },
       {
-        "t": 1787333726000,
-        "stars": 395
+        "t": 1787413656000,
+        "stars": 413
       },
       {
-        "t": 1787363136000,
-        "stars": 405
+        "t": 1788047524000,
+        "stars": 429
       },
       {
-        "t": 1787422452000,
-        "stars": 416
+        "t": 1788054393000,
+        "stars": 445
+      },
+      {
+        "t": 1788068030000,
+        "stars": 462
+      },
+      {
+        "t": 1788075301000,
+        "stars": 478
+      },
+      {
+        "t": 1788087570000,
+        "stars": 495
+      },
+      {
+        "t": 1788099190000,
+        "stars": 511
+      },
+      {
+        "t": 1788112904000,
+        "stars": 528
+      },
+      {
+        "t": 1788119570000,
+        "stars": 544
+      },
+      {
+        "t": 1788127692000,
+        "stars": 561
+      },
+      {
+        "t": 1788148869000,
+        "stars": 577
+      },
+      {
+        "t": 1788157894000,
+        "stars": 594
+      },
+      {
+        "t": 1788168862000,
+        "stars": 610
+      },
+      {
+        "t": 1788185624000,
+        "stars": 627
+      },
+      {
+        "t": 1788249097000,
+        "stars": 643
       }
     ]
   },
   "ossStats": {
-    "totalCommits": 448,
-    "totalPrs": 265
+    "totalCommits": 453,
+    "totalPrs": 270
   },
   "lightningEcosystem": {
-    "totalPrs": 252,
+    "totalPrs": 257,
     "repos": [
       {
         "name": "LitData",
@@ -194,24 +194,24 @@
         "fullName": "Lightning-AI/LitServe",
         "description": "A minimal Python framework for building custom AI inference servers with full control over logic, batching, and scaling.",
         "prs": 51,
-        "stars": 3929,
-        "forks": 298
+        "stars": 3934,
+        "forks": 302
       },
       {
         "name": "PyTorch Lightning",
         "fullName": "Lightning-AI/pytorch-lightning",
         "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
-        "prs": 47,
-        "stars": 31299,
-        "forks": 3779
+        "prs": 51,
+        "stars": 31313,
+        "forks": 3787
       },
       {
         "name": "LitGPT",
         "fullName": "Lightning-AI/litgpt",
         "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
         "prs": 29,
-        "stars": 13620,
-        "forks": 1487
+        "stars": 13641,
+        "forks": 1490
       }
     ]
   },
@@ -231,10 +231,10 @@
       "fullName": "Lightning-AI/pytorch-lightning",
       "org": "Lightning-AI",
       "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
-      "commits": 99,
-      "prs": 47,
-      "stars": 31299,
-      "forks": 3779
+      "commits": 103,
+      "prs": 51,
+      "stars": 31313,
+      "forks": 3787
     },
     {
       "name": "LitServe",
@@ -243,8 +243,8 @@
       "description": "A minimal Python framework for building custom AI inference servers with full control over logic, batching, and scaling.",
       "commits": 65,
       "prs": 51,
-      "stars": 3929,
-      "forks": 298
+      "stars": 3934,
+      "forks": 302
     },
     {
       "name": "receipt-ocr",
@@ -253,8 +253,8 @@
       "description": "An efficient OCR engine for receipt image processing.",
       "commits": 57,
       "prs": 17,
-      "stars": 416,
-      "forks": 60
+      "stars": 643,
+      "forks": 80
     },
     {
       "name": "litgpt",
@@ -263,8 +263,8 @@
       "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
       "commits": 43,
       "prs": 29,
-      "stars": 13620,
-      "forks": 1487
+      "stars": 13641,
+      "forks": 1490
     },
     {
       "name": "utilities",
@@ -281,10 +281,10 @@
       "fullName": "Lightning-AI/torchmetrics",
       "org": "Lightning-AI",
       "description": "Machine learning metrics for distributed, scalable PyTorch applications.",
-      "commits": 17,
-      "prs": 11,
-      "stars": 2460,
-      "forks": 516
+      "commits": 18,
+      "prs": 12,
+      "stars": 2465,
+      "forks": 518
     },
     {
       "name": "datasketch",
@@ -293,7 +293,7 @@
       "description": "MinHash, LSH, LSH Forest, Weighted MinHash, HyperLogLog, HyperLogLog++, LSH Ensemble and HNSW",
       "commits": 15,
       "prs": 13,
-      "stars": 2954,
+      "stars": 2962,
       "forks": 318
     },
     {
@@ -308,34 +308,6 @@
     }
   ],
   "monthlyContributions": [
-    {
-      "label": "Sep",
-      "year": 2025,
-      "month": 8,
-      "commits": 11,
-      "byRepo": [
-        {
-          "repo": "Lightning-AI/pytorch-lightning",
-          "name": "pytorch-lightning",
-          "commits": 6
-        },
-        {
-          "repo": "Lightning-AI/litdata",
-          "name": "litdata",
-          "commits": 2
-        },
-        {
-          "repo": "bhimrazy/receipt-ocr",
-          "name": "receipt-ocr",
-          "commits": 2
-        },
-        {
-          "repo": "Lightning-AI/LitServe",
-          "name": "LitServe",
-          "commits": 1
-        }
-      ]
-    },
     {
       "label": "Oct",
       "year": 2025,
@@ -695,7 +667,7 @@
       "label": "Aug",
       "year": 2026,
       "month": 7,
-      "commits": 12,
+      "commits": 17,
       "byRepo": [
         {
           "repo": "Lightning-AI/LitServe",
@@ -705,19 +677,26 @@
         {
           "repo": "Lightning-AI/pytorch-lightning",
           "name": "pytorch-lightning",
+          "commits": 6
+        },
+        {
+          "repo": "Lightning-AI/torchmetrics",
+          "name": "torchmetrics",
           "commits": 2
         },
         {
           "repo": "Lightning-AI/litgpt",
           "name": "litgpt",
           "commits": 1
-        },
-        {
-          "repo": "Lightning-AI/torchmetrics",
-          "name": "torchmetrics",
-          "commits": 1
         }
       ]
+    },
+    {
+      "label": "Sep",
+      "year": 2026,
+      "month": 8,
+      "commits": 0,
+      "byRepo": []
     }
   ]
 }
