@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-01T09:32:02.126Z",
-  "stars": 995,
+  "generatedAt": "2026-09-05T12:44:47.257Z",
+  "stars": 1032,
   "contributions": 453,
   "lightningCommits": 381,
   "featuredRepo": {
@@ -176,17 +176,17 @@
   },
   "ossStats": {
     "totalCommits": 453,
-    "totalPrs": 270
+    "totalPrs": 271
   },
   "lightningEcosystem": {
-    "totalPrs": 257,
+    "totalPrs": 258,
     "repos": [
       {
         "name": "LitData",
         "fullName": "Lightning-AI/litdata",
         "description": "Speed up model training by fixing data loading.",
         "prs": 96,
-        "stars": 611,
+        "stars": 613,
         "forks": 106
       },
       {
@@ -194,24 +194,24 @@
         "fullName": "Lightning-AI/LitServe",
         "description": "A minimal Python framework for building custom AI inference servers with full control over logic, batching, and scaling.",
         "prs": 51,
-        "stars": 3934,
-        "forks": 302
+        "stars": 3937,
+        "forks": 301
       },
       {
         "name": "PyTorch Lightning",
         "fullName": "Lightning-AI/pytorch-lightning",
         "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
         "prs": 51,
-        "stars": 31313,
-        "forks": 3787
+        "stars": 31318,
+        "forks": 3788
       },
       {
         "name": "LitGPT",
         "fullName": "Lightning-AI/litgpt",
         "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
-        "prs": 29,
-        "stars": 13641,
-        "forks": 1490
+        "prs": 30,
+        "stars": 13651,
+        "forks": 1493
       }
     ]
   },
@@ -223,7 +223,7 @@
       "description": "Speed up model training by fixing data loading.",
       "commits": 124,
       "prs": 96,
-      "stars": 611,
+      "stars": 613,
       "forks": 106
     },
     {
@@ -233,8 +233,8 @@
       "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
       "commits": 103,
       "prs": 51,
-      "stars": 31313,
-      "forks": 3787
+      "stars": 31318,
+      "forks": 3788
     },
     {
       "name": "LitServe",
@@ -243,8 +243,8 @@
       "description": "A minimal Python framework for building custom AI inference servers with full control over logic, batching, and scaling.",
       "commits": 65,
       "prs": 51,
-      "stars": 3934,
-      "forks": 302
+      "stars": 3937,
+      "forks": 301
     },
     {
       "name": "receipt-ocr",
@@ -253,18 +253,18 @@
       "description": "An efficient OCR engine for receipt image processing.",
       "commits": 57,
       "prs": 17,
-      "stars": 643,
-      "forks": 80
+      "stars": 682,
+      "forks": 83
     },
     {
       "name": "litgpt",
       "fullName": "Lightning-AI/litgpt",
       "org": "Lightning-AI",
       "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
-      "commits": 43,
-      "prs": 29,
-      "stars": 13641,
-      "forks": 1490
+      "commits": 44,
+      "prs": 30,
+      "stars": 13651,
+      "forks": 1493
     },
     {
       "name": "utilities",
@@ -283,8 +283,8 @@
       "description": "Machine learning metrics for distributed, scalable PyTorch applications.",
       "commits": 18,
       "prs": 12,
-      "stars": 2465,
-      "forks": 518
+      "stars": 2464,
+      "forks": 517
     },
     {
       "name": "datasketch",
@@ -667,7 +667,7 @@
       "label": "Aug",
       "year": 2026,
       "month": 7,
-      "commits": 17,
+      "commits": 18,
       "byRepo": [
         {
           "repo": "Lightning-AI/LitServe",
@@ -680,14 +680,14 @@
           "commits": 6
         },
         {
-          "repo": "Lightning-AI/torchmetrics",
-          "name": "torchmetrics",
+          "repo": "Lightning-AI/litgpt",
+          "name": "litgpt",
           "commits": 2
         },
         {
-          "repo": "Lightning-AI/litgpt",
-          "name": "litgpt",
-          "commits": 1
+          "repo": "Lightning-AI/torchmetrics",
+          "name": "torchmetrics",
+          "commits": 2
         }
       ]
     },
