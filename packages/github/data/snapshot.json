@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-10T13:37:13.025Z",
-  "stars": 1047,
+  "generatedAt": "2026-09-12T12:53:33.123Z",
+  "stars": 1050,
   "contributions": 470,
   "lightningCommits": 398,
   "featuredRepo": {
@@ -194,7 +194,7 @@
         "fullName": "Lightning-AI/LitServe",
         "description": "A minimal Python framework for building custom AI inference servers with full control over logic, batching, and scaling.",
         "prs": 53,
-        "stars": 3937,
+        "stars": 3938,
         "forks": 303
       },
       {
@@ -202,7 +202,7 @@
         "fullName": "Lightning-AI/pytorch-lightning",
         "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
         "prs": 52,
-        "stars": 31330,
+        "stars": 31337,
         "forks": 3793
       },
       {
@@ -210,8 +210,8 @@
         "fullName": "Lightning-AI/litgpt",
         "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
         "prs": 30,
-        "stars": 13655,
-        "forks": 1494
+        "stars": 13656,
+        "forks": 1495
       }
     ]
   },
@@ -233,7 +233,7 @@
       "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
       "commits": 104,
       "prs": 52,
-      "stars": 31330,
+      "stars": 31337,
       "forks": 3793
     },
     {
@@ -243,7 +243,7 @@
       "description": "A minimal Python framework for building custom AI inference servers with full control over logic, batching, and scaling.",
       "commits": 72,
       "prs": 53,
-      "stars": 3937,
+      "stars": 3938,
       "forks": 303
     },
     {
@@ -253,8 +253,8 @@
       "description": "An efficient OCR engine for receipt image processing.",
       "commits": 57,
       "prs": 17,
-      "stars": 697,
-      "forks": 84
+      "stars": 700,
+      "forks": 85
     },
     {
       "name": "litgpt",
@@ -263,8 +263,8 @@
       "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
       "commits": 48,
       "prs": 30,
-      "stars": 13655,
-      "forks": 1494
+      "stars": 13656,
+      "forks": 1495
     },
     {
       "name": "utilities",
@@ -283,8 +283,8 @@
       "description": "Machine learning metrics for distributed, scalable PyTorch applications.",
       "commits": 19,
       "prs": 13,
-      "stars": 2466,
-      "forks": 522
+      "stars": 2467,
+      "forks": 523
     },
     {
       "name": "datasketch",
