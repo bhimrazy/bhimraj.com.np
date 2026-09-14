@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-09-13T13:48:53.799Z",
-  "stars": 1054,
+  "generatedAt": "2026-09-14T07:01:54.170Z",
+  "stars": 1057,
   "contributions": 470,
   "lightningCommits": 398,
   "featuredRepo": {
     "name": "receipt-ocr",
     "fullName": "bhimrazy/receipt-ocr",
     "description": "An efficient OCR engine for receipt image processing.",
-    "stars": 643,
-    "forks": 80,
+    "stars": 704,
+    "forks": 86,
     "language": "Python",
     "url": "https://github.com/bhimrazy/receipt-ocr",
     "history": [
@@ -17,160 +17,160 @@
         "stars": 1
       },
       {
-        "t": 1724617641000,
-        "stars": 17
+        "t": 1725017335000,
+        "stars": 19
       },
       {
-        "t": 1732269208000,
-        "stars": 34
+        "t": 1732826413000,
+        "stars": 37
       },
       {
-        "t": 1736898038000,
-        "stars": 50
+        "t": 1738879782000,
+        "stars": 55
       },
       {
-        "t": 1742686251000,
-        "stars": 67
+        "t": 1743988623000,
+        "stars": 73
       },
       {
-        "t": 1748992279000,
-        "stars": 83
+        "t": 1749685754000,
+        "stars": 91
       },
       {
-        "t": 1753606001000,
-        "stars": 100
+        "t": 1755797102000,
+        "stars": 109
       },
       {
-        "t": 1756352628000,
-        "stars": 116
+        "t": 1758947197000,
+        "stars": 127
       },
       {
-        "t": 1759906056000,
-        "stars": 133
+        "t": 1762353069000,
+        "stars": 145
       },
       {
-        "t": 1762838823000,
-        "stars": 149
+        "t": 1765473704000,
+        "stars": 163
       },
       {
-        "t": 1765657510000,
-        "stars": 166
-      },
-      {
-        "t": 1769034146000,
-        "stars": 182
+        "t": 1768785456000,
+        "stars": 181
       },
       {
         "t": 1772569581000,
         "stars": 199
       },
       {
-        "t": 1775746377000,
-        "stars": 215
+        "t": 1776457328000,
+        "stars": 217
       },
       {
-        "t": 1778935743000,
-        "stars": 231
+        "t": 1779495490000,
+        "stars": 235
       },
       {
-        "t": 1780010043000,
-        "stars": 248
+        "t": 1780011911000,
+        "stars": 253
       },
       {
-        "t": 1780021836000,
-        "stars": 264
+        "t": 1780035238000,
+        "stars": 271
       },
       {
-        "t": 1780040161000,
-        "stars": 281
+        "t": 1780053000000,
+        "stars": 289
       },
       {
-        "t": 1780066379000,
-        "stars": 297
+        "t": 1780082575000,
+        "stars": 307
       },
       {
-        "t": 1780099437000,
-        "stars": 314
+        "t": 1780148553000,
+        "stars": 325
       },
       {
-        "t": 1780200255000,
-        "stars": 330
+        "t": 1781145043000,
+        "stars": 343
       },
       {
-        "t": 1781564139000,
-        "stars": 347
-      },
-      {
-        "t": 1783730962000,
-        "stars": 363
+        "t": 1783346076000,
+        "stars": 362
       },
       {
         "t": 1786720966000,
         "stars": 380
       },
       {
-        "t": 1787336166000,
-        "stars": 396
+        "t": 1787341427000,
+        "stars": 398
       },
       {
-        "t": 1787413656000,
-        "stars": 413
+        "t": 1787455664000,
+        "stars": 416
       },
       {
-        "t": 1788047524000,
-        "stars": 429
+        "t": 1788051745000,
+        "stars": 434
       },
       {
-        "t": 1788054393000,
-        "stars": 445
+        "t": 1788059414000,
+        "stars": 452
       },
       {
-        "t": 1788068030000,
-        "stars": 462
+        "t": 1788072810000,
+        "stars": 470
       },
       {
-        "t": 1788075301000,
-        "stars": 478
+        "t": 1788081721000,
+        "stars": 488
       },
       {
-        "t": 1788087570000,
-        "stars": 495
+        "t": 1788095327000,
+        "stars": 506
       },
       {
-        "t": 1788099190000,
-        "stars": 511
+        "t": 1788111731000,
+        "stars": 524
       },
       {
-        "t": 1788112904000,
-        "stars": 528
+        "t": 1788118995000,
+        "stars": 542
       },
       {
-        "t": 1788119570000,
-        "stars": 544
+        "t": 1788127454000,
+        "stars": 560
       },
       {
-        "t": 1788127692000,
-        "stars": 561
+        "t": 1788149235000,
+        "stars": 578
       },
       {
-        "t": 1788148869000,
-        "stars": 577
+        "t": 1788161032000,
+        "stars": 596
       },
       {
-        "t": 1788157894000,
-        "stars": 594
+        "t": 1788171133000,
+        "stars": 614
       },
       {
-        "t": 1788168862000,
-        "stars": 610
+        "t": 1788198075000,
+        "stars": 632
       },
       {
-        "t": 1788185624000,
-        "stars": 627
+        "t": 1788278191000,
+        "stars": 650
       },
       {
-        "t": 1788249097000,
-        "stars": 643
+        "t": 1788373162000,
+        "stars": 668
+      },
+      {
+        "t": 1788718301000,
+        "stars": 686
+      },
+      {
+        "t": 1789249554000,
+        "stars": 704
       }
     ]
   },
@@ -187,7 +187,7 @@
         "description": "Speed up model training by fixing data loading.",
         "prs": 99,
         "stars": 613,
-        "forks": 105
+        "forks": 106
       },
       {
         "name": "LitServe",
@@ -203,14 +203,14 @@
         "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
         "prs": 52,
         "stars": 31340,
-        "forks": 3794
+        "forks": 3795
       },
       {
         "name": "LitGPT",
         "fullName": "Lightning-AI/litgpt",
         "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
         "prs": 30,
-        "stars": 13660,
+        "stars": 13661,
         "forks": 1497
       }
     ]
@@ -224,7 +224,7 @@
       "commits": 127,
       "prs": 99,
       "stars": 613,
-      "forks": 105
+      "forks": 106
     },
     {
       "name": "pytorch-lightning",
@@ -234,7 +234,7 @@
       "commits": 104,
       "prs": 52,
       "stars": 31340,
-      "forks": 3794
+      "forks": 3795
     },
     {
       "name": "LitServe",
@@ -263,7 +263,7 @@
       "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
       "commits": 48,
       "prs": 30,
-      "stars": 13660,
+      "stars": 13661,
       "forks": 1497
     },
     {
