@@ -115,7 +115,7 @@ export function AboutHero() {
           </div>
 
           {/* Portrait */}
-          <figure className="group motion-safe:fade-in relative order-first mx-auto mt-6 w-full max-w-72 motion-safe:animate-in motion-safe:duration-1000 sm:max-w-80 lg:order-none lg:mx-0 lg:mt-0 lg:max-w-85">
+          <figure className="group motion-safe:fade-in relative mx-auto mt-2 w-full max-w-64 motion-safe:animate-in motion-safe:duration-1000 sm:max-w-80 lg:mx-0 lg:mt-0 lg:max-w-85">
             {/* Offset frame behind the card */}
             <div
               aria-hidden
