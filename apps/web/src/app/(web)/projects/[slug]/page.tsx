@@ -4,8 +4,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/container";
+import { JsonLd } from "@/components/json-ld";
 import { Badge } from "@/components/ui/badge";
 import { siteConfig } from "@/config/site";
+import { buildSoftwareSourceCodeJsonLd } from "@/lib/structured-data";
 import type { Project } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 
@@ -44,6 +46,9 @@ export async function generateMetadata({
 
   const projectURL = `/projects/${project?._meta.path}`;
 
+  // OG/Twitter images come from the `opengraph-image.tsx` /
+  // `twitter-image.tsx` file conventions here (a branded card with title +
+  // tags) — `project.image` stays reserved for the in-page hero image.
   return {
     title: project?.title,
     description: project?.description,
@@ -54,7 +59,6 @@ export async function generateMetadata({
       description: project?.description,
       url: projectURL,
       siteName: siteConfig.name,
-      images: project?.image ? [{ url: project.image }] : [],
       type: "article",
       locale: "en_US",
     },
@@ -63,7 +67,6 @@ export async function generateMetadata({
       title: project?.title,
       description: project?.description,
       creator: siteConfig.author.handle,
-      images: project?.image ? [project.image] : [],
     },
     robots: {
       index: true,
@@ -90,6 +93,19 @@ export default async function ProjectDetail({
 
   return (
     <main className="pt-24 pb-20">
+      <JsonLd
+        data={buildSoftwareSourceCodeJsonLd({
+          title: project.title,
+          description: project.description,
+          slug: project._meta.path,
+          githubLink: project.githubLink,
+          liveLink: project.liveLink,
+          tags: project.tags,
+          publishedAt: project.publishedAt,
+          updatedAt: project.updatedAt,
+          image: project.image,
+        })}
+      />
       <Container>
         <div className="mx-auto max-w-3xl">
           {/* Back */}

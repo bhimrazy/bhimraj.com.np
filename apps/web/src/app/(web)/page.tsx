@@ -6,7 +6,9 @@ import HeroSection from "@/components/homepage/hero-section";
 import NewsLetter from "@/components/homepage/news-letter";
 import OSSPreview from "@/components/homepage/oss-preview";
 import ResearchPreview from "@/components/homepage/research-preview";
+import { JsonLd } from "@/components/json-ld";
 import { SectionSeparator } from "@/components/section-separator";
+import { buildPersonJsonLd, buildWebSiteJsonLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -15,6 +17,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main>
+      <JsonLd data={[buildPersonJsonLd(), buildWebSiteJsonLd()]} />
       <HeroSection />
       <SectionSeparator />
       <ExperienceSection />

@@ -14,7 +14,7 @@ import { Timeline } from "@/components/oss/timeline";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
-  title: "Open Source Journey — Bhimraj Yadav",
+  title: "Open Source Journey",
   description:
     "200+ contributions across PyTorch Lightning, LitServe, LitData, and LitGPT. My open source story.",
   alternates: { canonical: "/oss" },
