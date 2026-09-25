@@ -218,3 +218,22 @@
   font-weight: var(--shiki-dark-font-weight);
   text-decoration: var(--shiki-dark-text-decoration);
 }
+
+/* ── About page ─────────────────────────────────────────────────── */
+/* Faint dot grid that fades out toward the edges (hero + contact card). */
+.about-dot-grid {
+  background-image: radial-gradient(
+    circle at center,
+    var(--site-border-hover) 1px,
+    transparent 1.5px
+  );
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse at 70% 30%, black, transparent 70%);
+}
+
+/* Outlined display numerals for the year chapters on /about. */
+.about-outline-numeral {
+  color: transparent;
+  -webkit-text-stroke: 1.5px
+    color-mix(in srgb, var(--site-accent) 70%, transparent);
+}
