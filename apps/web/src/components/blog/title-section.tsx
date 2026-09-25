@@ -1,85 +1,102 @@
-import { ChevronLeftIcon } from "@radix-ui/react-icons";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { siteConfig } from "@/config/site";
-import { formatDate, getReadingTime } from "@/lib/utils";
+import { cn, formatDate, getReadingTime } from "@/lib/utils";
+import { type BlogPost, tagLabel, wasUpdated } from "./posts";
 
-type BlogPost = typeof import("content-collections").allBlogPosts[number];
-
-export default function TitleSection({ blog }: { blog: BlogPost }) {
-  const date = blog.updatedAt ?? blog.publishedAt;
-  const dateLabel = blog.updatedAt ? "Updated" : "Published";
+export default function TitleSection({
+  blog,
+  dek,
+}: {
+  blog: BlogPost;
+  /** Trusted HTML subtitle split from the post body (see `splitDek`). */
+  dek?: string | null;
+}) {
+  const updated = wasUpdated(blog) ? blog.updatedAt : null;
 
   return (
-    <div className="mb-10">
-      {/* Back link */}
+    <header className="mx-auto mb-10 max-w-measure sm:mb-12">
       <Link
         href="/blog"
-        className="mb-8 inline-flex items-center gap-1.5 text-site-text-secondary text-sm transition-colors hover:text-site-text"
+        className="group mb-10 inline-flex items-center gap-2 rounded-sm font-mono text-site-text-secondary text-xs uppercase tracking-[1.5px] transition-colors hover:text-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4"
       >
-        <ChevronLeftIcon className="h-4 w-4" />
-        All posts
+        <ArrowLeftIcon className="size-3.5 transition-transform group-hover:-translate-x-0.5 motion-reduce:transition-none" />
+        All writing
       </Link>
 
-      {/* Tags */}
       {blog.tags.length > 0 && (
-        <div className="mb-4 flex flex-wrap gap-2">
-          {blog.tags.slice(0, 4).map((tag) => (
-            <Badge
+        <p className="mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 font-medium font-mono text-[11px] text-site-accent uppercase tracking-[1.5px]">
+          {blog.tags.slice(0, 3).map((tag, i) => (
+            <span
               key={tag}
-              variant="secondary"
-              className="rounded-md border-transparent bg-site-accent-subtle font-mono text-[10px] text-site-accent"
+              className={cn(
+                "inline-flex items-center gap-2",
+                // Keep the kicker to one line on phones.
+                i > 0 && "hidden sm:inline-flex",
+              )}
             >
-              {tag}
-            </Badge>
+              {i > 0 && (
+                <span aria-hidden className="text-site-text-tertiary">
+                  /
+                </span>
+              )}
+              {tagLabel(tag)}
+            </span>
           ))}
-        </div>
+        </p>
       )}
 
-      {/* Title */}
-      <h1 className="mb-5 font-bold font-display text-3xl text-site-text leading-tight sm:text-4xl">
+      <h1 className="text-balance font-bold font-display text-[2rem] text-site-text leading-[1.1] tracking-tight sm:text-5xl sm:leading-[1.05]">
         {blog.title}
       </h1>
 
-      {/* Meta row */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-site-border border-b pb-8 text-sm">
-        {/* Author */}
-        <div className="flex items-center gap-2">
-          <Image
-            src="/bhimraj-yadav.jpg"
-            alt={siteConfig.author.name}
-            width={28}
-            height={28}
-            className="rounded-full object-cover ring-2 ring-site-border"
-          />
+      {dek && (
+        <p
+          className="mt-5 text-pretty font-display text-site-text-secondary text-xl leading-snug tracking-tight sm:text-2xl"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: from trusted MDX
+          dangerouslySetInnerHTML={{ __html: dek }}
+        />
+      )}
+
+      <div className="mt-8 flex items-center gap-3 border-site-border border-y py-4">
+        <Image
+          src={siteConfig.author.avatar}
+          alt=""
+          width={40}
+          height={40}
+          className="size-10 shrink-0 rounded-full object-cover ring-1 ring-site-border"
+        />
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
           <a
             href={siteConfig.links.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-site-text transition-colors hover:text-site-accent"
+            className="w-fit rounded-sm font-medium text-site-text text-sm transition-colors hover:text-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
           >
             {siteConfig.author.name}
           </a>
+          {/* Stacks on phones so a wrapped line never ends on a separator. */}
+          <p className="flex flex-col font-mono text-site-text-secondary text-xs sm:flex-row sm:items-center sm:gap-2">
+            <span>
+              Published{" "}
+              <time dateTime={blog.publishedAt}>
+                {formatDate(blog.publishedAt)}
+              </time>
+              <span aria-hidden> · </span>
+              {getReadingTime(blog.html)}
+            </span>
+            {updated && (
+              <span>
+                <span aria-hidden className="hidden sm:inline">
+                  ·{" "}
+                </span>
+                Updated <time dateTime={updated}>{formatDate(updated)}</time>
+              </span>
+            )}
+          </p>
         </div>
-
-        <span className="text-site-border">·</span>
-
-        {/* Date */}
-        <time
-          dateTime={date}
-          className="font-mono text-site-text-tertiary text-xs"
-        >
-          {dateLabel} {formatDate(date)}
-        </time>
-
-        <span className="text-site-border">·</span>
-
-        {/* Reading time */}
-        <span className="font-mono text-site-text-tertiary text-xs">
-          {getReadingTime(blog.html)}
-        </span>
       </div>
-    </div>
+    </header>
   );
 }
