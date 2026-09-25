@@ -1,36 +1,26 @@
-import { ChevronLeftIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  GitHubLogoIcon,
+} from "@radix-ui/react-icons";
 import { allProjects } from "content-collections";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Container } from "@/components/container";
+import { ExternalLinkIcon, withUtm } from "@/components/projects/link-utils";
 import { Badge } from "@/components/ui/badge";
 import { siteConfig } from "@/config/site";
 import type { Project } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 
-const UTM =
-  "utm_source=bhimraj.com.np&utm_medium=portfolio&utm_campaign=projects";
-function withUtm(url: string) {
-  const separator = url.includes("?") ? "&" : "?";
-  return `${url}${separator}${UTM}`;
-}
-
-function ExternalLinkIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      aria-hidden="true"
-    >
-      <path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-    </svg>
+/** Projects sorted newest-first — the same order the list page uses, so
+ * prev/next navigation here matches what visitors browsed through. */
+function sortedProjects(): Project[] {
+  return [...(allProjects as Project[])].sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
   );
 }
 
@@ -42,28 +32,32 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = allProjects.find((p) => p._meta.path === slug);
 
-  const projectURL = `/projects/${project?._meta.path}`;
+  if (!project) {
+    return { title: `Project not found | ${siteConfig.name}` };
+  }
+
+  const projectURL = `/projects/${project._meta.path}`;
 
   return {
-    title: project?.title,
-    description: project?.description,
+    title: project.title,
+    description: project.description,
     alternates: { canonical: projectURL },
-    keywords: project?.tags,
+    keywords: project.tags,
     openGraph: {
-      title: project?.title,
-      description: project?.description,
+      title: project.title,
+      description: project.description,
       url: projectURL,
       siteName: siteConfig.name,
-      images: project?.image ? [{ url: project.image }] : [],
+      images: project.image ? [{ url: project.image }] : [],
       type: "article",
       locale: "en_US",
     },
     twitter: {
       card: "summary_large_image",
-      title: project?.title,
-      description: project?.description,
+      title: project.title,
+      description: project.description,
       creator: siteConfig.author.handle,
-      images: project?.image ? [project.image] : [],
+      images: project.image ? [project.image] : [],
     },
     robots: {
       index: true,
@@ -85,8 +79,16 @@ export default async function ProjectDetail({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  // biome-ignore lint/style/noNonNullAssertion: guaranteed by generateStaticParams
-  const project = allProjects.find((p) => p._meta.path === slug)! as Project;
+  const projects = sortedProjects();
+  const index = projects.findIndex((p) => p._meta.path === slug);
+
+  if (index === -1) {
+    notFound();
+  }
+
+  const project = projects[index];
+  const prev = projects[index - 1];
+  const next = projects[index + 1];
 
   return (
     <main className="pt-24 pb-20">
@@ -121,16 +123,39 @@ export default async function ProjectDetail({
             {project.title}
           </h1>
 
-          {/* Meta row */}
-          <div className="mb-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-site-border border-b pb-8 text-sm">
-            <time
-              dateTime={project.publishedAt}
-              className="font-mono text-site-text-tertiary text-xs"
-            >
-              {formatDate(project.publishedAt)}
-            </time>
-            <span className="text-site-border">·</span>
-            <div className="flex items-center gap-3">
+          {/* Meta sidebar/header */}
+          <div className="mb-8 flex flex-col gap-4 rounded-xl border border-site-border bg-site-card p-5 text-sm sm:flex-row sm:items-start sm:justify-between dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary">
+            <div className="flex flex-col gap-3">
+              <div>
+                <span className="block font-mono text-[10px] text-site-text-tertiary uppercase tracking-[1px]">
+                  Published
+                </span>
+                <time
+                  dateTime={project.publishedAt}
+                  className="font-mono text-site-text text-xs"
+                >
+                  {formatDate(project.publishedAt)}
+                </time>
+              </div>
+              <div>
+                <span className="block font-mono text-[10px] text-site-text-tertiary uppercase tracking-[1px]">
+                  Category
+                </span>
+                <span className="font-mono text-site-text text-xs">
+                  {project.category}
+                </span>
+              </div>
+              <div>
+                <span className="block font-mono text-[10px] text-site-text-tertiary uppercase tracking-[1px]">
+                  Stack
+                </span>
+                <span className="font-mono text-site-text text-xs">
+                  {project.tags.join(" · ")}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 sm:flex-col sm:items-end sm:gap-2">
               <a
                 href={withUtm(project.githubLink)}
                 target="_blank"
@@ -148,7 +173,7 @@ export default async function ProjectDetail({
                   className="inline-flex items-center gap-1.5 font-mono text-site-accent text-xs transition-colors hover:opacity-80"
                 >
                   <ExternalLinkIcon className="h-3.5 w-3.5" />
-                  Lightning AI
+                  Open in Lightning Studio
                 </a>
               )}
             </div>
@@ -171,6 +196,44 @@ export default async function ProjectDetail({
             // biome-ignore lint/security/noDangerouslySetInnerHtml: MDX content is trusted
             dangerouslySetInnerHTML={{ __html: project.html }}
           />
+
+          {/* Prev / next navigation */}
+          {(prev || next) && (
+            <nav className="mt-14 grid grid-cols-1 gap-3 border-site-border border-t pt-8 sm:grid-cols-2">
+              {prev ? (
+                <Link
+                  href={`/projects/${prev._meta.path}`}
+                  className="group flex flex-col rounded-xl border border-site-border bg-site-card px-4 py-3 transition-colors hover:border-site-border-hover"
+                >
+                  <span className="mb-1 inline-flex items-center gap-1 font-mono text-[11px] text-site-text-tertiary uppercase tracking-[0.5px]">
+                    <ChevronLeftIcon className="h-3 w-3" />
+                    Newer
+                  </span>
+                  <span className="font-display font-semibold text-site-text text-sm transition-colors group-hover:text-site-accent">
+                    {prev.title}
+                  </span>
+                </Link>
+              ) : (
+                <div />
+              )}
+              {next ? (
+                <Link
+                  href={`/projects/${next._meta.path}`}
+                  className="group flex flex-col rounded-xl border border-site-border bg-site-card px-4 py-3 text-right transition-colors hover:border-site-border-hover sm:items-end"
+                >
+                  <span className="mb-1 inline-flex items-center gap-1 font-mono text-[11px] text-site-text-tertiary uppercase tracking-[0.5px]">
+                    Older
+                    <ChevronRightIcon className="h-3 w-3" />
+                  </span>
+                  <span className="font-display font-semibold text-site-text text-sm transition-colors group-hover:text-site-accent">
+                    {next.title}
+                  </span>
+                </Link>
+              ) : (
+                <div />
+              )}
+            </nav>
+          )}
         </div>
       </Container>
     </main>

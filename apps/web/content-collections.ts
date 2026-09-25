@@ -56,6 +56,13 @@ const Project = defineCollection({
     githubLink: z.string(),
     liveLink: z.string().optional(),
     featured: z.boolean().default(false),
+    category: z
+      .enum([
+        "Multimodal LLMs",
+        "Model Serving",
+        "Computer Vision & Medical AI",
+      ])
+      .default("Model Serving"),
   }),
   transform: async (document, context) => {
     const html = await compileMarkdown(context, document, markdownOptions);
