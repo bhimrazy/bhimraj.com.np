@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Container } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { capture } from "@/lib/analytics";
 
-export default function NewsLetter() {
+/** Newsletter sign-up form — the only interactive leaf of the contact section. */
+export default function NewsletterForm() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [website, setWebsite] = useState("");
@@ -42,54 +42,35 @@ export default function NewsLetter() {
   };
 
   return (
-    <section className="py-24">
-      <Container>
-        <div className="rounded-2xl border border-site-border/50 bg-site-card px-8 py-14 text-center dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary">
-          <span className="mb-3 inline-block font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">
-            Newsletter
-          </span>
-          <h2 className="mb-3 font-bold font-display text-2xl text-site-text">
-            Stay in the loop
-          </h2>
-          <p className="mx-auto mb-8 max-w-sm text-base text-site-text-secondary">
-            Notes on software engineering, OSS, and AI research — sent only when
-            I ship or learn something worth sharing. No filler.
-          </p>
-
-          <form
-            onSubmit={subscribe}
-            className="mx-auto flex max-w-sm flex-col gap-3 sm:flex-row"
-          >
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="john.doe@example.com"
-              required
-              aria-label="Email for newsletter"
-              className="flex-1 rounded-lg border border-site-border/50 bg-site-bg text-site-text text-sm placeholder:text-site-text-tertiary focus-visible:border-site-accent/40 focus-visible:ring-site-accent/15 dark:border-white/6 dark:bg-site-bg-secondary"
-              disabled={loading}
-            />
-            <Input
-              type="text"
-              name="website"
-              tabIndex={-1}
-              autoComplete="off"
-              aria-hidden="true"
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
-              className="sr-only"
-            />
-            <Button
-              type="submit"
-              disabled={loading}
-              className="cursor-pointer rounded-lg border-0 bg-site-accent px-6 font-semibold text-white hover:bg-site-accent/85"
-            >
-              {loading ? "Subscribing…" : "Subscribe"}
-            </Button>
-          </form>
-        </div>
-      </Container>
-    </section>
+    <form onSubmit={subscribe} className="flex flex-col gap-3 sm:flex-row">
+      <Input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="you@example.com"
+        required
+        aria-label="Email for newsletter"
+        className="h-10 flex-1 rounded-lg border border-site-border bg-site-bg text-site-text text-sm placeholder:text-site-text-tertiary focus-visible:border-site-accent/50 focus-visible:ring-site-accent/20 dark:border-white/8 dark:bg-site-bg-secondary"
+        disabled={loading}
+      />
+      <Input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        value={website}
+        onChange={(e) => setWebsite(e.target.value)}
+        className="sr-only"
+      />
+      <Button
+        type="submit"
+        disabled={loading}
+        variant="outline"
+        className="h-10 cursor-pointer rounded-lg px-5 font-semibold text-site-text focus-visible:ring-2 focus-visible:ring-site-accent"
+      >
+        {loading ? "Subscribing…" : "Subscribe"}
+      </Button>
+    </form>
   );
 }

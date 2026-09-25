@@ -1,74 +1,70 @@
 import { allBlogPosts } from "content-collections";
 import Link from "next/link";
-import { Container } from "@/components/container";
-import { getReadingTime } from "@/lib/utils";
+import { ArrowLink } from "@/components/section-heading";
+import { formatShortDate } from "@/lib/format";
+import { cn, getReadingTime } from "@/lib/utils";
+import { ColumnTitle } from "./column-title";
+import { surface } from "./surface";
 
-const sortedPosts = [...allBlogPosts]
+const latestPosts = [...allBlogPosts]
   .sort(
     (a, b) => Number(new Date(b.publishedAt)) - Number(new Date(a.publishedAt)),
   )
-  .slice(0, 2);
+  .slice(0, 3);
 
+/** Latest posts as a dated list — one column of the Writing & research pair. */
 export default function BlogPreview() {
   return (
-    <section className="py-24">
-      <Container>
-        {/* Section header */}
-        <div className="mb-12">
-          <span className="font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">
-            Blog
-          </span>
-          <h2 className="mt-2 font-bold font-display text-3xl text-site-text leading-tight">
-            Writing &amp; thinking
-          </h2>
-          <p className="mt-3 max-w-lg text-base text-site-text-secondary">
-            Technical deep-dives on architecture, ML, and building in the open.
-          </p>
-        </div>
+    <div className="flex flex-col">
+      <ColumnTitle
+        title="From the blog"
+        action={<ArrowLink href="/blog">All posts</ArrowLink>}
+      />
 
-        {/* Post list */}
-        <div className="divide-y divide-site-border/50 overflow-hidden rounded-xl border border-site-border/50 dark:divide-white/3 dark:border-white/4">
-          {sortedPosts.map((post) => (
+      <ol
+        className={cn(
+          surface,
+          "flex-1 divide-y divide-site-border/60 dark:divide-white/5",
+        )}
+      >
+        {latestPosts.map((post) => (
+          <li key={post._meta.path}>
             <Link
-              key={post._meta.path}
               href={`/blog/${post._meta.path}/`}
-              className="site-card-hover group flex items-center justify-between gap-4 px-7 py-6 transition-colors"
+              className="group flex gap-5 px-6 py-5 transition-colors hover:bg-site-bg-secondary/70 focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:-outline-offset-2 sm:px-7 dark:hover:bg-white/3"
             >
-              <div className="min-w-0">
-                <h3 className="mb-2 font-display font-semibold text-base text-site-text leading-snug">
+              <time
+                dateTime={post.publishedAt}
+                className="hidden w-24 shrink-0 pt-0.5 font-mono text-[12px] text-site-text-tertiary sm:block"
+              >
+                {formatShortDate(post.publishedAt)}
+              </time>
+              <div className="min-w-0 flex-1">
+                <h4 className="text-pretty font-display font-semibold text-base text-site-text leading-snug transition-colors group-hover:text-site-accent">
                   {post.title}
-                </h3>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-site-text-tertiary text-sm">
-                    {getReadingTime(post.html)}
+                </h4>
+                <p className="mt-1.5 line-clamp-2 text-site-text-secondary text-sm leading-relaxed">
+                  {post.description}
+                </p>
+                <p className="mt-2.5 flex flex-wrap items-center gap-x-2 font-mono text-[11px] text-site-text-tertiary">
+                  <time dateTime={post.publishedAt} className="sm:hidden">
+                    {formatShortDate(post.publishedAt)}
+                  </time>
+                  <span aria-hidden className="sm:hidden">
+                    ·
                   </span>
+                  <span>{getReadingTime(post.html)}</span>
                   {post.tags?.slice(0, 2).map((tag: string) => (
-                    <span
-                      key={tag}
-                      className="rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[10px] text-site-accent"
-                    >
-                      {tag}
+                    <span key={tag} className="text-site-accent/80">
+                      #{tag.replace(/\s+/g, "-")}
                     </span>
                   ))}
-                </div>
+                </p>
               </div>
-              <span className="shrink-0 text-site-text-tertiary text-xl transition-transform group-hover:translate-x-1">
-                →
-              </span>
             </Link>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <div className="mt-8 text-center">
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-1.5 font-medium text-site-accent text-sm transition-opacity hover:opacity-80"
-          >
-            All posts →
-          </Link>
-        </div>
-      </Container>
-    </section>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
