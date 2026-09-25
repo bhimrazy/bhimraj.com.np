@@ -9,6 +9,7 @@ import {
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
+import { ActivityBreakdown } from "@/components/oss/activity-breakdown";
 import { ContributionGraph } from "@/components/oss/contribution-graph";
 import { Timeline } from "@/components/oss/timeline";
 import { siteConfig } from "@/config/site";
@@ -95,6 +96,18 @@ export default async function OSSPage() {
               </span>
             </div>
           ))}
+        </div>
+
+        {/* Maintainer work beyond merged PRs */}
+        <h2 className="mb-2 font-bold font-display text-2xl text-site-text">
+          Beyond the merge button
+        </h2>
+        <p className="mb-6 text-site-text-secondary text-sm">
+          Reviews, resolved issues, and support threads across the same repos —
+          each number links to the GitHub search behind it.
+        </p>
+        <div className="mb-12">
+          <ActivityBreakdown />
         </div>
 
         {/* Contribution graph */}
