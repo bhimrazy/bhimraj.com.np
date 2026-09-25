@@ -81,6 +81,7 @@ export function mergeSnapshot(
           prev.ossStats.totalPrs,
         ),
       },
+      ossActivity: mergeActivity(next, prev, keepMax, record),
       lightningEcosystem: {
         totalPrs: keepMax(
           "lightningEcosystem.totalPrs",
@@ -210,5 +211,46 @@ function mergeFeaturedRepo(
       next.featuredRepo.history.length < prev.featuredRepo.history.length
         ? prev.featuredRepo.history
         : next.featuredRepo.history,
+  };
+}
+
+/**
+ * Every activity metric is cumulative except `prsOpen`, which falls whenever a
+ * PR merges. A failed search reads as 0, so an open-PR count of exactly 0
+ * against a non-zero previous one is treated as a failed fetch.
+ */
+function mergeActivity(
+  next: GitHubSnapshot,
+  prev: GitHubSnapshot,
+  keepMax: KeepFn,
+  record: (field: string, prev: number, next: number) => number,
+): GitHubSnapshot["ossActivity"] {
+  const a = next.ossActivity;
+  const b = prev.ossActivity;
+  return {
+    prsReviewed: keepMax(
+      "ossActivity.prsReviewed",
+      a.prsReviewed,
+      b.prsReviewed,
+    ),
+    issuesResolved: keepMax(
+      "ossActivity.issuesResolved",
+      a.issuesResolved,
+      b.issuesResolved,
+    ),
+    prsOpen:
+      a.prsOpen === 0 && b.prsOpen > 0
+        ? record("ossActivity.prsOpen", b.prsOpen, a.prsOpen)
+        : a.prsOpen,
+    issuesHelped: keepMax(
+      "ossActivity.issuesHelped",
+      a.issuesHelped,
+      b.issuesHelped,
+    ),
+    issuesOpened: keepMax(
+      "ossActivity.issuesOpened",
+      a.issuesOpened,
+      b.issuesOpened,
+    ),
   };
 }

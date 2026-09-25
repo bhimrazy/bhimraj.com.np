@@ -1,4 +1,5 @@
 import { featuredRepo, ossRepos, username } from "./config";
+import { getOSSActivity } from "./fetchers/activity";
 import {
   getGitHubContributions,
   getMonthlyContributions,
@@ -25,6 +26,7 @@ export async function buildSnapshot(): Promise<GitHubSnapshot> {
     lightningCommits,
     featured,
     ossStats,
+    ossActivity,
     lightningEcosystem,
     contributedRepos,
     monthlyContributions,
@@ -34,6 +36,7 @@ export async function buildSnapshot(): Promise<GitHubSnapshot> {
     getGitHubContributions(username, lightningRepos),
     getFeaturedRepoStats(featuredRepo),
     getOSSStats(username, ossRepos),
+    getOSSActivity(username, ossRepos),
     getLightningAIEcosystemStats(username),
     getContributedRepos(username, ossRepos),
     getMonthlyContributions(username, ossRepos),
@@ -46,6 +49,7 @@ export async function buildSnapshot(): Promise<GitHubSnapshot> {
     lightningCommits,
     featuredRepo: featured,
     ossStats,
+    ossActivity,
     lightningEcosystem,
     contributedRepos,
     monthlyContributions,

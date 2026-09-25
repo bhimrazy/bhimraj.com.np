@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { OSSActivity } from "./activity-queries";
 import type { MonthlyContribution } from "./fetchers/contributions";
 import type {
   ContributedRepo,
@@ -7,6 +8,10 @@ import type {
 } from "./fetchers/ecosystem";
 import type { FeaturedRepoStats } from "./fetchers/stars";
 
+export type {
+  OSSActivity,
+  OSSActivityMetric,
+} from "./activity-queries";
 export type {
   MonthlyContribution,
   MonthlyRepoContribution,
@@ -35,6 +40,8 @@ export type GitHubSnapshot = {
   lightningCommits: number;
   featuredRepo: FeaturedRepoStats | null;
   ossStats: OSSStats;
+  /** Reviews, resolved issues, and open PRs — the work merged-PR counts miss. */
+  ossActivity: OSSActivity;
   lightningEcosystem: LightningAIEcosystemStats;
   contributedRepos: ContributedRepo[];
   monthlyContributions: MonthlyContribution[];
@@ -60,6 +67,23 @@ const ossStatsSchema = z.object({
   totalCommits: z.number(),
   totalPrs: z.number(),
 });
+
+const ossActivitySchema = z.object({
+  prsReviewed: z.number(),
+  issuesResolved: z.number(),
+  prsOpen: z.number(),
+  issuesHelped: z.number(),
+  issuesOpened: z.number(),
+});
+
+/** Zeros for snapshots written before activity metrics existed. */
+const EMPTY_OSS_ACTIVITY: OSSActivity = {
+  prsReviewed: 0,
+  issuesResolved: 0,
+  prsOpen: 0,
+  issuesHelped: 0,
+  issuesOpened: 0,
+};
 
 const lightningEcosystemSchema = z.object({
   totalPrs: z.number(),
@@ -110,6 +134,7 @@ export const snapshotSchema = z.object({
   lightningCommits: z.number(),
   featuredRepo: featuredRepoStatsSchema.nullable(),
   ossStats: ossStatsSchema,
+  ossActivity: ossActivitySchema.default(EMPTY_OSS_ACTIVITY),
   lightningEcosystem: lightningEcosystemSchema,
   contributedRepos: z.array(contributedRepoSchema),
   monthlyContributions: z.array(monthlyContributionSchema),
