@@ -9,12 +9,14 @@ import { PathTimeline } from "@/components/about/path-timeline";
 import { Toolbox } from "@/components/about/toolbox";
 import { siteConfig } from "@/config/site";
 
-const TITLE = "About — Bhimraj Yadav";
+// The root layout's title template appends " · Bhimraj Yadav" to `title`;
+// share cards get the full name.
+const TITLE = "About · Bhimraj Yadav";
 const DESCRIPTION =
   "Software engineer in Kathmandu, Nepal. Building production software at Fetchly Labs, on the LitData core team and a Tier 2 OSS contributor at Lightning AI, and an IEEE Access–published researcher.";
 
 export const metadata: Metadata = {
-  title: TITLE,
+  title: "About",
   description: DESCRIPTION,
   alternates: { canonical: "/about" },
   openGraph: {
@@ -23,13 +25,11 @@ export const metadata: Metadata = {
     title: TITLE,
     description: DESCRIPTION,
     siteName: siteConfig.name,
-    images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: TITLE }],
   },
   twitter: {
     card: "summary_large_image",
     title: TITLE,
     description: DESCRIPTION,
-    images: [siteConfig.ogImage],
     creator: siteConfig.author.handle,
   },
 };
