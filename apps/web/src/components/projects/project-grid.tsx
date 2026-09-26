@@ -1,18 +1,17 @@
 "use client";
 
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLinkIcon, withUtm } from "./link-utils";
+import { ProjectCover } from "./project-cover";
 
 export type ProjectCardData = {
   slug: string;
   title: string;
   description: string;
   tags: string[];
-  image: string;
   githubLink: string;
   liveLink?: string;
   featured: boolean;
@@ -79,17 +78,17 @@ function ProjectCard({ project }: { project: ProjectCardData }) {
       {/* Cover image */}
       <Link
         href={`/projects/${project.slug}`}
+        aria-hidden
+        tabIndex={-1}
         className="relative block aspect-2/1 w-full shrink-0 overflow-hidden border-site-border border-b bg-site-bg-secondary"
       >
-        <Image
-          src={project.image}
-          alt=""
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        <ProjectCover
+          slug={project.slug}
+          githubLink={project.githubLink}
+          category={project.category}
         />
         {project.featured && (
-          <span className="absolute top-2.5 left-2.5 rounded-md bg-site-accent px-2 py-0.5 font-mono text-[10px] text-site-bg uppercase tracking-[0.5px]">
+          <span className="absolute top-2.5 right-2.5 rounded-md bg-site-accent px-2 py-0.5 font-mono text-[10px] text-site-bg uppercase tracking-[0.5px]">
             Featured
           </span>
         )}

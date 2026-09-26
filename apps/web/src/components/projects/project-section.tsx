@@ -15,7 +15,6 @@ export default function ProjectSection() {
     title: project.title,
     description: project.description,
     tags: project.tags,
-    image: project.image,
     githubLink: project.githubLink,
     liveLink: project.liveLink,
     featured: project.featured,
