@@ -64,9 +64,6 @@
   /* Animations */
   --animate-pulse-dot: pulse-dot 2s ease infinite;
   --animate-blink: blink 1s step-end infinite;
-  --animate-float-dot: float-dot 6s ease-in-out infinite;
-  --animate-glow-pulse: glow-pulse 4s ease-in-out infinite;
-  --animate-light-sweep: light-sweep 5s ease-in-out infinite;
   --animate-fly: fly 0.5s ease-in-out forwards;
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
@@ -101,26 +98,6 @@
       border-color: transparent;
     }
   }
-  @keyframes float-dot {
-    0%,
-    100% {
-      transform: translateY(0) scale(1);
-    }
-    50% {
-      transform: translateY(-12px) scale(1.2);
-    }
-  }
-  @keyframes glow-pulse {
-    0%,
-    100% {
-      opacity: 0.15;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.25;
-      transform: scale(1.1);
-    }
-  }
   /* A dot travelling between two points (set --fx/--fy → --tx/--ty). */
   @keyframes fly {
     from {
@@ -134,22 +111,6 @@
       transform: translate(var(--tx), var(--ty));
       opacity: 0;
     }
-  }
-  @keyframes light-sweep {
-    0%,
-    100% {
-      transform: translateX(-100%);
-    }
-    50% {
-      transform: translateX(200%);
-    }
-  }
-}
-
-@utility site-card-hover {
-  background: var(--site-card-bg);
-  &:hover {
-    background: var(--site-bg-secondary);
   }
 }
 

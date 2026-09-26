@@ -1,56 +1,60 @@
-import Link from "next/link";
-import { Container } from "@/components/container";
-import { Card, CardContent } from "@/components/ui/card";
+import { ArrowLink } from "@/components/section-heading";
+import { cn } from "@/lib/utils";
+import { ColumnTitle } from "./column-title";
+import { chip, surface } from "./surface";
 
+// Mirrors the first entry on /research.
+const PUBLICATION = {
+  title:
+    "A Comparative Study of State-of-the-Art Deep Learning Models for Semantic Segmentation of Pores in SEM Images",
+  authors: "B. Pokharel, B. Yadav, et al.",
+  venue: "IEEE Access",
+  year: "2024",
+  volume: "vol. 12, pp. 50217–50243",
+  url: "https://ieeexplore.ieee.org/document/10458140",
+  tags: ["Computer Vision", "Semantic Segmentation", "Deep Learning"],
+} as const;
+
+/** The peer-reviewed paper — one column of the Writing & research pair. */
 export default function ResearchPreview() {
   return (
-    <section className="py-20">
-      <Container>
-        {/* Section header */}
-        <div className="mb-12">
-          <span className="font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">
-            Research
+    <div className="flex flex-col">
+      <ColumnTitle
+        title="Published research"
+        action={<ArrowLink href="/research">Research</ArrowLink>}
+      />
+
+      <article className={cn(surface, "flex flex-1 flex-col p-6 sm:p-7")}>
+        <div
+          aria-hidden
+          className="absolute inset-y-6 left-0 w-0.75 rounded-r-full bg-linear-to-b from-site-accent to-transparent"
+        />
+        <p className="flex flex-wrap items-center gap-2 font-mono text-[11px]">
+          <span className="rounded-md bg-site-accent-subtle px-2 py-0.5 text-site-accent">
+            {PUBLICATION.venue} · {PUBLICATION.year}
           </span>
-          <h2 className="mt-2 font-bold font-display text-3xl text-site-text leading-tight">
-            Academic work
-          </h2>
-          <p className="mt-3 max-w-lg text-base text-site-text-secondary">
-            Publications and research notes on AI, computer vision, and deep
-            learning.
-          </p>
-        </div>
+          <span className="text-site-text-tertiary">Journal article</span>
+        </p>
 
-        <Link href="/research" className="group block">
-          <Card className="relative overflow-hidden border border-site-border bg-site-card shadow-2xs transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-site-border-hover group-hover:shadow-lg/3 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:group-hover:border-white/10 dark:group-hover:shadow-site-accent/30">
-            <span className="pointer-events-none absolute -top-16 -right-12 size-40 rounded-full bg-site-accent-subtle opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-60" />
-            <CardContent className="relative p-6">
-              <div className="flex gap-5">
-                {/* Accent bar */}
-                <div className="w-1 shrink-0 rounded-full bg-linear-to-b from-site-accent to-transparent" />
+        <h4 className="mt-4 text-pretty font-display font-semibold text-lg text-site-text leading-snug">
+          {PUBLICATION.title}
+        </h4>
+        <p className="mt-2 text-site-text-tertiary text-sm">
+          {PUBLICATION.authors} · {PUBLICATION.volume}
+        </p>
 
-                <div>
-                  <span className="mb-3 inline-block rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[11px] text-site-accent">
-                    IEEE Access · 2024
-                  </span>
+        <ul className="mt-5 flex flex-1 flex-wrap content-start gap-1.5">
+          {PUBLICATION.tags.map((tag) => (
+            <li key={tag} className={chip}>
+              {tag}
+            </li>
+          ))}
+        </ul>
 
-                  <h3 className="mb-2 font-display font-semibold text-base text-site-text leading-snug">
-                    A Comparative Study of State-of-the-Art Deep Learning Models
-                    for Semantic Segmentation of Pores in SEM Images
-                  </h3>
-
-                  <p className="mb-3 text-site-text-secondary text-sm">
-                    B. Pokharel et al. · IEEE Access, vol. 12, pp. 50217–50243
-                  </p>
-
-                  <span className="font-medium text-site-accent text-sm transition-opacity group-hover:opacity-80">
-                    View all research →
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-      </Container>
-    </section>
+        <ArrowLink href={PUBLICATION.url} external className="mt-6 self-start">
+          Read on IEEE Xplore
+        </ArrowLink>
+      </article>
+    </div>
   );
 }
