@@ -146,7 +146,9 @@ export function computeUNetShapes(config: UNetConfig): UNetShapes {
     const concatChannels = upChannels + skip.channels;
     const out = doubleConvOut(upSize, padding);
     if (out < 1) {
-      return fail(`Too small: decoder level ${level + 1} shrinks to nothing.`);
+      return fail(
+        `Too small: decoder level ${level + 1} upsamples to ${upSize}×${upSize}, which two 3×3 convolutions without padding shrink to nothing.`,
+      );
     }
     skips.push({
       level,

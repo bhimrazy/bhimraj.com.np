@@ -9,21 +9,22 @@ import {
   useSyncExternalStore,
 } from "react";
 
-const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
-
-function subscribeReducedMotion(onChange: () => void) {
-  const mql = window.matchMedia(REDUCED_MOTION);
-  mql.addEventListener("change", onChange);
-  return () => mql.removeEventListener("change", onChange);
+/** Live `matchMedia` result; `serverValue` is used for SSR and hydration. */
+export function useMediaQuery(query: string, serverValue = false) {
+  return useSyncExternalStore(
+    (onChange) => {
+      const mql = window.matchMedia(query);
+      mql.addEventListener("change", onChange);
+      return () => mql.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(query).matches,
+    () => serverValue,
+  );
 }
 
-/** `true` when the reader asked for reduced motion. Server snapshot: `true` (never autoplay before hydration). */
+/** `true` when the reader asked for reduced motion (and on the server, so nothing autoplays before hydration). */
 export function usePrefersReducedMotion() {
-  return useSyncExternalStore(
-    subscribeReducedMotion,
-    () => window.matchMedia(REDUCED_MOTION).matches,
-    () => true,
-  );
+  return useMediaQuery("(prefers-reduced-motion: reduce)", true);
 }
 
 /** Tracks whether an element is on screen, so figures stop animating offscreen. */
@@ -87,23 +88,30 @@ export function useInterval(onTick: () => void, ms: number, running: boolean) {
  * time units, advanced at `rate` units per second). Starts at `duration` so
  * the server-rendered frame is the finished picture.
  */
-export function useTimeline(duration: number, rate: number, running: boolean) {
+export function useTimeline(
+  duration: number,
+  rate: number,
+  running: boolean,
+  onEnd: () => void,
+) {
   const [t, setT] = useState(duration);
   const tRef = useRef(t);
   tRef.current = t;
+  const end = useRef(onEnd);
+  end.current = onEnd;
 
   useEffect(() => {
     if (!running) return;
     let raf = 0;
     let last = performance.now();
+    // Playing from the end replays from the start.
+    let current = tRef.current >= duration ? 0 : tRef.current;
     const frame = (now: number) => {
-      const next = Math.min(
-        duration,
-        tRef.current + ((now - last) / 1000) * rate,
-      );
+      current = Math.min(duration, current + ((now - last) / 1000) * rate);
       last = now;
-      setT(next);
-      if (next < duration) raf = requestAnimationFrame(frame);
+      setT(current);
+      if (current < duration) raf = requestAnimationFrame(frame);
+      else end.current();
     };
     raf = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(raf);

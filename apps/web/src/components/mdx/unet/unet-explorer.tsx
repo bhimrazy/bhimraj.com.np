@@ -188,7 +188,9 @@ export function UNetExplorer() {
             <p className="mt-1 text-site-text-tertiary">
               {result.output.size === inputSize
                 ? "Same size out as in."
-                : `${inputSize - result.output.size} px lost to the border.`}{" "}
+                : padding === 0
+                  ? `${inputSize - result.output.size} px lost to unpadded convolutions.`
+                  : `${inputSize - result.output.size} px lost because MaxPool2d floors odd sizes; inputs divisible by ${2 ** (result.depth - 1)} keep their size.`}{" "}
               Hover or tap a feature map to see its shape and code.
             </p>
           </>

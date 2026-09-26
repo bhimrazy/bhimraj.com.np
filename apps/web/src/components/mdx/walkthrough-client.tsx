@@ -115,15 +115,19 @@ export function WalkthroughClient({
 
         <div
           aria-live="polite"
-          className="min-h-36 px-4 py-4 text-[14px] text-site-text-secondary leading-relaxed sm:px-5 [&_code]:rounded [&_code]:bg-site-bg-tertiary [&_code]:px-1 [&_code]:py-px [&_code]:font-mono [&_code]:text-[12px] [&_code]:text-site-text [&_p+p]:mt-2"
+          className="grid px-4 py-4 text-[14px] text-site-text-secondary leading-relaxed sm:px-5 [&_code]:rounded [&_code]:bg-site-bg-tertiary [&_code]:px-1 [&_code]:py-px [&_code]:font-mono [&_code]:text-[12px] [&_code]:text-site-text [&_p+p]:mt-2"
         >
+          {/* Steps share one grid cell, so the panel is as tall as the
+              tallest step and the code below never jumps. */}
           {steps.map((s, i) => (
             <div
               key={s.title}
-              hidden={i !== index}
+              aria-hidden={i !== index}
               className={cn(
+                "col-start-1 row-start-1",
+                i !== index && "invisible",
                 s.aside &&
-                  "grid items-center gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,15rem)]",
+                  "grid content-start items-start gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,17rem)]",
               )}
             >
               <div>{s.content}</div>
