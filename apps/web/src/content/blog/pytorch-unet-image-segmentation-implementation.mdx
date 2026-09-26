@@ -63,6 +63,12 @@ The **U-Net architecture** has skip connections between the encoder and decoder 
 
 These skip connections concatenate the feature maps from the encoder with those from the decoder at the corresponding spatial resolution, allowing the decoder to refine the segmentation map with the information from the encoder.
 
+The figure below computes every feature-map shape from the same configuration the code later in this post runs: `channels=[3, 64, 128, 256, 512, 1024]` on a 572×572 input.
+
+<Figure label="UNet shapes, from the code" caption="The post's UNet, computed from its code. Squares scale with spatial size; the number next to each is its channel count. Drag the input size or switch the padding to see why the output is smaller than the input.">
+  <UNetExplorer />
+</Figure>
+
 ## PyTorch Implementation of U-Net for Image Segmentation
 
 In this tutorial, I will guide you through the step-by-step implementation of U-Net in PyTorch for image segmentation tasks.
@@ -80,7 +86,7 @@ The double convolution block is a basic building block of the U-Net architecture
 
 > In this implementation, I have also included batch normalization so as to improve the performance and training speed of neural networks.
 
-```python
+```python title="DoubleConvBlock"
 import torch
 import torch.nn as nn
 
@@ -120,7 +126,7 @@ class DoubleConvBlock(nn.Module):
 
 The encoder is part of the U-Net architecture that downsamples the input image and extracts its features. It consists of a series of double convolution blocks followed by max pooling layers. The number of feature channels is doubled at each downsampling step. Here's the implementation of the encoder in PyTorch:
 
-```python
+```python title="Encoder"
 class Encoder(nn.Module):
     """The encoder part of the UNet architecture.
 
@@ -162,7 +168,7 @@ class Encoder(nn.Module):
 
 The decoder is the part of the U-Net architecture that upsamples the feature maps and combines them with the corresponding feature maps from the encoder to produce the final segmentation map. It consists of a series of transposed convolutional layers followed by concatenation with the corresponding feature maps from the encoder, and double convolution blocks to process the combined feature maps. Here's the implementation of the decoder with skip connections in PyTorch:
 
-```python
+```python title="Decoder" {41-43}
 class Decoder(nn.Module):
     """The decoder part of the UNet architecture.
 
@@ -216,7 +222,7 @@ class Decoder(nn.Module):
 
 The final U-Net architecture consists of an encoder and decoder with skip connections. The encoder downsamples the input image and extracts its features, while the decoder upsamples the feature maps and combines them with the corresponding feature maps from the encoder to produce the final segmentation map. Here's the implementation of the final U-Net architecture in PyTorch:
 
-```python
+```python title="UNet" {36}
 class UNet(nn.Module):
     """The UNet architecture.
 
@@ -254,6 +260,75 @@ x = torch.randn(1, 3, 572, 572)
 y = model(x)
 print(y.shape) #-> torch.Size([1, 1, 388, 388])
 ```
+
+To see how that 572×572 input becomes a 388×388 mask, step through the three `forward` methods above with the test tensor:
+
+<CodeWalkthrough caption="One forward pass through the forward methods above (excerpted from the classes in this post). Shapes are computed for the test input, torch.randn(1, 3, 572, 572).">
+
+```python title="forward passes (excerpt)"
+# class UNet
+def forward(self, x: torch.Tensor) -> torch.Tensor:
+    encoder_features = self.encoder(x)[::-1]
+    x = self.decoder(encoder_features[0], encoder_features[1:])
+    x = self.output(x)
+    return x
+
+# class Encoder
+def forward(self, x: torch.Tensor) -> List[torch.Tensor]:
+    encoder_features = []
+    for encoder_block in self.encoder_blocks:
+        x = encoder_block(x)
+
+        # Save the output of each convolutional block
+        if isinstance(encoder_block, DoubleConvBlock):
+            encoder_features.append(x)
+
+    return encoder_features
+
+# class Decoder
+def forward(self, x: torch.Tensor, encoder_features: List[torch.Tensor]) -> torch.Tensor:
+
+    for i, decoder_block in enumerate(self.decoder_blocks):
+
+        # Concatenate the output of the encoder with the output of the decoder
+        if isinstance(decoder_block, DoubleConvBlock):
+            encoder_feature = self._center_crop(encoder_features[i//2], x)
+            x = torch.cat([x, encoder_feature], dim=1)
+
+        # Apply the upconv or double convolutional block
+        x = decoder_block(x)
+    return x
+```
+
+<Step lines="2-3" title="Into the encoder" aside={<UNetTrace at="input enc-0" />}>
+`x` starts as the test tensor, <Shape of="input" />. `UNet.forward` hands it straight to the encoder.
+</Step>
+
+<Step lines="11-16" title="Encode: convolve, save, pool" aside={<UNetTrace at="input enc-0 enc-1 enc-2 enc-3 bottleneck" />}>
+Each `DoubleConvBlock` runs two 3×3 convolutions without padding, trimming 2 pixels per side, and its output is saved. The `MaxPool2d` between blocks halves the size. The first saved feature is <Shape of="enc-0" />; the last, at the bottleneck, is <Shape of="bottleneck" />.
+</Step>
+
+<Step lines="3-4" title="Reverse the features" aside={<UNetTrace at="bottleneck" />}>
+`[::-1]` puts the deepest feature first. The bottleneck becomes the decoder's `x`, and the other four become its skip connections, deepest first.
+</Step>
+
+<Step lines="23,31" title="Up-convolve" aside={<UNetTrace at="bottleneck dec-3" />}>
+The decoder's blocks alternate. At even `i` the block is a `ConvTranspose2d` with kernel 2 and stride 2: it doubles the height and width and halves the channels.
+</Step>
+
+<Step lines="26-28" title="Crop the skip and concatenate" aside={<UNetTrace at="enc-3 dec-3" />}>
+At odd `i`, `_center_crop` trims the saved encoder feature to the upsampled size (the unpadded convolutions left it larger), and `torch.cat` stacks the two along the channel axis, doubling the channels again.
+</Step>
+
+<Step lines="31" title="Convolve, four times up" aside={<UNetTrace at="dec-3 dec-2 dec-1 dec-0" />}>
+The `DoubleConvBlock` then trims 4 more pixels, giving <Shape of="dec-3" />. Repeating up-convolve, crop, concatenate and convolve for each level ends at <Shape of="dec-0" />.
+</Step>
+
+<Step lines="5-6" title="Output" aside={<UNetTrace at="dec-0 output" />}>
+Finally the 1×1 `self.output` convolution maps 64 channels to `out_channels`: <Shape of="output" />, the shape the test prints.
+</Step>
+
+</CodeWalkthrough>
 
 ## Conclusion
 

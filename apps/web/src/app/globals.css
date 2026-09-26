@@ -67,6 +67,7 @@
   --animate-float-dot: float-dot 6s ease-in-out infinite;
   --animate-glow-pulse: glow-pulse 4s ease-in-out infinite;
   --animate-light-sweep: light-sweep 5s ease-in-out infinite;
+  --animate-fly: fly 0.5s ease-in-out forwards;
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
@@ -118,6 +119,20 @@
     50% {
       opacity: 0.25;
       transform: scale(1.1);
+    }
+  }
+  /* A dot travelling between two points (set --fx/--fy → --tx/--ty). */
+  @keyframes fly {
+    from {
+      transform: translate(var(--fx), var(--fy));
+      opacity: 1;
+    }
+    85% {
+      opacity: 1;
+    }
+    to {
+      transform: translate(var(--tx), var(--ty));
+      opacity: 0;
     }
   }
   @keyframes light-sweep {
@@ -485,5 +500,151 @@
     padding: 1.25rem;
     border-inline: 0;
     border-radius: 0;
+  }
+}
+
+/* ── Code block extras (Shiki transformers) ─────────────────────── */
+.shiki {
+  --code-px: 1.75rem;
+  padding-inline: var(--code-px);
+}
+.shiki code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+}
+/* Lines span the full block so highlights reach both edges. */
+.shiki .line {
+  display: inline-block;
+  min-width: calc(100% + 2 * var(--code-px));
+  margin-inline: calc(-1 * var(--code-px));
+  padding-inline: var(--code-px);
+  transition:
+    opacity 0.2s,
+    background-color 0.2s,
+    filter 0.2s;
+}
+/* ```py {1,3-4}``` and `# [!code highlight]` / `[!code error|warning]` */
+.shiki .line.highlighted,
+.shiki .line.diff.add {
+  background: var(--site-accent-subtle);
+  box-shadow: inset 2px 0 var(--site-accent);
+}
+/* `[!code focus]`: everything else recedes until the block is hovered. */
+.shiki.has-focused .line:not(.focused) {
+  opacity: 0.4;
+  filter: blur(0.4px);
+}
+.shiki.has-focused:hover .line:not(.focused) {
+  opacity: 1;
+  filter: none;
+}
+/* `[!code ++]` / `[!code --]` */
+.shiki .line.diff::before {
+  display: inline-block;
+  width: 1.25rem;
+  margin-left: -1.25rem;
+  color: var(--site-text-tertiary);
+}
+.shiki .line.diff.add::before {
+  content: "+";
+  color: var(--site-accent);
+}
+.shiki .line.diff.remove {
+  opacity: 0.5;
+}
+.shiki .line.diff.remove::before {
+  content: "−";
+}
+
+/* ```py title="unet.py"``` → a filename bar above the code. */
+.code-block {
+  margin-block: 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--site-border);
+  border-radius: 0.75rem;
+  background: var(--site-card-bg);
+}
+.code-block-title {
+  padding: 0.5rem var(--code-title-px, 1.75rem);
+  border-bottom: 1px solid var(--site-border);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--site-text-tertiary);
+}
+.code-block > .shiki {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+.article-prose > .code-block {
+  max-width: none;
+  margin-block: 2rem;
+}
+
+/* <CodeWalkthrough>: the code sits flush in the figure; the active step's
+   lines are lifted by a scoped <style> the component renders. */
+[data-walkthrough] .shiki,
+[data-walkthrough] .code-block {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+[data-walkthrough] .code-block-title {
+  display: none;
+}
+[data-walkthrough] .line {
+  opacity: 0.38;
+}
+@media (prefers-reduced-motion: reduce) {
+  .shiki .line {
+    transition: none;
+  }
+}
+
+/* Range inputs in figures: a hairline track and an amber thumb. */
+.figure-range {
+  appearance: none;
+  background: transparent;
+}
+.figure-range::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 999px;
+  background: var(--site-border-hover);
+}
+.figure-range::-moz-range-track {
+  height: 2px;
+  border-radius: 999px;
+  background: var(--site-border-hover);
+}
+.figure-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -6px;
+  border: 2px solid var(--site-card-bg);
+  border-radius: 999px;
+  background: var(--site-accent);
+}
+.figure-range::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--site-card-bg);
+  border-radius: 999px;
+  background: var(--site-accent);
+}
+
+@media (max-width: 639px) {
+  .shiki {
+    --code-px: 1.25rem;
+  }
+  .article-prose > .code-block {
+    --code-title-px: 1.25rem;
+    margin-inline: -1.25rem;
+    border-inline: 0;
+    border-radius: 0;
+  }
+  .article-prose > .code-block > pre.shiki {
+    padding: 1.25rem;
   }
 }

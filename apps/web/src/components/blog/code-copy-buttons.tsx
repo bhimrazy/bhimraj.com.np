@@ -56,7 +56,11 @@ export default function CodeCopyButtons() {
       const onClick = async () => {
         const code = pre.querySelector("code");
         const text = code?.innerText ?? pre.innerText;
-        await navigator.clipboard.writeText(text);
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          return; // Clipboard permission denied or unavailable.
+        }
         capture("code_copied", { slug: window.location.pathname });
         btn.innerHTML = checkIcon();
         btn.style.color = "var(--site-accent)";
