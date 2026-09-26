@@ -27,7 +27,12 @@ declare module "content-collections" {
     tags: string[];
     image: string;
     githubLink: string;
+    liveLink?: string;
     featured: boolean;
+    category:
+      | "Multimodal LLMs"
+      | "Model Serving"
+      | "Computer Vision & Medical AI";
     html: string;
   }
 

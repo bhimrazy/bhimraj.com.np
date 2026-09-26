@@ -3,6 +3,7 @@ title: "3D Lung Tumour Segmentation"
 description: "3D semantic segmentation of lung tumours from CT scans using PyTorch Lightning and MONAI. Trained on the Medical Segmentation Decathlon lung dataset with a U-Net based architecture."
 publishedAt: "2022-04-24"
 tags: [PyTorch, MONAI, Medical AI, Segmentation]
+category: "Computer Vision & Medical AI"
 image: "https://opengraph.githubassets.com/1/bhimrazy/lung-tumours-segmentation"
 githubLink: "https://github.com/bhimrazy/lung-tumours-segmentation"
 liveLink: "https://lightning.ai/bhimrajyadav/studios/empowering-3d-lung-tumour-segmentation-with-monai"

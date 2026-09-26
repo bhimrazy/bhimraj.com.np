@@ -3,7 +3,7 @@ import {
   getGitHubStars,
   getMonthlyContributions,
   getOSSStats,
-  ossStartYear,
+  getSnapshotMeta,
   username,
 } from "@bhimrazy/github";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
@@ -13,6 +13,7 @@ import { ActivityBreakdown } from "@/components/oss/activity-breakdown";
 import { ContributionGraph } from "@/components/oss/contribution-graph";
 import { Timeline } from "@/components/oss/timeline";
 import { siteConfig } from "@/config/site";
+import { formatDate } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Open Source Journey — Bhimraj Yadav",
@@ -23,6 +24,10 @@ export const metadata: Metadata = {
 
 const USERNAME = username;
 const UTM = siteConfig.utmParams;
+
+// First OSS milestone — joining the Lightning AI Studios Publisher Program —
+// matches the Timeline component's first entry ("Mar 2024") below.
+const OSS_START_DATE = "2024-03-01";
 
 function formatCount(n: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
@@ -36,14 +41,33 @@ function repoUrl(fullName: string, org: string): string {
   return `https://github.com/${fullName}/pulls?q=is%3Apr+author%3A${USERNAME}+is%3Amerged&${UTM}`;
 }
 
+/** Months elapsed between two ISO-ish date strings (year/month precision). */
+function monthsBetween(fromISO: string, toISO: string): number {
+  const from = new Date(fromISO);
+  const to = new Date(toISO);
+  return (
+    (to.getFullYear() - from.getFullYear()) * 12 +
+    (to.getMonth() - from.getMonth())
+  );
+}
+
+function formatActiveSpan(totalMonths: number): string {
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+  if (years === 0) return `${months}mo`;
+  if (months === 0) return `${years}yr`;
+  return `${years}yr ${months}mo`;
+}
+
 export default async function OSSPage() {
   const contributions = getContributedRepos();
   const oss = getOSSStats();
   const monthly = getMonthlyContributions();
   const ownStars = getGitHubStars();
+  const { generatedAt } = getSnapshotMeta();
 
-  const currentYear = monthly.at(-1)?.year ?? ossStartYear;
-  const yearsActive = currentYear - ossStartYear;
+  const monthsActive = monthsBetween(OSS_START_DATE, generatedAt);
+  const activeSpan = formatActiveSpan(monthsActive);
 
   const maxRepoCommits = Math.max(...contributions.map((c) => c.commits), 1);
 
@@ -60,7 +84,7 @@ export default async function OSSPage() {
       value: `${formatCount(ownStars)}+`,
       label: "Stars Earned",
     },
-    { value: `${yearsActive}+`, label: "Years Active" },
+    { value: activeSpan, label: "Active Since Mar 2024" },
   ];
 
   return (
@@ -82,7 +106,7 @@ export default async function OSSPage() {
         </div>
 
         {/* Stats */}
-        <div className="mb-12 grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-site-border shadow-lg/2 transition-shadow duration-200 hover:shadow-xl/5 sm:grid-cols-4">
+        <div className="mb-3 grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-site-border shadow-lg/2 transition-shadow duration-200 hover:shadow-xl/5 sm:grid-cols-4">
           {stats.map((stat) => (
             <div
               key={stat.label}
@@ -97,6 +121,11 @@ export default async function OSSPage() {
             </div>
           ))}
         </div>
+
+        {/* Synced-from-GitHub trust caption */}
+        <p className="mb-12 text-right font-mono text-[11px] text-site-text-tertiary">
+          Synced from GitHub {formatDate(generatedAt)}
+        </p>
 
         {/* Maintainer work beyond merged PRs */}
         <h2 className="mb-2 font-bold font-display text-2xl text-site-text">
@@ -133,6 +162,7 @@ export default async function OSSPage() {
               target="_blank"
               rel="nofollow noopener noreferrer"
               className="group relative isolate flex flex-col gap-1.5 overflow-hidden px-4 py-3 sm:flex-row sm:items-center sm:gap-4 sm:px-5"
+              title={c.fullName}
             >
               {/* Commit-volume bar — ranks repos at a glance */}
               <span
@@ -144,9 +174,9 @@ export default async function OSSPage() {
               />
 
               {/* Repo + org */}
-              <div className="flex items-center gap-2 sm:w-60 sm:shrink-0">
+              <div className="flex min-w-0 items-center gap-2 sm:w-72 sm:shrink-0 lg:w-80">
                 <GitHubLogoIcon className="h-3.5 w-3.5 shrink-0 text-site-text-tertiary transition-colors group-hover:text-site-accent" />
-                <h3 className="truncate font-display font-semibold text-[15px] text-site-text">
+                <h3 className="min-w-0 truncate font-display font-semibold text-[15px] text-site-text">
                   {c.name}
                 </h3>
                 <span className="ml-auto shrink-0 rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[10px] text-site-accent sm:ml-0">
@@ -165,7 +195,7 @@ export default async function OSSPage() {
               )}
 
               {/* Stats */}
-              <div className="flex items-center gap-x-3 font-mono text-[11px] text-site-text-tertiary sm:ml-auto sm:shrink-0">
+              <div className="grid shrink-0 grid-cols-2 gap-x-3 gap-y-0.5 font-mono text-[11px] text-site-text-tertiary sm:ml-auto sm:flex sm:items-center">
                 <span className="text-site-accent">{c.commits} commits</span>
                 {c.prs > 0 && <span>{c.prs} PRs</span>}
                 <span>★ {formatCount(c.stars)}</span>

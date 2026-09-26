@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
+import { CiteButton } from "@/components/research/cite-button";
 import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata: Metadata = {
@@ -24,6 +25,44 @@ const PUBLICATIONS = [
     type: "Journal",
   },
 ] as const;
+
+/**
+ * Bare-minimum BibTeX built only from fields already shown on this page.
+ * Authors are listed as "B. Pokharel, B. Yadav, et al." in the source data,
+ * so the entry uses `and others` rather than inventing the full author list.
+ */
+function buildBibtex(pub: (typeof PUBLICATIONS)[number]): string {
+  const volumeMatch = pub.volume.match(/vol\.\s*(\d+)/i);
+  const pagesMatch = pub.volume.match(/pp\.\s*([\d–-]+)/i);
+  const volume = volumeMatch ? volumeMatch[1] : "";
+  const pages = pagesMatch ? pagesMatch[1].replace(/–/g, "--") : "";
+  const key = `pokharel${pub.year}sem`;
+
+  return [
+    `@article{${key},`,
+    `  title={${pub.title}},`,
+    `  author={Pokharel, B. and Yadav, B. and others},`,
+    `  journal={${pub.venue}},`,
+    volume && `  volume={${volume}},`,
+    pages && `  pages={${pages}},`,
+    `  year={${pub.year}},`,
+    `  url={${pub.doi}}`,
+    `}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+// Research interests, derived verbatim from the existing hero copy below
+// (generative models, medical imaging, and efficient inference).
+const RESEARCH_INTERESTS = [
+  "Generative models",
+  "Medical imaging",
+  "Efficient inference",
+] as const;
+
+// TODO: link to a Google Scholar profile once one exists in the repo/config —
+// no such link is currently defined, so none is added here.
 
 const READING_NOTES = [
   {
@@ -70,6 +109,18 @@ export default function ResearchPage() {
             learning. Research interests span generative models, medical
             imaging, and efficient inference.
           </p>
+
+          {/* Research interests, pulled from the sentence above */}
+          <div className="mt-5 flex flex-wrap gap-2">
+            {RESEARCH_INTERESTS.map((interest) => (
+              <span
+                key={interest}
+                className="rounded-full border border-site-border bg-site-card px-3 py-1 font-mono text-[11px] text-site-text-secondary"
+              >
+                {interest}
+              </span>
+            ))}
+          </div>
         </div>
 
         {/* Publications */}
@@ -78,99 +129,112 @@ export default function ResearchPage() {
         </h2>
         <div className="mb-16 flex flex-col gap-4">
           {PUBLICATIONS.map((pub) => (
-            <a
+            <Card
               key={pub.title}
-              href={pub.doi}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block"
+              className="group relative overflow-hidden border border-site-border bg-site-card transition-all duration-200 hover:-translate-y-0.5 hover:border-site-border-hover hover:shadow-xl/5 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:hover:border-white/10 dark:hover:shadow-site-accent-subtle"
             >
-              <Card className="relative overflow-hidden border border-site-border bg-site-card transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-site-border-hover group-hover:shadow-xl/5 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:group-hover:border-white/10 dark:group-hover:shadow-site-accent-subtle">
-                <span className="pointer-events-none absolute -top-16 -right-12 size-40 rounded-full bg-site-accent-subtle opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-100" />
-                <CardContent className="relative p-6">
-                  <div className="flex gap-5">
-                    {/* Accent bar */}
-                    <div
-                      className="w-1 shrink-0 rounded-full"
-                      style={{
-                        background:
-                          "linear-gradient(180deg, var(--site-accent), transparent)",
-                      }}
-                    />
-                    <div>
-                      <div className="mb-3 flex flex-wrap gap-2">
-                        <span className="rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[11px] text-site-accent">
-                          {pub.venue} · {pub.year}
-                        </span>
-                        <span className="rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[11px] text-site-accent">
-                          {pub.type}
-                        </span>
-                      </div>
-
-                      <h3 className="mb-2 font-display font-semibold text-base text-site-text leading-snug">
-                        {pub.title}
-                      </h3>
-                      <p className="mb-2 text-site-text-tertiary text-sm">
-                        {pub.authors} · {pub.volume}
-                      </p>
-                      <p className="mb-4 text-site-text-secondary text-sm leading-relaxed">
-                        {pub.abstract}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {pub.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="rounded-md bg-site-bg-tertiary px-2 py-0.5 font-mono text-[11px] text-site-text-secondary"
-                          >
-                            {tag}
-                          </span>
-                        ))}
+              <span className="pointer-events-none absolute -top-16 -right-12 size-40 rounded-full bg-site-accent-subtle opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-100" />
+              <CardContent className="relative p-6">
+                <div className="flex gap-5">
+                  {/* Accent bar */}
+                  <div
+                    className="w-1 shrink-0 rounded-full"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, var(--site-accent), transparent)",
+                    }}
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-3 flex flex-wrap items-center gap-2">
+                      <span className="rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[11px] text-site-accent">
+                        {pub.venue} · {pub.year}
+                      </span>
+                      <span className="rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[11px] text-site-accent">
+                        {pub.type}
+                      </span>
+                      <div className="ml-auto flex items-center gap-2">
+                        <CiteButton bibtex={buildBibtex(pub)} />
+                        <a
+                          href={pub.doi}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="relative z-10 inline-flex items-center gap-1.5 rounded-md border border-site-border bg-site-bg-secondary px-2.5 py-1 font-mono text-[11px] text-site-text-secondary transition-colors hover:border-site-border-hover hover:text-site-text"
+                        >
+                          View on IEEE
+                        </a>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </a>
-          ))}
-        </div>
 
-        {/* Reading notes */}
-        <h2 className="mb-2 font-bold font-display text-2xl text-site-text">
-          Reading Notes
-        </h2>
-        <p className="mb-6 text-site-text-secondary text-sm">
-          Key takeaways from papers I&apos;ve read and found influential.
-        </p>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {READING_NOTES.map((note) => (
-            <Card
-              key={note.title}
-              className="border border-site-border bg-site-card dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary"
-            >
-              <CardContent className="p-5">
-                <h3 className="mb-1 font-display font-semibold text-site-text text-sm leading-snug">
-                  {note.title}
-                </h3>
-                <p className="mb-3 font-mono text-[11px] text-site-text-tertiary">
-                  {note.authors} · {note.year}
-                </p>
-                <p className="mb-4 text-[13px] text-site-text-secondary leading-relaxed">
-                  {note.notes}
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {note.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded bg-site-accent-subtle px-1.5 py-0.5 font-mono text-[10px] text-site-accent"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                    <h3 className="mb-2 font-display font-semibold text-base text-site-text leading-snug">
+                      {pub.title}
+                    </h3>
+                    <p className="mb-2 text-site-text-tertiary text-sm">
+                      {pub.authors} · {pub.volume}
+                    </p>
+                    <p className="mb-4 text-site-text-secondary text-sm leading-relaxed">
+                      {pub.abstract}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {pub.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-md bg-site-bg-tertiary px-2 py-0.5 font-mono text-[11px] text-site-text-secondary"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
+
+        {/* Reading notes */}
+        <h2 className="mb-2 font-bold font-display text-2xl text-site-text">
+          Papers That Shaped My Thinking
+        </h2>
+        <p className="mb-6 max-w-2xl text-site-text-secondary text-sm leading-relaxed">
+          Not a reading log — a short, deliberate list of papers whose ideas I
+          keep coming back to when reasoning about model architecture and
+          training.
+        </p>
+        <ol className="mb-4 flex flex-col gap-4">
+          {READING_NOTES.map((note, i) => (
+            <Card
+              key={note.title}
+              className="border border-site-border bg-site-card dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary"
+            >
+              <CardContent className="flex gap-4 p-5">
+                <span className="shrink-0 font-display font-semibold text-site-accent text-sm tabular-nums">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="min-w-0">
+                  <h3 className="mb-1 font-display font-semibold text-site-text text-sm leading-snug">
+                    {note.title}
+                  </h3>
+                  <p className="mb-3 font-mono text-[11px] text-site-text-tertiary">
+                    {note.authors} · {note.year}
+                  </p>
+                  <p className="mb-4 text-[13px] text-site-text-secondary leading-relaxed">
+                    {note.notes}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {note.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded bg-site-accent-subtle px-1.5 py-0.5 font-mono text-[10px] text-site-accent"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </ol>
       </Container>
     </main>
   );
