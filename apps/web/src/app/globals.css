@@ -64,9 +64,7 @@
   /* Animations */
   --animate-pulse-dot: pulse-dot 2s ease infinite;
   --animate-blink: blink 1s step-end infinite;
-  --animate-float-dot: float-dot 6s ease-in-out infinite;
-  --animate-glow-pulse: glow-pulse 4s ease-in-out infinite;
-  --animate-light-sweep: light-sweep 5s ease-in-out infinite;
+  --animate-fly: fly 0.5s ease-in-out forwards;
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
@@ -100,41 +98,19 @@
       border-color: transparent;
     }
   }
-  @keyframes float-dot {
-    0%,
-    100% {
-      transform: translateY(0) scale(1);
+  /* A dot travelling between two points (set --fx/--fy → --tx/--ty). */
+  @keyframes fly {
+    from {
+      transform: translate(var(--fx), var(--fy));
+      opacity: 1;
     }
-    50% {
-      transform: translateY(-12px) scale(1.2);
+    85% {
+      opacity: 1;
     }
-  }
-  @keyframes glow-pulse {
-    0%,
-    100% {
-      opacity: 0.15;
-      transform: scale(1);
+    to {
+      transform: translate(var(--tx), var(--ty));
+      opacity: 0;
     }
-    50% {
-      opacity: 0.25;
-      transform: scale(1.1);
-    }
-  }
-  @keyframes light-sweep {
-    0%,
-    100% {
-      transform: translateX(-100%);
-    }
-    50% {
-      transform: translateX(200%);
-    }
-  }
-}
-
-@utility site-card-hover {
-  background: var(--site-card-bg);
-  &:hover {
-    background: var(--site-bg-secondary);
   }
 }
 
@@ -217,4 +193,419 @@
   font-style: var(--shiki-dark-font-style);
   font-weight: var(--shiki-dark-font-weight);
   text-decoration: var(--shiki-dark-text-decoration);
+}
+
+/* ── Blog reading experience ─────────────────────────────────────── */
+@theme {
+  /* Body copy measure (~70 characters) and the wider article column that
+     code blocks, figures and tables are allowed to use. */
+  --container-measure: 38rem;
+  --container-wide: 46rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/*
+ * Article typography. Unlayered (like .shiki above) so it wins over the
+ * typography plugin; colors map onto the site tokens so both themes work.
+ */
+.article-prose {
+  --tw-prose-body: color-mix(
+    in oklab,
+    var(--site-text) 70%,
+    var(--site-text-secondary)
+  );
+  --tw-prose-headings: var(--site-text);
+  --tw-prose-links: var(--site-text);
+  --tw-prose-bold: var(--site-text);
+  --tw-prose-counters: var(--site-text-tertiary);
+  --tw-prose-bullets: var(--site-accent);
+  --tw-prose-hr: var(--site-border);
+  --tw-prose-quotes: var(--site-text);
+  --tw-prose-quote-borders: var(--site-accent);
+  --tw-prose-captions: var(--site-text-secondary);
+  --tw-prose-code: var(--site-text);
+  --tw-prose-th-borders: var(--site-border);
+  --tw-prose-td-borders: var(--site-border);
+  counter-reset: figure;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  overflow-wrap: break-word;
+}
+
+/* Text sits at the reading measure; code, figures and tables break out. */
+.article-prose > * {
+  max-width: var(--container-measure);
+  margin-inline: auto;
+}
+.article-prose > :is(pre, figure, .table-wrap) {
+  max-width: none;
+}
+
+.article-prose > :first-child {
+  margin-top: 0;
+}
+
+.article-prose :is(h2, h3, h4) {
+  position: relative;
+  scroll-margin-top: 6.5rem;
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.article-prose :is(h2, h3, h4) strong {
+  font-weight: inherit;
+}
+.article-prose h2 {
+  margin-top: 2.4em;
+  margin-bottom: 0.75em;
+  font-size: 1.625rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.article-prose h3 {
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+/* Permalink "#": hangs in the margin on wide screens, trails on small. */
+.article-prose .heading-anchor {
+  margin-left: 0.35em;
+  border-radius: 0.25rem;
+  color: var(--site-text-tertiary);
+  font-weight: 400;
+  text-decoration: none;
+  opacity: 0;
+  transition:
+    opacity 0.15s,
+    color 0.15s;
+}
+.article-prose .heading-anchor::before {
+  content: "#";
+}
+.article-prose :is(h2, h3):hover .heading-anchor,
+.article-prose .heading-anchor:focus-visible {
+  opacity: 1;
+}
+.article-prose .heading-anchor:hover {
+  color: var(--site-accent);
+}
+@media (min-width: 1024px) {
+  .article-prose .heading-anchor {
+    position: absolute;
+    left: -1.1em;
+    margin-left: 0;
+  }
+}
+@media (hover: none) {
+  .article-prose .heading-anchor:not(:focus-visible) {
+    display: none;
+  }
+}
+
+.article-prose a:not(.heading-anchor) {
+  font-weight: 500;
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(
+    in oklab,
+    var(--site-accent) 55%,
+    transparent
+  );
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition:
+    color 0.15s,
+    text-decoration-color 0.15s;
+}
+.article-prose a:not(.heading-anchor):hover {
+  color: var(--site-accent);
+  text-decoration-color: var(--site-accent);
+}
+.article-prose a:focus-visible {
+  border-radius: 0.125rem;
+  outline: 2px solid var(--site-accent);
+  outline-offset: 2px;
+}
+
+.article-prose ol > li::marker {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+.article-prose blockquote {
+  margin-block: 2em;
+  padding: 1rem 1.25rem;
+  border-left: 2px solid var(--site-accent);
+  border-radius: 0 0.5rem 0.5rem 0;
+  background: var(--site-accent-subtle);
+  color: var(--site-text);
+  font-style: normal;
+  font-weight: 400;
+  quotes: none;
+}
+.article-prose blockquote p {
+  margin-block: 0.5em;
+}
+.article-prose blockquote > :first-child {
+  margin-top: 0;
+}
+.article-prose blockquote > :last-child {
+  margin-bottom: 0;
+}
+.article-prose blockquote p::before,
+.article-prose blockquote p::after {
+  content: none;
+}
+
+.article-prose :not(pre) > code {
+  padding: 0.125em 0.375em;
+  border: 1px solid var(--site-border);
+  border-radius: 0.375rem;
+  background: var(--site-bg-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  font-weight: 500;
+}
+.article-prose :not(pre) > code::before,
+.article-prose :not(pre) > code::after {
+  content: none;
+}
+
+.article-prose > pre.shiki {
+  margin-block: 2rem;
+}
+
+.article-prose figure {
+  margin-block: 2.5rem;
+}
+.article-prose figure img {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border: 1px solid var(--site-border);
+  border-radius: 0.75rem;
+}
+.article-prose figure:has(figcaption) {
+  counter-increment: figure;
+}
+.article-prose figcaption {
+  margin-top: 0.875rem;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--site-text-secondary);
+}
+.article-prose figcaption::before {
+  content: "Fig. " counter(figure);
+  margin-right: 0.75em;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--site-accent);
+}
+
+.article-prose .table-wrap {
+  margin-block: 2rem;
+  overflow-x: auto;
+  border: 1px solid var(--site-border);
+  border-radius: 0.75rem;
+}
+.article-prose .table-wrap:focus-visible {
+  outline: 2px solid var(--site-accent);
+  outline-offset: 2px;
+}
+.article-prose table {
+  width: 100%;
+  margin: 0;
+  font-size: 0.875rem;
+}
+.article-prose thead {
+  background: var(--site-bg-secondary);
+}
+.article-prose th {
+  padding: 0.75rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--site-text-secondary);
+}
+.article-prose td {
+  padding: 0.75rem 1rem;
+}
+
+.article-prose hr {
+  margin-block: 3em;
+  border: 0;
+  text-align: center;
+}
+.article-prose hr::after {
+  content: "* * *";
+  letter-spacing: 0.75em;
+  color: var(--site-accent);
+}
+
+/* Small screens: code runs edge to edge instead of scrolling in a thin box. */
+@media (max-width: 639px) {
+  .article-prose > pre.shiki {
+    margin-inline: -1.25rem;
+    padding: 1.25rem;
+    border-inline: 0;
+    border-radius: 0;
+  }
+}
+
+/* ── Code block extras (Shiki transformers) ─────────────────────── */
+.shiki {
+  --code-px: 1.75rem;
+  padding-inline: var(--code-px);
+}
+.shiki code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+}
+/* Lines span the full block so highlights reach both edges. */
+.shiki .line {
+  display: inline-block;
+  min-width: calc(100% + 2 * var(--code-px));
+  margin-inline: calc(-1 * var(--code-px));
+  padding-inline: var(--code-px);
+  transition:
+    opacity 0.2s,
+    background-color 0.2s,
+    filter 0.2s;
+}
+/* ```py {1,3-4}``` and `# [!code highlight]` / `[!code error|warning]` */
+.shiki .line.highlighted,
+.shiki .line.diff.add {
+  background: var(--site-accent-subtle);
+  box-shadow: inset 2px 0 var(--site-accent);
+}
+/* `[!code focus]`: everything else recedes until the block is hovered. */
+.shiki.has-focused .line:not(.focused) {
+  opacity: 0.4;
+  filter: blur(0.4px);
+}
+.shiki.has-focused:hover .line:not(.focused) {
+  opacity: 1;
+  filter: none;
+}
+/* `[!code ++]` / `[!code --]` */
+.shiki .line.diff::before {
+  display: inline-block;
+  width: 1.25rem;
+  margin-left: -1.25rem;
+  color: var(--site-text-tertiary);
+}
+.shiki .line.diff.add::before {
+  content: "+";
+  color: var(--site-accent);
+}
+.shiki .line.diff.remove {
+  opacity: 0.5;
+}
+.shiki .line.diff.remove::before {
+  content: "−";
+}
+
+/* ```py title="unet.py"``` → a filename bar above the code. */
+.code-block {
+  margin-block: 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--site-border);
+  border-radius: 0.75rem;
+  background: var(--site-card-bg);
+}
+.code-block-title {
+  padding: 0.5rem var(--code-title-px, 1.75rem);
+  border-bottom: 1px solid var(--site-border);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--site-text-tertiary);
+}
+.code-block > .shiki {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+.article-prose > .code-block {
+  max-width: none;
+  margin-block: 2rem;
+}
+
+/* <CodeWalkthrough>: the code sits flush in the figure; the active step's
+   lines are lifted by a scoped <style> the component renders. */
+[data-walkthrough] .shiki,
+[data-walkthrough] .code-block {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+[data-walkthrough] .code-block-title {
+  display: none;
+}
+[data-walkthrough] .line {
+  opacity: 0.38;
+}
+@media (prefers-reduced-motion: reduce) {
+  .shiki .line {
+    transition: none;
+  }
+}
+
+/* Range inputs in figures: a hairline track and an amber thumb. */
+.figure-range {
+  appearance: none;
+  background: transparent;
+}
+.figure-range::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 999px;
+  background: var(--site-border-hover);
+}
+.figure-range::-moz-range-track {
+  height: 2px;
+  border-radius: 999px;
+  background: var(--site-border-hover);
+}
+.figure-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -6px;
+  border: 2px solid var(--site-card-bg);
+  border-radius: 999px;
+  background: var(--site-accent);
+}
+.figure-range::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--site-card-bg);
+  border-radius: 999px;
+  background: var(--site-accent);
+}
+
+@media (max-width: 639px) {
+  .shiki {
+    --code-px: 1.25rem;
+  }
+  .article-prose > .code-block {
+    --code-title-px: 1.25rem;
+    margin-inline: -1.25rem;
+    border-inline: 0;
+    border-radius: 0;
+  }
+  .article-prose > .code-block > pre.shiki {
+    padding: 1.25rem;
+  }
 }

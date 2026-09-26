@@ -56,6 +56,8 @@ async function main() {
     contributions: `${prev?.contributions ?? 0} → ${snapshot.contributions}`,
     ossPrs: `${prev?.ossStats.totalPrs ?? 0} → ${snapshot.ossStats.totalPrs}`,
     contributedRepos: snapshot.contributedRepos.length,
+    prsReviewed: `${prev?.ossActivity.prsReviewed ?? 0} → ${snapshot.ossActivity.prsReviewed}`,
+    issuesResolved: `${prev?.ossActivity.issuesResolved ?? 0} → ${snapshot.ossActivity.issuesResolved}`,
   });
 }
 
