@@ -183,7 +183,7 @@ export function UNetSvg({
                   textAnchor="middle"
                   className={cn(
                     "font-mono",
-                    "text-[11px] max-sm:text-[22px]",
+                    "text-[11px] max-sm:text-[26px]",
                     on ? "fill-site-accent" : "fill-site-text-secondary",
                   )}
                 >
@@ -195,7 +195,7 @@ export function UNetSvg({
                   textAnchor="middle"
                   className={cn(
                     "fill-site-text-tertiary font-mono",
-                    "text-[10px] max-sm:text-[20px]",
+                    "text-[10px] max-sm:hidden",
                   )}
                 >
                   {stage.size}
