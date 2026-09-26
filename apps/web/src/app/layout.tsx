@@ -6,7 +6,10 @@ import { siteConfig } from "@/config/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: siteConfig.name,
+  title: {
+    default: siteConfig.name,
+    template: `%s · ${siteConfig.author.name}`,
+  },
   metadataBase: new URL(siteConfig.url),
   description: siteConfig.description,
   keywords: [
@@ -19,8 +22,18 @@ export const metadata: Metadata = {
     "Python Developer",
     "Kathmandu Nepal",
   ],
-  authors: [{ name: "Bhimraj Yadav", url: "https://bhimraj.com.np" }],
-  creator: "bhimrazy",
+  authors: [{ name: siteConfig.author.name, url: siteConfig.url }],
+  creator: siteConfig.author.username,
+  alternates: {
+    types: {
+      "application/rss+xml": [
+        { title: `${siteConfig.name} — RSS Feed`, url: "/feed.xml" },
+      ],
+    },
+  },
+  // OG/Twitter images are supplied by the root `opengraph-image.tsx` /
+  // `twitter-image.tsx` file conventions (a branded default card); every
+  // other route either inherits this or defines its own image files.
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -28,21 +41,12 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     siteName: siteConfig.name,
-    images: [
-      {
-        url: siteConfig.ogImage,
-        width: 1200,
-        height: 630,
-        alt: siteConfig.name,
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [siteConfig.ogImage],
-    creator: "@bhimrazy",
+    creator: siteConfig.author.handle,
   },
   icons: {
     icon: "/favicon.ico",

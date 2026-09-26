@@ -3,6 +3,7 @@ title: "Chat with Llama 3.2 Vision"
 description: "Deploy Meta's Llama 3.2 Vision multimodal LLM with LitServe for lightning-fast inference. Supports image understanding and visual question answering via a clean REST API."
 publishedAt: "2024-09-25"
 tags: [LitServe, Llama, Multimodal, LLM]
+category: "Multimodal LLMs"
 image: "https://opengraph.githubassets.com/1/bhimrazy/chat-with-llama-3.2-vision"
 githubLink: "https://github.com/bhimrazy/chat-with-llama-3.2-vision"
 liveLink: "https://lightning.ai/bhimrajyadav/studios/deploy-and-chat-with-llama-3-2-vision-multimodal-llm-using-litserve-lightning-fast-inference-engine"
