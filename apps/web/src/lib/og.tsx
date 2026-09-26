@@ -8,7 +8,7 @@ export const OG_SIZE = { width: 1200, height: 630 } as const;
 export const OG_CONTENT_TYPE = "image/png";
 
 // Warm-dark brand tokens (mirrors apps/web/src/app/globals.css `.dark` scope).
-export const OG_COLORS = {
+const OG_COLORS = {
   bg: "#0f0d0a",
   bgSecondary: "#16140f",
   card: "#17150f",
@@ -28,7 +28,7 @@ const FONT_CACHE = new Map<string, ArrayBuffer | null>();
  * (letting `ImageResponse` use its default sans-serif) if the fetch fails —
  * dynamic OG generation must never hard-fail a page render.
  */
-export async function loadGoogleFont(
+async function loadGoogleFont(
   family: string,
   weight: number,
   text: string,
