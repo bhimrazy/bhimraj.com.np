@@ -2,13 +2,19 @@
 
 import { useState } from "react";
 import { capture } from "@/lib/analytics";
+import { cn } from "@/lib/utils";
 
 interface ShareSidebarProps {
   title: string;
   url: string;
+  orientation?: "vertical" | "horizontal";
 }
 
-export default function ShareSidebar({ title, url }: ShareSidebarProps) {
+export default function ShareSidebar({
+  title,
+  url,
+  orientation = "vertical",
+}: ShareSidebarProps) {
   const [copied, setCopied] = useState(false);
 
   const encodedUrl = encodeURIComponent(url);
@@ -70,9 +76,22 @@ export default function ShareSidebar({ title, url }: ShareSidebarProps) {
     },
   ];
 
+  const buttonClass =
+    "flex size-9 items-center justify-center rounded-lg border transition-all hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0";
+
   return (
-    <div className="flex flex-col gap-2">
-      <p className="mb-2 font-medium font-mono text-[11px] text-site-text-tertiary uppercase tracking-[1.5px]">
+    <div
+      className={cn(
+        "flex gap-2",
+        orientation === "vertical" ? "flex-col" : "flex-row items-center",
+      )}
+    >
+      <p
+        className={cn(
+          "font-medium font-mono text-[11px] text-site-text-tertiary uppercase tracking-[1.5px]",
+          orientation === "vertical" ? "mb-2" : "mr-2",
+        )}
+      >
         Share
       </p>
 
@@ -83,7 +102,10 @@ export default function ShareSidebar({ title, url }: ShareSidebarProps) {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Share on ${link.label}`}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-site-border bg-site-card text-site-text-secondary transition-all hover:-translate-y-0.5"
+          className={cn(
+            buttonClass,
+            "border-site-border bg-site-card text-site-text-secondary hover:border-site-border-hover hover:text-site-text",
+          )}
           title={`Share on ${link.label}`}
         >
           {link.icon}
@@ -94,16 +116,15 @@ export default function ShareSidebar({ title, url }: ShareSidebarProps) {
       <button
         type="button"
         onClick={copyLink}
-        aria-label="Copy link"
+        aria-label={copied ? "Link copied" : "Copy link"}
         title="Copy link"
-        className="flex h-9 w-9 items-center justify-center rounded-lg border transition-all hover:-translate-y-0.5"
-        style={{
-          background: copied
-            ? "var(--site-accent-subtle)"
-            : "var(--site-card-bg)",
-          borderColor: copied ? "var(--site-accent)" : "var(--site-border)",
-          color: copied ? "var(--site-accent)" : "var(--site-text-secondary)",
-        }}
+        className={cn(
+          buttonClass,
+          "cursor-pointer",
+          copied
+            ? "border-site-accent bg-site-accent-subtle text-site-accent"
+            : "border-site-border bg-site-card text-site-text-secondary hover:border-site-border-hover hover:text-site-text",
+        )}
       >
         {copied ? (
           <svg
