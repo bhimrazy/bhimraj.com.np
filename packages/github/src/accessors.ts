@@ -1,4 +1,11 @@
 import snapshotData from "../data/snapshot.json" with { type: "json" };
+import {
+  githubSearchUrl,
+  type OSSActivityMetric,
+  ossActivityQueries,
+  ossSearchScope,
+} from "./activity-queries";
+import { ossRepos, username } from "./config";
 import { type GitHubSnapshot, snapshotSchema } from "./types";
 
 /**
@@ -38,6 +45,21 @@ export function getContributedRepos(): GitHubSnapshot["contributedRepos"] {
 
 export function getMonthlyContributions(): GitHubSnapshot["monthlyContributions"] {
   return snapshot.monthlyContributions;
+}
+
+export function getOSSActivity(): GitHubSnapshot["ossActivity"] {
+  return snapshot.ossActivity;
+}
+
+/** A github.com search per activity metric, so visitors can verify each count. */
+export function getOSSActivitySearchUrls(): Record<OSSActivityMetric, string> {
+  const queries = ossActivityQueries(
+    username,
+    ossSearchScope(username, ossRepos),
+  );
+  return Object.fromEntries(
+    Object.entries(queries).map(([metric, q]) => [metric, githubSearchUrl(q)]),
+  ) as Record<OSSActivityMetric, string>;
 }
 
 /** When the snapshot was generated (ISO string) — for an "updated X ago" label. */

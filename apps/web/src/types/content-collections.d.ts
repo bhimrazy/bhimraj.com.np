@@ -12,7 +12,10 @@ declare module "content-collections" {
     tags: string[];
     image: string;
     featured: boolean;
+    /** Compiled markdown; feeds the dek, TOC and reading time. */
     html: string;
+    /** Compiled MDX body (rendered with `<MDXContent>`). */
+    mdx: string;
   }
 
   export interface Project {

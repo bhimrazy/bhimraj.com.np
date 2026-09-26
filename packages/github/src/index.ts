@@ -6,6 +6,8 @@ export {
   getLightningAIEcosystemStats,
   getLightningCommits,
   getMonthlyContributions,
+  getOSSActivity,
+  getOSSActivitySearchUrls,
   getOSSStats,
   getSnapshotMeta,
 } from "./accessors";
@@ -24,6 +26,8 @@ export type {
   LightningAIRepoStat,
   MonthlyContribution,
   MonthlyRepoContribution,
+  OSSActivity,
+  OSSActivityMetric,
   OSSStats,
   StarPoint,
 } from "./types";
