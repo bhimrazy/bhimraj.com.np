@@ -27,26 +27,24 @@ function transformerCodeFrame(): ShikiTransformer {
     },
     root(root) {
       const title = parseTitle(this.options.meta?.__raw);
-      if (!title) return;
-      return {
-        type: "root",
-        children: [
-          {
-            type: "element",
-            tagName: "div",
-            properties: { className: ["code-block"] },
-            children: [
-              {
-                type: "element",
-                tagName: "div",
-                properties: { className: ["code-block-title"] },
-                children: [{ type: "text", value: title }],
-              },
-              ...root.children,
-            ],
-          },
-        ],
-      };
+      const pre = root.children.find((node) => node.type === "element");
+      if (!title || pre?.type !== "element") return;
+      root.children = [
+        {
+          type: "element",
+          tagName: "div",
+          properties: { className: ["code-block"] },
+          children: [
+            {
+              type: "element",
+              tagName: "div",
+              properties: { className: ["code-block-title"] },
+              children: [{ type: "text", value: title }],
+            },
+            pre,
+          ],
+        },
+      ];
     },
   };
 }

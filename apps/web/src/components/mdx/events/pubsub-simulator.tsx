@@ -1,13 +1,17 @@
 "use client";
 
-import { useReducer, useRef } from "react";
+import { useId, useReducer, useRef } from "react";
 import {
   ControlBar,
   ControlButton,
   PlayButton,
   Segmented,
 } from "@/components/mdx/controls";
-import { useInterval, usePlayback } from "@/components/mdx/hooks";
+import {
+  useInterval,
+  useMediaQuery,
+  usePlayback,
+} from "@/components/mdx/hooks";
 import { cn } from "@/lib/utils";
 import {
   advance,
@@ -23,20 +27,20 @@ import {
  * the producer appends on the right, consumers sit under the offset they
  * will read next.
  */
-const SLOTS = 12;
+const RETENTION = 12;
 const PITCH = 30;
 const CELL = 24;
 const X0 = 92;
 const LOG_Y = 72;
-const PRODUCER = { x: X0 + (SLOTS - 1) * PITCH + CELL / 2, y: 22 };
+const PRODUCER_Y = 22;
 const ROW_Y = [150, 190] as const;
-const W = 560;
+const MOBILE_SLOTS = 7;
 const H = 214;
 const TICK_MS = 750;
 
 /** A deterministic first frame: C2 was paused for a while and is catching up. */
 function firstFrame(): BrokerState {
-  let s = advance(initialBrokerState("pubsub", ["C1", "C2"], SLOTS), 6);
+  let s = advance(initialBrokerState("pubsub", ["C1", "C2"], RETENTION), 6);
   s = brokerReducer(s, { type: "togglePause", id: "C2" });
   s = advance(s, 7);
   s = brokerReducer(s, { type: "togglePause", id: "C2" });
@@ -44,8 +48,8 @@ function firstFrame(): BrokerState {
 }
 
 /** x of the left edge of the slot holding `offset`. */
-function slotX(state: BrokerState, offset: number) {
-  const first = state.nextOffset - SLOTS;
+function slotX(state: BrokerState, offset: number, slots: number) {
+  const first = state.nextOffset - slots;
   return X0 + (offset - first) * PITCH;
 }
 
@@ -55,7 +59,15 @@ export function PubSubSimulator() {
   const { playing, toggle, running } = usePlayback(ref);
   useInterval(() => dispatch({ type: "tick" }), TICK_MS, running);
 
-  const firstVisible = state.nextOffset - SLOTS;
+  // Narrow screens show fewer slots so labels stay legible.
+  const narrow = useMediaQuery("(max-width: 639px)");
+  const slots = narrow ? MOBILE_SLOTS : RETENTION;
+  const W = X0 + slots * PITCH + 40;
+  const producerX = X0 + (slots - 1) * PITCH + CELL / 2;
+  const titleId = useId();
+  const clipId = `pubsub-clip${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
+
+  const firstVisible = state.nextOffset - slots;
   const offsets: number[] = [];
   for (let o = Math.max(firstVisible, state.head); o < state.nextOffset; o++) {
     offsets.push(o);
@@ -76,16 +88,16 @@ export function PubSubSimulator() {
     <div ref={ref}>
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        className="block h-auto w-full"
-        aria-labelledby="pubsub-title"
+        className="block h-auto w-full max-sm:aspect-342/214"
+        aria-labelledby={titleId}
       >
-        <title id="pubsub-title">{summary}</title>
+        <title id={titleId}>{summary}</title>
 
         {/* Producer */}
         <g>
           <rect
-            x={PRODUCER.x - 44}
-            y={PRODUCER.y - 16}
+            x={producerX - 44}
+            y={PRODUCER_Y - 16}
             width={88}
             height={30}
             rx={6}
@@ -93,17 +105,17 @@ export function PubSubSimulator() {
             className="fill-site-bg-secondary stroke-site-border-hover"
           />
           <text
-            x={PRODUCER.x}
-            y={PRODUCER.y + 3}
+            x={producerX}
+            y={PRODUCER_Y + 3}
             textAnchor="middle"
             className="fill-site-text-secondary font-mono text-[11px]"
           >
             producer
           </text>
           <line
-            x1={PRODUCER.x}
-            y1={PRODUCER.y + 14}
-            x2={PRODUCER.x}
+            x1={producerX}
+            y1={PRODUCER_Y + 14}
+            x2={producerX}
             y2={LOG_Y - 6}
             strokeWidth={1.25}
             className="stroke-site-border-hover"
@@ -129,7 +141,7 @@ export function PubSubSimulator() {
         </text>
 
         {/* Empty slots */}
-        {Array.from({ length: SLOTS }, (_, i) => (
+        {Array.from({ length: slots }, (_, i) => (
           <rect
             // biome-ignore lint/suspicious/noArrayIndexKey: fixed slot positions
             key={i}
@@ -145,18 +157,18 @@ export function PubSubSimulator() {
 
         {/* Events, keyed by offset so they slide left as the log grows. */}
         <defs>
-          <clipPath id="pubsub-log">
-            <rect x={X0 - 2} y={LOG_Y - 20} width={SLOTS * PITCH} height={60} />
+          <clipPath id={clipId}>
+            <rect x={X0 - 2} y={LOG_Y - 20} width={slots * PITCH} height={60} />
           </clipPath>
         </defs>
-        <g clipPath="url(#pubsub-log)">
+        <g clipPath={`url(#${clipId})`}>
           {offsets.map((o) => {
             const consumedByAll = o < minOffset;
             return (
               <g
                 key={o}
                 className="transition-transform duration-500 ease-out motion-reduce:transition-none"
-                style={{ transform: `translateX(${slotX(state, o)}px)` }}
+                style={{ transform: `translateX(${slotX(state, o, slots)}px)` }}
               >
                 <rect
                   x={0}
@@ -200,9 +212,9 @@ export function PubSubSimulator() {
             className="animate-fly fill-site-accent motion-reduce:hidden"
             style={
               {
-                "--fx": `${PRODUCER.x}px`,
-                "--fy": `${PRODUCER.y + 14}px`,
-                "--tx": `${PRODUCER.x}px`,
+                "--fx": `${producerX}px`,
+                "--fy": `${PRODUCER_Y + 14}px`,
+                "--tx": `${producerX}px`,
                 "--ty": `${LOG_Y + CELL / 2}px`,
               } as React.CSSProperties
             }
@@ -213,7 +225,8 @@ export function PubSubSimulator() {
         {state.consumers.map((c, i) => {
           const rowY = ROW_Y[i] ?? ROW_Y[0];
           const behind = c.offset < firstVisible;
-          const x = Math.max(slotX(state, c.offset), X0) - (PITCH - CELL) / 2;
+          const x =
+            Math.max(slotX(state, c.offset, slots), X0) - (PITCH - CELL) / 2;
           return (
             <g
               key={c.id}
@@ -293,7 +306,7 @@ export function PubSubSimulator() {
         {state.delivered.map((d) => {
           const i = state.consumers.findIndex((c) => c.id === d.consumerId);
           const rowY = ROW_Y[i] ?? ROW_Y[0];
-          const x = slotX(state, d.offset) + CELL / 2;
+          const x = slotX(state, d.offset, slots) + CELL / 2;
           return (
             <circle
               key={`${d.consumerId}-${d.offset}-${state.tick}`}
