@@ -32,12 +32,7 @@ export const POST_CONFIG = {
   batch: 1,
 } as const satisfies UNetConfig;
 
-export type StageKind =
-  | "input"
-  | "encoder"
-  | "bottleneck"
-  | "decoder"
-  | "output";
+type StageKind = "input" | "encoder" | "bottleneck" | "decoder" | "output";
 
 export interface Stage {
   id: string;
@@ -50,7 +45,7 @@ export interface Stage {
   op: string;
 }
 
-export interface SkipConnection {
+interface SkipConnection {
   level: number;
   from: string;
   to: string;
@@ -75,11 +70,11 @@ export type UNetShapes =
 
 const KERNEL = 3;
 
-export function convOut(size: number, padding: number, kernel = KERNEL) {
+function convOut(size: number, padding: number, kernel = KERNEL) {
   return size + 2 * padding - kernel + 1;
 }
 
-export function doubleConvOut(size: number, padding: number) {
+function doubleConvOut(size: number, padding: number) {
   return convOut(convOut(size, padding), padding);
 }
 

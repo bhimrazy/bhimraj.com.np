@@ -35,9 +35,13 @@ export function UNetTrace({ at }: { at: string }) {
     <div>
       <UNetSvg shapes={shapes} highlight={ids} compact title={title} />
       <ul className="mt-3 space-y-0.5 font-mono text-[11px] text-site-text-tertiary">
-        {lit.map((s) => (
+        {/* Long paths list only their ends, so every step stays short. */}
+        {(lit.length > 3 ? [lit[0], lit[lit.length - 1]] : lit).map((s, i) => (
           <li key={s.id} className="flex justify-between gap-3">
-            <span>{shortName(s)}</span>
+            <span>
+              {lit.length > 3 && i === 1 ? "… " : ""}
+              {shortName(s)}
+            </span>
             <span className="text-site-text-secondary tabular-nums">
               {formatShape(s)}
             </span>

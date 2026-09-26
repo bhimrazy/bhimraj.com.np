@@ -9,7 +9,7 @@ import {
 type ShikiTransformer = ReturnType<typeof transformerMetaHighlight>;
 
 /** `title="unet.py"` (or single quotes) in a code fence's meta string. */
-export function parseTitle(meta: string | undefined): string | null {
+function parseTitle(meta: string | undefined): string | null {
   const match = meta?.match(/\btitle=(?:"([^"]*)"|'([^']*)')/);
   return match ? (match[1] ?? match[2] ?? null) : null;
 }

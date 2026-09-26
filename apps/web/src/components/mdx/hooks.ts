@@ -28,7 +28,7 @@ export function usePrefersReducedMotion() {
 }
 
 /** Tracks whether an element is on screen, so figures stop animating offscreen. */
-export function useInView<T extends Element>(ref: RefObject<T | null>) {
+function useInView<T extends Element>(ref: RefObject<T | null>) {
   const [inView, setInView] = useState(false);
   useEffect(() => {
     const el = ref.current;

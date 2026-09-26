@@ -68,7 +68,7 @@ In the event streaming model, event producers publish *streams* of events to a
 
 Try both models below: pause a consumer to watch the broker hold its backlog, then switch to event streaming to see consumed events stay in the log and be replayed.
 
-<Figure caption="One producer, a broker and two subscribers. In pub/sub, an event is deleted once every subscriber has consumed it. In event streaming, the broker keeps the last 12 events whether or not they were consumed, so a consumer can step back in at an earlier offset.">
+<Figure label="Pub/sub vs event streaming" caption="One producer, a broker and two subscribers. In pub/sub, an event is deleted once every subscriber has consumed it. In event streaming, the broker keeps the last 12 events whether or not they were consumed, so a consumer can step back in at an earlier offset.">
   <PubSubSimulator />
 </Figure>
 
@@ -115,7 +115,7 @@ Instead of having 20 services ping service A for data, what if whenever an event
 
 Here is the three-service example from above, both ways, on the same clock:
 
-<Figure caption="A customer asks C for a ride price. Request-driven: C asks A, then B, and the customer waits for the whole chain. Event-driven: A and B publish changes to a stream on their own schedule and C keeps the latest, so it answers straight away. Time is counted in network hops, not measured latency.">
+<Figure label="Request-driven vs event-driven" caption="A customer asks C for a ride price. Request-driven: C asks A, then B, and the customer waits for the whole chain. Event-driven: A and B publish changes to a stream on their own schedule and C keeps the latest, so it answers straight away. Time is counted in network hops, not measured latency.">
   <RequestVsEvent />
 </Figure>
 

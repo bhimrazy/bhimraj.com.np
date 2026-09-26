@@ -20,7 +20,7 @@ export interface Consumer {
   offset: number;
 }
 
-export interface Delivery {
+interface Delivery {
   consumerId: string;
   offset: number;
 }
