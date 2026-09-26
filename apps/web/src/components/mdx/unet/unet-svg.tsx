@@ -134,7 +134,7 @@ export function UNetSvg({
                 textAnchor="middle"
                 className={cn(
                   "font-mono",
-                  "text-[10px] max-sm:text-[16px]",
+                  "text-[10px] max-sm:hidden",
                   on ? "fill-site-accent" : "fill-site-text-tertiary",
                 )}
               >
@@ -167,7 +167,7 @@ export function UNetSvg({
                   : undefined
               }
               className={cn(
-                "transition-[x,y,width,height,fill,stroke] duration-300 ease-out",
+                "transition-[x,y,width,height,fill,stroke] duration-300 ease-out motion-reduce:transition-none",
                 on
                   ? "fill-site-accent-subtle stroke-site-accent"
                   : "fill-site-bg-tertiary stroke-site-text-tertiary",
@@ -183,7 +183,7 @@ export function UNetSvg({
                   textAnchor="middle"
                   className={cn(
                     "font-mono",
-                    "text-[11px] max-sm:text-[16px]",
+                    "text-[11px] max-sm:text-[22px]",
                     on ? "fill-site-accent" : "fill-site-text-secondary",
                   )}
                 >
@@ -195,7 +195,7 @@ export function UNetSvg({
                   textAnchor="middle"
                   className={cn(
                     "fill-site-text-tertiary font-mono",
-                    "text-[10px] max-sm:text-[15px]",
+                    "text-[10px] max-sm:text-[20px]",
                   )}
                 >
                   {stage.size}

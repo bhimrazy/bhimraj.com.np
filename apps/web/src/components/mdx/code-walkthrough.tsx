@@ -62,7 +62,7 @@ export function Step(_props: StepProps) {
 }
 
 /** `"1,4-6"` → `[1, 4, 5, 6]` (1-based line numbers). */
-export function parseLineRanges(spec: string): number[] {
+function parseLineRanges(spec: string): number[] {
   const out = new Set<number>();
   for (const part of spec.split(",")) {
     const [a, b] = part.trim().split("-").map(Number);
