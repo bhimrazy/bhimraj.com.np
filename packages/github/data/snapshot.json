@@ -178,6 +178,13 @@
     "totalCommits": 479,
     "totalPrs": 284
   },
+  "ossActivity": {
+    "prsReviewed": 445,
+    "issuesResolved": 69,
+    "prsOpen": 34,
+    "issuesHelped": 222,
+    "issuesOpened": 53
+  },
   "lightningEcosystem": {
     "totalPrs": 271,
     "repos": [
