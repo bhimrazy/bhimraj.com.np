@@ -22,6 +22,13 @@ export function formatDate(dateOrString: Date | string): string {
   return date?.toLocaleDateString("en-US", options);
 }
 
+/** Formats a date as "Oct 16" — for lists already grouped by year. */
+export function formatMonthDay(dateOrString: Date | string): string {
+  const date =
+    typeof dateOrString === "string" ? new Date(dateOrString) : dateOrString;
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
 /**
  * Calculate the estimated reading time for a given text.
  *

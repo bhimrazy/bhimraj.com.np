@@ -4,6 +4,7 @@ import rehypeShiki from "@shikijs/rehype";
 import rehypeSlug from "rehype-slug";
 import type { Pluggable } from "unified";
 import { z } from "zod";
+import rehypeArticle from "./src/components/blog/rehype-article";
 
 const markdownOptions = {
   rehypePlugins: [
@@ -21,6 +22,11 @@ const markdownOptions = {
   ],
 };
 
+// Blog posts get extra editorial markup (figures, heading anchors, dek).
+const blogMarkdownOptions = {
+  rehypePlugins: [...markdownOptions.rehypePlugins, rehypeArticle],
+};
+
 const BlogPost = defineCollection({
   name: "BlogPost",
   directory: "src/content/blog",
@@ -36,7 +42,7 @@ const BlogPost = defineCollection({
     featured: z.boolean().default(false),
   }),
   transform: async (document, context) => {
-    const html = await compileMarkdown(context, document, markdownOptions);
+    const html = await compileMarkdown(context, document, blogMarkdownOptions);
     return { ...document, html };
   },
 });
