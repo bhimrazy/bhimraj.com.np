@@ -1,8 +1,18 @@
 /**
- * Shared helpers for dynamic Open Graph / Twitter card image generation
+ * Shared helpers for generated Open Graph / Twitter card images
  * (next/og `ImageResponse`). Kept framework-agnostic-ish so each
  * `opengraph-image.tsx` / `twitter-image.tsx` route can stay a few lines.
  */
+
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { ImageResponse } from "next/og";
+
+type Font = NonNullable<
+  ConstructorParameters<typeof ImageResponse>[1]
+>["fonts"] extends (infer F)[] | undefined
+  ? F
+  : never;
 
 export const OG_SIZE = { width: 1200, height: 630 } as const;
 export const OG_CONTENT_TYPE = "image/png";
@@ -20,55 +30,32 @@ const OG_COLORS = {
   accentSubtle: "rgba(245, 158, 11, 0.12)",
 } as const;
 
-const FONT_CACHE = new Map<string, ArrayBuffer | null>();
+const FONT_FAMILY = "Space Grotesk";
+const FONT_DIR = join(process.cwd(), "src/assets/fonts");
+
+let fonts: Promise<Font[]> | undefined;
 
 /**
- * Loads a Google Font's raw glyph data for use in `ImageResponse`, subset to
- * only the characters that will actually be rendered. Falls back to `null`
- * (letting `ImageResponse` use its default sans-serif) if the fetch fails —
- * dynamic OG generation must never hard-fail a page render.
+ * Space Grotesk ships in the repo (OFL — see `assets/fonts/OFL.txt`), so card
+ * generation never calls out to Google Fonts: no request-time network, no
+ * glyph subsetting (which dropped CSS-uppercased letters), and the images can
+ * prerender at build. Read once per server process.
  */
-async function loadGoogleFont(
-  family: string,
-  weight: number,
-  text: string,
-): Promise<ArrayBuffer | null> {
-  const cacheKey = `${family}-${weight}-${text}`;
-  if (FONT_CACHE.has(cacheKey)) {
-    return FONT_CACHE.get(cacheKey) ?? null;
-  }
-
-  try {
-    // NOTE: `family` uses Google Fonts' own "+"-for-space syntax (e.g.
-    // "Space+Grotesk") and must NOT be percent-encoded — encoding the "+"
-    // breaks the family selector and the API 400s.
-    const cssUrl = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}&text=${encodeURIComponent(text)}`;
-    const cssResponse = await fetch(cssUrl, {
-      signal: AbortSignal.timeout(4000),
-    });
-    const css = await cssResponse.text();
-    const match = css.match(
-      /src: url\(([^)]+)\) format\('(?:opentype|truetype)'\)/,
-    );
-    if (!match?.[1]) throw new Error(`no font source found for ${family}`);
-
-    const fontResponse = await fetch(match[1], {
-      signal: AbortSignal.timeout(4000),
-    });
-    if (!fontResponse.ok) throw new Error(`font fetch failed for ${family}`);
-
-    const buffer = await fontResponse.arrayBuffer();
-    FONT_CACHE.set(cacheKey, buffer);
-    return buffer;
-  } catch {
-    FONT_CACHE.set(cacheKey, null);
-    return null;
-  }
-}
-
-/** Loads Space Grotesk (the site's display font) for the given text content. */
-export function loadDisplayFont(text: string, weight: 500 | 700 = 700) {
-  return loadGoogleFont("Space+Grotesk", weight, text);
+function loadFonts(): Promise<Font[]> {
+  fonts ??= Promise.all(
+    (
+      [
+        [500, "SpaceGrotesk-Medium.ttf"],
+        [700, "SpaceGrotesk-Bold.ttf"],
+      ] as const
+    ).map(async ([weight, file]) => ({
+      name: FONT_FAMILY,
+      data: await readFile(join(FONT_DIR, file)),
+      weight,
+      style: "normal" as const,
+    })),
+  );
+  return fonts;
 }
 
 type OgCardProps = {
@@ -76,21 +63,36 @@ type OgCardProps = {
   title: string;
   meta?: string;
   tags?: string[];
-  fontFamily: string;
 };
+
+/**
+ * Renders the branded card; every `opengraph-image.tsx` route calls this.
+ * The PNG bytes are cached (a `Response` can't cross a `"use cache"`
+ * boundary), which lets Cache Components prerender the image at build.
+ */
+export async function renderOgImage(props: OgCardProps) {
+  return new Response(await renderOgPng(props), {
+    headers: { "Content-Type": OG_CONTENT_TYPE },
+  });
+}
+
+async function renderOgPng(
+  props: OgCardProps,
+): Promise<Uint8Array<ArrayBuffer>> {
+  "use cache";
+  const image = new ImageResponse(<OgCard {...props} />, {
+    ...OG_SIZE,
+    fonts: await loadFonts(),
+  });
+  return new Uint8Array(await image.arrayBuffer());
+}
 
 /**
  * The shared visual template for every generated OG/Twitter card: warm-dark
  * background, amber accent, eyebrow label, title, optional meta line (e.g.
  * reading time) and tags, plus the "bhimraj." wordmark.
  */
-export function OgCard({
-  eyebrow,
-  title,
-  meta,
-  tags,
-  fontFamily,
-}: OgCardProps) {
+function OgCard({ eyebrow, title, meta, tags }: OgCardProps) {
   return (
     <div
       style={{
@@ -102,7 +104,7 @@ export function OgCard({
         padding: "72px",
         backgroundColor: OG_COLORS.bg,
         backgroundImage: `radial-gradient(circle at 82% 8%, ${OG_COLORS.accentSubtle} 0%, rgba(0,0,0,0) 55%)`,
-        fontFamily,
+        fontFamily: FONT_FAMILY,
       }}
     >
       {/* Eyebrow */}
@@ -124,6 +126,7 @@ export function OgCard({
         <span
           style={{
             fontSize: 22,
+            fontWeight: 700,
             letterSpacing: 3,
             textTransform: "uppercase",
             color: OG_COLORS.accent,
@@ -155,7 +158,13 @@ export function OgCard({
         {(meta || (tags && tags.length > 0)) && (
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             {meta && (
-              <span style={{ fontSize: 24, color: OG_COLORS.textSecondary }}>
+              <span
+                style={{
+                  fontSize: 24,
+                  fontWeight: 500,
+                  color: OG_COLORS.textSecondary,
+                }}
+              >
                 {meta}
               </span>
             )}
@@ -171,6 +180,7 @@ export function OgCard({
                     key={tag}
                     style={{
                       fontSize: 20,
+                      fontWeight: 500,
                       padding: "6px 14px",
                       borderRadius: 8,
                       color: OG_COLORS.accent,
@@ -199,7 +209,13 @@ export function OgCard({
         <span style={{ fontSize: 28, fontWeight: 700, color: OG_COLORS.text }}>
           bhimraj<span style={{ color: OG_COLORS.accent }}>.</span>
         </span>
-        <span style={{ fontSize: 20, color: OG_COLORS.textTertiary }}>
+        <span
+          style={{
+            fontSize: 20,
+            fontWeight: 500,
+            color: OG_COLORS.textTertiary,
+          }}
+        >
           bhimraj.com.np
         </span>
       </div>
