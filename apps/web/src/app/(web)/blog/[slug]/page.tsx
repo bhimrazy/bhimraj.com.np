@@ -1,3 +1,4 @@
+import { MDXContent } from "@content-collections/mdx/react";
 import { allBlogPosts } from "content-collections";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -12,6 +13,7 @@ import SponsorCard from "@/components/blog/sponsor-card";
 import TitleSection from "@/components/blog/title-section";
 import Toc from "@/components/blog/toc";
 import { Container } from "@/components/container";
+import { mdxComponents } from "@/components/mdx/mdx-components";
 import { ads } from "@/config/ads";
 import { siteConfig } from "@/config/site";
 import { extractToc } from "@/lib/toc";
@@ -133,12 +135,9 @@ export default async function BlogPostPage({
 
             <MobileToc items={tocItems} className="xl:hidden" />
 
-            <div
-              id="post-body"
-              className="prose article-prose max-w-none"
-              // biome-ignore lint/security/noDangerouslySetInnerHtml: MDX content is trusted
-              dangerouslySetInnerHTML={{ __html: body }}
-            />
+            <div id="post-body" className="prose article-prose max-w-none">
+              <MDXContent code={post.mdx} components={mdxComponents} />
+            </div>
 
             <PostEnd post={post} url={postUrl} />
           </article>

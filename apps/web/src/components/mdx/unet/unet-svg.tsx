@@ -57,7 +57,7 @@ export function UNetSvg({
   /** Stages drawn in the accent colour (a skip lights up when both ends do). */
   highlight?: ReadonlySet<string>;
   selected?: string | null;
-  /** Hide labels except on highlighted stages (for small inline traces). */
+  /** Hide all labels (small inline traces label things in HTML). */
   compact?: boolean;
   /** Makes each feature map a focusable button. */
   onSelect?: (id: string) => void;
@@ -89,6 +89,7 @@ export function UNetSvg({
             x2={q.x}
             y2={q.y}
             strokeWidth={1.25}
+            vectorEffect="non-scaling-stroke"
             className={cn(
               "transition-colors duration-300",
               lit(a.id) && lit(b.id)
@@ -116,22 +117,24 @@ export function UNetSvg({
               y2={q.y}
               strokeDasharray="3 4"
               strokeWidth={1.25}
+              vectorEffect="non-scaling-stroke"
               className={cn("transition-colors duration-300", stroke)}
             />
             <path
               d={`M${x2 - 5} ${q.y - 3.5}L${x2} ${q.y}L${x2 - 5} ${q.y + 3.5}`}
               fill="none"
               strokeWidth={1.25}
+              vectorEffect="non-scaling-stroke"
               className={cn("transition-colors duration-300", stroke)}
             />
-            {(!compact || on) && (
+            {!compact && (
               <text
                 x={(x1 + x2) / 2}
                 y={p.y - 5}
                 textAnchor="middle"
                 className={cn(
                   "font-mono",
-                  compact ? "text-[18px]" : "text-[10px] max-sm:text-[16px]",
+                  "text-[10px] max-sm:text-[16px]",
                   on ? "fill-site-accent" : "fill-site-text-tertiary",
                 )}
               >
@@ -157,6 +160,7 @@ export function UNetSvg({
               height={s}
               rx={2}
               strokeWidth={1.25}
+              vectorEffect="non-scaling-stroke"
               strokeDasharray={
                 stage.kind === "input" || stage.kind === "output"
                   ? "2 2"
@@ -171,7 +175,7 @@ export function UNetSvg({
                   "group-hover:stroke-site-text-secondary group-focus-visible:stroke-2 group-focus-visible:stroke-site-accent",
               )}
             />
-            {(!compact || on) && (
+            {!compact && (
               <>
                 <text
                   x={p.x}
@@ -179,7 +183,7 @@ export function UNetSvg({
                   textAnchor="middle"
                   className={cn(
                     "font-mono",
-                    compact ? "text-[18px]" : "text-[11px] max-sm:text-[16px]",
+                    "text-[11px] max-sm:text-[16px]",
                     on ? "fill-site-accent" : "fill-site-text-secondary",
                   )}
                 >
@@ -187,11 +191,11 @@ export function UNetSvg({
                 </text>
                 <text
                   x={p.x}
-                  y={p.y + s / 2 + (compact ? 18 : 13)}
+                  y={p.y + s / 2 + 13}
                   textAnchor="middle"
                   className={cn(
                     "fill-site-text-tertiary font-mono",
-                    compact ? "text-[17px]" : "text-[10px] max-sm:text-[15px]",
+                    "text-[10px] max-sm:text-[15px]",
                   )}
                 >
                   {stage.size}
