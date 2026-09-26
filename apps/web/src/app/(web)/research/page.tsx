@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
+import { JsonLd } from "@/components/json-ld";
 import { CiteButton } from "@/components/research/cite-button";
 import { Card, CardContent } from "@/components/ui/card";
+import { buildScholarlyArticleJsonLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Research — Bhimraj Yadav",
+  title: "Research",
   description:
     "Academic publications and research notes on AI, computer vision, and deep learning.",
   alternates: { canonical: "/research" },
@@ -95,6 +97,18 @@ const READING_NOTES = [
 export default function ResearchPage() {
   return (
     <main className="pt-28 pb-20">
+      <JsonLd
+        data={PUBLICATIONS.map((pub) =>
+          buildScholarlyArticleJsonLd({
+            title: pub.title,
+            authors: pub.authors,
+            venue: pub.venue,
+            year: pub.year,
+            doi: pub.doi,
+            abstract: pub.abstract,
+          }),
+        )}
+      />
       <Container>
         {/* Hero */}
         <div className="mb-16">

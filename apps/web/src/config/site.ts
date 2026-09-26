@@ -8,7 +8,6 @@ export const siteConfig = {
     avatar: "/bhimraj-yadav.jpg",
   },
   url: "https://bhimraj.com.np",
-  ogImage: "/opengraph-image.jpg",
   description:
     "Software Engineer at Fetchly Labs and Tier 2 OSS contributor at Lightning AI. Writing about engineering, open source, and AI from Kathmandu, Nepal.",
   links: {

@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import ProjectSection from "@/components/projects/project-section";
-import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
-  title: `Projects | ${siteConfig.name}`,
+  title: "Projects",
   description:
     "Open-source AI projects spanning multimodal LLMs, model serving, computer vision, and developer tools.",
   alternates: { canonical: "/projects" },

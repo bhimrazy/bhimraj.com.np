@@ -16,7 +16,7 @@ import { siteConfig } from "@/config/site";
 import { formatDate } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Open Source Journey — Bhimraj Yadav",
+  title: "Open Source Journey",
   description:
     "200+ contributions across PyTorch Lightning, LitServe, LitData, and LitGPT. My open source story.",
   alternates: { canonical: "/oss" },
