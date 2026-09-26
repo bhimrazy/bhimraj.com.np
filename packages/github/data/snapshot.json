@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-25T18:45:31.799Z",
-  "stars": 1078,
+  "generatedAt": "2026-09-26T13:45:12.872Z",
+  "stars": 1076,
   "contributions": 479,
   "lightningCommits": 407,
   "featuredRepo": {
@@ -202,16 +202,16 @@
         "fullName": "Lightning-AI/pytorch-lightning",
         "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
         "prs": 54,
-        "stars": 31361,
-        "forks": 3798
+        "stars": 31362,
+        "forks": 3800
       },
       {
         "name": "LitGPT",
         "fullName": "Lightning-AI/litgpt",
         "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
         "prs": 30,
-        "stars": 13685,
-        "forks": 1507
+        "stars": 13686,
+        "forks": 1508
       }
     ]
   },
@@ -233,8 +233,8 @@
       "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
       "commits": 108,
       "prs": 54,
-      "stars": 31361,
-      "forks": 3798
+      "stars": 31362,
+      "forks": 3800
     },
     {
       "name": "LitServe",
@@ -253,7 +253,7 @@
       "description": "An efficient OCR engine for receipt image processing.",
       "commits": 57,
       "prs": 17,
-      "stars": 725,
+      "stars": 726,
       "forks": 87
     },
     {
@@ -263,8 +263,8 @@
       "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
       "commits": 48,
       "prs": 30,
-      "stars": 13685,
-      "forks": 1507
+      "stars": 13686,
+      "forks": 1508
     },
     {
       "name": "utilities",
@@ -284,7 +284,7 @@
       "commits": 19,
       "prs": 13,
       "stars": 2474,
-      "forks": 528
+      "forks": 529
     },
     {
       "name": "datasketch",
@@ -293,7 +293,7 @@
       "description": "MinHash, LSH, LSH Forest, Weighted MinHash, HyperLogLog, HyperLogLog++, LSH Ensemble and HNSW",
       "commits": 15,
       "prs": 13,
-      "stars": 2968,
+      "stars": 2969,
       "forks": 319
     },
     {
@@ -313,7 +313,7 @@
       "description": "PyTorch compiler that accelerates training and inference. Get built-in optimizations for performance, memory, parallelism, and easily write your own.",
       "commits": 2,
       "prs": 2,
-      "stars": 1474,
+      "stars": 1475,
       "forks": 122
     }
   ],
