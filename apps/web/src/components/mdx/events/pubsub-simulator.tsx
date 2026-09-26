@@ -7,6 +7,7 @@ import {
   PlayButton,
   Segmented,
 } from "@/components/mdx/controls";
+import { Narration } from "@/components/mdx/figure";
 import {
   useInterval,
   useMediaQuery,
@@ -21,6 +22,28 @@ import {
   lag,
   type Mode,
 } from "./broker-sim";
+
+/** One sentence for what the reader is looking at (changes only with the model or C2's status). */
+function narrate(state: BrokerState) {
+  const c2 = state.consumers[1];
+  const behind = c2 ? lag(state, c2) > 2 : false;
+  if (state.mode === "pubsub") {
+    if (c2?.paused) {
+      return "C2 is paused, so the broker keeps every event C2 hasn't read. Nothing is deleted until both subscribers have it.";
+    }
+    if (behind) {
+      return "C2 is catching up on its backlog; each event is deleted once both subscribers have consumed it.";
+    }
+    return "Each event goes to both subscribers and is deleted once both have consumed it.";
+  }
+  if (c2?.paused) {
+    return "C2 is paused. The log keeps events whether or not anyone has read them, until they age out.";
+  }
+  if (behind) {
+    return "C2 is re-reading retained events from an earlier offset while C1 stays live.";
+  }
+  return "Consumed events stay in the log (the last 12 here), so any consumer can step back in.";
+}
 
 /*
  * Geometry (SVG user units). The log reads oldest → newest, left to right;
@@ -327,7 +350,8 @@ export function PubSubSimulator() {
         })}
       </svg>
 
-      <ControlBar className="mt-4">
+      <Narration>{narrate(state)}</Narration>
+      <ControlBar className="mt-3">
         <PlayButton playing={playing} onToggle={toggle} label="simulation" />
         <Segmented<Mode>
           label="Messaging model"

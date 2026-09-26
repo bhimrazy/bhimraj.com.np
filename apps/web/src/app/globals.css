@@ -596,6 +596,43 @@
 [data-walkthrough] .line {
   opacity: 0.38;
 }
+@media (prefers-reduced-motion: reduce) {
+  .shiki .line {
+    transition: none;
+  }
+}
+
+/* Range inputs in figures: a hairline track and an amber thumb. */
+.figure-range {
+  appearance: none;
+  background: transparent;
+}
+.figure-range::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 999px;
+  background: var(--site-border-hover);
+}
+.figure-range::-moz-range-track {
+  height: 2px;
+  border-radius: 999px;
+  background: var(--site-border-hover);
+}
+.figure-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -6px;
+  border: 2px solid var(--site-card-bg);
+  border-radius: 999px;
+  background: var(--site-accent);
+}
+.figure-range::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--site-card-bg);
+  border-radius: 999px;
+  background: var(--site-accent);
+}
 
 @media (max-width: 639px) {
   .shiki {
