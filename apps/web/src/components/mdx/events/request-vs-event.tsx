@@ -2,6 +2,7 @@
 
 import { useId, useRef } from "react";
 import { ControlBar, PlayButton, Scrubber } from "@/components/mdx/controls";
+import { Narration } from "@/components/mdx/figure";
 import { usePlayback, useTimeline } from "@/components/mdx/hooks";
 import { cn } from "@/lib/utils";
 import {
@@ -29,6 +30,24 @@ const ACTOR_LABEL: Record<string, string> = {
 };
 
 const y = (t: number) => TOP + t * UNIT;
+
+/** Narration indexed by the request-driven message that is in flight. */
+const STORY = [
+  "Both customers ask C for a ride price.",
+  "Request-driven C has to ask A for driver availability. Event-driven C already has it from the stream, so it answers.",
+  "A replies. The request-driven customer is still waiting.",
+  "Now C asks B for ride demand.",
+  "B replies. Meanwhile A and B keep publishing changes to the stream on their own schedule.",
+  "C finally sends the price back.",
+];
+
+function narrate(t: number) {
+  if (t >= REQUEST_DRIVEN.wait.end) {
+    return `Request-driven: the customer waited ${REQUEST_DRIVEN.wait.hops} hops. Event-driven: ${EVENT_DRIVEN.wait.hops}, because C reads its own subscription instead of asking A and B.`;
+  }
+  const index = REQUEST_DRIVEN.messages.findLastIndex((m) => t > m.start);
+  return STORY[Math.max(0, index)];
+}
 
 function LaneSvg({ lane, t }: { lane: Lane; t: number }) {
   const n = lane.actors.length;
@@ -179,7 +198,8 @@ export function RequestVsEvent() {
           </div>
         ))}
       </div>
-      <ControlBar className="mt-4">
+      <Narration>{narrate(t)}</Narration>
+      <ControlBar className="mt-3">
         <PlayButton playing={playing} onToggle={toggle} label="sequence" />
         <label htmlFor={scrubId} className="sr-only">
           Time

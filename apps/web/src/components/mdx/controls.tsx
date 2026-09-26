@@ -57,9 +57,8 @@ export function PlayButton({
   return (
     <ControlButton
       onClick={onToggle}
-      aria-pressed={playing}
       aria-label={`${playing ? "Pause" : "Play"} ${label}`}
-      className="w-7 justify-center px-0"
+      className="w-7 justify-center rounded-full px-0"
     >
       {playing ? <PauseIcon /> : <PlayIcon />}
     </ControlButton>
@@ -111,7 +110,7 @@ export function Scrubber({
     <input
       type="range"
       className={cn(
-        "h-7 min-w-0 flex-1 cursor-pointer accent-site-accent",
+        "figure-range h-7 min-w-0 flex-1 cursor-pointer rounded-sm",
         focusRing,
         className,
       )}
