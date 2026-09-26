@@ -9,6 +9,10 @@
  * - `Decoder`: `ConvTranspose2d(c, c/2, 2, 2)`, `_center_crop` of the matching
  *   encoder feature, `torch.cat(dim=1)`, then a `DoubleConvBlock`.
  * - `UNet.output`: a 1×1 `Conv2d` to `out_channels`.
+ *
+ * Every stage is always returned. When an input is too small, the stage that
+ * fails is reported in `failedAt`, and it and every later stage get
+ * `size: null` (unknown) instead of made-up numbers.
  */
 
 export type Padding = 0 | 1;
@@ -20,7 +24,6 @@ export interface UNetConfig {
   /** Height and width of the (square) input tensor. */
   inputSize: number;
   padding: Padding;
-  batch?: number;
 }
 
 /** The configuration the post's code runs (`UNet(channels=[3, 64, 128, 256, 512, 1024], out_channels=1)` on a 572×572 input). */
@@ -29,7 +32,6 @@ export const POST_CONFIG = {
   outChannels: 1,
   inputSize: 572,
   padding: 0,
-  batch: 1,
 } as const satisfies UNetConfig;
 
 type StageKind = "input" | "encoder" | "bottleneck" | "decoder" | "output";
@@ -40,8 +42,9 @@ export interface Stage {
   /** 0 = full resolution, increasing with depth. */
   level: number;
   channels: number;
-  size: number;
-  /** The PyTorch module that produced this tensor. */
+  /** Height/width, or `null` when it can't be computed. */
+  size: number | null;
+  /** The PyTorch module that produces this tensor. */
   op: string;
 }
 
@@ -50,28 +53,30 @@ interface SkipConnection {
   from: string;
   to: string;
   /** Spatial size of the encoder feature before `_center_crop`. */
-  fromSize: number;
-  /** Spatial size after cropping to match the upsampled decoder tensor. */
-  cropTo: number;
+  fromSize: number | null;
+  /** Size after cropping to the upsampled decoder tensor (`null` if unknown). */
+  cropTo: number | null;
   /** Channels after `torch.cat([x, encoder_feature], dim=1)`. */
   concatChannels: number;
 }
 
-export type UNetShapes =
-  | {
-      ok: true;
-      stages: Stage[];
-      skips: SkipConnection[];
-      input: Stage;
-      output: Stage;
-      depth: number;
-    }
-  | { ok: false; error: string; stages: Stage[] };
+export interface UNetShapes {
+  ok: boolean;
+  /** Why the shapes can't be computed, when `ok` is false. */
+  error: string | null;
+  /** Id of the first stage that can't be computed. */
+  failedAt: string | null;
+  depth: number;
+  stages: Stage[];
+  skips: SkipConnection[];
+  input: Stage;
+  output: Stage;
+}
 
 const KERNEL = 3;
 
-function convOut(size: number, padding: number, kernel = KERNEL) {
-  return size + 2 * padding - kernel + 1;
+function convOut(size: number, padding: number) {
+  return size + 2 * padding - KERNEL + 1;
 }
 
 function doubleConvOut(size: number, padding: number) {
@@ -80,44 +85,56 @@ function doubleConvOut(size: number, padding: number) {
 
 export function computeUNetShapes(config: UNetConfig): UNetShapes {
   const { channels, outChannels, inputSize, padding } = config;
-  const levels = channels.length - 1;
-  const stages: Stage[] = [];
-  const fail = (error: string): UNetShapes => ({ ok: false, error, stages });
+  const depth = channels.length - 1;
+  if (depth < 2) throw new Error("UNet needs at least two levels of channels.");
 
-  if (levels < 2) return fail("UNet needs at least two levels of channels.");
-  if (!Number.isInteger(inputSize) || inputSize < 1) {
-    return fail("Input size must be a positive integer.");
-  }
+  let error: string | null = null;
+  let failedAt: string | null = null;
+  const fail = (id: string, message: string) => {
+    if (failedAt) return;
+    failedAt = id;
+    error = message;
+  };
+  const known = () => failedAt === null;
 
+  const inputValid = Number.isInteger(inputSize) && inputSize >= 1;
   const input: Stage = {
     id: "input",
     kind: "input",
     level: 0,
     channels: channels[0],
-    size: inputSize,
+    size: inputValid ? inputSize : null,
     op: "input",
   };
-  stages.push(input);
+  if (!inputValid) fail("input", "Input size must be a positive integer.");
+  const stages: Stage[] = [input];
 
   // Encoder: DoubleConvBlock(channels[i], channels[i+1]), MaxPool2d between.
   const encoder: Stage[] = [];
   let size = inputSize;
-  for (let i = 0; i < levels; i++) {
-    if (i > 0) size = Math.floor(size / 2);
-    const out = doubleConvOut(size, padding);
-    const isBottleneck = i === levels - 1;
-    if (out < 1) {
-      return fail(
-        `Too small: level ${i + 1} gets a ${size}×${size} map, which two 3×3 convolutions without padding shrink to nothing.`,
-      );
+  for (let i = 0; i < depth; i++) {
+    const bottleneck = i === depth - 1;
+    const id = bottleneck ? "bottleneck" : `enc-${i}`;
+    let out: number | null = null;
+    if (known()) {
+      const pooled = i > 0 ? Math.floor(size / 2) : size;
+      const next = doubleConvOut(pooled, padding);
+      if (next < 1) {
+        fail(
+          id,
+          `Too small: ${bottleneck ? "the bottleneck" : `encoder level ${i + 1}`} gets a ${pooled}×${pooled} map, and two 3×3 convolutions without padding shrink it to nothing.`,
+        );
+      } else {
+        out = next;
+        size = next;
+      }
     }
-    size = out;
     const stage: Stage = {
-      id: isBottleneck ? "bottleneck" : `enc-${i}`,
-      kind: isBottleneck ? "bottleneck" : "encoder",
+      id,
+      kind: bottleneck ? "bottleneck" : "encoder",
       level: i,
       channels: channels[i + 1],
-      size,
+      size: out,
       op: `DoubleConvBlock(${channels[i]}, ${channels[i + 1]})`,
     };
     encoder.push(stage);
@@ -127,41 +144,52 @@ export function computeUNetShapes(config: UNetConfig): UNetShapes {
   // Decoder: Decoder(channels[::-1][:-1]).
   const dec = [...channels].reverse().slice(0, -1);
   const skips: SkipConnection[] = [];
-  let x = encoder[encoder.length - 1];
+  let x: number | null = encoder[encoder.length - 1].size;
   for (let j = 0; j < dec.length - 1; j++) {
-    const level = levels - 2 - j;
-    const upSize = x.size * 2;
+    const level = depth - 2 - j;
+    const id = `dec-${level}`;
     const upChannels = dec[j + 1];
     const skip = encoder[level];
-    if (skip.size < upSize) {
-      return fail(
-        `Skip at level ${level + 1} is ${skip.size}×${skip.size}, smaller than the ${upSize}×${upSize} upsampled map, so _center_crop can't match it.`,
-      );
-    }
-    const concatChannels = upChannels + skip.channels;
-    const out = doubleConvOut(upSize, padding);
-    if (out < 1) {
-      return fail(
-        `Too small: decoder level ${level + 1} upsamples to ${upSize}×${upSize}, which two 3×3 convolutions without padding shrink to nothing.`,
-      );
+    const upSize = x === null ? null : x * 2;
+    let out: number | null = null;
+    if (known() && upSize !== null && skip.size !== null) {
+      if (skip.size < upSize) {
+        fail(
+          id,
+          `Skip at level ${level + 1} is ${skip.size}×${skip.size}, smaller than the ${upSize}×${upSize} upsampled map, so _center_crop can't match it.`,
+        );
+      } else {
+        const next = doubleConvOut(upSize, padding);
+        if (next < 1) {
+          fail(
+            id,
+            `Too small: decoder level ${level + 1} upsamples to ${upSize}×${upSize}, and two 3×3 convolutions without padding shrink it to nothing.`,
+          );
+        } else {
+          out = next;
+        }
+      }
     }
     skips.push({
       level,
       from: skip.id,
-      to: `dec-${level}`,
+      to: id,
       fromSize: skip.size,
-      cropTo: upSize,
-      concatChannels,
+      cropTo:
+        upSize !== null && skip.size !== null && skip.size >= upSize
+          ? upSize
+          : null,
+      concatChannels: upChannels + skip.channels,
     });
-    x = {
-      id: `dec-${level}`,
+    stages.push({
+      id,
       kind: "decoder",
       level,
       channels: upChannels,
       size: out,
       op: `ConvTranspose2d(${dec[j]}, ${upChannels}) → cat → DoubleConvBlock(${dec[j]}, ${upChannels})`,
-    };
-    stages.push(x);
+    });
+    x = out;
   }
 
   const output: Stage = {
@@ -169,18 +197,28 @@ export function computeUNetShapes(config: UNetConfig): UNetShapes {
     kind: "output",
     level: 0,
     channels: outChannels,
-    size: x.size,
+    size: x,
     op: `Conv2d(${channels[1]}, ${outChannels}, kernel_size=1)`,
   };
   stages.push(output);
 
-  return { ok: true, stages, skips, input, output, depth: levels };
+  return {
+    ok: failedAt === null,
+    error,
+    failedAt,
+    depth,
+    stages,
+    skips,
+    input,
+    output,
+  };
 }
 
-/** `[N, C, H, W]` as PyTorch prints it. */
+/** `[N, C, H, W]` as PyTorch prints it; unknown sizes print as "—". */
 export function formatShape(
   stage: Pick<Stage, "channels" | "size">,
   batch = 1,
 ) {
-  return `[${batch}, ${stage.channels}, ${stage.size}, ${stage.size}]`;
+  const s = stage.size ?? "—";
+  return `[${batch}, ${stage.channels}, ${s}, ${s}]`;
 }
