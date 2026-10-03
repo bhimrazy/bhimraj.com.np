@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-25T18:45:31.799Z",
-  "stars": 1078,
+  "generatedAt": "2026-10-03T14:19:30.420Z",
+  "stars": 1080,
   "contributions": 479,
   "lightningCommits": 407,
   "featuredRepo": {
@@ -187,31 +187,31 @@
         "description": "Speed up model training by fixing data loading.",
         "prs": 99,
         "stars": 615,
-        "forks": 108
+        "forks": 110
       },
       {
         "name": "LitServe",
         "fullName": "Lightning-AI/LitServe",
         "description": "A minimal Python framework for building custom AI inference servers with full control over logic, batching, and scaling.",
         "prs": 55,
-        "stars": 3942,
-        "forks": 306
+        "stars": 3944,
+        "forks": 310
       },
       {
         "name": "PyTorch Lightning",
         "fullName": "Lightning-AI/pytorch-lightning",
         "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
         "prs": 54,
-        "stars": 31361,
-        "forks": 3798
+        "stars": 31372,
+        "forks": 3807
       },
       {
         "name": "LitGPT",
         "fullName": "Lightning-AI/litgpt",
         "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
         "prs": 30,
-        "stars": 13685,
-        "forks": 1507
+        "stars": 13692,
+        "forks": 1517
       }
     ]
   },
@@ -224,7 +224,7 @@
       "commits": 127,
       "prs": 99,
       "stars": 615,
-      "forks": 108
+      "forks": 110
     },
     {
       "name": "pytorch-lightning",
@@ -233,8 +233,8 @@
       "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
       "commits": 108,
       "prs": 54,
-      "stars": 31361,
-      "forks": 3798
+      "stars": 31372,
+      "forks": 3807
     },
     {
       "name": "LitServe",
@@ -243,8 +243,8 @@
       "description": "A minimal Python framework for building custom AI inference servers with full control over logic, batching, and scaling.",
       "commits": 75,
       "prs": 55,
-      "stars": 3942,
-      "forks": 306
+      "stars": 3944,
+      "forks": 310
     },
     {
       "name": "receipt-ocr",
@@ -253,7 +253,7 @@
       "description": "An efficient OCR engine for receipt image processing.",
       "commits": 57,
       "prs": 17,
-      "stars": 725,
+      "stars": 730,
       "forks": 87
     },
     {
@@ -263,8 +263,8 @@
       "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
       "commits": 48,
       "prs": 30,
-      "stars": 13685,
-      "forks": 1507
+      "stars": 13692,
+      "forks": 1517
     },
     {
       "name": "utilities",
@@ -283,8 +283,8 @@
       "description": "Machine learning metrics for distributed, scalable PyTorch applications.",
       "commits": 19,
       "prs": 13,
-      "stars": 2474,
-      "forks": 528
+      "stars": 2475,
+      "forks": 538
     },
     {
       "name": "datasketch",
@@ -293,8 +293,8 @@
       "description": "MinHash, LSH, LSH Forest, Weighted MinHash, HyperLogLog, HyperLogLog++, LSH Ensemble and HNSW",
       "commits": 15,
       "prs": 13,
-      "stars": 2968,
-      "forks": 319
+      "stars": 2971,
+      "forks": 321
     },
     {
       "name": "LitModels",
@@ -313,39 +313,11 @@
       "description": "PyTorch compiler that accelerates training and inference. Get built-in optimizations for performance, memory, parallelism, and easily write your own.",
       "commits": 2,
       "prs": 2,
-      "stars": 1474,
-      "forks": 122
+      "stars": 1475,
+      "forks": 121
     }
   ],
   "monthlyContributions": [
-    {
-      "label": "Oct",
-      "year": 2025,
-      "month": 9,
-      "commits": 36,
-      "byRepo": [
-        {
-          "repo": "bhimrazy/receipt-ocr",
-          "name": "receipt-ocr",
-          "commits": 19
-        },
-        {
-          "repo": "Lightning-AI/pytorch-lightning",
-          "name": "pytorch-lightning",
-          "commits": 11
-        },
-        {
-          "repo": "Lightning-AI/litdata",
-          "name": "litdata",
-          "commits": 3
-        },
-        {
-          "repo": "Lightning-AI/LitServe",
-          "name": "LitServe",
-          "commits": 3
-        }
-      ]
-    },
     {
       "label": "Nov",
       "year": 2025,
@@ -738,6 +710,13 @@
           "commits": 1
         }
       ]
+    },
+    {
+      "label": "Oct",
+      "year": 2026,
+      "month": 9,
+      "commits": 0,
+      "byRepo": []
     }
   ]
 }
