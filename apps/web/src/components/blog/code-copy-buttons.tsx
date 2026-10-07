@@ -19,10 +19,14 @@ export default function CodeCopyButtons() {
 
       pre.style.position = "relative";
 
+      const label = pre.classList.contains("console")
+        ? "Copy commands"
+        : "Copy code";
       const btn = document.createElement("button");
+      btn.type = "button";
       btn.className = "code-copy-btn";
-      btn.setAttribute("aria-label", "Copy code");
-      btn.setAttribute("title", "Copy code");
+      btn.setAttribute("aria-label", label);
+      btn.setAttribute("title", label);
       btn.innerHTML = copyIcon();
       btn.style.cssText = `
         position: absolute;
@@ -52,11 +56,12 @@ export default function CodeCopyButtons() {
 
       pre.addEventListener("mouseenter", showBtn);
       pre.addEventListener("mouseleave", hideBtn);
+      // Keyboard users tab onto a button they could not otherwise see.
+      btn.addEventListener("focus", showBtn);
+      btn.addEventListener("blur", hideBtn);
 
       const onClick = async () => {
-        const code = pre.querySelector("code");
-        const text = code?.innerText ?? pre.innerText;
-        await navigator.clipboard.writeText(text);
+        await navigator.clipboard.writeText(copyText(pre));
         capture("code_copied", { slug: window.location.pathname });
         btn.innerHTML = checkIcon();
         btn.style.color = "var(--site-accent)";
@@ -74,6 +79,8 @@ export default function CodeCopyButtons() {
       cleanups.push(() => {
         pre.removeEventListener("mouseenter", showBtn);
         pre.removeEventListener("mouseleave", hideBtn);
+        btn.removeEventListener("focus", showBtn);
+        btn.removeEventListener("blur", hideBtn);
         btn.removeEventListener("click", onClick);
         btn.remove();
       });
@@ -85,6 +92,27 @@ export default function CodeCopyButtons() {
   }, []);
 
   return null;
+}
+
+/**
+ * The block's text. For ```` ```console ```` blocks (see `transformerConsole`)
+ * that is only the command lines, without their `$ ` prompts, so a paste
+ * into a terminal runs the commands and nothing else.
+ */
+function copyText(pre: HTMLPreElement): string {
+  const commands = pre.querySelectorAll<HTMLElement>(".line.command");
+  if (pre.classList.contains("console") && commands.length > 0) {
+    return Array.from(commands, (line) =>
+      Array.from(line.childNodes)
+        .filter((n) => !(n instanceof Element && n.matches(".prompt")))
+        .map((n) => n.textContent ?? "")
+        .join(""),
+    )
+      .filter((command) => command.trim() !== "")
+      .join("\n");
+  }
+  const code = pre.querySelector("code");
+  return code?.innerText ?? pre.innerText;
 }
 
 function copyIcon() {

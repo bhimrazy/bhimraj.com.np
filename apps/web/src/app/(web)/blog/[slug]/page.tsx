@@ -8,13 +8,14 @@ import MobileToc from "@/components/blog/mobile-toc";
 import PostEnd from "@/components/blog/post-end";
 import { coverInBody, getPost, splitDek } from "@/components/blog/posts";
 import ReadingProgress from "@/components/blog/reading-progress";
+import SeriesNav from "@/components/blog/series-nav";
 import ShareSidebar from "@/components/blog/share-sidebar";
 import SponsorCard from "@/components/blog/sponsor-card";
 import TitleSection from "@/components/blog/title-section";
 import Toc from "@/components/blog/toc";
 import { Container } from "@/components/container";
 import { JsonLd } from "@/components/json-ld";
-import { mdxComponents } from "@/components/mdx/mdx-components";
+import { mdxComponentsFor } from "@/components/mdx/mdx-components";
 import { ads } from "@/config/ads";
 import { siteConfig } from "@/config/site";
 import {
@@ -150,8 +151,13 @@ export default async function BlogPostPage({
             <MobileToc items={tocItems} className="xl:hidden" />
 
             <div id="post-body" className="prose article-prose max-w-none">
-              <MDXContent code={post.mdx} components={mdxComponents} />
+              <MDXContent
+                code={post.mdx}
+                components={mdxComponentsFor(post.series)}
+              />
             </div>
+
+            <SeriesNav post={post} />
 
             <PostEnd post={post} url={postUrl} />
           </article>

@@ -1,4 +1,5 @@
 import { allBlogPosts } from "content-collections";
+import { isHiddenFromIndex } from "./series";
 
 export type BlogPost = (typeof allBlogPosts)[number];
 
@@ -7,6 +8,11 @@ const byNewest = (a: BlogPost, b: BlogPost) =>
 
 /** All posts, newest first. */
 export const sortedPosts: BlogPost[] = [...allBlogPosts].sort(byNewest);
+
+/** Newest first, minus series parts that are listed through their hub. */
+export const listedPosts: BlogPost[] = sortedPosts.filter(
+  (post) => !isHiddenFromIndex(post),
+);
 
 export const postHref = (post: BlogPost) => `/blog/${post._meta.path}`;
 

@@ -2,17 +2,21 @@ import { ArrowRightIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
 import { cn, formatDate, formatMonthDay, getReadingTime } from "@/lib/utils";
-import { type BlogPost, postHref, sortedPosts, tagLabel } from "./posts";
+import { type BlogPost, listedPosts, postHref, tagLabel } from "./posts";
+import SeriesLabel from "./series-label";
 
 const focusRing =
   "focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4";
 
-/** Featured post (flagged `featured`, else the newest), then a year-grouped archive. */
+/**
+ * Featured post (flagged `featured`, else the newest), then a year-grouped
+ * archive. A series shows up once, as its hub.
+ */
 export default function BlogSection() {
-  const featured = sortedPosts.find((p) => p.featured) ?? sortedPosts[0];
+  const featured = listedPosts.find((p) => p.featured) ?? listedPosts[0];
   if (!featured) return null;
 
-  const rest = sortedPosts.filter((p) => p !== featured);
+  const rest = listedPosts.filter((p) => p !== featured);
   const years = groupByYear(rest);
 
   return (
@@ -78,6 +82,7 @@ function FeaturedPost({ post }: { post: BlogPost }) {
           <span className="rounded-full bg-site-accent-subtle px-2.5 py-0.5 font-medium text-[10px] text-site-accent uppercase tracking-[1.5px]">
             {post.featured ? "Featured" : "Latest"}
           </span>
+          <SeriesLabel post={post} />
           <span className="whitespace-nowrap">
             <time dateTime={post.publishedAt}>
               {formatDate(post.publishedAt)}
@@ -119,12 +124,15 @@ function ArchiveRow({ post }: { post: BlogPost }) {
   return (
     <article className="group relative grid items-start gap-6 sm:grid-cols-[minmax(0,1fr)_11rem]">
       <div className="min-w-0">
-        <p className="mb-2 font-mono text-site-text-tertiary text-xs">
-          <time dateTime={post.publishedAt}>
-            {formatMonthDay(post.publishedAt)}
-          </time>
-          <span aria-hidden> · </span>
-          {getReadingTime(post.html)}
+        <p className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-site-text-tertiary text-xs">
+          <SeriesLabel post={post} />
+          <span>
+            <time dateTime={post.publishedAt}>
+              {formatMonthDay(post.publishedAt)}
+            </time>
+            <span aria-hidden> · </span>
+            {getReadingTime(post.html)}
+          </span>
         </p>
         <h4 className="text-pretty font-display font-semibold text-site-text text-xl leading-snug">
           <Link

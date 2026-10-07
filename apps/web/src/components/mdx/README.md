@@ -55,7 +55,30 @@ Prose for this step.
 `shiki-transformers.ts` adds: ```` ```py title="unet.py" ```` (filename bar),
 ```` ```py {1,4-6} ```` (highlight lines), and in-code comments
 `# [!code highlight]`, `[!code focus]`, `[!code ++]` / `[!code --]`,
-`[!code error]` / `[!code warning]`.
+`[!code error]` / `[!code warning]`. ```` ```console ```` blocks dim the `$ `
+prompt (unselectable) and the copy button copies only the commands, including
+`\` continuation lines. Blog posts also get GFM (tables, task lists).
+
+## Writing components
+
+For long-form guides (the GitHub Field Guide series). Server components except
+`Tabs`.
+
+- `<Callout type="tip|note|warning|skip|founder" title="optional">`: an aside.
+  `founder` is the plain-English summary, `skip` points experienced readers on.
+- `<Details summary="Deep dive: …">`: native `<details>`, works without JS.
+- `<Level value="beginner|intermediate|advanced" />`: own line under a `##`.
+- `<Tabs>` + `<Tab label="macOS">`: the server renders the first tab; picks are
+  remembered (localStorage, most recent label first) and sync across groups.
+- `<Exercise title="…" time="10 min">`: workshop card; end with
+  `**Done when:** …` and an optional `<Details summary="Solution">`.
+- Hub only: `<Paths>` + `<Path who="Founder" parts="1,3,7">`, and
+  `<SeriesParts />`. Both are bound to the post's series by `mdxComponentsFor`.
+
+Series data (`components/blog/series.ts`) comes from the `series`, `part`
+(0 = hub), `level` and `verifiedAt` frontmatter. The layout adds "Part N of M",
+the level badge, the verified stamp and prev/next on its own. Comment-only
+lines (`{/* FIGURE: … */}`) are dropped from `html`, so drafts can carry them.
 
 ## Post-specific figures
 
