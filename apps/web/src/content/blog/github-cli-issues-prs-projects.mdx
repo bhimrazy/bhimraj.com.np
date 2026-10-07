@@ -1,0 +1,525 @@
+---
+title: "Work from the terminal: gh, issues, PRs and Projects"
+description: "Run your daily GitHub work from the terminal with gh, and set up issues, templates and Projects so planning stays next to the code."
+publishedAt: "2026-10-07"
+updatedAt: "2026-10-07"
+tags: [github, git, gh, cli, issues, pull-requests, projects]
+image: "/blog/github-field-guide/part-4.png"
+series: "github-field-guide"
+part: 4
+level: "beginner"
+verifiedAt: "2026-10-07"
+---
+
+By the end of this part you'll go from an issue to a merged pull request without opening a browser: create the issue, branch from it, open a draft PR, watch CI, and set it to merge itself when it's green. You'll also set up the planning side (labels, issue forms, a PR template, sub-issues and a GitHub Project) so the work is tracked in the same place as the code. It's for beginners who know the basics from [Part 1](/blog/git-and-github-foundations), and for anyone who lives in VS Code and wants a faster loop.
+
+<Callout type="founder" title="The short version">
+- **gh** is GitHub's official command-line tool. Engineers use it to do in a few keystrokes what takes several clicks on the website.
+- Every piece of work should start as an **issue**, and every code change should arrive as a **pull request** that links back to it. That's what makes "what's the status of X?" answerable.
+- **Issue forms** and a **PR template** make people write useful bug reports and descriptions without being nagged.
+- A **GitHub Project** is a board or spreadsheet view over your issues and PRs. It updates itself when work is closed or merged.
+- If you'd rather not use a terminal, the **GitHub Pull Requests** extension for VS Code covers most of the same ground.
+</Callout>
+
+<Callout type="skip" title="Skip this if you already…">
+use `gh pr create`, `gh pr checkout` and `gh run watch` daily. Skim the [aliases and extensions](#aliases-and-extensions) section and jump to [Planning on GitHub](#planning-on-github).
+</Callout>
+
+Examples use the fictional org `acme-labs` and its repo `acme-labs/web`. Swap in your own.
+
+## Install and sign in
+
+<Level value="beginner" />
+
+[Part 2](/blog/git-setup-across-devices) covers authentication in depth. The short version:
+
+<Tabs>
+<Tab label="macOS">
+
+```console
+$ brew install gh
+$ gh auth login
+```
+
+</Tab>
+<Tab label="Windows">
+
+```console
+$ winget install --id GitHub.cli
+$ gh auth login
+```
+
+</Tab>
+<Tab label="Linux">
+
+Use your distribution's package from the [official install instructions](https://github.com/cli/cli#installation), then:
+
+```console
+$ gh auth login
+```
+
+</Tab>
+</Tabs>
+
+Check what you're running and who you're signed in as:
+
+```console
+$ gh --version
+$ gh auth status
+```
+
+At the time of writing the latest release is [gh 2.102.0](https://github.com/cli/cli/releases), from 30 September 2026. gh changes quickly, and several features below (issue types, sub-issues, `--worktree`) arrived in recent releases, so upgrade before you follow along (`brew upgrade gh` or `winget upgrade GitHub.cli`).
+
+Inside a cloned repo, gh works out the repo from your git remote. Elsewhere, add `--repo acme-labs/web` (or `-R`) to any command.
+
+## Issues from the terminal
+
+<Level value="beginner" />
+
+An **issue** is a tracked piece of work: a bug, a feature, a question. Create one:
+
+```console
+$ gh issue create --title "Login button does nothing on Safari" --label bug --assignee @me
+```
+
+Leave the flags off and gh asks for each field interactively, including which issue template to use. Find work:
+
+```console
+$ gh issue list --assignee @me
+$ gh issue list --label bug --state open
+$ gh issue view 42 --comments
+$ gh issue view 42 --web
+```
+
+Every `list` and `view` command takes `--json` and `--jq` for scripting, for example `gh issue list --json number,title --jq '.[].title'`. See the [gh issue manual](https://cli.github.com/manual/gh_issue).
+
+### Branch from an issue
+
+This is the command I'd show a new teammate first:
+
+```console
+$ gh issue develop 42 --checkout
+```
+
+[`gh issue develop`](https://cli.github.com/manual/gh_issue_develop) creates a branch on GitHub that's **linked to issue 42**, then checks it out locally. The branch appears in the issue's Development section, so anyone looking at the issue can see work has started. Useful flags:
+
+- `--name fix/safari-login` picks the branch name instead of the generated one.
+- `--base release-1.4` branches from something other than the default branch.
+- `--list` shows branches already linked to the issue.
+- `--worktree ../web-42` checks the branch out into a separate folder ([git worktree](https://git-scm.com/docs/git-worktree)), so your current work stays put. More on worktrees in [Part 2](/blog/git-setup-across-devices).
+
+{/* VOICE: How you pick up an issue in your own daily flow (gh issue develop, a VS Code button, or plain git switch), in 1–2 sentences. */}
+
+## Pull requests from the terminal
+
+<Level value="beginner" />
+
+A **pull request** (PR) proposes merging your branch into `main`, with a place for review and automated checks. The full lifecycle:
+
+{/* FIGURE: pr-lifecycle — issue #42 → gh issue develop (linked branch) → commits → gh pr create --draft → checks running → gh pr ready → review approved → gh pr merge --auto --squash → merged, branch deleted, issue closed, Project item moves to Done. Highlight which steps are automatic. */}
+
+### Create
+
+Commit your work, then:
+
+```console
+$ gh pr create --fill
+$ gh pr create --draft --fill
+$ gh pr create --fill --reviewer acme-labs/web --label bug
+```
+
+- `--fill` takes the title and body from your commits, so you skip the prompts. `--fill-first` uses only the first commit, which suits single-commit PRs.
+- `--draft` opens a **draft PR**: visible to everyone and running CI, but marked as not ready for review. I open drafts early and often, because it's the easiest way to show work in progress and get CI feedback.
+- `--reviewer` takes people or **teams** (`acme-labs/web`). Team review requests are covered in [Part 3](/blog/github-organizations-and-teams).
+
+gh pushes the branch for you if it isn't on GitHub yet. When the draft is ready:
+
+```console
+$ gh pr ready
+```
+
+The full flag list is in the [gh pr create manual](https://cli.github.com/manual/gh_pr_create).
+
+### Check out and review someone else's PR
+
+```console
+$ gh pr list
+$ gh pr checkout 123
+$ gh pr diff 123
+$ gh pr review 123 --approve
+$ gh pr review 123 --request-changes --body "The token is logged on line 40, please remove it."
+$ gh pr review 123 --comment --body "Looks good, one question in the description."
+```
+
+`gh pr checkout` fetches the PR's branch (even from a fork) and switches to it, so you can run the code instead of reading the diff in a browser. `gh pr checkout 123 --worktree ../web-pr-123` does the same into a separate folder.
+
+`gh pr review` leaves a whole-PR review. For comments on specific lines, use the web UI or the [VS Code extension](#the-non-terminal-path-vs-code).
+
+### Merge, or let GitHub merge it for you
+
+```console
+$ gh pr merge 123 --squash --delete-branch
+$ gh pr merge 123 --auto --squash --delete-branch
+```
+
+`--auto` turns on **auto-merge**: the PR merges itself once [all required reviews and status checks pass](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request). You approve it, walk away, and it lands when CI goes green. Two conditions apply: the repo must allow auto-merge (`gh repo edit --enable-auto-merge`), and the branch needs requirements to wait for, such as a ruleset requiring checks. Requirements on private repos depend on your plan; see [Part 3](/blog/github-organizations-and-teams#plan-reality-free-vs-team-vs-enterprise).
+
+`--squash` combines the PR's commits into one commit on `main`. That's a good default for most startups; [Part 5](/blog/git-branching-and-releases) compares squash, merge and rebase.
+
+<Callout type="warning">
+`gh pr merge --admin` merges even when requirements aren't met, if you have the rights. Treat it like a fire extinguisher, not a shortcut. If you need it weekly, fix the rules instead.
+</Callout>
+
+## Checks and workflow runs
+
+<Level value="beginner" />
+
+**Checks** are the automated tests and builds that run on a PR, usually [GitHub Actions](/blog/github-actions-automation). Watch them without refreshing a browser tab:
+
+```console
+$ gh pr checks
+$ gh pr checks --watch --fail-fast
+$ gh pr checks --required
+```
+
+`--watch` keeps updating until the checks finish, and `--fail-fast` stops at the first failure. For the underlying workflow runs:
+
+```console
+$ gh run list --limit 5
+$ gh run watch
+$ gh run view --log-failed
+$ gh run rerun 1234567890 --failed
+```
+
+- `gh run watch` lets you pick an in-progress run and streams its progress. Add `--exit-status` in scripts so a failed run returns a non-zero exit code, for example `gh run watch --exit-status && echo "CI passed"`.
+- `gh run view --log-failed` prints only the logs of failed steps, usually all you need.
+- `gh run rerun --failed` reruns only the failed jobs, which is handy for flaky tests.
+
+To start a workflow that has a manual trigger (`workflow_dispatch`):
+
+```console
+$ gh workflow run deploy.yml -f environment=staging
+```
+
+Triggers and inputs are explained in [Part 6](/blog/github-actions-automation). See the [gh run](https://cli.github.com/manual/gh_run) and [gh workflow](https://cli.github.com/manual/gh_workflow) manuals.
+
+## Releases, briefly
+
+<Level value="intermediate" />
+
+```console
+$ gh release create v1.4.0 --generate-notes
+$ gh release create v1.5.0-rc.1 --generate-notes --prerelease
+```
+
+`--generate-notes` writes release notes from the PRs merged since the last release, which is another reason to give PRs good titles. Versioning, tags and release automation are in [Part 5](/blog/git-branching-and-releases).
+
+## gh api: for everything else
+
+<Level value="intermediate" />
+
+When there's no gh command for something, [`gh api`](https://cli.github.com/manual/gh_api) calls the GitHub REST or GraphQL API with your existing login. No tokens to copy around.
+
+```console
+$ gh api repos/{owner}/{repo}/pulls --jq '.[].title'
+$ gh api --paginate repos/acme-labs/web/issues --jq '.[] | select(.comments > 10) | .html_url'
+$ gh api -X PATCH repos/acme-labs/web -f delete_branch_on_merge=true
+$ gh api graphql -f query='query { viewer { login } }'
+```
+
+Inside a repo, gh fills in the `{owner}` and `{repo}` placeholders for you. `-f` sends string fields, `-F` sends typed ones (numbers, booleans), `--paginate` follows every page, and `--jq` filters the JSON. [Part 3](/blog/github-organizations-and-teams) uses `gh api` to create teams and rulesets. Endpoints are listed in the [REST API docs](https://docs.github.com/en/rest).
+
+## Aliases and extensions
+
+<Level value="intermediate" />
+
+### Aliases
+
+[`gh alias set`](https://cli.github.com/manual/gh_alias_set) saves a command under a short name:
+
+```console
+$ gh alias set co 'pr checkout'
+$ gh alias set mine 'issue list --assignee @me'
+$ gh alias set review-queue 'pr list --search "review-requested:@me"'
+$ gh alias set --shell igrep 'gh issue list --label="$1" | grep "$2"'
+$ gh alias list
+```
+
+Now `gh co 123` checks out PR 123 and `gh review-queue` lists PRs waiting on you. `--shell` aliases run through your shell, so they can use pipes and arguments.
+
+Two built-ins people miss: `gh status` (your assigned issues, review requests and mentions across repos) and `gh browse` (opens the current repo, or a file with `gh browse src/app.ts`, in the browser).
+
+### Extensions
+
+Extensions are community commands installed into gh:
+
+```console
+$ gh extension install dlvhdr/gh-dash
+$ gh dash
+$ gh extension browse
+$ gh extension upgrade --all
+```
+
+[gh-dash](https://github.com/dlvhdr/gh-dash) is a keyboard-driven dashboard of your PRs and issues across repos, and it's the one I'd install first. `gh extension browse` lets you explore others. Extensions are third-party code that runs with your GitHub login, so install them from authors you trust.
+
+{/* SCREENSHOT: gh-dash showing a PR section and an issues section for acme-labs repos — needs sandbox org */}
+
+<Exercise title="Issue to merged PR, without a browser" time="15 min">
+1. In a practice repo, create an issue: `gh issue create --title "Add a README badge" --label enhancement`.
+2. Branch from it: `gh issue develop ISSUE_NUMBER --checkout`.
+3. Make a small change, commit it, and open a draft: `gh pr create --draft --fill`.
+4. Edit the PR body to include `Closes #ISSUE_NUMBER` (`gh pr edit --body "Closes #ISSUE_NUMBER"`).
+5. Mark it ready with `gh pr ready`, then `gh pr merge --squash --delete-branch` (or `--auto` if the repo has required checks).
+6. Run `gh issue view ISSUE_NUMBER`.
+
+**Done when:** the PR shows as merged, the issue shows as closed, and the branch is gone locally and on GitHub.
+
+<Details summary="Hints">
+
+- If `gh pr merge --auto` errors, the repo doesn't allow auto-merge or there's nothing to wait for. Use a plain `gh pr merge --squash`.
+- If the issue didn't close, check that the PR targeted the **default branch**; closing keywords are ignored otherwise.
+
+</Details>
+</Exercise>
+
+## Planning on GitHub
+
+<Level value="intermediate" />
+
+The terminal speeds up the work. Planning makes sure it's the right work. GitHub has everything a small team needs, and it lives next to the code.
+
+### Labels
+
+Labels are tags on issues and PRs. Keep the set small. Too many labels and nobody applies them. A starting set:
+
+- **Area**: `area:web`, `area:api`, `area:infra`, so each team can filter its work.
+- **Status signals**: `blocked`, `needs-design`, `good first issue`.
+- Use **issue types** (below) for bug/feature/task, and a **Project field** for priority, rather than labels.
+
+```console
+$ gh label create "area:web" --color 1D76DB --description "Frontend app"
+$ gh label list
+$ gh label clone acme-labs/web --repo acme-labs/api
+```
+
+`gh label clone` copies one repo's labels to another, so new repos start with the same set.
+
+### Issue forms
+
+An **issue form** turns "New issue" into a structured form with required fields. It's a YAML file in `.github/ISSUE_TEMPLATE/`. Syntax is in the [issue forms docs](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms):
+
+```yaml title=".github/ISSUE_TEMPLATE/bug.yml"
+name: Bug report
+description: Something is broken
+title: "Bug: "
+labels: ["area:web"]
+type: Bug
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for reporting. Please fill in as much as you can.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Go to /login\n2. Click Sign in\n3. Nothing happens"
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Safari
+        - Firefox
+        - Other
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      render: shell
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and this isn't a duplicate
+          required: true
+```
+
+`type: Bug` sets the issue type automatically (it needs issue types enabled in the org). `render: shell` formats the logs as a code block. Add a `config.yml` next to it to turn off blank issues and point people elsewhere:
+
+```yaml title=".github/ISSUE_TEMPLATE/config.yml"
+blank_issues_enabled: false
+contact_links:
+  - name: Ask a question
+    url: https://github.com/orgs/acme-labs/discussions
+    about: Questions go in Discussions, not issues.
+```
+
+<Callout type="tip">
+Put issue templates and the PR template in a **public** repo named `.github` in your org, and they become the default for every repo that doesn't have its own. (`CODEOWNERS` isn't one of the supported defaults; each repo needs its own.) See [creating a default community health file](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file).
+</Callout>
+
+### A PR template
+
+A [pull request template](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository) pre-fills every new PR's description:
+
+```markdown title=".github/pull_request_template.md"
+## What does this PR do?
+
+<!-- One or two sentences. Link the issue: Closes #123 -->
+
+## How to test
+
+<!-- Steps a reviewer can follow, or "covered by CI". -->
+
+## Screenshots
+
+<!-- For UI changes: before and after. -->
+```
+
+Keep it short. A template with twelve sections gets deleted wholesale; one with three gets filled in. `gh pr create` uses the template too, unless `--fill` or `--body` overrides it.
+
+### Closing keywords
+
+Write `Closes #42` in a PR description and issue 42 closes automatically when the PR merges. The full set of [closing keywords](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue) is `close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves` and `resolved`. Two rules:
+
+- They only work when the PR targets the repo's **default branch**.
+- For an issue in another repo, use the full form: `Fixes acme-labs/api#100`.
+
+### Issue types and sub-issues
+
+**Issue types** are an org-wide classification for issues. The defaults are task, bug and feature, and an org can have up to 25 ([docs](https://docs.github.com/en/issues/tracking-your-work-with-issues/configuring-issues/managing-issue-types-in-an-organization)). Manage them in **Org Settings → Planning → Issue types**. They replace the old habit of `bug` and `feature` labels, and they work across every repo in the org.
+
+**Sub-issues** break a big issue into smaller ones, with a progress bar on the parent. A parent can have up to 100 sub-issues, nested up to eight levels deep, and they can come from other repos ([docs](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/adding-sub-issues)).
+
+Both work from gh:
+
+```console
+$ gh issue create --title "Checkout v2" --type Feature
+$ gh issue create --title "Add Stripe webhook handler" --type Task --parent 40
+$ gh issue edit 40 --add-sub-issue 41
+$ gh issue edit 43 --add-blocked-by 41
+$ gh issue list --type Bug
+```
+
+Do this: use one parent issue per feature or project ("Checkout v2"), with sub-issues for each PR-sized piece. Don't create a sub-issue for anything smaller than a PR.
+
+### GitHub Projects
+
+A **Project** is a view over issues and PRs from any repos in the org, with your own fields on top. From [About Projects](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects):
+
+- **Views**: a table (spreadsheet), a board (kanban columns) and a roadmap (timeline). Each view has its own filters, grouping and sorting, and you can have many views per project, for example "My work", "Web board" and "This quarter".
+- **Custom fields**: text, number, date, single select (Priority: P0, P1, P2) and iteration (week-by-week or two-week cycles).
+- **Built-in automations** ([docs](https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/using-the-built-in-automations)): closed issues and PRs move to Done, and merged PRs move to Done. Both are on by default. You can also auto-archive old items and **auto-add** new items from a repo that match a filter like `is:issue label:area:web`. The number of auto-add workflows depends on your plan: one on Free, five on Team ([docs](https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/adding-items-automatically)), and existing items aren't added retroactively.
+
+{/* SCREENSHOT: acme-labs Project board view grouped by Status, with a Priority field, an iteration field and a parent issue showing sub-issue progress — needs sandbox org */}
+
+From the terminal, `gh project` needs the `project` token scope first:
+
+```console
+$ gh auth refresh -s project
+$ gh project create --owner acme-labs --title "Product"
+$ gh project list --owner acme-labs
+$ gh project field-create 1 --owner acme-labs --name Priority --data-type SINGLE_SELECT --single-select-options "P0,P1,P2"
+$ gh project item-add 1 --owner acme-labs --url https://github.com/acme-labs/web/issues/42
+$ gh project item-list 1 --owner acme-labs --query "assignee:@me -status:Done"
+```
+
+The `1` is the project number from `gh project list`. Views and iteration fields are easier to set up in the browser; once they exist, gh and the built-in automations keep items moving. `gh issue create --project "Product"` and `gh pr create --project "Product"` add new items as you create them. See the [gh project manual](https://cli.github.com/manual/gh_project).
+
+<Callout type="founder" title="What a founder actually looks at">
+Ask the team for one Project with a board view grouped by Status and a roadmap view by iteration. You get "what's in progress" and "what ships this cycle" without asking anyone, and it stays current because merging a PR moves the card.
+</Callout>
+
+{/* VOICE: How your team (or you, solo) actually plans: a Project board, a Linear-style tool, or a plain issue list, and why. 1–3 sentences, no employer specifics you can't share. */}
+
+<Exercise title="Set up planning for a repo" time="20 min">
+1. Add `.github/ISSUE_TEMPLATE/bug.yml` and `config.yml` from above, plus `.github/pull_request_template.md`. Commit them through a PR (use gh).
+2. Open "New issue" on GitHub and confirm the form appears and blank issues are gone.
+3. Create a parent issue and two sub-issues with `gh issue create --parent`.
+4. Create a Project, add a Priority field, and add the parent issue and sub-issues.
+5. Close one sub-issue through a PR with `Closes #N` in the body.
+
+**Done when:** the parent issue shows 1 of 2 sub-issues done, and the closed sub-issue sits in the Project's Done column without you moving it.
+</Exercise>
+
+## The non-terminal path: VS Code
+
+<Level value="beginner" />
+
+Not everyone wants a terminal, and that's fine. The [GitHub Pull Requests extension](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github) (`GitHub.vscode-pull-request-github`) brings most of this into VS Code ([docs](https://code.visualstudio.com/docs/sourcecontrol/github)):
+
+- **Sign in** through the GitHub icon in the Activity Bar. It uses VS Code's built-in GitHub login, so there's no token to paste.
+- **Pull requests view**: list PRs, check one out, see changed files, and leave **line-by-line review comments** in the editor. This is the part gh doesn't do.
+- **Create a PR** from the current branch, picking base repo and branch. A sparkle button can draft the title and description with Copilot.
+- **Issues view**: browse issues and start working on one, which creates a branch for it, much like `gh issue develop`.
+- `@` and `#` completions for people and issues while you write commit messages.
+
+{/* SCREENSHOT: VS Code with the GitHub Pull Requests sidebar open, a checked-out PR, and an inline review comment on a diff — needs author VS Code */}
+
+My split: gh for creating, checking out and merging, because it's faster; VS Code for reviewing anything longer than a screen, because inline comments matter there.
+
+## Cheat sheet
+
+### Top 15 commands
+
+| # | Command | What it does |
+|---|---|---|
+| 1 | `gh auth login` | Sign in once per machine |
+| 2 | `gh issue create` | New issue, with prompts or flags |
+| 3 | `gh issue list --assignee @me` | Your open issues |
+| 4 | `gh issue develop 42 --checkout` | Linked branch from an issue, checked out |
+| 5 | `gh pr create --draft --fill` | Draft PR from your commits |
+| 6 | `gh pr ready` | Mark the draft ready for review |
+| 7 | `gh pr checkout 123` | Run someone else's PR locally |
+| 8 | `gh pr review 123 --approve` | Approve (or `--request-changes`, `--comment`) |
+| 9 | `gh pr checks --watch` | Watch CI on the current PR |
+| 10 | `gh pr merge --auto --squash -d` | Merge when green, delete the branch |
+| 11 | `gh run view --log-failed` | Only the logs that matter |
+| 12 | `gh run rerun ID --failed` | Retry failed jobs |
+| 13 | `gh release create vX.Y.Z --generate-notes` | Release with generated notes |
+| 14 | `gh api ENDPOINT --jq EXPR` | Anything the API can do |
+| 15 | `gh status` | Your review requests, mentions and assignments across repos |
+
+### Planning files and settings
+
+| What | Where |
+|---|---|
+| Issue forms | `.github/ISSUE_TEMPLATE/*.yml` |
+| Template chooser config | `.github/ISSUE_TEMPLATE/config.yml` |
+| PR template | `.github/pull_request_template.md` |
+| Org-wide defaults | a public repo named `.github` in the org |
+| Issue types | Org Settings → Planning → Issue types |
+| Project automations | Project → ⋯ → Workflows |
+| Closing keywords | `Closes #N`, `Fixes owner/repo#N`, default branch only |
+| Projects scope for gh | `gh auth refresh -s project` |
+
+## What changes fast
+
+- **gh itself.** Releases land every few weeks; issue types, sub-issues, `--attach` and `--worktree` are all recent additions. Check the [gh releases](https://github.com/cli/cli/releases) and run `gh COMMAND --help` when a flag here doesn't match.
+- **Issues and Projects.** Issue types, sub-issues and issue dependencies are recent and still evolving. Check the [Issues docs](https://docs.github.com/en/issues) and the [changelog](https://github.blog/changelog/).
+- **Auto-add workflow limits and plan features.** Check [adding items automatically](https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/adding-items-automatically) and [pricing](https://github.com/pricing).
+- **The VS Code extension.** Copilot features move into it often. Check the [VS Code GitHub docs](https://code.visualstudio.com/docs/sourcecontrol/github).
+
+## Further reading
+
+- [GitHub CLI manual](https://cli.github.com/manual/) and [releases](https://github.com/cli/cli/releases)
+- [gh issue develop](https://cli.github.com/manual/gh_issue_develop), [gh pr merge](https://cli.github.com/manual/gh_pr_merge), [gh api](https://cli.github.com/manual/gh_api), [gh project](https://cli.github.com/manual/gh_project)
+- [Automatically merging a pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request)
+- [Syntax for issue forms](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms)
+- [Creating a pull request template](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository)
+- [Linking a pull request to an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue)
+- [Adding sub-issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/adding-sub-issues) and [managing issue types](https://docs.github.com/en/issues/tracking-your-work-with-issues/configuring-issues/managing-issue-types-in-an-organization)
+- [About Projects](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects) and [built-in automations](https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/using-the-built-in-automations)
+- [Working with GitHub in VS Code](https://code.visualstudio.com/docs/sourcecontrol/github)
+- [gh-dash](https://github.com/dlvhdr/gh-dash)

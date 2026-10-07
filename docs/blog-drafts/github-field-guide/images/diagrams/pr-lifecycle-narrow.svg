@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 496" width="360" height="496" role="img" aria-labelledby="gf-pr-lifecycle-sm-title gf-pr-lifecycle-sm-desc">
+<title id="gf-pr-lifecycle-sm-title">The pull request lifecycle</title>
+<desc id="gf-pr-lifecycle-sm-desc">A feature branch leaves main, collects commits, opens pull request 42, passes three checks, gets approved, merges back into main, and a later commit on main is tagged v1.4.0 and released. Each step lists its command: git switch -c, git commit, gh pr create, CI runs, gh pr review, gh pr merge, gh release create.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="496" rx="12"/>
+<path class="ln" d="M40 24L40 484"/><text class="m" x="40" y="16" text-anchor="middle">main</text><path class="ln on" d="M40 52C40 74 96 74 96 96L96 350C96 372 40 372 40 382"/><circle class="dot" cx="40" cy="52" r="4.5"/><circle class="dot" cx="40" cy="220" r="3.5"/><circle class="dot on" cx="96" cy="104" r="4.5"/><circle class="dot on" cx="96" cy="118" r="4.5"/><circle class="dot on" cx="96" cy="132" r="4.5"/><rect class="n" x="63" y="171" width="66" height="26" rx="13"/><text class="mk" x="96" y="188" text-anchor="middle">PR #42</text><rect class="n" x="63" y="237" width="66" height="26" rx="13"/><text class="mk" x="96" y="254" text-anchor="middle">3/3 ✓</text><rect class="n" x="56" y="303" width="80" height="26" rx="13"/><text class="mk" x="96" y="320" text-anchor="middle">approved</text><circle class="ring on" cx="40" cy="382" r="7"/><circle class="dot" cx="40" cy="448" r="4.5"/><path class="n" d="M52 448l9 -12h52v24h-52z"/><text class="mk" x="90" y="452" text-anchor="middle">v1.4.0</text><path class="ln dim dash" d="M52 52L182 52"/><text class="t" x="192" y="49" text-anchor="start">01  Branch</text><text class="m" x="192" y="67" text-anchor="start">git switch -c</text><path class="ln dim dash" d="M106 118L182 118"/><text class="t" x="192" y="115" text-anchor="start">02  Commit</text><text class="m" x="192" y="133" text-anchor="start">git commit</text><path class="ln dim dash" d="M134 184L182 184"/><text class="t" x="192" y="181" text-anchor="start">03  Open PR</text><text class="m" x="192" y="199" text-anchor="start">gh pr create</text><path class="ln dim dash" d="M134 250L182 250"/><text class="t" x="192" y="247" text-anchor="start">04  Checks</text><text class="m" x="192" y="265" text-anchor="start">CI runs</text><path class="ln dim dash" d="M141 316L182 316"/><text class="t" x="192" y="313" text-anchor="start">05  Review</text><text class="m" x="192" y="331" text-anchor="start">gh pr review</text><path class="ln dim dash" d="M52 382L182 382"/><text class="t" x="192" y="379" text-anchor="start">06  Merge</text><text class="m" x="192" y="397" text-anchor="start">gh pr merge</text><path class="ln dim dash" d="M160 448L182 448"/><text class="t" x="192" y="445" text-anchor="start">07  Release</text><text class="m" x="192" y="463" text-anchor="start">gh release create</text>
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 360" width="360" height="360" role="img" aria-labelledby="gf-actions-triggers-sm-title gf-actions-triggers-sm-desc">
+<title id="gf-actions-triggers-sm-title">What can start a GitHub Actions workflow</title>
+<desc id="gf-actions-triggers-sm-desc">Six triggers feed the on: block of a workflow file: push (you push commits), pull_request (a PR opens or updates), workflow_dispatch (the Run button or gh workflow run), schedule (a cron in UTC), repository_dispatch (an outside system calls the API), and workflow_call (another workflow calls this one).</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="360" rx="12"/>
+<rect class="n on" x="196" y="14" width="152" height="332" rx="12"/><text class="mk act" x="208" y="38" text-anchor="start" font-weight="600">on:</text><text class="cap" x="16" y="38" text-anchor="start">WHAT FIRES IT</text><text class="cap" x="16" y="76" text-anchor="start">REPO</text><text class="s" x="16" y="94" text-anchor="start">you push commits</text><path class="ln" d="M166 84L200 84"/><path class="hd" d="M200 84L193.7 87.0L193.7 81.0Z"/><text class="m" x="208" y="88" text-anchor="start" style="fill:var(--tx)">push</text><text class="cap" x="16" y="124" text-anchor="start">REPO</text><text class="s" x="16" y="142" text-anchor="start">a PR opens or updates</text><path class="ln" d="M166 132L200 132"/><path class="hd" d="M200 132L193.7 135.0L193.7 129.0Z"/><text class="m" x="208" y="136" text-anchor="start" style="fill:var(--tx)">pull_request</text><text class="cap" x="16" y="172" text-anchor="start">YOU</text><text class="s" x="16" y="190" text-anchor="start">Run button or gh CLI</text><path class="ln" d="M166 180L200 180"/><path class="hd" d="M200 180L193.7 183.0L193.7 177.0Z"/><text class="m" x="208" y="184" text-anchor="start" style="fill:var(--tx)">workflow_dispatch</text><text class="cap" x="16" y="220" text-anchor="start">CLOCK</text><text class="s" x="16" y="238" text-anchor="start">cron schedule (UTC)</text><path class="ln" d="M166 228L200 228"/><path class="hd" d="M200 228L193.7 231.0L193.7 225.0Z"/><text class="m" x="208" y="232" text-anchor="start" style="fill:var(--tx)">schedule</text><text class="cap" x="16" y="268" text-anchor="start">API</text><text class="s" x="16" y="286" text-anchor="start">an outside system</text><path class="ln" d="M166 276L200 276"/><path class="hd" d="M200 276L193.7 279.0L193.7 273.0Z"/><text class="m" x="208" y="280" text-anchor="start" style="fill:var(--tx)">repository_dispatch</text><text class="cap" x="16" y="316" text-anchor="start">WORKFLOW</text><text class="s" x="16" y="334" text-anchor="start">another workflow</text><path class="ln" d="M166 324L200 324"/><path class="hd" d="M200 324L193.7 327.0L193.7 321.0Z"/><text class="m" x="208" y="328" text-anchor="start" style="fill:var(--tx)">workflow_call</text>
+</svg>

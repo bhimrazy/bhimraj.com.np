@@ -1,0 +1,488 @@
+---
+title: "Foundations: Git, GitHub, and the shape of the work"
+description: "The mental model behind Git and GitHub: repos, commits, branches, pull requests and issues, in VS Code and the terminal, plus how to undo mistakes."
+publishedAt: "2026-10-07"
+updatedAt: "2026-10-07"
+tags: [github, git, vscode, pull-requests, beginners]
+image: "/blog/github-field-guide/part-1.png"
+series: "github-field-guide"
+part: 1
+level: "beginner"
+verifiedAt: "2026-10-07"
+---
+
+By the end of this part you'll know what Git and GitHub each do, how a change travels from your editor to the main branch, and how to get yourself out of the usual messes. It's for founders who click around GitHub every day without a clear picture of what's underneath, and for developers starting their first job on a team. Every step is shown twice: once in VS Code, once in the terminal.
+
+<Callout type="founder">
+- **Git** is the history of your code. It lives on each person's laptop.
+- **GitHub** is the shared copy plus everything people do around it: reviews, discussions, permissions, automation.
+- Work happens on **branches** (private drafts) and lands through **pull requests** (a proposal that others review before it's merged).
+- **Issues** are the to-do list. A pull request can close an issue automatically when it merges.
+- Almost every mistake is recoverable. The one that isn't: pushing a password or API key. Treat that as leaked and replace the key.
+</Callout>
+
+<Callout type="skip">
+Skip this part if you already work on branches, open pull requests, know when to use `git revert` instead of `git reset`, and have used `git reflog` to rescue a lost commit. Go to [Part 2](/blog/git-setup-across-devices) for machine setup.
+</Callout>
+
+## The mental model
+
+<Level value="beginner" />
+
+Most confusion about GitHub comes from treating five different things as one. Pull them apart:
+
+| Layer | What it is | Where it lives |
+|---|---|---|
+| **Git** | A version control system: it records snapshots of your files and lets you branch, merge and go back. | Your machine. Works offline. |
+| **GitHub** | A host for Git repositories, plus collaboration: pull requests, reviews, issues, permissions, organizations. | github.com |
+| **Interfaces** | Ways to drive Git and GitHub: VS Code's Source Control panel, the `git` command, the GitHub CLI (`gh`), the website. | Your editor and terminal |
+| **GitHub Actions** | Automation that runs on GitHub's servers when something happens: a push, a pull request, a schedule. | GitHub |
+| **AI agents** | New teammates (Claude, Codex, Copilot) that open branches and pull requests through the same flow humans use. | GitHub and your machine |
+
+{/* FIGURE: ecosystem-map — Git on each laptop at the bottom; GitHub in the middle as the shared remote with PRs, issues, reviews and permissions; VS Code, git, gh and the website as interfaces on the left; Actions and AI agents on the right as automated participants pushing to and reading from GitHub */}
+
+Git came first and doesn't need GitHub. You can run `git init` in a folder and never connect to the internet. GitHub adds a shared copy, called a **remote**, that everyone pushes to and pulls from, plus the social layer around code. The [GitHub docs](https://docs.github.com/en/get-started/start-your-journey/about-github-and-git) draw the same line.
+
+This series follows that order. This part covers the core loop. [Part 2](/blog/git-setup-across-devices) sets up your machines, [Part 4](/blog/github-cli-issues-prs-projects) goes deep on `gh`, [Part 6](/blog/github-actions-automation) on Actions, and [Part 7](/blog/ai-coding-agents-on-github) on agents.
+
+## Repositories
+
+<Level value="beginner" />
+
+A **repository** (repo) is a project folder plus its full history. On GitHub it also holds the project's issues, pull requests, settings and access rules ([about repositories](https://docs.github.com/en/repositories/creating-and-managing-repositories/about-repositories)).
+
+You get one of two ways: create a new one, or clone an existing one.
+
+```console
+$ gh repo create acme-labs/web --private --clone
+$ cd web
+```
+
+```console
+$ gh repo clone acme-labs/api
+$ cd api
+```
+
+`gh repo create` makes the repo on GitHub and, with `--clone`, downloads it into a new folder. `gh repo clone` copies an existing repo with its whole history. Plain Git works too (`git clone https://github.com/acme-labs/api.git`), but `gh` saves you from copying URLs. If you haven't installed or signed in to `gh`, [Part 2](/blog/git-setup-across-devices) covers that.
+
+In VS Code, the same actions live in the Command Palette: **Git: Clone** and **Publish to GitHub**.
+
+A repo is **public** (anyone can read it) or **private** (only people you grant access). Organizations that belong to an enterprise account can also create **internal** repos, visible to everyone in the enterprise. Pick private by default for company code; you can make it public later.
+
+## Commits
+
+<Level value="beginner" />
+
+A **commit** is a saved snapshot of your project with a message explaining it. Git builds each commit in two steps: you **stage** the changes you want (pick what goes in), then you **commit** them (seal the snapshot).
+
+```console
+$ git status
+$ git add src/login.ts
+$ git commit -m "fix(auth): show error when the magic link has expired"
+```
+
+`git status` shows what changed. `git add` stages a file. `git commit` records the staged changes. Nothing has left your machine yet: commits are local until you push.
+
+The single most useful habit here is `git add -p`. It walks you through each change, hunk by hunk, and asks whether to stage it. You catch the stray `console.log` before it becomes history.
+
+```console
+$ git add -p
+```
+
+### What makes a good commit
+
+**One logical change per commit.** "Fix the expired-link error" is one commit. "Fix the error, rename a variable across 30 files, and bump three dependencies" is three. Small commits are easier to review and, more importantly, easier to undo: you can revert one without losing the others.
+
+**A message that explains why.** The shape that has worked for decades:
+
+```text
+fix(auth): show error when the magic link has expired
+
+Users clicking an old link saw a blank page. The token check threw
+before the error boundary mounted. Catch it in the loader instead.
+
+Closes #42
+```
+
+- A subject line of about 50 characters, in the imperative ("add", "fix", not "added", "fixes"). Read it as "this commit will … add magic links".
+- A blank line.
+- A body that explains why, not what. The diff already shows what.
+
+{/* VOICE: a short story about a commit message (good or bad) that saved or cost Bhimraj time when digging through history, e.g. while reviewing in an open-source project */}
+
+### Conventional Commits
+
+[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) is a small convention for the subject line: `type(scope): description`. The common types:
+
+| Type | Use for |
+|---|---|
+| `feat` | A new feature (maps to a minor version bump) |
+| `fix` | A bug fix (maps to a patch bump) |
+| `docs` | Documentation only |
+| `refactor` | Code change that doesn't change behavior |
+| `test` | Adding or fixing tests |
+| `chore` | Tooling, dependencies, housekeeping |
+
+A `!` after the type (`feat(api)!: drop v1 endpoints`) or a `BREAKING CHANGE:` footer marks a breaking change. The payoff comes later: release tools can read these prefixes to pick the next version number and write the changelog for you. [Part 5](/blog/git-branching-and-releases) uses that.
+
+Do this: adopt it from the first commit. It costs nothing and the history reads like a changelog.
+
+## Branches
+
+<Level value="beginner" />
+
+A **branch** is a movable label pointing at a line of commits. `main` is the branch everyone agrees is the real project. You never work on it directly; you make a branch, work there, and propose merging it back.
+
+```console
+$ git switch main
+$ git pull
+$ git switch -c feat/magic-link
+```
+
+`git switch -c` creates a branch and moves you onto it. Starting from a freshly pulled `main` means you're building on everyone else's latest work.
+
+Name branches by intent: `feat/magic-link`, `fix/expired-token`, `docs/readme-setup`. The prefix matches the commit type, so the branch list reads at a glance.
+
+When you're ready to share, push the branch to GitHub:
+
+```console
+$ git push -u origin feat/magic-link
+```
+
+`origin` is the default name for the remote you cloned from. `-u` remembers the link between your local branch and the remote one, so future pushes are just `git push`. [Part 2](/blog/git-setup-across-devices) sets `push.autoSetupRemote` so you can skip `-u` forever.
+
+Branching strategy (how long branches live, release branches, trunk-based development) is its own topic. That's [Part 5](/blog/git-branching-and-releases).
+
+## Pull requests
+
+<Level value="beginner" />
+
+A **pull request** (PR) is a proposal: "here's a branch; please review it and merge it into `main`". It's where review, discussion and automated checks happen ([about pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests)).
+
+```console
+$ gh pr create --fill
+```
+
+`--fill` uses your commit messages for the title and description. Add `--draft` to open it as a draft.
+
+{/* FIGURE: pr-lifecycle — branch from main, commits, push, draft PR, checks run, mark ready, review (comment / approve / request changes), more commits, merge, branch deleted, linked issue closes */}
+
+### Draft PRs
+
+A **draft PR** says "work in progress, look if you like, but don't merge". Draft PRs [can't be merged, and code owners aren't automatically asked to review them](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests). When it's ready:
+
+```console
+$ gh pr create --draft --fill
+$ gh pr ready
+```
+
+Do this: open a draft PR as soon as you push the first commit. Teammates see what you're working on, CI starts running early, and your work is backed up on GitHub. It's also how you'll switch between machines in [Part 2](/blog/git-setup-across-devices).
+
+### Reviews
+
+A reviewer reads the diff and leaves one of three verdicts ([about PR reviews](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews)):
+
+- **Comment**: feedback without a verdict.
+- **Approve**: good to merge.
+- **Request changes**: must be addressed first.
+
+You respond by pushing more commits to the same branch. The PR updates itself. On a team, a protected `main` can require an approval and passing checks before anything merges. That's set up in [Part 3](/blog/github-organizations-and-teams).
+
+<Callout type="tip" title="Review your own PR first">
+Before asking anyone, open the **Files changed** tab and read your own diff as a stranger would. You'll catch the leftover debug line, the unrelated formatting change, the missing test.
+</Callout>
+
+### Merge, squash or rebase
+
+When a PR merges, GitHub offers [three methods](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github):
+
+| Method | What lands on `main` | Good for |
+|---|---|---|
+| **Create a merge commit** (the default) | Every commit from the branch, plus a merge commit tying them together | Keeping the full, exact history |
+| **Squash and merge** | One commit containing the whole PR | A tidy `main` where one PR = one commit |
+| **Rebase and merge** | Each commit from the branch, replayed on top of `main`, no merge commit | A linear history that keeps individual commits |
+
+{/* FIGURE: merge-strategies — the same three-commit feature branch merged three ways, shown as commit graphs side by side: merge commit (two parents), squash (one new commit), rebase (three replayed commits, linear) */}
+
+Do this: for a small team, allow only **squash and merge** (repo **Settings** > **General** > **Pull Requests**). Your branch can be full of "wip" and "fix typo" commits, and `main` still reads as one clean commit per PR, titled with the PR's Conventional Commit title. Reverting a feature is one `git revert`.
+
+<Details summary="Deep dive: the trade-offs the docs mention">
+Squashing loses the timing of individual commits on the branch. If you keep working on a branch after it was squash-merged, the old commits show up again in the next PR, so start a fresh branch from `main` after each merge.
+
+Rebase and merge rewrites commits, and GitHub notes that commits added this way [lose their signature verification](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github), because GitHub can't re-sign them with your key. If you sign commits (see [Part 2](/blog/git-setup-across-devices)), that matters.
+
+Merge commits keep everything, which is useful for large projects with long-lived branches. For a startup's web app it mostly adds noise.
+</Details>
+
+## Issues
+
+<Level value="beginner" />
+
+An **issue** is a unit of work or discussion: a bug, a feature request, a question ([about issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues)). Issues have a number, labels, assignees and a comment thread.
+
+```console
+$ gh issue create --title "Magic link fails after 15 minutes" --label bug
+$ gh issue list --assignee @me
+```
+
+The link between issues and PRs is the useful part. Write `Closes #42` in a PR description and the issue [closes automatically when the PR merges](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue) into the default branch. `Fixes` and `Resolves` work too.
+
+Issue forms, sub-issues, labels and Projects boards are in [Part 4](/blog/github-cli-issues-prs-projects).
+
+## VS Code and the terminal, side by side
+
+<Level value="beginner" />
+
+You don't have to pick one. VS Code's Source Control panel and the terminal run the same Git underneath, so you can stage in the panel and push from the terminal. The [VS Code source control docs](https://code.visualstudio.com/docs/sourcecontrol/overview) cover the panel; here's the mapping.
+
+| Task | VS Code | Terminal |
+|---|---|---|
+| Open source control | Source Control view (`Ctrl+Shift+G`, `⌃⇧G` on Mac) | `git status` |
+| Create or switch branch | Branch name in the status bar (bottom left) | `git switch -c feat/x` / `git switch main` |
+| Stage a file | Hover the file, click **+** | `git add path/to/file` |
+| Stage some lines | Open the diff, select lines, **Stage** in the gutter | `git add -p` |
+| Commit | Type the message, **Commit** (`Ctrl+Enter`, `Cmd+Enter` on Mac) | `git commit -m "…"` |
+| Fix the last unpushed commit | Commit dropdown > **Commit (Amend)** | `git commit --amend` |
+| Undo the last unpushed commit | **Undo Last Commit** | `git reset --soft HEAD~1` |
+| Push / pull | **Sync Changes** or **Publish Branch** | `git push` / `git pull` |
+| History of one file | Timeline view in the Explorer | `git log -p path/to/file` |
+| Open a PR | GitHub Pull Requests extension | `gh pr create --fill` |
+
+The labels come from the VS Code [staging and committing guide](https://code.visualstudio.com/docs/sourcecontrol/staging-commits). For PRs and issues inside the editor, install the [GitHub Pull Requests extension](https://code.visualstudio.com/docs/sourcecontrol/github). It signs in through VS Code's GitHub account, so you never paste a token.
+
+{/* SCREENSHOT: VS Code Source Control panel with staged and unstaged changes, a Conventional Commit message in the box, the branch picker in the status bar, and the GitHub Pull Requests sidebar open — needs author VS Code */}
+
+<Callout type="note" title="AI commit messages">
+VS Code's commit box has a sparkle button that drafts a message from your staged diff. Treat it as a first draft: it can describe *what* changed, but only you know *why*.
+</Callout>
+
+{/* VOICE: one or two sentences on how Bhimraj actually splits work between the VS Code panel and the terminal day to day (e.g. where he stages, where he reviews diffs) */}
+
+## .gitignore, and never committing secrets
+
+<Level value="beginner" />
+
+A `.gitignore` file at the root of your repo lists files Git should never track: build output, dependencies, editor clutter, and, above all, files holding secrets ([ignoring files](https://docs.github.com/en/get-started/git-basics/ignoring-files)).
+
+```text title=".gitignore"
+# dependencies and build output
+node_modules/
+.next/
+dist/
+
+# local environment and secrets
+.env
+.env.*
+!.env.example
+
+# OS and editor clutter
+.DS_Store
+```
+
+The `!.env.example` line un-ignores one file: a copy of `.env` with the variable names and fake values, so new teammates know what to set. Don't write a `.gitignore` from scratch; GitHub keeps [templates for most languages](https://github.com/github/gitignore), and `gh repo create --gitignore Node` adds one when you create the repo.
+
+For clutter that's about your machine rather than the project (`.DS_Store`, editor folders), use a global ignore file at `~/.config/git/ignore`. Git reads it in every repo.
+
+If you already committed a file and then added it to `.gitignore`, Git keeps tracking it. Stop tracking it without deleting your copy:
+
+```console
+$ git rm --cached .env
+$ git commit -m "chore: stop tracking .env"
+```
+
+### If a secret gets pushed
+
+A committed secret stays in history even after you delete the file in a later commit. Anyone with a clone has it.
+
+1. **Revoke and rotate the key first.** GitHub's guide on [removing sensitive data](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository) puts this as the first step, and often it's the only one you need: a revoked key is useless.
+2. Then decide whether to rewrite history. That guide walks through `git-filter-repo`, and it's disruptive: every collaborator's clone, open PR and fork is affected.
+
+GitHub helps on the way in. [Push protection for users](https://docs.github.com/en/code-security/secret-scanning/introduction/about-push-protection) is on by default and blocks pushes containing recognized secrets to **public** repos. Push protection for private repos needs the paid [GitHub Secret Protection](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) product, turned on per repo or org. Either way, it's a seatbelt, not a plan: keep secrets in `.env` files that are ignored, and in GitHub Actions secrets for CI ([Part 6](/blog/github-actions-automation)).
+
+<Callout type="warning">
+Never paste tokens, passwords or customer data into commit messages, issue comments or PR descriptions either. Those are as public as the repo, and usually more widely read.
+</Callout>
+
+## Personal account or organization?
+
+<Level value="intermediate" />
+
+Every GitHub user has a **personal account**. Repos under it (`bhimrazy/…`) belong to you. You can invite collaborators, but access is flat: each person is added repo by repo, and you're the only owner.
+
+An **organization** is a shared account for a company or project (`acme-labs/…`). It has multiple owners, teams, roles, and org-wide policies ([about organizations](https://docs.github.com/en/organizations/collaborating-with-groups-in-organizations/about-organizations)). The code belongs to the business, not to whichever founder created the repo.
+
+My rule of thumb: create an org as soon as a second person joins, or as soon as the repo holds anything you'd care about losing control of: customer data, deploy keys, CI secrets. Creating an org is free on the [Free plan](https://github.com/pricing), which covers the basics; paid plans add things like protected branches on private repos.
+
+Moving an existing repo is a [transfer](https://docs.github.com/en/repositories/creating-and-managing-repositories/transferring-a-repository). Issues, PRs, wiki, stars, webhooks, secrets and deploy keys move with it, and old URLs (including `git clone` and `git push` URLs) redirect to the new location. One thing doesn't: a GitHub Pages site isn't redirected. Update your local remotes anyway, rather than relying on redirects forever:
+
+```console
+$ git remote set-url origin https://github.com/acme-labs/web.git
+```
+
+Teams, roles, base permissions and protecting `main` are all in [Part 3](/blog/github-organizations-and-teams).
+
+## Recovering from common mistakes
+
+<Level value="intermediate" />
+
+The key question is always: **have I pushed it yet?** Before you push, history is yours to rewrite. After you push, other people may have built on it, so you add new commits that undo things instead of rewriting.
+
+| Situation | Pushed? | Do this |
+|---|---|---|
+| Typo in the last commit message, or forgot a file | No | `git add forgotten-file` then `git commit --amend` |
+| Want to undo the last commit but keep the changes | No | `git reset --soft HEAD~1` |
+| Staged a file by mistake | No | `git restore --staged path/to/file` |
+| Want to throw away edits to a file | No | `git restore path/to/file` (destroys those edits) |
+| A commit on `main` broke something | Yes | `git revert abc1234`, then push |
+| "I lost a commit" or "I reset too far" | Either | `git reflog`, then recover the commit (below) |
+
+### Amend before pushing
+
+```console
+$ git add src/forgotten.ts
+$ git commit --amend --no-edit
+```
+
+`--amend` replaces the last commit with a new one that includes your staged changes. `--no-edit` keeps the message; drop it to edit the message too. Only do this before pushing. Amending a pushed commit means you'd have to force push, which rewrites history other people may already have.
+
+### Restore files
+
+```console
+$ git restore --staged src/login.ts
+$ git restore src/login.ts
+```
+
+The first line unstages the file; your edits stay. The second throws away your uncommitted edits to that file. There's no undo for the second one, because Git never recorded those edits. [`git restore`](https://git-scm.com/docs/git-restore) replaced the older, overloaded `git checkout -- file` form.
+
+### Revert after pushing
+
+```console
+$ git revert abc1234
+$ git push
+```
+
+[`git revert`](https://git-scm.com/docs/git-revert) makes a new commit that does the opposite of `abc1234`. History stays intact and everyone else's clone keeps working. On GitHub, a merged PR also has a [**Revert** button](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/reverting-a-pull-request) that opens a revert PR for you.
+
+### The reflog is your safety net
+
+Git records every place your branch tip (`HEAD`) has been: every commit, checkout, reset, rebase and amend. That record is the [reflog](https://git-scm.com/docs/git-reflog).
+
+```console
+$ git reflog
+3f2c1a9 HEAD@{0}: reset: moving to HEAD~3
+8be41d0 HEAD@{1}: commit: feat(auth): add magic link email
+71ac9e2 HEAD@{2}: commit: feat(auth): add token table
+$ git switch -c rescue 8be41d0
+```
+
+Find the line from before the mistake and make a branch at that commit. Nothing lost. Making a new branch is safer than `git reset --hard`, which moves your current branch and discards uncommitted work.
+
+Two limits. The reflog is local: it lives in your clone only, and isn't pushed. And entries expire: by default [after 90 days, or 30 days for commits no longer on any branch](https://git-scm.com/docs/git-gc). Uncommitted work never enters the reflog, which is one more reason to commit often.
+
+<Details summary="Deep dive: reset --soft, --mixed and --hard">
+`git reset` moves the current branch to another commit. The flag decides what happens to your files:
+
+- `--soft`: branch moves; changes from the undone commits stay **staged**.
+- `--mixed` (the default): branch moves; changes stay in your files but **unstaged**.
+- `--hard`: branch moves; staged and unstaged changes are **discarded**.
+
+`--hard` is the only one that can lose work, and only uncommitted work: committed work is still in the reflog. Before any `--hard`, run `git status` and `git stash` if in doubt. See the [git-reset docs](https://git-scm.com/docs/git-reset).
+</Details>
+
+{/* VOICE: a 1–3 sentence story of a time Bhimraj (or a teammate) recovered "lost" work with git reflog, or a mistake he'd warn beginners about */}
+
+## Workshop exercises
+
+<Level value="beginner" />
+
+<Exercise title="Your first pull request, end to end" time="25 min">
+Goal: take one change from an issue to a merged PR, using both VS Code and the terminal.
+
+1. Create a private practice repo with a README: `gh repo create git-practice --private --add-readme --clone`, then `cd git-practice`.
+2. Open an issue: `gh issue create --title "Add a contributing section" --body "Explain how to propose changes."`. Note its number.
+3. Create a branch: `git switch -c docs/contributing`.
+4. Add a `## Contributing` section to `README.md`. In VS Code, stage it with the **+** button and commit with the message `docs: add contributing section`.
+5. Make a second small edit, then stage and commit it in the terminal with `git add -p` and `git commit`.
+6. Push and open a draft PR: `git push -u origin docs/contributing`, then `gh pr create --draft --fill`. Edit the PR description to include `Closes #1` (use your issue number).
+7. Read your own diff on GitHub under **Files changed**. Then `gh pr ready`.
+8. Merge with squash: `gh pr merge --squash --delete-branch`.
+
+**Done when:** `main` has one new commit for the whole PR, the issue shows as closed by your PR, and the branch is gone on GitHub.
+</Exercise>
+
+<Exercise title="Break it and fix it" time="15 min">
+Goal: practice each recovery move in a safe repo.
+
+1. In `git-practice`, make three commits on a new branch `practice/undo`.
+2. Amend the last commit's message with `git commit --amend`.
+3. Run `git reset --hard HEAD~3`. Your three commits seem gone.
+4. Use `git reflog` to find the last of them and create a branch `rescued` pointing at it.
+5. Switch to `main`, make a commit, push it, then undo it with `git revert` and push again.
+
+**Done when:** `git log rescued` shows all three commits, and `main` on GitHub has both your commit and its revert.
+
+<Details summary="Solution">
+```console
+$ git switch -c practice/undo
+$ git commit --allow-empty -m "chore: one"
+$ git commit --allow-empty -m "chore: two"
+$ git commit --allow-empty -m "chore: three"
+$ git commit --amend -m "chore: three (amended)"
+$ git reset --hard HEAD~3
+$ git reflog
+$ git switch -c rescued HEAD@{1}
+$ git log --oneline rescued
+$ git switch main
+$ git pull
+$ git commit --allow-empty -m "chore: oops"
+$ git push
+$ git revert --no-edit HEAD
+$ git push
+```
+
+`HEAD@{1}` means "where HEAD was one move ago", which is the amended commit just before the reset. Check the `git reflog` output to confirm before using it.
+</Details>
+</Exercise>
+
+## Cheat sheet
+
+| Task | Command |
+|---|---|
+| Create a repo and clone it | `gh repo create NAME --private --clone` |
+| Clone a repo | `gh repo clone OWNER/REPO` |
+| What changed? | `git status` / `git diff` |
+| Stage interactively | `git add -p` |
+| Commit | `git commit -m "feat(scope): summary"` |
+| New branch | `git switch -c feat/name` |
+| Update main | `git switch main && git pull` |
+| Push a new branch | `git push -u origin feat/name` |
+| Open a draft PR | `gh pr create --draft --fill` |
+| Mark ready | `gh pr ready` |
+| Squash-merge and clean up | `gh pr merge --squash --delete-branch` |
+| Open an issue | `gh issue create --title "…"` |
+| Stop tracking a file | `git rm --cached FILE` |
+| Fix last unpushed commit | `git commit --amend` |
+| Undo last unpushed commit, keep changes | `git reset --soft HEAD~1` |
+| Unstage / discard edits | `git restore --staged FILE` / `git restore FILE` |
+| Undo a pushed commit | `git revert SHA` |
+| Find lost commits | `git reflog` |
+
+## What changes fast
+
+- **VS Code Source Control UI and AI features** (commit message generation, code review button). Check the [VS Code source control docs](https://code.visualstudio.com/docs/sourcecontrol/overview).
+- **Merge method options and defaults.** Check [about merge methods](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github).
+- **Push protection coverage and pricing** for private repos. Check [about push protection](https://docs.github.com/en/code-security/secret-scanning/introduction/about-push-protection).
+- **`gh` flags.** The CLI ships often; run `gh <command> --help` or check the [manual](https://cli.github.com/manual/).
+
+## Further reading
+
+- [About GitHub and Git](https://docs.github.com/en/get-started/start-your-journey/about-github-and-git)
+- [Pro Git book](https://git-scm.com/book/en/v2), free online; chapters 2 and 3 cover this part in depth
+- [About pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests)
+- [About pull request reviews](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews)
+- [Linking a pull request to an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue)
+- [Ignoring files](https://docs.github.com/en/get-started/git-basics/ignoring-files)
+- [Removing sensitive data from a repository](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+- [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
+- [git-reflog](https://git-scm.com/docs/git-reflog), [git-revert](https://git-scm.com/docs/git-revert), [git-restore](https://git-scm.com/docs/git-restore)
+- [GitHub CLI manual](https://cli.github.com/manual/)

@@ -250,7 +250,9 @@
   margin-top: 0;
 }
 
-.article-prose :is(h2, h3, h4) {
+/* `.not-prose` components (callouts, exercises, series cards) style their
+   own headings and links, so the rules below skip them. */
+.article-prose :is(h2, h3, h4):not(.not-prose *) {
   position: relative;
   scroll-margin-top: 6.5rem;
   font-family: var(--font-display);
@@ -260,14 +262,14 @@
 .article-prose :is(h2, h3, h4) strong {
   font-weight: inherit;
 }
-.article-prose h2 {
+.article-prose h2:not(.not-prose *) {
   margin-top: 2.4em;
   margin-bottom: 0.75em;
   font-size: 1.625rem;
   font-weight: 700;
   line-height: 1.25;
 }
-.article-prose h3 {
+.article-prose h3:not(.not-prose *) {
   margin-top: 2em;
   margin-bottom: 0.6em;
   font-size: 1.25rem;
@@ -310,7 +312,7 @@
   }
 }
 
-.article-prose a:not(.heading-anchor) {
+.article-prose a:not(.heading-anchor, .not-prose *) {
   font-weight: 500;
   text-decoration-line: underline;
   text-decoration-color: color-mix(
@@ -324,7 +326,7 @@
     color 0.15s,
     text-decoration-color 0.15s;
 }
-.article-prose a:not(.heading-anchor):hover {
+.article-prose a:not(.heading-anchor, .not-prose *):hover {
   color: var(--site-accent);
   text-decoration-color: var(--site-accent);
 }
@@ -516,6 +518,55 @@
 }
 .shiki .line.diff.remove::before {
   content: "−";
+}
+
+/* ```console```: a dim, unselectable `$ ` prompt; output reads quieter than
+   the commands. */
+.shiki .line > .prompt {
+  color: var(--site-text-tertiary);
+  user-select: none;
+}
+.shiki.console .line.output span,
+.dark .shiki.console .line.output span {
+  color: var(--site-text-secondary);
+}
+/* Shiki reads a `\` continuation as output; it is part of the command. */
+.shiki.console .line.continuation span,
+.dark .shiki.console .line.continuation span {
+  color: inherit;
+}
+.code-copy-btn:focus-visible {
+  outline: 2px solid var(--site-accent);
+  outline-offset: 2px;
+}
+
+/* <Tabs> / <Exercise>: code inside the card. A tab that holds only code
+   shows it flush under the tabs; on phones, code runs edge to edge instead
+   of nesting a second box in a narrow card. */
+.tab-panel,
+.exercise-body {
+  --panel-px: 1.25rem;
+}
+.tab-panel > :is(pre.shiki, .code-block) {
+  margin-block: 1.25rem;
+}
+.tab-panel > :is(pre.shiki, .code-block):only-child {
+  margin: 0 calc(-1 * var(--panel-px));
+  border: 0;
+  border-radius: 0;
+}
+@media (min-width: 640px) {
+  .tab-panel,
+  .exercise-body {
+    --panel-px: 1.5rem;
+  }
+}
+@media (max-width: 639px) {
+  :is(.tab-panel, .exercise-body) > :is(pre.shiki, .code-block) {
+    margin-inline: calc(-1 * var(--panel-px));
+    border-inline: 0;
+    border-radius: 0;
+  }
 }
 
 /* ```py title="unet.py"``` → a filename bar above the code. */

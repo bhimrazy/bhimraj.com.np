@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 680 228" width="680" height="228" role="img" aria-labelledby="gf-agent-loop-title gf-agent-loop-desc">
+<title id="gf-agent-loop-title">How an AI agent ships a change on GitHub</title>
+<desc id="gf-agent-loop-desc">You write a scoped issue; the agent works on its own branch and opens a draft PR, never pushing to main; CI runs the same checks as for humans; a human reviews; you merge. If CI fails, the agent pushes a fix. If review requests changes, the agent revises. Both loops return to the agent.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="680" height="228" rx="12"/>
+<text class="cap" x="65" y="36" text-anchor="middle">YOU</text><rect class="n" x="21" y="48" width="88" height="64" rx="10"/><text class="t" x="65" y="76" text-anchor="middle">Issue</text><text class="s" x="65" y="92" text-anchor="middle">scoped by you</text><path class="ln" d="M111 80L128 80"/><path class="hd" d="M128 80L121.7 83.0L121.7 77.0Z"/><text class="cap" x="175" y="36" text-anchor="middle">AGENT</text><rect class="n" x="131" y="48" width="88" height="64" rx="10"/><text class="t" x="175" y="76" text-anchor="middle">Agent</text><text class="s" x="175" y="92" text-anchor="middle">own branch</text><path class="ln" d="M221 80L238 80"/><path class="hd" d="M238 80L231.7 83.0L231.7 77.0Z"/><text class="cap" x="285" y="36" text-anchor="middle">AGENT</text><rect class="n" x="241" y="48" width="88" height="64" rx="10"/><text class="t" x="285" y="76" text-anchor="middle">Draft PR</text><text class="s" x="285" y="92" text-anchor="middle">never main</text><path class="ln" d="M331 80L348 80"/><path class="hd" d="M348 80L341.7 83.0L341.7 77.0Z"/><text class="cap" x="395" y="36" text-anchor="middle">ACTIONS</text><rect class="n" x="351" y="48" width="88" height="64" rx="10"/><text class="t" x="395" y="76" text-anchor="middle">CI checks</text><text class="s" x="395" y="92" text-anchor="middle">same gates</text><path class="ln" d="M441 80L458 80"/><path class="hd" d="M458 80L451.7 83.0L451.7 77.0Z"/><text class="cap act" x="505" y="36" text-anchor="middle">YOU</text><rect class="n on" x="461" y="48" width="88" height="64" rx="10"/><text class="t" x="505" y="76" text-anchor="middle">Review</text><text class="s" x="505" y="92" text-anchor="middle">human gate</text><path class="ln" d="M551 80L568 80"/><path class="hd" d="M568 80L561.7 83.0L561.7 77.0Z"/><text class="cap" x="615" y="36" text-anchor="middle">YOU</text><rect class="n" x="571" y="48" width="88" height="64" rx="10"/><text class="t" x="615" y="76" text-anchor="middle">Merge</text><text class="s" x="615" y="92" text-anchor="middle">you decide</text><path class="ln dash" d="M395 114L395.0 138.0Q395 148 385.0 148.0L197.0 148.0Q187 148 187.0 138.0L187 116"/><path class="hd" d="M187 116L190.0 122.3L184.0 122.3Z"/><text class="m" x="291" y="166" text-anchor="middle">CI fails → agent pushes a fix</text><path class="ln dash" d="M505 114L505.0 186.0Q505 196 495.0 196.0L173.0 196.0Q163 196 163.0 186.0L163 116"/><path class="hd" d="M163 116L166.0 122.3L160.0 122.3Z"/><text class="m" x="334" y="214" text-anchor="middle">changes requested → agent revises</text>
+</svg>

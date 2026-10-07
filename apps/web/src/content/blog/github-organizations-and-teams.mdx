@@ -1,0 +1,502 @@
+---
+title: "Running a startup on GitHub: orgs, teams, access and guardrails"
+description: "Set up a GitHub org like a small company should: teams as the unit of access, a protected main, the right plan and a clean offboarding checklist."
+publishedAt: "2026-10-07"
+updatedAt: "2026-10-07"
+tags: [github, organizations, teams, rulesets, security, startups]
+image: "/blog/github-field-guide/part-3.png"
+series: "github-field-guide"
+part: 3
+level: "intermediate"
+verifiedAt: "2026-10-07"
+---
+
+By the end of this part you'll be able to move a startup's code into a GitHub organization, give people access through teams instead of one repo at a time, lock down `main` so nobody can break production by accident, and pick the plan that actually turns those locks on. It's written for founders who own the GitHub account, team leads setting things up for the first time, and engineers who inherited an org that grew without a plan.
+
+<Callout type="founder" title="The short version">
+- Put the company's code in an **organization**, not in a founder's personal account. The code then belongs to the business, and you can add and remove people cleanly.
+- Give access to **teams** (for example "web" and "platform"), not to individual people. Someone joining or leaving becomes one change.
+- **Protect `main`** so changes need a reviewed pull request and passing tests. On private repos this needs the paid **Team** plan (a few dollars per user per month).
+- Turn on **required two-factor authentication** and **Dependabot** on day one. Both are available on every plan.
+- Keep an **offboarding checklist**. Removing someone from the org is the start, not the end.
+</Callout>
+
+<Callout type="skip" title="Skip this if you already…">
+run an org with teams, base permission set to Read, a ruleset on the default branch, and required 2FA. Jump to [Plan reality](#plan-reality-free-vs-team-vs-enterprise) to double-check what your plan enforces, or to the [offboarding checklist](#onboarding-and-offboarding-checklists).
+</Callout>
+
+Examples use a fictional company, **`acme-labs`**, with repos `acme-labs/web` and `acme-labs/api` and teams `@acme-labs/web`, `@acme-labs/platform` and `@acme-labs/founders`. Swap in your own names.
+
+## Why a startup should create an organization
+
+<Level value="beginner" />
+
+A personal account's repos can have collaborators, but access is flat: each person is added to each repo by hand, with no teams, roles or company-wide policy. An [organization](https://docs.github.com/en/organizations/collaborating-with-groups-in-organizations/about-organizations) is a shared account with owners, members, teams and org-wide settings. It's the GitHub equivalent of a company Google Workspace.
+
+My rule of thumb: create the org the moment a second person touches the code, or the repo holds anything you'd lose sleep over (customer data, deploy keys, CI secrets). Orgs are free to create.
+
+{/* VOICE: When did you first move a project from your personal account into an org, and what pushed you to do it? 1–3 sentences. */}
+
+### Create the org
+
+1. Go to [github.com/account/organizations/new](https://github.com/account/organizations/new) and pick the Free plan to start. You can upgrade later without moving anything.
+2. Name it after the company (`acme-labs`). The name becomes the URL and the prefix in every team handle.
+3. Add a second owner straight away. GitHub's docs recommend [no fewer than two owners](https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/roles-in-an-organization), so the company can't be locked out if one person loses their account.
+
+### Transfer existing repos into it
+
+If the code already lives under a founder's account, transfer it. In the repo: **Settings → General → Danger Zone → Transfer**, then choose the org. You need permission to create repos in the target org.
+
+The same thing from the terminal, using the [transfer endpoint](https://docs.github.com/en/rest/repos/repos#transfer-a-repository) through `gh api` (gh has no dedicated transfer command):
+
+```console
+$ gh api -X POST repos/bhimrazy/acme-web/transfer -f new_owner=acme-labs -f new_name=web
+```
+
+According to the [transfer docs](https://docs.github.com/en/repositories/creating-and-managing-repositories/transferring-a-repository), these come along: issues, pull requests, wiki, stars, watchers, commit history, webhooks, secrets, deploy keys and Git LFS objects. Old URLs redirect, for both the web page and `git clone`/`git push`.
+
+Two things don't carry over cleanly:
+
+- **GitHub Pages** links are not redirected. If you serve a site from the repo, update DNS or links afterwards.
+- **Issue assignments** to people who aren't in the new org may be cleared.
+
+<Callout type="tip">
+Update your local remotes anyway, even though redirects work: `git remote set-url origin git@github.com:acme-labs/web.git`. Redirects break if someone later creates a repo at the old path.
+</Callout>
+
+## Members, outside collaborators and org roles
+
+<Level value="beginner" />
+
+Everyone with access to an org's repos is one of two things:
+
+- **Member**: part of the org. Members can be put in teams and get the org's base permission (more on that below).
+- **Outside collaborator**: not a member, added to specific repos only. Use this for a contractor or agency who should see one repo and nothing else. The [base permission does not apply to them](https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/setting-base-permissions-for-an-organization), which is exactly the point.
+
+On paid plans, people with access to private repos count as seats; the [pricing page](https://github.com/pricing) lists "Collaborators for private repositories" as unlimited on Free and per user on Team and Enterprise.
+
+### Org roles
+
+The [org roles page](https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/roles-in-an-organization) lists the predefined roles. The ones a startup uses:
+
+| Role | What it's for |
+|---|---|
+| Owner | Full admin over the org, billing and every repo. Keep this to two or three people. |
+| Member | The default. Access comes from the base permission and teams. |
+| Billing manager | Pays the bills and sees invoices without touching code. Good for a finance person. |
+| Security manager | Sees security alerts and manages security settings across repos. |
+| Outside collaborator | Access to specific repos only. |
+
+[Custom organization roles](https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/roles-in-an-organization) and [custom repository roles](https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/about-custom-repository-roles) are Enterprise Cloud features. You won't need them early on.
+
+### Set the base permission to Read
+
+The base permission is the access every member gets to every repo in the org, before teams add anything. Set it in **Org Settings → Access → Member privileges → Base permissions**. The options are No permission, Read, Write and Admin, and the [API default is Read](https://docs.github.com/en/rest/orgs/orgs#update-an-organization).
+
+Do this: keep it at **Read** (or **No permission** if some repos are sensitive) and grant Write through teams. A Write base permission means every new hire can push to every repo on day one, including the ones they've never heard of.
+
+```console
+$ gh api -X PATCH orgs/acme-labs -f default_repository_permission=read
+```
+
+
+## Teams are the unit of access
+
+<Level value="intermediate" />
+
+This is the most useful idea in the whole part. **Don't give people access to repos. Give teams access to repos, and put people in teams.**
+
+{/* FIGURE: collaborators-vs-teams — left: five people each wired to three repos one by one (15 grants to track); right: the same people in two teams (@acme-labs/web, @acme-labs/platform), each team wired once to its repos with a permission label (Write, Maintain). Animate one person leaving: on the left, 3 grants to hunt down; on the right, one team membership removed. */}
+
+Why it beats adding people to repos one by one:
+
+- **Onboarding is one change.** A new frontend engineer joins `@acme-labs/web` and gets Write on every repo that team touches, now and later.
+- **Offboarding is one change.** Remove them from the org and every team grant goes with it. Direct collaborator grants have to be hunted down repo by repo, and the one you forget is the one that matters.
+- **Reviews route to teams.** Request a review from `@acme-labs/platform`, or name the team in CODEOWNERS, and nobody has to know who's on holiday.
+
+### Create teams
+
+A starting layout for a small company:
+
+| Team | Members | Repos and permission |
+|---|---|---|
+| `@acme-labs/founders` | Founders | Admin on everything, or nothing extra if they're already owners |
+| `@acme-labs/web` | Frontend engineers | Write on `acme-labs/web` |
+| `@acme-labs/platform` | Backend and infra | Write on `acme-labs/api`, Maintain on infra repos |
+
+In the UI: **Org → Teams → New team**. Name it, add a description, choose visibility (more below), then add members and repos from the team page.
+
+With `gh api`, using the [teams REST endpoints](https://docs.github.com/en/rest/teams/teams):
+
+```console
+$ gh api -X POST orgs/acme-labs/teams -f name=web -f description="Frontend" -f privacy=closed
+$ gh api -X POST orgs/acme-labs/teams -f name=platform -f description="Backend and infra" -f privacy=closed
+$ gh api -X PUT orgs/acme-labs/teams/web/memberships/octocat -f role=member
+```
+
+In the API, `privacy=closed` means a **visible** team. The other option, `secret`, is covered below. Adding someone who isn't an org member to a team [sends them an org invitation](https://docs.github.com/en/rest/teams/members).
+
+### Give teams repo permissions
+
+There are five [repository roles](https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/repository-roles-for-an-organization), from least to most access:
+
+| Role | API name | Who it's for |
+|---|---|---|
+| Read | `pull` | People who view and discuss: designers, PMs, founders who read code |
+| Triage | `triage` | People who manage issues and PRs (labels, assignees, closing) without pushing code |
+| Write | `push` | Engineers who push branches and merge PRs |
+| Maintain | `maintain` | Leads who manage repo settings, without destructive actions like deleting the repo |
+| Admin | `admin` | Full control, including security settings and deleting the repo |
+
+Give the team Write on its repo from **Repo → Settings → Collaborators and teams → Add teams**, or:
+
+```console
+$ gh api -X PUT orgs/acme-labs/teams/web/repos/acme-labs/web -f permission=push
+$ gh api -X PUT orgs/acme-labs/teams/platform/repos/acme-labs/api -f permission=push
+```
+
+Do this: Write for the team that owns a repo, Read (from the base permission) for everyone else, Maintain for one or two leads, Admin only for owners.
+
+### Visible vs secret teams, and nesting
+
+From [About teams](https://docs.github.com/en/organizations/organizing-members-into-teams/about-teams):
+
+- **Visible** teams can be seen and @mentioned by every org member. Use these by default.
+- **Secret** teams are only visible to their members and org owners. They're meant for things like an external partner group. Secret teams can't be nested.
+- **Nested teams**: a child team inherits the parent's repo access. If `@acme-labs/engineering` has Read on everything and `@acme-labs/web` is its child, web members get that Read plus whatever `web` has on its own. Mentioning a parent team also notifies the child teams' members.
+
+To nest a team, set its parent when creating it (you need the parent's numeric id):
+
+```console
+$ gh api -X POST orgs/acme-labs/teams -f name=engineering -f privacy=closed
+$ gh api -X POST orgs/acme-labs/teams -f name=mobile -f privacy=closed -F parent_team_id=$(gh api orgs/acme-labs/teams/engineering --jq .id)
+```
+
+At five people, two flat teams are fine; nesting pays off later.
+
+### Team maintainers
+
+You don't need to be an owner to run a team. A [team maintainer](https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/giving-team-maintainer-permissions-to-an-organization-member) can add and remove org members from the team, rename it, change its visibility, remove the team's access to repos, and manage its code review assignment and scheduled reminders. Make the tech lead of each team its maintainer and the owners stop being a bottleneck.
+
+```console
+$ gh api -X PUT orgs/acme-labs/teams/web/memberships/octocat -f role=maintainer
+```
+
+### Team review requests
+
+When someone requests a review from `@acme-labs/platform`, GitHub can pick specific people instead of pinging the whole team. In **Team → Settings → Code review** you can turn on [auto assignment](https://docs.github.com/en/organizations/organizing-members-into-teams/managing-code-review-settings-for-your-team) with one of two algorithms:
+
+- **Round robin**: picks whoever had the least recent review request.
+- **Load balance**: considers each member's recent review requests and outstanding reviews.
+
+Members who set their GitHub status to Busy are skipped. The [pricing page](https://github.com/pricing) lists automatic code review assignment for public repos on Free and all repos on Team and Enterprise.
+
+{/* SCREENSHOT: Team → Settings → Code review page with auto assignment enabled, load balance selected, 1 reviewer — needs sandbox org */}
+
+<Exercise title="Build the team structure" time="15 min">
+1. Create a free org (or use the workshop sandbox) and two private repos, `web` and `api`.
+2. Set the base permission to **Read**.
+3. Create the teams `web` and `platform`, both visible.
+4. Give `web` Write on `web`, and `platform` Write on `api`.
+5. Invite a partner (or a second account of yours) to `web` only.
+6. Have them try to push a branch to `api`.
+
+**Done when:** your partner can push to `web`, can see `api` (base Read), and gets a permission error when pushing to `api`.
+
+<Details summary="Solution: the same setup with gh api">
+
+```console
+$ gh api -X PATCH orgs/acme-labs -f default_repository_permission=read
+$ gh repo create acme-labs/web --private
+$ gh repo create acme-labs/api --private
+$ gh api -X POST orgs/acme-labs/teams -f name=web -f privacy=closed
+$ gh api -X POST orgs/acme-labs/teams -f name=platform -f privacy=closed
+$ gh api -X PUT orgs/acme-labs/teams/web/repos/acme-labs/web -f permission=push
+$ gh api -X PUT orgs/acme-labs/teams/platform/repos/acme-labs/api -f permission=push
+$ gh api -X PUT orgs/acme-labs/teams/web/memberships/PARTNER_LOGIN -f role=member
+```
+
+</Details>
+</Exercise>
+
+## Protecting main
+
+<Level value="intermediate" />
+
+Teams decide *who* can push. Protection decides *how* changes reach `main`. Without it, anyone with Write can push straight to `main`, rewrite history, or merge a PR with failing tests.
+
+GitHub has two ways to protect a branch: **rulesets** (newer) and **classic branch protection rules**. Both [work alongside each other](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets), and when several rules target the same branch, the most restrictive one wins.
+
+<Callout type="warning" title="Check your plan first">
+On a **Free** org, branch protection and rulesets only work on **public** repos. On private repos you'll find the settings unavailable or not enforced. See [Plan reality](#plan-reality-free-vs-team-vs-enterprise) before you spend an afternoon configuring something that doesn't apply.
+</Callout>
+
+### Rulesets: do this
+
+Use rulesets for anything new. Compared with classic rules, per the [rulesets docs](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets):
+
+- **They stack.** Several rulesets can apply to one branch, so you can have a company-wide baseline plus a stricter one for `acme-labs/api`.
+- **They can be switched off without deleting them.** Enforcement is Active or Disabled, and some rules can run in Evaluate mode to see what would be blocked.
+- **Anyone with read access can see them**, so engineers know why their push was rejected.
+- **They can be org-wide.** Org rulesets became [available on the Team plan in June 2025](https://github.blog/changelog/2025-06-16-organization-rulesets-now-available-for-github-team-plans/), so one ruleset can protect the default branch of every repo.
+
+Create one in **Repo → Settings → Rules → Rulesets → New ruleset → New branch ruleset** ([steps](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository)). For the whole org: **Org Settings → Repository → Rulesets** ([steps](https://docs.github.com/en/organizations/managing-organization-settings/creating-rulesets-for-repositories-in-your-organization)).
+
+A sensible baseline for `main`:
+
+| Rule | Setting | Why |
+|---|---|---|
+| Restrict deletions | On | Nobody deletes `main` |
+| Block force pushes | On | History can't be rewritten |
+| Require a pull request before merging | 1 approval, dismiss stale approvals, require review from Code Owners | Every change gets a second pair of eyes |
+| Require status checks to pass | Your CI job, for example `ci` | Broken builds can't merge. CI itself is [Part 6](/blog/github-actions-automation). |
+| Require signed commits | Optional | Proves commits came from the person they claim. Setup is in [Part 2](/blog/git-setup-across-devices). |
+| Require linear history | Optional | Pairs well with squash merging, see [Part 5](/blog/git-branching-and-releases) |
+
+### The bypass list
+
+Every ruleset has a **bypass list**: roles, teams or GitHub Apps that can skip it. From the [ruleset creation docs](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository), you can add repository admins, org owners, people with maintain or write roles, teams (not secret ones), GitHub Apps and Dependabot. For branch rulesets, you can also limit a bypass to "pull requests only", so the person still has to open a PR but can merge it without the usual requirements.
+
+Keep the list short. Each name on it is someone who can quietly skip review. A good default is `@acme-labs/founders` with "pull requests only", for genuine emergencies, and nobody with "always".
+
+### The same ruleset with gh api
+
+Save this as `main-ruleset.json`:
+
+```json title="main-ruleset.json"
+{
+  "name": "protect-main",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": { "include": ["~DEFAULT_BRANCH"], "exclude": [] }
+  },
+  "bypass_actors": [
+    { "actor_id": 1234567, "actor_type": "Team", "bypass_mode": "pull_request" }
+  ],
+  "rules": [
+    { "type": "deletion" },
+    { "type": "non_fast_forward" },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 1,
+        "dismiss_stale_reviews_on_push": true,
+        "require_code_owner_review": true,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": true
+      }
+    },
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "strict_required_status_checks_policy": true,
+        "required_status_checks": [{ "context": "ci" }]
+      }
+    }
+  ]
+}
+```
+
+Replace `1234567` with the founders team's id, then create it and check what now applies to `main`:
+
+```console
+$ gh api orgs/acme-labs/teams/founders --jq .id
+$ gh api -X POST repos/acme-labs/web/rulesets --input main-ruleset.json
+$ gh ruleset check main --repo acme-labs/web
+$ gh ruleset list --org acme-labs
+```
+
+The body format is documented in the [repository rules API](https://docs.github.com/en/rest/repos/rules). For an org-wide version, `POST` to `orgs/acme-labs/rulesets` and add `"repository_name": { "include": ["~ALL"], "exclude": [] }` to `conditions` ([org rules API](https://docs.github.com/en/rest/orgs/rules)). `gh ruleset` itself is read-only (list, view, check), which is why creation goes through `gh api`.
+
+### CODEOWNERS: route reviews to the right team
+
+A `CODEOWNERS` file maps paths to the people or teams who own them. When a PR touches those paths, GitHub requests a review from the owners automatically, and with "Require review from Code Owners" turned on, their approval is required.
+
+```text title=".github/CODEOWNERS"
+# Default owners for everything
+*                     @acme-labs/founders
+
+# Frontend
+/apps/web/            @acme-labs/web
+
+# Backend, infra and CI
+/services/            @acme-labs/platform
+/.github/workflows/   @acme-labs/platform
+```
+
+Rules from the [CODEOWNERS docs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners): the file lives in `.github/`, the repo root or `docs/`; later lines win over earlier ones; teams must have **explicit Write access** to the repo; and approval from any one listed owner is enough.
+
+<Details summary="Deep dive: classic branch protection rules">
+
+Classic rules live in **Repo → Settings → Branches → Add branch protection rule**. They cover similar ground ([full list](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches)): required reviews, status checks, conversation resolution, signed commits, linear history, merge queue, required deployments, branch locking, push restrictions, and whether admins are included.
+
+Why I prefer rulesets anyway: classic rules don't stack, can't be paused without deleting them, can't be defined once for the whole org, and are hidden from people without admin access. If you inherit classic rules, there's no rush to migrate; they keep working alongside rulesets.
+
+Merge queues (which test PRs against the latest `main` before merging) are a branch rule too. [Part 5](/blog/git-branching-and-releases) covers when you need one. Plan availability for merge queues on private repos has historically been narrower than for other rules, so check the [merge queue docs](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue) for your plan.
+
+</Details>
+
+<Exercise title="Protect main and try to break it" time="15 min">
+1. On a repo where rulesets apply (a public repo, or a private repo on Team), create the `protect-main` ruleset above in the UI. Skip the status check rule if you don't have CI yet.
+2. Add a `.github/CODEOWNERS` file that assigns `*` to one of your teams.
+3. Try `git push origin main` with a direct commit.
+4. Open a PR instead and try to merge it without approval.
+
+**Done when:** the direct push is rejected with a message naming the ruleset, and the PR shows "Review required" from the code owner team until someone approves it.
+</Exercise>
+
+## Plan reality: Free vs Team vs Enterprise
+
+<Level value="intermediate" />
+
+Most of the confusion around "why isn't my branch protected?" comes down to the plan. Here's what matters for a startup, from the [pricing page](https://github.com/pricing) and the [plans docs](https://docs.github.com/en/get-started/learning-about-github/githubs-plans), checked on 7 October 2026:
+
+| | Free | Team | Enterprise |
+|---|---|---|---|
+| Listed price | $0 | $4 per user/month | from $21 per user/month |
+| Private repos, unlimited | Yes | Yes | Yes |
+| Rulesets and protected branches | Public repos only | All repos | All repos |
+| Required reviewers, code owners | Public repos only | All repos | All repos |
+| Org-wide rulesets | No | [Yes](https://github.blog/changelog/2025-06-16-organization-rulesets-now-available-for-github-team-plans/) | Yes |
+| Draft PRs, multiple reviewers, auto review assignment | Public repos only | All repos | All repos |
+| GitHub Actions minutes (private repos) | 2,000/month | 3,000/month | 50,000/month |
+| Required 2FA, audit log | Yes | Yes | Yes |
+| Audit log API, SAML SSO | No | No | Yes |
+| Custom roles, team sync with an identity provider | No | No | Enterprise Cloud |
+
+On the pricing page's annual-billing view, the Team and Enterprise prices carry a "for the first 12 months" footnote, so read the current terms before you budget. Prices and plan contents change; treat [github.com/pricing](https://github.com/pricing) as the source of truth.
+
+<Callout type="warning" title="The gotcha">
+A Free org with **private** repos has no enforceable branch protection. Rulesets, required reviews and CODEOWNERS enforcement don't apply there, so anyone with Write can push to `main`. If your code is private and more than one person writes it, Team is the cheapest fix.
+</Callout>
+
+Do this: start on Free while it's just you or the repos are public. Move to **Team** when the first collaborator joins a private repo. Consider Enterprise when a customer or auditor asks for SAML single sign-on or audit log streaming.
+
+{/* VOICE: A sentence on how Fetchly Labs or a past team decided between Free and Team, or the moment you noticed main wasn't protected. Only if it's yours to share. */}
+
+## Security hygiene
+
+<Level value="intermediate" />
+
+### Require two-factor authentication
+
+**Org Settings → Authentication security → Require two-factor authentication for everyone**. Per the [2FA docs](https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-two-factor-authentication-for-your-organization/requiring-two-factor-authentication-in-your-organization):
+
+- Members without 2FA lose access to the org's resources until they enable it.
+- **Outside collaborators without 2FA are removed** from the org. They can be reinstated if they enable 2FA within three months.
+- Bot accounts that are collaborators need 2FA too.
+
+Check who'd be affected before you flip it (owners only):
+
+```console
+$ gh api "orgs/acme-labs/members?filter=2fa_disabled" --jq '.[].login'
+$ gh api "orgs/acme-labs/outside_collaborators?filter=2fa_disabled" --jq '.[].login'
+```
+
+Tell people a week ahead. The setting itself is UI-only.
+
+### Dependabot
+
+Dependabot alerts, security updates and version updates are [available on every plan](https://github.com/pricing), including private repos on Free. Enable them org-wide in **Org Settings → Advanced Security** (labelled **Code security** in some orgs) for all repos, or per repo in **Settings → Advanced Security**. Version updates need a `.github/dependabot.yml`, which [Part 6](/blog/github-actions-automation) covers.
+
+### Secret scanning and push protection
+
+Push protection blocks a commit that contains something that looks like an API key before it reaches GitHub. Availability depends on visibility ([docs](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security)):
+
+- **Public repos**: secret scanning and push protection are free.
+- **Private repos**: you need **GitHub Secret Protection**, a paid add-on that requires the Team or Enterprise plan. It's billed per active committer; the [launch changelog](https://github.blog/changelog/2025-03-04-introducing-github-secret-protection-and-github-code-security/) listed it at $19 per active committer per month, with Team availability from 1 April 2025. Check the current price before buying.
+
+```console
+$ gh repo edit acme-labs/web --enable-secret-scanning --enable-secret-scanning-push-protection
+```
+
+That command only succeeds where the feature is available for the repo.
+
+### The audit log
+
+**Org Settings → Archive → Logs → Audit log** shows who did what: membership changes, permission grants, repo transfers, ruleset edits. Per the [audit log docs](https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization), only owners can see it, events are kept for 180 days (the default view shows three months), and you can export JSON or CSV. The [pricing page](https://github.com/pricing) lists the audit log on all plans; the audit log **API** and streaming are Enterprise.
+
+## Onboarding and offboarding checklists
+
+<Level value="intermediate" />
+
+Teams make these short. Copy them into your internal docs.
+
+### Onboarding
+
+1. Confirm the person has 2FA on their GitHub account (it'll be enforced anyway).
+2. Invite them to the org as a **Member** (Org → People → Invite member).
+3. Add them to their team(s). That's their repo access done.
+4. If they lead a team, make them its **maintainer**.
+5. Point them at [Part 2](/blog/git-setup-across-devices) for SSH keys, commit signing and `gh auth login`.
+6. Contractors: add as an **outside collaborator** on the specific repo instead, with the lowest role that works.
+
+```console
+$ gh api -X PUT orgs/acme-labs/memberships/NEW_LOGIN -f role=member
+$ gh api -X PUT orgs/acme-labs/teams/web/memberships/NEW_LOGIN -f role=member
+```
+
+### Offboarding
+
+Removing someone from the org is step one, not the whole job. Based on GitHub's [removal docs](https://docs.github.com/en/organizations/managing-membership-in-your-organization/removing-a-member-from-your-organization):
+
+1. **Remove them from the org** (Org → People → select → Remove from organization). This removes them from all teams and their repo access. Their membership data is kept for three months in case they're reinstated.
+2. **Check outside-collaborator grants** in case they were also added directly to a repo: `gh api orgs/acme-labs/outside_collaborators --jq '.[].login'`.
+3. **Rotate secrets they could read**: CI secrets, deploy keys, cloud credentials, `.env` values shared with them. Removing access doesn't un-know a secret.
+4. **Revoke tokens and keys tied to them**: deploy keys they added, personal access tokens approved for the org (**Org Settings → Personal access tokens**), OAuth or GitHub Apps they installed.
+5. **Reassign what they owned**: repos, webhooks, GitHub Apps, scheduled workflows, the team maintainer role.
+6. **Review the audit log** for their recent activity.
+7. **Remind them** that local clones stay on their machine; removal stops syncing, not copies. Ask them to delete confidential material.
+
+```console
+$ gh api -X DELETE orgs/acme-labs/members/LEAVING_LOGIN
+```
+
+{/* VOICE: Optional: a short lesson from an offboarding you handled or saw go wrong (a forgotten secret, a deploy key nobody knew about). Leave out anything confidential. */}
+
+<Exercise title="Run an offboarding drill" time="10 min">
+1. Using your partner from the first exercise, write down every repo, team, secret and key they can reach.
+2. Remove them from the org with the UI or `gh api`.
+3. Go through the offboarding checklist and tick off each item.
+4. Find the removal event in the audit log.
+
+**Done when:** your partner can no longer see `web` or `api`, and you can point to the audit log entry for the removal.
+</Exercise>
+
+## Cheat sheet
+
+| Task | UI path | Command |
+|---|---|---|
+| Transfer a repo to the org | Repo → Settings → Danger Zone → Transfer | `gh api -X POST repos/OWNER/REPO/transfer -f new_owner=acme-labs` |
+| Set base permission | Org Settings → Member privileges | `gh api -X PATCH orgs/acme-labs -f default_repository_permission=read` |
+| Create a team | Org → Teams → New team | `gh api -X POST orgs/acme-labs/teams -f name=web -f privacy=closed` |
+| Add someone to a team | Team → Members → Add a member | `gh api -X PUT orgs/acme-labs/teams/web/memberships/LOGIN -f role=member` |
+| Give a team repo access | Repo → Settings → Collaborators and teams | `gh api -X PUT orgs/acme-labs/teams/web/repos/acme-labs/web -f permission=push` |
+| Create a ruleset | Repo → Settings → Rules → Rulesets | `gh api -X POST repos/acme-labs/web/rulesets --input main-ruleset.json` |
+| See rules on a branch | Repo → Settings → Rules | `gh ruleset check main --repo acme-labs/web` |
+| Org rulesets (Team+) | Org Settings → Repository → Rulesets | `gh ruleset list --org acme-labs` |
+| Code owners | `.github/CODEOWNERS` | `*  @acme-labs/founders` |
+| Require 2FA | Org Settings → Authentication security | UI only |
+| Find members without 2FA | Org → People → filter | `gh api "orgs/acme-labs/members?filter=2fa_disabled"` |
+| Push protection | Repo → Settings → Advanced Security | `gh repo edit --enable-secret-scanning-push-protection` |
+| Remove a member | Org → People → Remove | `gh api -X DELETE orgs/acme-labs/members/LOGIN` |
+
+## What changes fast
+
+- **Prices and plan contents.** Team and Enterprise pricing, Actions minutes and what's "public repos only" on Free. Check [github.com/pricing](https://github.com/pricing).
+- **Rulesets.** New rule types arrive regularly, and org rulesets moved from Enterprise to Team in 2025. Some docs pages still lag behind changelog posts. Check the [rulesets docs](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets) and the [changelog](https://github.blog/changelog/).
+- **Security product packaging.** Secret Protection and Code Security became standalone products in 2025. Check [About GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security).
+
+## Further reading
+
+- [About organizations](https://docs.github.com/en/organizations/collaborating-with-groups-in-organizations/about-organizations)
+- [Roles in an organization](https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/roles-in-an-organization)
+- [Repository roles for an organization](https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/repository-roles-for-an-organization)
+- [About teams](https://docs.github.com/en/organizations/organizing-members-into-teams/about-teams)
+- [About rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets) and [available rules](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets)
+- [About code owners](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners)
+- [Requiring 2FA in your organization](https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-two-factor-authentication-for-your-organization/requiring-two-factor-authentication-in-your-organization)
+- [Reviewing the audit log](https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization)
+- [REST API: teams](https://docs.github.com/en/rest/teams/teams), [org members](https://docs.github.com/en/rest/orgs/members), [repository rules](https://docs.github.com/en/rest/repos/rules)
+- [GitHub's plans](https://docs.github.com/en/get-started/learning-about-github/githubs-plans) and [pricing](https://github.com/pricing)

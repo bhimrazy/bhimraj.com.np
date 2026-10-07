@@ -1,0 +1,576 @@
+---
+title: "One setup, every machine: auth, signing, dotfiles and switching devices"
+description: "A one-time Git and GitHub setup for any new laptop: gh auth, SSH or HTTPS, signed commits, a sane .gitconfig, dotfiles, Codespaces and worktrees."
+publishedAt: "2026-10-07"
+updatedAt: "2026-10-07"
+tags: [github, git, gh, ssh, dotfiles, codespaces, vscode]
+image: "/blog/github-field-guide/part-2.png"
+series: "github-field-guide"
+part: 2
+level: "beginner"
+verifiedAt: "2026-10-07"
+---
+
+This part is the checklist I want open the day a new laptop arrives. After it, any machine you touch (a work laptop, a home desktop, a cloud Codespace) will push to GitHub without password prompts, sign your commits, behave the same way, and let you pick up work exactly where you left it. It's for anyone who has done the basics from [Part 1](/blog/git-and-github-foundations) and is tired of "it works on my other laptop".
+
+<Callout type="founder">
+- Sign in once with the GitHub CLI (`gh`) and Git stops asking for passwords.
+- Turn on commit signing so GitHub shows a **Verified** badge on your work. It proves the commits came from you.
+- Keep your settings in a **dotfiles** repo and VS Code **Settings Sync**, so a new machine is ready in minutes.
+- No laptop handy? A **Codespace** is a full dev machine in the browser.
+- Before you close the lid: commit and push, even if it's half-done. Work that isn't pushed lives on one machine only.
+</Callout>
+
+<Callout type="skip">
+Skip this part if `gh auth status` already shows you logged in, your commits show **Verified** on GitHub, and your `.gitconfig` lives in a dotfiles repo. Jump to the [switching machines](#switching-machines-without-losing-work) habits, or go on to [Part 3](/blog/github-organizations-and-teams).
+</Callout>
+
+## The checklist
+
+<Level value="beginner" />
+
+Here's the whole setup in order. Each step has its own section below.
+
+1. Install Git and the GitHub CLI.
+2. Tell Git who you are.
+3. Sign in with `gh auth login` and let it handle Git credentials.
+4. Pick HTTPS or SSH.
+5. Turn on commit signing.
+6. Apply a sane global `.gitconfig`.
+7. Put your config in a dotfiles repo.
+8. Turn on VS Code Settings Sync.
+
+Then two tools for working across machines (Codespaces, `git worktree`) and the habits that keep work from getting stranded.
+
+{/* FIGURE: two-devices — a laptop and a desktop (plus a Codespace in the cloud) each with Git, gh and VS Code; arrows to GitHub for the repo and WIP branches, to a dotfiles repo for config, and to VS Code Settings Sync for editor settings; a crossed-out arrow for git stash staying on one machine */}
+
+## Install Git and the GitHub CLI
+
+<Level value="beginner" />
+
+<Tabs>
+<Tab label="macOS">
+```console
+$ brew install git gh
+```
+
+macOS ships a Git with the Xcode Command Line Tools, but it trails the current release. The Homebrew version stays current with `brew upgrade git gh`.
+</Tab>
+<Tab label="Linux">
+```console
+$ sudo apt install git
+```
+
+Use your distro's package manager for Git (`dnf`, `pacman` and so on). For `gh`, follow the [official Linux install guide](https://github.com/cli/cli/blob/trunk/docs/install_linux.md): it adds GitHub's package repository, so you get current releases instead of an old distro build.
+</Tab>
+<Tab label="Windows">
+```console
+$ winget install --id Git.Git -e --source winget
+$ winget install --id GitHub.cli
+```
+
+Git for Windows includes [Git Credential Manager](https://github.com/git-ecosystem/git-credential-manager). Open a new terminal after installing so both are on your `PATH`.
+</Tab>
+</Tabs>
+
+Check what you got:
+
+```console
+$ git --version
+$ gh --version
+```
+
+At the time of writing, the latest releases are [Git 2.56.0](https://git-scm.com/) and [gh 2.102.0](https://github.com/cli/cli/releases). You don't need the newest Git, but you need **2.34 or later** for SSH commit signing. gh 2.102.0 includes security fixes, so upgrade if you're behind.
+
+## Tell Git who you are
+
+<Level value="beginner" />
+
+```console
+$ git config --global user.name "Your Name"
+$ git config --global user.email "you@example.com"
+```
+
+Every commit records this name and email. GitHub matches the email to your account to show your avatar and to verify signatures, so use an email that's on your GitHub account.
+
+If you'd rather not expose your personal email in public commits, GitHub gives you a `noreply` address. Find it under **Settings** > **Emails** and see [setting your commit email address](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address).
+
+## Sign in with gh
+
+<Level value="beginner" />
+
+```console
+$ gh auth login
+$ gh auth setup-git
+$ gh auth status
+```
+
+`gh auth login` walks you through a few prompts. Answer them like this:
+
+- **Where do you use GitHub?** GitHub.com.
+- **Preferred protocol for Git operations?** HTTPS, unless you've chosen SSH (next section).
+- **Authenticate Git with your GitHub credentials?** Yes.
+- **How would you like to authenticate?** Login with a web browser. Copy the one-time code, approve it in the browser, done.
+
+The token is stored in your system's credential store (Keychain, Windows Credential Manager, or the Linux secret service), not in a plain file, unless no store is available. `gh auth login --help` explains the fallback.
+
+`gh auth setup-git` [configures Git to use gh as its credential helper](https://cli.github.com/manual/gh_auth_setup-git): when Git needs to talk to GitHub over HTTPS, it asks gh for the token. If you said yes to the Git prompt above it's already done; running it again is harmless, and it's the fix whenever Git starts asking for a password. `gh auth status` confirms which account is active and what the token can do.
+
+VS Code uses the same Git, so once this works in the terminal, **Sync Changes** in VS Code works too.
+
+<Callout type="note">
+GitHub [no longer accepts your account password for Git over HTTPS](https://docs.github.com/en/get-started/git-basics/about-remote-repositories). If you see a password prompt, don't type your password; run `gh auth setup-git` instead.
+</Callout>
+
+## HTTPS or SSH
+
+<Level value="beginner" />
+
+Git talks to GitHub over one of two protocols. Both are fine ([about remote repositories](https://docs.github.com/en/get-started/git-basics/about-remote-repositories)). The difference is how you prove who you are.
+
+Do this: if you're new, use **HTTPS with gh**. You're already done. Choose SSH if you work on machines without a browser, or you already manage SSH keys.
+
+<Tabs>
+<Tab label="HTTPS">
+Nothing more to do. gh holds the token and hands it to Git. Your remotes look like:
+
+```text
+https://github.com/acme-labs/web.git
+```
+
+HTTPS also works behind most corporate firewalls and proxies, which sometimes block SSH's port 22.
+</Tab>
+<Tab label="SSH">
+Make one key per device. Never copy a private key between machines: if one laptop is lost, you revoke just its key.
+
+```console
+$ ssh-keygen -t ed25519 -C "you@example.com"
+$ gh ssh-key add ~/.ssh/id_ed25519.pub --title "work laptop"
+$ ssh -T git@github.com
+```
+
+`ssh-keygen` makes a key pair; accept the default path and set a passphrase. `gh ssh-key add` uploads the public half (`.pub`) to your account. If gh complains about missing permissions, run `gh auth refresh -h github.com -s admin:public_key` once. `ssh -T` tests the connection and should greet you by username.
+
+Then tell gh to use SSH URLs (`git@github.com:acme-labs/web.git`) when it clones or creates repos:
+
+```console
+$ gh config set git_protocol ssh --host github.com
+```
+
+Existing clones keep their HTTPS remote until you change it with `git remote set-url origin git@github.com:acme-labs/web.git`. Full steps are in [connecting to GitHub with SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh).
+</Tab>
+</Tabs>
+
+### Keep the SSH key unlocked (SSH only)
+
+So you aren't typing the passphrase on every push, load the key into `ssh-agent`, a small background program that holds unlocked keys. The commands differ by OS ([GitHub's guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)).
+
+<Tabs>
+<Tab label="macOS">
+Add this to `~/.ssh/config` (create the file if needed):
+
+```text title="~/.ssh/config"
+Host github.com
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+```
+
+Then store the passphrase in the Keychain:
+
+```console
+$ ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+```
+</Tab>
+<Tab label="Linux">
+```console
+$ eval "$(ssh-agent -s)"
+$ ssh-add ~/.ssh/id_ed25519
+```
+
+Most desktop environments start an agent for you; the first line is for when they don't.
+</Tab>
+<Tab label="Windows">
+In PowerShell **as administrator**, start the agent and make it start with Windows:
+
+```console
+$ Get-Service -Name ssh-agent | Set-Service -StartupType Manual
+$ Start-Service ssh-agent
+```
+
+Then, in a normal terminal:
+
+```console
+$ ssh-add $env:USERPROFILE\.ssh\id_ed25519
+```
+</Tab>
+</Tabs>
+
+## Sign your commits
+
+<Level value="intermediate" />
+
+Anyone can set `user.email` to your address and make commits that look like yours. A **signed** commit carries a cryptographic signature that GitHub checks against keys on your account, and shows a **Verified** badge when it matches ([about commit signature verification](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification)). Teams can require signed commits on `main` ([Part 3](/blog/github-organizations-and-teams)).
+
+GPG used to be the only option. Today, the SSH key you already have can do it, with Git 2.34 or later:
+
+```console
+$ git config --global gpg.format ssh
+$ git config --global user.signingkey ~/.ssh/id_ed25519.pub
+$ git config --global commit.gpgsign true
+$ git config --global tag.gpgSign true
+```
+
+Then upload the same public key to GitHub a second time, as a **signing** key:
+
+```console
+$ gh auth refresh -h github.com -s admin:ssh_signing_key
+$ gh ssh-key add ~/.ssh/id_ed25519.pub --type signing --title "work laptop signing"
+```
+
+The first line grants gh permission to manage signing keys (the default login doesn't include it). GitHub treats authentication keys and signing keys separately, so [the same key is uploaded twice](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account), once per type. You can also do it in the browser: **Settings** > **SSH and GPG keys** > **New SSH key**, key type **Signing Key**.
+
+If you chose HTTPS and don't have an SSH key yet, generate one with `ssh-keygen` as in the SSH tab above. You can sign with SSH and still push over HTTPS.
+
+Make a commit, push it, and look for the **Verified** badge next to it on GitHub.
+
+<Details summary="Deep dive: verifying signatures locally, and vigilant mode">
+`git log --show-signature` checks signatures on your machine, but for SSH signatures Git needs a list of trusted keys first. Create an allowed-signers file and point Git at it:
+
+```console
+$ echo "$(git config --get user.email) namespaces=\"git\" $(cat ~/.ssh/id_ed25519.pub)" >> ~/.ssh/allowed_signers
+$ git config --global gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers
+$ git log --show-signature -1
+```
+
+See `gpg.ssh.allowedSignersFile` in the [git-config docs](https://git-scm.com/docs/git-config).
+
+GitHub also has **vigilant mode**: once on, GitHub marks unsigned commits attributed to you as **Unverified** instead of showing nothing, so a forged commit stands out ([signature verification statuses](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification)). Turn it on only after every machine you use signs commits, or your own older commits will look suspicious.
+
+Remember from [Part 1](/blog/git-and-github-foundations): commits added with **Rebase and merge** on GitHub [lose signature verification](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github).
+</Details>
+
+{/* VOICE: why Bhimraj signs commits (or when he started), in 1–3 sentences; no invented incident */}
+
+## A sane global .gitconfig
+
+<Level value="intermediate" />
+
+Git's defaults are conservative because they can't break old workflows. A handful of settings make day-to-day work smoother. Run these once:
+
+```console
+$ git config --global init.defaultBranch main
+$ git config --global pull.rebase true
+$ git config --global push.autoSetupRemote true
+$ git config --global fetch.prune true
+$ git config --global rebase.autoStash true
+$ git config --global rerere.enabled true
+$ git config --global merge.conflictStyle zdiff3
+$ git config --global diff.algorithm histogram
+$ git config --global branch.sort -committerdate
+$ git config --global commit.verbose true
+```
+
+They end up in `~/.gitconfig`, which you can also edit by hand:
+
+```ini title="~/.gitconfig"
+[user]
+  name = Your Name
+  email = you@example.com
+  signingkey = ~/.ssh/id_ed25519.pub
+[gpg]
+  format = ssh
+[commit]
+  gpgsign = true
+  verbose = true
+[tag]
+  gpgSign = true
+[init]
+  defaultBranch = main
+[pull]
+  rebase = true
+[push]
+  autoSetupRemote = true
+[fetch]
+  prune = true
+[rebase]
+  autoStash = true
+[rerere]
+  enabled = true
+[merge]
+  conflictStyle = zdiff3
+[diff]
+  algorithm = histogram
+[branch]
+  sort = -committerdate
+```
+
+What each one does (all documented in [git-config](https://git-scm.com/docs/git-config)):
+
+| Setting | Why |
+|---|---|
+| `init.defaultBranch main` | New repos start on `main`, matching GitHub's default. |
+| `pull.rebase true` | `git pull` replays your local commits on top of the remote ones instead of creating a "Merge branch 'main'" commit every time. |
+| `push.autoSetupRemote true` | `git push` on a new branch just works, no `-u origin branch-name`. Needs Git 2.37+. |
+| `fetch.prune true` | Branches deleted on GitHub (after a merge) disappear from your remote-tracking list too. |
+| `rebase.autoStash true` | A rebase (including `git pull` with rebase) stashes your uncommitted edits first and puts them back after. |
+| `rerere.enabled true` | "Reuse recorded resolution": resolve a conflict once and Git reapplies your fix if the same conflict comes back. |
+| `merge.conflictStyle zdiff3` | Conflict markers also show the original text, so you can see what each side changed. |
+| `diff.algorithm histogram` | Diffs that line up better on moved or repeated code. |
+| `branch.sort -committerdate` | `git branch` lists recently used branches first. |
+| `commit.verbose true` | The commit editor shows the diff you're committing, so you write the message while looking at it. |
+
+<Details summary="Deep dive: a separate email for work repos">
+If you use one GitHub account but want your work email on work repos, keep work repos under one folder and use a conditional include:
+
+```ini title="~/.gitconfig"
+[includeIf "gitdir:~/work/"]
+  path = ~/.gitconfig-work
+```
+
+```ini title="~/.gitconfig-work"
+[user]
+  email = you@acme-labs.example
+```
+
+Any repo under `~/work/` picks up the work email; everything else uses the default. The work email must also be added to your GitHub account so commits are attributed and verified.
+
+If you have two separate GitHub accounts, gh can hold more than one per host. `gh auth login` adds another, and `gh auth switch` changes the active one. Most people are better off with one account that belongs to several organizations ([Part 3](/blog/github-organizations-and-teams)).
+</Details>
+
+## A dotfiles repo
+
+<Level value="intermediate" />
+
+**Dotfiles** are the config files in your home folder whose names start with a dot: `.gitconfig`, `.zshrc`, `.bashrc`, `.config/…`. Keep them in a Git repo and a new machine is one clone away from feeling like yours.
+
+A minimal layout:
+
+```text
+dotfiles/
+├── .gitconfig
+├── .zshrc
+├── .config/git/ignore
+└── install.sh
+```
+
+And an `install.sh` that links each file into your home folder:
+
+```bash title="install.sh"
+#!/usr/bin/env bash
+set -euo pipefail
+DIR="$(cd "$(dirname "$0")" && pwd)"
+
+mkdir -p "$HOME/.config/git"
+ln -sf "$DIR/.gitconfig" "$HOME/.gitconfig"
+ln -sf "$DIR/.zshrc" "$HOME/.zshrc"
+ln -sf "$DIR/.config/git/ignore" "$HOME/.config/git/ignore"
+```
+
+On a new machine:
+
+```console
+$ gh repo clone your-username/dotfiles ~/dotfiles
+$ ~/dotfiles/install.sh
+```
+
+Codespaces can use the same repo. Turn on **Settings** > **Codespaces** > **Automatically install dotfiles** and pick the repo. Each new codespace clones it and runs the first script it finds from a fixed list (`install.sh`, `install`, `bootstrap.sh`, `bootstrap`, `script/bootstrap`, `setup.sh`, `setup`, `script/setup`). If there's no script, it symlinks every dotfile into your home folder ([personalizing Codespaces](https://docs.github.com/en/codespaces/setting-your-user-preferences/personalizing-github-codespaces-for-your-account)). Changes apply to new codespaces only.
+
+<Callout type="warning">
+Dotfiles repos are often public. Never put tokens, API keys or SSH private keys in them. Keep secrets in a separate untracked file (for example `~/.zshrc.local`) that your `.zshrc` sources if it exists. Machine-specific paths go there too.
+</Callout>
+
+{/* VOICE: what's in Bhimraj's own dotfiles repo (or link to it if public), 1–3 sentences */}
+
+## VS Code Settings Sync
+
+<Level value="beginner" />
+
+Dotfiles cover the terminal. For the editor, VS Code has [Settings Sync](https://code.visualstudio.com/docs/configure/settings-sync) built in: open the **Manage** menu (gear icon, bottom left), choose **Backup and Sync Settings...**, pick what to sync and sign in with GitHub (or Microsoft).
+
+It syncs settings, keyboard shortcuts, snippets, tasks, extensions, UI state and profiles. Settings scoped to a single machine (like a local path) stay local, which is what you want.
+
+Do this: turn it on for every machine, including Codespaces. Install an extension once, and it shows up everywhere.
+
+## Codespaces and dev containers: any machine at all
+
+<Level value="intermediate" />
+
+A [codespace](https://docs.github.com/en/codespaces/overview) is a development environment running in the cloud: a container on a virtual machine that you open in the browser, in desktop VS Code, or over the terminal. Good for a borrowed laptop, a tablet, a slow machine, or reviewing a PR without disturbing your local work.
+
+```console
+$ gh codespace create -R acme-labs/web
+$ gh codespace code
+```
+
+The first command creates a codespace for the repo; the second opens it in desktop VS Code. In the browser, use the green **Code** button > **Codespaces** on the repo page.
+
+What's inside the codespace comes from a **dev container** config committed to the repo, `.devcontainer/devcontainer.json` ([introduction to dev containers](https://docs.github.com/en/codespaces/setting-up-your-project-for-codespaces/adding-a-dev-container-configuration/introduction-to-dev-containers)):
+
+```json title=".devcontainer/devcontainer.json"
+{
+  "name": "acme-labs/web",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
+  "postCreateCommand": "npm ci",
+  "customizations": {
+    "vscode": {
+      "extensions": ["biomejs.biome"]
+    }
+  }
+}
+```
+
+Without one, GitHub uses a default image with common runtimes. Dev containers are an [open specification](https://containers.dev/), so the same file also works locally through VS Code's **Dev Containers** extension and Docker. One file gives every teammate, and every AI agent working in a container ([Part 7](/blog/ai-coding-agents-on-github)), the same environment.
+
+<Callout type="note" title="Cost">
+At the time of writing, personal accounts get a free monthly allowance: GitHub Free includes 120 core hours and 15 GB-month of storage, GitHub Pro 180 core hours and 20 GB-month. Organization plans include no free Codespaces usage. A 2-core machine uses 2 core hours per hour. Check [Codespaces billing](https://docs.github.com/en/billing/concepts/product-billing/github-codespaces) for current numbers, and stop codespaces you aren't using.
+</Callout>
+
+## git worktree: two branches open at once
+
+<Level value="intermediate" />
+
+You're halfway through a feature and an urgent bug comes in. The old answer was `git stash`, switch branches, fix, switch back, `git stash pop`, and hope. A **worktree** is better: a second folder checked out from the same repo, on a different branch, sharing the same history ([git-worktree](https://git-scm.com/docs/git-worktree)).
+
+```console
+$ git worktree add ../web-hotfix -b fix/login-redirect main
+$ cd ../web-hotfix
+$ git worktree list
+```
+
+That creates `../web-hotfix` on a new branch `fix/login-redirect` started from `main`. Your feature folder stays exactly as you left it, half-typed code and all. Open the new folder in a second VS Code window, fix, commit, push, open the PR.
+
+When you're done:
+
+```console
+$ cd ../web
+$ git worktree remove ../web-hotfix
+```
+
+Git refuses to remove a worktree with uncommitted or untracked changes unless you add `--force`, and it won't check out the same branch in two worktrees at once. Both are protections, not bugs.
+
+gh knows about worktrees too. To review a teammate's PR without touching your current branch:
+
+```console
+$ gh pr checkout 123 --worktree ../web-pr-123
+```
+
+Worktrees are also how you run several AI agents on one repo in parallel, each in its own folder on its own branch. More in [Part 7](/blog/ai-coding-agents-on-github).
+
+## Switching machines without losing work
+
+<Level value="beginner" />
+
+Here's the rule: **if it isn't pushed, it only exists on that machine.** Laptops get lost, die, or are simply at home when you're at the office.
+
+At the end of a session, on whatever branch you're on:
+
+```console
+$ git add -A
+$ git commit -m "wip: magic link email template"
+$ git push
+$ gh pr create --draft --fill
+```
+
+The commit doesn't have to be good; it has to exist. The draft PR is optional but useful: it shows up in your PR list on any device, so you won't forget the branch exists. If you squash-merge (see [Part 1](/blog/git-and-github-foundations)), the "wip" commits disappear from `main` anyway.
+
+On the other machine:
+
+```console
+$ git fetch
+$ git switch feat/magic-link
+```
+
+Or, if you don't remember the branch name, `gh pr checkout` with the draft PR's number. Then carry on, and push again before you stop.
+
+<Callout type="warning" title="git stash is not a sync tool">
+`git stash` saves uncommitted changes in your local repo only. Stashes are never pushed, so they don't follow you to another machine, and they're easy to forget: weeks later, `git stash list` shows a pile of entries with names like "WIP on main". Use stash for a few minutes at most. For anything longer, commit to a branch and push.
+</Callout>
+
+{/* VOICE: how Bhimraj moves between machines day to day (e.g. which devices, whether he uses draft PRs or Codespaces for it), 1–3 sentences, no invented specifics */}
+
+## Workshop exercises
+
+<Level value="beginner" />
+
+<Exercise title="Set up a machine from scratch" time="30 min">
+Goal: get a machine (yours, a fresh user account, or a codespace) fully set up and producing verified commits.
+
+1. Install Git and gh for your OS, and check `git --version` is 2.34 or later.
+2. Set `user.name` and `user.email`.
+3. Run `gh auth login` (HTTPS, browser), then `gh auth setup-git` and `gh auth status`.
+4. Create or reuse an SSH key and set up SSH signing with the four `git config` commands.
+5. Upload the key as a signing key with `gh ssh-key add … --type signing`.
+6. Apply the global `.gitconfig` settings from this part.
+7. In your practice repo from [Part 1](/blog/git-and-github-foundations) (or `gh repo create git-practice --private --add-readme --clone`), make a commit on a new branch and push it with plain `git push`.
+
+**Done when:** `gh auth status` shows you logged in, `git push` worked without `-u`, and the commit shows a **Verified** badge on GitHub.
+
+<Details summary="Solution: checking each step">
+```console
+$ git config --global --list
+$ gh auth status
+$ git log --format="%h %G? %s" -1
+$ gh ssh-key list
+```
+
+In `git log`, `%G?` prints a letter for the signature status: `N` means the commit isn't signed at all, which is the thing to fix. Other letters depend on whether you set up local verification (see the deep dive above). The **Verified** badge on GitHub is the real test. `gh ssh-key list` shows the keys on your account; you can also check **Settings** > **SSH and GPG keys** in the browser.
+</Details>
+</Exercise>
+
+<Exercise title="Switch devices mid-task" time="15 min">
+Goal: practice handing off work between two machines. A second clone in another folder stands in for the second device, or use a codespace.
+
+1. In your practice repo, create a branch `feat/handoff` and make an uncommitted change.
+2. Try `git stash`, then clone the repo into a second folder (`gh repo clone your-username/git-practice /tmp/device-two`). Notice the stash isn't there. Back in the first folder, `git stash pop`.
+3. Now do it properly: commit with a `wip:` message, `git push`, and open a draft PR with `gh pr create --draft --fill`.
+4. In the second folder, `git fetch` and `git switch feat/handoff`, or use `gh pr checkout`. Finish the change, commit, push.
+5. Back in the first folder, `git pull`.
+6. Bonus: in the first folder, run `git worktree add ../git-practice-hotfix -b fix/typo main`, commit a fix there, push it, then `git worktree remove ../git-practice-hotfix`.
+
+**Done when:** both folders show the same latest commit on `feat/handoff`, the draft PR shows both commits, and `git worktree list` shows only your main folder.
+</Exercise>
+
+## Cheat sheet
+
+| Task | Command |
+|---|---|
+| Sign in | `gh auth login` |
+| Let Git use gh for HTTPS | `gh auth setup-git` |
+| Who am I logged in as? | `gh auth status` |
+| Switch gh account | `gh auth switch` |
+| Make an SSH key | `ssh-keygen -t ed25519 -C "you@example.com"` |
+| Upload it (auth) | `gh ssh-key add ~/.ssh/id_ed25519.pub --title "laptop"` |
+| Upload it (signing) | `gh ssh-key add ~/.ssh/id_ed25519.pub --type signing` |
+| Allow gh to manage signing keys | `gh auth refresh -h github.com -s admin:ssh_signing_key` |
+| Test SSH | `ssh -T git@github.com` |
+| Use SSH for gh clones | `gh config set git_protocol ssh --host github.com` |
+| Sign with SSH | `git config --global gpg.format ssh` + `user.signingkey` + `commit.gpgsign true` |
+| Push new branches without `-u` | `git config --global push.autoSetupRemote true` |
+| Rebase on pull | `git config --global pull.rebase true` |
+| See all your global config | `git config --global --list` |
+| Create a codespace | `gh codespace create -R OWNER/REPO` |
+| Open it in VS Code | `gh codespace code` |
+| Second checkout of a branch | `git worktree add ../dir -b BRANCH main` |
+| Check out a PR in a worktree | `gh pr checkout N --worktree ../dir` |
+| Remove a worktree | `git worktree remove ../dir` |
+| Hand off work | `git commit -m "wip: …" && git push && gh pr create --draft --fill` |
+
+## What changes fast
+
+- **gh releases and flags** ship every few weeks (worktree support in `gh pr checkout` is recent). Check the [gh releases](https://github.com/cli/cli/releases) and [manual](https://cli.github.com/manual/).
+- **Codespaces quotas and pricing.** Check [Codespaces billing](https://docs.github.com/en/billing/concepts/product-billing/github-codespaces).
+- **What Settings Sync covers** (it now covers MCP servers and prompts, for example). Check the [Settings Sync docs](https://code.visualstudio.com/docs/configure/settings-sync).
+- **Signing and verification options**, including vigilant mode. Check [commit signature verification](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification).
+
+## Further reading
+
+- [GitHub CLI manual](https://cli.github.com/manual/), especially [gh auth login](https://cli.github.com/manual/gh_auth_login) and [gh auth setup-git](https://cli.github.com/manual/gh_auth_setup-git)
+- [Caching your GitHub credentials in Git](https://docs.github.com/en/get-started/git-basics/caching-your-github-credentials-in-git)
+- [Connecting to GitHub with SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
+- [Telling Git about your signing key](https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key)
+- [git-config reference](https://git-scm.com/docs/git-config)
+- [git-worktree reference](https://git-scm.com/docs/git-worktree)
+- [Personalizing Codespaces with dotfiles](https://docs.github.com/en/codespaces/setting-your-user-preferences/personalizing-github-codespaces-for-your-account)
+- [Introduction to dev containers](https://docs.github.com/en/codespaces/setting-up-your-project-for-codespaces/adding-a-dev-container-configuration/introduction-to-dev-containers)
+- [VS Code Settings Sync](https://code.visualstudio.com/docs/configure/settings-sync)

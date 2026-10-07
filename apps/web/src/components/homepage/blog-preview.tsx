@@ -1,16 +1,14 @@
-import { allBlogPosts } from "content-collections";
 import Link from "next/link";
+import { listedPosts } from "@/components/blog/posts";
+import SeriesLabel from "@/components/blog/series-label";
 import { ArrowLink } from "@/components/section-heading";
 import { formatShortDate } from "@/lib/format";
 import { cn, getReadingTime } from "@/lib/utils";
 import { ColumnTitle } from "./column-title";
 import { surface } from "./surface";
 
-const latestPosts = [...allBlogPosts]
-  .sort(
-    (a, b) => Number(new Date(b.publishedAt)) - Number(new Date(a.publishedAt)),
-  )
-  .slice(0, 3);
+// A series shows up once, as its hub.
+const latestPosts = listedPosts.slice(0, 3);
 
 /** Latest posts as a dated list — one column of the Writing & research pair. */
 export default function BlogPreview() {
@@ -54,6 +52,7 @@ export default function BlogPreview() {
                     ·
                   </span>
                   <span>{getReadingTime(post.html)}</span>
+                  <SeriesLabel post={post} />
                   {post.tags?.slice(0, 2).map((tag: string) => (
                     <span key={tag} className="text-site-accent/80">
                       #{tag.replace(/\s+/g, "-")}

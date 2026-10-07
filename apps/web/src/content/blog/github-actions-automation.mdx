@@ -1,0 +1,747 @@
+---
+title: "Automate it: GitHub Actions from first workflow to reusable pipelines"
+description: "Write GitHub Actions workflows, pick the right triggers, reuse pipelines across repos, choose runners, and lock it all down with least privilege, OIDC and SHA pins."
+publishedAt: "2026-10-07"
+updatedAt: "2026-10-07"
+tags: [github, github-actions, ci-cd, automation, security, devops]
+image: "/blog/github-field-guide/part-6.png"
+series: "github-field-guide"
+part: 6
+level: "intermediate"
+verifiedAt: "2026-10-07"
+---
+
+By the end of this part you'll be able to read any workflow file, write your own CI, run jobs on a button press or a schedule, reuse one pipeline across many repos, and lock it down so a compromised third-party action can't walk off with your secrets. It's for startup engineers and team leads who own CI, and for advanced readers who want the 2026 picture. We finish by walking through a real workflow from this site's repo.
+
+<Callout type="founder" title="The short version">
+- GitHub Actions runs scripts for you on GitHub's machines when something happens: a push, a pull request, a button press, or a time of day.
+- Typical jobs: run tests on every pull request, deploy when `main` changes, refresh data every morning.
+- Public repos get standard runners free. Private repos get a monthly allowance of minutes that depends on your plan.
+- The main risk is supply chain: workflows run other people's code with your secrets. Give each workflow the least access it needs, and pin third-party actions to exact versions.
+</Callout>
+
+<Callout type="skip">
+Already shipping CI with matrices and caches? Skip to [Reuse](#reuse-reusable-workflows-vs-composite-actions) or [Security](#security).
+</Callout>
+
+## Workflows, jobs, steps and runners
+
+<Level value="beginner" />
+
+Start with a whole file:
+
+```yaml title=".github/workflows/ci.yml"
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm test
+```
+
+Four nouns explain it ([understanding GitHub Actions](https://docs.github.com/en/actions/get-started/understand-github-actions)):
+
+- **Workflow:** one YAML file in `.github/workflows/`. `on:` says when it runs.
+- **Job:** a unit of work that gets its own fresh machine. Jobs run in parallel unless you chain them with `needs:`.
+- **Step:** one thing a job does, in order. Either `run:` (a shell command) or `uses:` (an **action**, a packaged step someone published, like `actions/checkout`).
+- **Runner:** the machine a job runs on, picked by `runs-on:`. GitHub hosts Linux, Windows and macOS runners, or you can bring your own.
+
+Push this file in a PR and the **Checks** tab shows it running. From the terminal:
+
+```console
+$ gh run list --limit 5
+$ gh run watch
+$ gh run view --log-failed
+```
+
+`--log-failed` prints only the logs of the steps that failed, which is usually all you need.
+
+## Triggers
+
+<Level value="intermediate" />
+
+{/* FIGURE: actions-triggers — an interactive picker: choose an event (push, PR from a branch, PR from a fork, schedule, workflow_dispatch, repository_dispatch, workflow_run, workflow_call) and see which workflows fire, which branch/commit they run on, whether secrets and a write token are available, and a risk badge. */}
+
+| You want to… | Trigger | Watch out for |
+|---|---|---|
+| Run CI on pull requests | `pull_request` | Fork PRs get a read-only token and no secrets |
+| Run after merge | `push` with `branches: [main]` | Add `paths:` to skip unrelated changes |
+| A manual button with inputs | `workflow_dispatch` | Up to 25 inputs |
+| Run on a timetable | `schedule` | UTC by default, default branch only, can be delayed |
+| Let an outside system start a run | `repository_dispatch` | Default branch only |
+| Run after another workflow finishes | `workflow_run` | Max three levels of chaining |
+| Be called by other workflows | `workflow_call` | Makes the file a reusable workflow |
+| Check PRs in a merge queue | `merge_group` | Required if you use a merge queue ([Part 5](/blog/git-branching-and-releases)) |
+| Label or comment on fork PRs | `pull_request_target` | Has secrets; never run the PR's code. See [Security](#security) |
+
+The limits in this table come from [events that trigger workflows](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows).
+
+### push and pull_request, with path filters
+
+```yaml
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/api/**"
+      - ".github/workflows/api.yml"
+  pull_request:
+    paths:
+      - "apps/api/**"
+      - ".github/workflows/api.yml"
+```
+
+In a monorepo, path filters keep the API's tests from running when someone fixes a typo in the web app. Always include the workflow file itself, so edits to the workflow get tested.
+
+<Callout type="warning" title="Path filters and required checks">
+If a check is **required** and its workflow is skipped by a path filter, the PR waits for a check that never reports. Either don't make path-filtered workflows required, or keep the workflow running and skip inside it.
+</Callout>
+
+### workflow_dispatch: a button with typed inputs
+
+```yaml title=".github/workflows/deploy.yml"
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        options: [staging, production]
+        default: staging
+      dry_run:
+        type: boolean
+        default: true
+```
+
+Inputs can be `string`, `boolean`, `choice`, `number` or `environment` ([workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax)). Read them as `${{ inputs.environment }}`. In the UI, open **Actions**, pick the workflow, and click **Run workflow**. From the terminal ([gh workflow run](https://cli.github.com/manual/gh_workflow_run)):
+
+```console
+$ gh workflow run deploy.yml -f environment=production -f dry_run=false
+$ gh workflow run deploy.yml --ref fix/deploy-script
+$ gh run watch
+```
+
+{/* SCREENSHOT: the "Run workflow" dropdown with a choice input and a boolean checkbox — needs sandbox org */}
+
+### schedule: cron in UTC
+
+```yaml
+on:
+  schedule:
+    - cron: "15 3 * * *" # 03:15 UTC = 09:00 Nepal Time
+```
+
+Cron's five fields are minute, hour, day of month, month, day of week. Three rules from the docs:
+
+- **It's UTC by default.** Nepal Time is UTC+5:45, so subtract 5 hours 45 minutes: 09:00 NPT is 03:15 UTC. Write the conversion in a comment; future you will not remember it.
+- **It runs on the default branch only,** and the shortest interval is every 5 minutes. In public repos, schedules are disabled automatically after 60 days without repository activity.
+- **It can be late.** Runs can be delayed at high load, the start of every hour is a high-load time, and under enough load some queued runs are dropped. Pick an odd minute like `:15` or `:37`, and never rely on a schedule for anything that must happen at an exact minute.
+
+Since March 2026 you can also give a schedule an IANA time zone, and GitHub does the conversion ([changelog](https://github.blog/changelog/2026-03-19-github-actions-late-march-2026-updates/)):
+
+```yaml
+on:
+  schedule:
+    - cron: "0 9 * * 1-5"
+      timezone: "Asia/Kathmandu"
+```
+
+For zones with daylight saving time, check the docs' note on what happens during the spring-forward hour. Nepal doesn't observe DST, so `Asia/Kathmandu` is simple.
+
+### repository_dispatch: let another system start a run
+
+```yaml
+on:
+  repository_dispatch:
+    types: [content-updated]
+```
+
+Your CMS, another repo, or a script can then start it through the API:
+
+```console
+$ gh api repos/acme-labs/web/dispatches -f event_type=content-updated
+```
+
+The payload you send arrives as `github.event.client_payload` (up to 10 top-level properties). It runs on the default branch.
+
+### workflow_run and workflow_call
+
+`workflow_run` starts a workflow when another finishes, for example "deploy after CI succeeds on `main`". It runs with secrets and a write token even when the first workflow ran for a fork PR, so treat anything that workflow produced (artifacts especially) as untrusted input. You can't chain more than three levels.
+
+`workflow_call` turns a workflow into a reusable one that other workflows call like a function. More in [Reuse](#reuse-reusable-workflows-vs-composite-actions).
+
+## Concurrency, matrix, caching and artifacts
+
+<Level value="intermediate" />
+
+### Concurrency
+
+Push three commits quickly and you get three CI runs, two of them wasted. `concurrency` groups runs and can cancel the stale ones:
+
+```yaml
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+```
+
+Cancel freely for PR CI. Never cancel a production deploy halfway; give deploys their own group with `cancel-in-progress: false` so they queue instead.
+
+### Matrix
+
+One job definition, many combinations:
+
+```yaml
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [22, 24]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm ci
+      - run: npm test
+```
+
+That's four jobs in parallel. `fail-fast: false` lets the others finish when one fails, so you see the whole picture. Use `include` and `exclude` to add or drop specific combinations.
+
+### Caching
+
+Dependency installs are the slowest boring part of CI. Cache them, keyed on the lockfile. This is from this site's `ci.yml`:
+
+```yaml
+- name: Cache dependencies
+  uses: actions/cache@v6
+  with:
+    path: ~/.bun/install/cache
+    key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+    restore-keys: |
+      ${{ runner.os }}-bun-
+```
+
+The exact `key` hits only when the lockfile is unchanged. `restore-keys` falls back to the newest cache with that prefix, so a changed lockfile still starts warm. Many setup actions (`setup-node`, `setup-python`) have a built-in `cache:` option that does this for you. Each repository gets 10 GB of cache storage ([Actions billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions)).
+
+### Artifacts
+
+Jobs don't share a disk. To pass files between jobs, or to keep a build output or test report after the run, upload an artifact:
+
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: npm ci && npm run build
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+```
+
+Cache is for things you can rebuild (dependencies). Artifacts are for things you produced and want to keep or pass on.
+
+## Environments and required reviewers
+
+<Level value="intermediate" />
+
+An **environment** (`staging`, `production`) is a named deploy target with its own secrets, variables and protection rules. Point a job at it:
+
+```yaml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - run: ./scripts/deploy.sh
+```
+
+Under **Settings → Environments → production** you can add:
+
+- **Required reviewers:** up to 6 people or teams who must approve before the job starts. Tick "Prevent self-review" so the person who triggered the deploy can't approve it.
+- **Wait timer:** a delay before the job starts.
+- **Deployment branches and tags:** only `main` (or `v*` tags) may deploy here.
+- **Environment secrets:** the production database URL lives here, not in repo secrets, so only jobs that passed the rules can read it.
+
+**Plan check:** environments and their protection rules are available in public repos on all current plans. For private repos you need Pro, Team or Enterprise for environments at all, and on Free, Pro and Team, required reviewers and wait timers only work in public repos ([managing environments](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments)). So on a private repo on Team, "required reviewer for production" isn't available. The usual workaround is to deploy only from a protected `main`, or from release tags that a tag ruleset lets only maintainers create ([Part 5](/blog/git-branching-and-releases)).
+
+## Worked example: the workflow that keeps this site's data fresh
+
+<Level value="intermediate" />
+
+This site shows GitHub stats (stars, merged PRs) without calling GitHub when a page loads. A `sync` command fetches everything once and writes a JSON snapshot that's committed to the repo. This workflow reruns it every day and opens a PR when the numbers changed. Here's the whole file from [bhimrazy/bhimraj.com.np](https://github.com/bhimrazy/bhimraj.com.np/blob/main/.github/workflows/sync-github.yml):
+
+```yaml title=".github/workflows/sync-github.yml"
+name: Sync GitHub snapshot
+
+on:
+  schedule:
+    # Once daily, in UTC (NPT = UTC+5:45):
+    #   09:15 UTC = 03:00 PM NPT.
+    - cron: "15 9 * * *"
+  workflow_dispatch:
+  # Changes to the data layer run the sync for real against GitHub — CI type
+  # checks and unit tests can't catch a fetcher that stopped resolving. These
+  # runs are validation only; the PR step below is gated to schedule/dispatch.
+  push:
+    branches: [main]
+    paths:
+      - "packages/github/**"
+      - ".github/workflows/sync-github.yml"
+  pull_request:
+    paths:
+      - "packages/github/**"
+      - ".github/workflows/sync-github.yml"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+# Skip husky hook installation: the create-pull-request commit must not
+# trigger the lint-staged pre-commit hook (biome errors on snapshot.json).
+env:
+  HUSKY: "0"
+
+# Keyed by ref so a validation run on a branch never queues behind the daily
+# job. Only validation runs are worth cancelling.
+concurrency:
+  group: sync-github-snapshot-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Refresh snapshot
+        env:
+          # The default Actions token authenticates GitHub API requests
+          # (1,000 req/hr) — plenty for the handful of calls the sync makes,
+          # and enough to fetch full, accurate data.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bun run sync
+
+      # Validation runs stop here: report what the sync would have written,
+      # then leave the snapshot alone.
+      - name: Report snapshot diff
+        if: github.event_name == 'push' || github.event_name == 'pull_request'
+        run: |
+          git --no-pager diff --stat -- packages/github/data/snapshot.json
+          git checkout -- packages/github/data/snapshot.json
+
+      # Only opens (or updates) a PR when snapshot.json actually changed.
+      # If the stats are identical, this is a no-op — no branch, no PR.
+      - name: Open pull request on change
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/github-snapshot
+          base: main
+          commit-message: "chore(data): refresh GitHub snapshot"
+          title: "chore(data): refresh GitHub snapshot"
+          body: |
+            Automated daily refresh of `packages/github/data/snapshot.json`.
+
+            Review the diff to see how the GitHub stats changed, then merge.
+          labels: automated, data
+          reviewers: bhimrazy
+          delete-branch: true
+```
+
+What each decision does:
+
+**Two kinds of run, one file.** `schedule` and `workflow_dispatch` are *write* runs: they fetch fresh data and may open a PR. `push` and `pull_request` are *validation* runs: they fire only when the data layer (`packages/github/**`) or the workflow itself changes, run the real sync against GitHub, and throw the result away. Unit tests can't tell you a GitHub API query stopped resolving. Running it for real can.
+
+**Step-level `if:` gates the side effects.** The same job runs every time, and two `if:` conditions on `github.event_name` decide the ending. Validation runs print a `diff --stat` and restore the file with `git checkout --`. Only scheduled or manual runs reach the PR step. Keeping one job means the fetch logic can't drift between "test" and "real".
+
+**The schedule avoids the top of the hour.** `15 9 * * *` is 09:15 UTC, which is 15:00 in Kathmandu, and the comment says so. Minute 15 dodges the busiest time for scheduled runs.
+
+**Concurrency keyed by ref.** Each branch gets its own group, so a PR's validation run never queues behind the daily job on `main`. `cancel-in-progress` is an expression that is true only for `pull_request`, so a new push to a PR cancels the stale validation run, but the daily write run is never cancelled.
+
+**The PR step is idempotent.** `peter-evans/create-pull-request` commits only if `snapshot.json` changed. It reuses one branch, `chore/github-snapshot`, so a second change before merge updates the same PR instead of opening another. No change means no branch and no PR.
+
+**`HUSKY: "0"`** skips the repo's Git hooks inside CI, because the bot's commit would otherwise trip the local lint-staged pre-commit hook.
+
+**The built-in token does the API work.** `secrets.GITHUB_TOKEN` is created per run and expires when the job ends. No personal access token to rotate.
+
+{/* VOICE: why you built the snapshot approach instead of fetching GitHub at request time, and what broke (if anything) before you added the path-filtered validation runs. */}
+
+### The trade-offs, honestly
+
+- **Actions are pinned by tag** (`@v7`, `@v2`, `@v8`), not by commit SHA. Tags can be moved, which is exactly what went wrong in the incident described under [Security](#security). The repo's `dependabot.yml` already watches the `github-actions` ecosystem weekly, so switching to SHA pins with version comments is a small, mechanical change. On a personal site with no cloud credentials in CI, tags are a reasonable trade for readability. For a company repo with deploy secrets, I'd pin SHAs.
+- **`permissions` are set at the workflow level**, so validation runs also get `contents: write` and `pull-requests: write` though they only need read. Moving the write scopes onto a separate job that only runs for `schedule` and `workflow_dispatch` would tighten it. (PRs from forks get a read-only token regardless.)
+- **PRs opened with `GITHUB_TOKEN` don't run CI on their own.** Events created by `GITHUB_TOKEN` generally don't start new workflow runs. For `pull_request` opened or synchronized by a workflow using `GITHUB_TOKEN`, the runs are created in an approval-required state, and someone with write access has to approve them ([GITHUB_TOKEN](https://docs.github.com/en/actions/concepts/security/github_token)). For a daily data PR that a human reviews anyway, that's fine. If you want CI to start by itself, have the workflow use a GitHub App token.
+- **`ubuntu-latest` will move to Ubuntu 26.04** during GitHub's migration window (see [What changes fast](#what-changes-fast)). For a Bun script that's low risk. Pin `ubuntu-24.04` if a job depends on system packages.
+
+## Reuse: reusable workflows vs composite actions
+
+<Level value="advanced" />
+
+Once you have three repos with the same CI, you'll want to write it once. There are two main tools.
+
+**A reusable workflow** is a whole workflow with `on: workflow_call`. Callers use it in place of a job:
+
+```yaml title="acme-labs/.github/.github/workflows/node-ci.yml"
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        type: string
+        default: "24"
+    secrets:
+      NPM_TOKEN:
+        required: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ inputs.node-version }}
+      - run: npm ci
+      - run: npm test
+```
+
+```yaml title="acme-labs/web/.github/workflows/ci.yml"
+on: [pull_request]
+
+jobs:
+  ci:
+    uses: acme-labs/.github/.github/workflows/node-ci.yml@main
+    with:
+      node-version: "24"
+    secrets: inherit
+```
+
+**A composite action** is an `action.yml` that bundles several steps. Callers use it *as a step* inside their own job:
+
+```yaml title="acme-labs/actions/setup-app/action.yml"
+name: Setup app
+description: Checkout-free setup for our Node apps
+inputs:
+  node-version:
+    default: "24"
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v7
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: npm
+    - run: npm ci
+      shell: bash
+```
+
+| | Reusable workflow | Composite action |
+|---|---|---|
+| Replaces | A whole job (or several) | Some steps inside a job |
+| Picks its own runner, environment, matrix | Yes | No, inherits the caller's job |
+| Secrets | Declared `secrets:`, or `secrets: inherit` | Can't read `secrets`; pass values as inputs |
+| Shows in logs as | Separate jobs | One step (expandable) |
+| Good for | "Our standard CI" or "our deploy pipeline" | "Our standard setup" |
+
+Rules worth knowing, from [reusing workflow configurations](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations) and [reuse workflows](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows):
+
+- You can nest up to ten levels of workflows, and call up to 50 unique reusable workflows from one file.
+- `secrets: inherit` passes all the caller's secrets, but only to workflows in the same organization or enterprise.
+- `env` set at the caller's workflow level is not passed to the called workflow.
+- The called workflow can only reduce `GITHUB_TOKEN` permissions, never raise them.
+- Pin the `@ref` like any action: a tag for internal workflows you control, a SHA for anything third-party.
+- If the repo holding the reusable workflow is private, allow other repos to use it under that repo's **Settings → Actions → General → Access**.
+
+### Starter workflows from your org's .github repo
+
+An organization can publish **workflow templates** so new repos start from your CI, not a blank file. Create a repo named `.github` in the org, add a `workflow-templates/` folder, and put each template next to a metadata file with the same name ([creating workflow templates](https://docs.github.com/en/actions/how-tos/reuse-automations/create-workflow-templates)):
+
+```text
+acme-labs/.github
+└── workflow-templates/
+    ├── node-ci.yml
+    └── node-ci.properties.json
+```
+
+```json title="workflow-templates/node-ci.properties.json"
+{
+  "name": "Acme Node CI",
+  "description": "Lint, test and build with our shared settings.",
+  "categories": ["JavaScript", "TypeScript"]
+}
+```
+
+Write `$default-branch` wherever the template needs the branch name; GitHub replaces it when someone uses the template. Templates then appear under **Actions → New workflow** in every repo in the org. A template is copied, so later changes don't reach repos that already used it. Combine it with a reusable workflow: the template is three lines that call the shared pipeline, and the pipeline itself stays in one place.
+
+## Runners
+
+<Level value="intermediate" />
+
+### GitHub-hosted
+
+The labels you'll actually use ([GitHub-hosted runners](https://docs.github.com/en/actions/reference/runners/github-hosted-runners)):
+
+| Need | Label |
+|---|---|
+| Linux, default | `ubuntu-latest` |
+| Linux, pinned version | `ubuntu-24.04`, `ubuntu-26.04`, `ubuntu-22.04` |
+| Linux on ARM | `ubuntu-24.04-arm`, `ubuntu-26.04-arm` |
+| Tiny automation jobs | `ubuntu-slim` (1 CPU, 5 GB RAM) |
+| Windows | `windows-latest`, `windows-2025`, `windows-11-arm` |
+| macOS (Apple silicon) | `macos-latest`, `macos-15` |
+| macOS (Intel) | `macos-15-intel`, `macos-26-intel` |
+
+Standard Linux and Windows runners have 4 CPUs and 16 GB in public repos, and 2 CPUs and 8 GB in private ones. ARM runners cost slightly less per minute than x64 in private repos, and suit builds that don't need x86. `ubuntu-slim` suits jobs that only call an API or label an issue.
+
+Pin a version (`ubuntu-24.04`) when you depend on system tools. Use `-latest` when you'd rather move with GitHub and fix the rare break.
+
+### Minutes and money
+
+Standard GitHub-hosted runners are free in public repositories. For private repos, each plan includes minutes per month: at the time of writing, Free 2,000, Pro 3,000, Team 3,000 and Enterprise Cloud 50,000. Usage is billed per minute, rounded up per job, and macOS minutes cost several times more than Linux ones. **Larger runners** (more CPU, more RAM, GPUs, static IPs) are always billed, even in public repos, and don't use your included minutes ([Actions billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions)).
+
+{/* VOICE: rough sense of how far the free minutes go for a small team, from your own experience, if you have one. No invented numbers. */}
+
+### Self-hosted
+
+You can register your own machines (`runs-on: [self-hosted, linux]`). The machine is yours, so it can reach your private network, keep big caches warm, or use your own GPU. You also own patching, isolation and cleanup between jobs. GitHub's guidance is blunt: self-hosted runners should almost never be used for public repositories, because anyone can open a pull request and compromise the machine. If you go this way, prefer just-in-time runners that take at most one job and are then removed, on a clean environment each time ([self-hosted runners](https://docs.github.com/en/actions/concepts/runners/self-hosted-runners), [secure use reference](https://docs.github.com/en/actions/reference/security/secure-use)).
+
+## Security
+
+<Level value="advanced" />
+
+A workflow runs code you didn't write (every `uses:`) next to secrets you care about. Five habits cover most of the risk.
+
+### 1. Least-privilege permissions
+
+Every run gets a `GITHUB_TOKEN`. Set the default to read-only and widen per job ([secure use reference](https://docs.github.com/en/actions/reference/security/secure-use)):
+
+```yaml
+permissions:
+  contents: read
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - run: gh pr edit "$PR" --repo "$GITHUB_REPOSITORY" --add-label triaged
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+```
+
+Also set the org or repo default to read-only under **Settings → Actions → General → Workflow permissions**, so a workflow without a `permissions:` block starts read-only.
+
+### 2. OIDC instead of long-lived cloud keys
+
+Storing `AWS_SECRET_ACCESS_KEY` in GitHub secrets means a key that works from anywhere until someone rotates it. With **OIDC** (OpenID Connect), the job asks GitHub for a signed, short-lived identity token, and your cloud swaps it for temporary credentials that expire with the job. AWS, Azure, Google Cloud and HashiCorp Vault support it ([about OIDC](https://docs.github.com/en/actions/concepts/security/openid-connect)).
+
+```yaml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/acme-web-deploy
+          aws-region: ap-south-1
+      - run: aws s3 sync ./dist s3://acme-web-prod
+```
+
+The important half is on the cloud side: the role's trust policy should accept only tokens whose subject matches your repo and environment, for example `repo:acme-labs/web:environment:production`. Then a workflow in another repo, or a PR branch, can't assume your production role.
+
+### 3. Pin third-party actions to a full commit SHA
+
+A tag like `@v45` is a pointer the action's owner, or an attacker with their credentials, can move. In March 2025, that's what happened to `tj-actions/changed-files` (CVE-2025-30066): its version tags were retroactively pointed at a malicious commit that dumped secrets from runner memory into the build logs. Repos that referenced it by tag ran the malicious code on their next build; repos pinned to an earlier SHA didn't ([GitHub advisory](https://github.com/advisories/ghsa-mrrh-fwg8-r2c3)).
+
+GitHub's own guidance: pinning to a full-length commit SHA is currently the only way to use an action as an immutable release. Keep the version in a comment so humans and Dependabot can read it:
+
+```yaml
+steps:
+  - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+```
+
+Get the SHA for a tag with `gh api`:
+
+```console
+$ gh api repos/actions/checkout/git/ref/tags/v7.0.1 --jq .object.sha
+3d3c42e5aac5ba805825da76410c181273ba90b1
+```
+
+(If `.object.type` is `tag` rather than `commit`, it's an annotated tag; follow it one more step to the commit.)
+
+Admins can enforce this. Under **Settings → Actions → General**, the allowed-actions policy can limit which actions run, block specific ones with a `!` prefix, and require every action to be pinned to a full-length commit SHA ([changelog](https://github.blog/changelog/2025-08-15-github-actions-policy-now-supports-blocking-and-sha-pinning-actions/), [managing Actions settings](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository)). Check which of these options your plan and account type show before you rely on them.
+
+### 4. Dependabot for actions
+
+Pins go stale. Let Dependabot open PRs that bump them ([keeping actions up to date](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot)):
+
+```yaml title=".github/dependabot.yml"
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+```
+
+One caveat from the docs: Dependabot *alerts* only cover actions referenced by semantic version, not SHA-pinned ones. Version-update PRs keep coming either way, so review and merge them.
+
+### 5. Treat pull_request_target as dangerous
+
+`pull_request` runs for fork PRs get no secrets and a read-only token. `pull_request_target` exists for jobs like labelling fork PRs, and it runs in the context of the base repository, **with** secrets and a write token. If such a workflow checks out and runs the PR's code (installing its dependencies counts), any stranger can open a PR that steals your secrets. This pattern is often called a "pwn request" ([securely using pull_request_target](https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target)).
+
+GitHub has been closing this door in steps:
+
+- Since 8 December 2025, `pull_request_target` always takes the workflow file and checkout commit from the default branch ([changelog](https://github.blog/changelog/2025-11-07-actions-pull_request_target-and-environment-branch-protections-changes/)).
+- `actions/checkout` v7 refuses to fetch fork PR code in `pull_request_target` (and in `workflow_run` triggered by PRs) unless you set `allow-unsafe-pr-checkout`, and GitHub said it would backport this to supported major versions ([changelog](https://github.blog/changelog/2026-06-18-safer-pull_request_target-defaults-for-github-actions-checkout)).
+- A default rule now disables `pull_request_target` in public repositories that don't already have an applicable event policy. It runs in evaluate mode first, and on 2 November 2026 GitHub will enforce it for affected repos that were on the default policy. Private and internal repos aren't affected ([changelog](https://github.blog/changelog/2026-09-17-workflow-execution-protections-in-github-actions-generally-available/)).
+
+If you maintain a public repo with a `pull_request_target` workflow, check the evaluate results now and decide whether to allow it explicitly or move to `pull_request`.
+
+<Callout type="tip" title="A short security checklist">
+- Workflow-level `permissions: contents: read`, wider per job.
+- No cloud keys in secrets; OIDC with a trust policy scoped to repo and environment.
+- Third-party actions pinned to SHAs, Dependabot watching them.
+- Production secrets in a protected environment.
+- No `pull_request_target` that runs PR code.
+- `${{ }}` values from issues and PRs (titles, branch names) passed through `env:`, never pasted into `run:` scripts.
+</Callout>
+
+The last point is about script injection: `run: echo "${{ github.event.pull_request.title }}"` pastes attacker-controlled text into a shell script. Put it in an environment variable and reference `"$TITLE"` instead, as in the `PR` example above.
+
+## Exercises
+
+<Exercise title="A button and a timetable" time="20 min">
+1. In a sandbox repo, add `.github/workflows/hello.yml` with `workflow_dispatch` (a `choice` input `greeting` with `hello` and `namaste`) and a `schedule` for 09:00 Nepal Time.
+2. Have the job `echo` the input, falling back to `hello` when it's empty (scheduled runs have no inputs).
+3. Commit to the default branch, then run it with `gh workflow run hello.yml -f greeting=namaste` and watch with `gh run watch`.
+
+**Done when:** the run log prints `namaste`, and your cron line has a comment showing the UTC conversion.
+
+<Details summary="Solution">
+```yaml title=".github/workflows/hello.yml"
+name: Hello
+
+on:
+  workflow_dispatch:
+    inputs:
+      greeting:
+        type: choice
+        options: [hello, namaste]
+        default: hello
+  schedule:
+    - cron: "15 3 * * *" # 03:15 UTC = 09:00 NPT (UTC+5:45)
+
+permissions:
+  contents: read
+
+jobs:
+  greet:
+    runs-on: ubuntu-slim
+    steps:
+      - run: echo "${GREETING:-hello}"
+        env:
+          GREETING: ${{ inputs.greeting }}
+```
+</Details>
+</Exercise>
+
+<Exercise title="Harden one real workflow" time="30 min">
+1. Pick a workflow in a repo you own.
+2. Add `permissions: contents: read` at the top and widen only the jobs that need more.
+3. Replace each third-party `@vN` with a full SHA and a `# vN.x.y` comment, using `gh api repos/OWNER/REPO/git/ref/tags/TAG --jq .object.sha`.
+4. Add the `github-actions` entry to `.github/dependabot.yml`.
+5. Search the file for `${{ github.event.` inside `run:` lines and move each into `env:`.
+
+**Done when:** the workflow still passes, every `uses:` outside `actions/*` has a 40-character SHA with a version comment, and `dependabot.yml` has a `github-actions` entry.
+</Exercise>
+
+<Exercise title="Extract a reusable workflow" time="30 min">
+1. Move your CI job into `acme-labs/.github/.github/workflows/node-ci.yml` with `on: workflow_call` and a `node-version` input.
+2. Replace the job in two repos with `uses: acme-labs/.github/.github/workflows/node-ci.yml@main`.
+3. Change the Node version in one caller only.
+
+**Done when:** both repos' PR checks run the shared job, and one of them runs a different Node version.
+</Exercise>
+
+## Cheat sheet
+
+| Task | Snippet or command |
+|---|---|
+| Run on PRs and merges | `on: pull_request` and `push: branches: [main]` |
+| Only when some files change | `paths: ["apps/api/**"]` |
+| Manual run with inputs | `workflow_dispatch: inputs:` then `gh workflow run f.yml -f k=v` |
+| Nightly | `schedule: - cron: "15 3 * * *"` (UTC unless `timezone:`) |
+| External trigger | `repository_dispatch` then `gh api repos/O/R/dispatches -f event_type=x` |
+| Watch, debug | `gh run watch`, `gh run view --log-failed` |
+| Cancel stale PR runs | `concurrency:` with `cancel-in-progress` |
+| Fan out | `strategy: matrix:` |
+| Cache deps | `actions/cache` keyed on `hashFiles('**/lockfile')` |
+| Pass files between jobs | `upload-artifact` / `download-artifact` |
+| Gate a deploy | `environment: production` with required reviewers |
+| Call a shared pipeline | `jobs.x.uses: org/repo/.github/workflows/f.yml@ref` |
+| Least privilege | `permissions: contents: read` |
+| Cloud auth without keys | `permissions: id-token: write` plus OIDC trust policy |
+| Pin an action | `uses: owner/repo@<40-char-sha> # vX.Y.Z` |
+
+## What changes fast
+
+- **`ubuntu-latest` moves from Ubuntu 24.04 to 26.04** gradually between 19 October and 19 November 2026. Pin `ubuntu-24.04` to defer ([changelog](https://github.blog/changelog/2026-09-17-ubuntu-26-generally-available-and-latest-migration)).
+- **macOS 14 is retired on 2 November 2026**, with brownouts through October. `macos-latest` points to macOS 26 per that notice ([changelog](https://github.blog/changelog/2026-10-01-github-actions-macos-14-runner-image-retirement)).
+- **`pull_request_target` default-off for public repos**, enforced from 2 November 2026 ([changelog](https://github.blog/changelog/2026-09-17-workflow-execution-protections-in-github-actions-generally-available/)).
+- **Runner labels and specs.** Check [GitHub-hosted runners](https://docs.github.com/en/actions/reference/runners/github-hosted-runners).
+- **Included minutes, storage and per-minute prices.** Check [Actions billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions) and the [pricing reference](https://docs.github.com/en/billing/reference/actions-minute-multipliers).
+- **Action major versions** (`checkout@v7`, `cache@v6`, `upload-artifact@v7`, `download-artifact@v8` at the time of writing). Let Dependabot track them.
+- **Actions security roadmap** items (workflow dependency locking, scoped secrets, egress controls) are in preview pipelines. Watch the [2026 security roadmap post](https://github.blog/2026-03-26-whats-coming-to-our-github-actions-2026-security-roadmap/) and the [changelog](https://github.blog/changelog/).
+
+## Further reading
+
+- [Understanding GitHub Actions](https://docs.github.com/en/actions/get-started/understand-github-actions)
+- [Events that trigger workflows](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows)
+- [Workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax)
+- [Reusing workflow configurations](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations)
+- [Creating workflow templates](https://docs.github.com/en/actions/how-tos/reuse-automations/create-workflow-templates)
+- [Managing environments](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments)
+- [Secure use reference](https://docs.github.com/en/actions/reference/security/secure-use)
+- [OpenID Connect](https://docs.github.com/en/actions/concepts/security/openid-connect)
+- [GITHUB_TOKEN](https://docs.github.com/en/actions/concepts/security/github_token)
+- [gh workflow run](https://cli.github.com/manual/gh_workflow_run) and [gh run](https://cli.github.com/manual/gh_run)
