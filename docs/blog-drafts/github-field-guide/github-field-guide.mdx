@@ -1,0 +1,154 @@
+---
+title: "The GitHub Field Guide: how a modern team works on GitHub"
+description: "A seven-part guide to Git and GitHub for founders, new developers, team leads and senior engineers, with reading paths, a workshop plan and a cheat sheet."
+publishedAt: "2026-10-07"
+updatedAt: "2026-10-07"
+tags: [github, git, gh, github-actions, workshop, startups]
+image: "/blog/github-field-guide/part-0.png"
+series: "github-field-guide"
+part: 0
+level: "all"
+verifiedAt: "2026-10-07"
+featured: true
+---
+
+Most people learn GitHub sideways. You clone a repo for a tutorial, click **Merge** because someone asked you to, copy a workflow file from a blog post, and a few years later you run a team on top of habits nobody ever explained. This series is the explanation: how a small, modern team actually works on GitHub in 2026, from the first commit to protected branches, releases, CI and AI agents that open pull requests.
+
+It's written for five kinds of reader:
+
+- **Founders and non-engineers** who use GitHub daily but never learned what's underneath.
+- **New developers** in their first job on a team.
+- **Team leads** setting up an org, CI and releases.
+- **Experienced engineers** who want the current picture: rulesets, OIDC, immutable releases, agents.
+- **Workshop facilitators.** Each part is one 60–90 minute session with exercises built in.
+
+{/* VOICE: why Bhimraj wrote this series: what he kept re-explaining to teammates, founders or new contributors (at work or in Lightning AI open source), and why he wanted one place to send them. 1–3 sentences, no invented specifics. */}
+
+<Callout type="founder" title="The whole series in five lines">
+- **Git** keeps the history of your code on every laptop. **GitHub** is the shared copy plus reviews, permissions and automation around it.
+- Work happens on short-lived **branches** and lands through reviewed **pull requests**. Small and often beats big and rare.
+- Put company code in an **organization**, give access through **teams**, and **protect `main`**. On private repos, protection needs the paid Team plan.
+- **GitHub Actions** runs your tests, deploys and chores automatically. The main risk is giving it more access than it needs.
+- **AI agents** now open pull requests too. They go through the same reviews and checks as people, and a human still decides what merges.
+</Callout>
+
+{/* FIGURE: ecosystem-map — Git on each laptop at the bottom; GitHub in the middle as the shared remote with PRs, issues, reviews and permissions; VS Code, git, gh and the website as interfaces on the left; Actions and AI agents on the right as automated participants pushing to and reading from GitHub. Same figure as Part 1; on the hub, label each region with the part that covers it. */}
+
+Here's how to read the map. At the bottom, every laptop holds its own copy of the code and its history: that's Git ([Part 1](/blog/git-and-github-foundations)), and [Part 2](/blog/git-setup-across-devices) makes each laptop talk to GitHub safely. In the middle sits GitHub, the shared copy everyone pushes to, wrapped in organizations, teams and rules about who may change what ([Part 3](/blog/github-organizations-and-teams)). On the left are the ways you drive it: VS Code, `git`, the website and the GitHub CLI `gh` ([Part 4](/blog/github-cli-issues-prs-projects)). The path from branch to pull request to release runs through the middle ([Part 5](/blog/git-branching-and-releases)). On the right are the participants that aren't people: Actions workflows ([Part 6](/blog/github-actions-automation)) and AI agents ([Part 7](/blog/ai-coding-agents-on-github)). They use the same doors as humans, which is why Part 3's guardrails matter.
+
+## Pick your path
+
+<Paths>
+<Path who="Founder / non-engineer" parts="1,3,4,7">Read the founder callouts and section intros, skip the code. Part 3 is the one that protects the company; Part 4 shows you the Project board to ask for.</Path>
+<Path who="New developer" parts="1,2,4,5">The daily loop first, then a machine that pushes and signs without fuss, then the terminal workflow and how your team ships.</Path>
+<Path who="Team lead setting up an org" parts="3,5,6,7">Org, teams and rulesets first, then the branching and release defaults, CI, and the guardrails agents need. Send new hires Part 2.</Path>
+<Path who="Experienced engineer" parts="2,5,6,7">Skim the skip callouts. The newer material: SSH signing and worktrees, merge queues and immutable releases, OIDC and SHA pins, agents on a protected repo.</Path>
+</Paths>
+
+Every part opens with a "Skip this if you already…" box. Trust it: if you already do what it lists, jump ahead.
+
+## The parts
+
+<SeriesParts />
+
+## Run it as a workshop
+
+Each part is built to be one session. The exercises are already in the parts as `Exercise` blocks with a goal, steps and a "Done when" check, so a facilitator mostly has to pick and time them.
+
+| Session | Part | Time | Prerequisites | Exercises to run |
+|---|---|---|---|---|
+| 1 | [Foundations](/blog/git-and-github-foundations) | 60 min | GitHub account, Git and `gh` installed and signed in | "Your first pull request, end to end" (25 min), "Break it and fix it" (15 min) |
+| 2 | [Setup across devices](/blog/git-setup-across-devices) | 75 min | Session 1; admin rights on the laptop | "Set up a machine from scratch" (30 min), "Switch devices mid-task" (15 min) |
+| 3 | [Orgs and teams](/blog/github-organizations-and-teams) | 75 min | Sandbox org, people working in pairs | "Build the team structure" (15 min), "Protect main and try to break it" (15 min), "Run an offboarding drill" (10 min) |
+| 4 | [gh, issues, PRs, Projects](/blog/github-cli-issues-prs-projects) | 60 min | Sessions 1–2 | "Issue to merged PR, without a browser" (15 min), "Set up planning for a repo" (20 min) |
+| 5 | [Branching and releases](/blog/git-branching-and-releases) | 75 min | Session 3 (rulesets), a partner to approve PRs | "Protect main and ship a squash-merged PR" (20 min), "Cut an immutable release and verify it" (25 min) |
+| 6 | [GitHub Actions](/blog/github-actions-automation) | 90 min | Session 4; a repo with a workflow to harden | "A button and a timetable" (20 min), then one of "Harden one real workflow" or "Extract a reusable workflow" (30 min each) |
+| 7 | [Agents](/blog/ai-coding-agents-on-github) | 60–90 min | Sessions 3 and 6; agent access on the sandbox org | The exercises in Part 7 |
+
+{/* TODO: fill in Part 7's exercise titles and times once ai-coding-agents-on-github.mdx is drafted. */}
+
+The exercise times add up to less than the session time on purpose. The rest goes on a short walkthrough of the part's diagram, and on the one person whose push gets rejected for a reason nobody expected.
+
+### Setup notes for facilitators
+
+- **Make a sandbox org with public repos** (`web` and `api` match the examples). On the Free plan, rulesets, required reviews and CODEOWNERS only apply to public repos, so exercises like "protect `main`" quietly do nothing on a private one. Draft PRs on private repos are also plan-dependent at the time of writing, so if a `--private` practice repo refuses a draft PR, recreate it as public. Need private? Put the org on Team and check [Part 3's plan table](/blog/github-organizations-and-teams#plan-reality-free-vs-team-vs-enterprise) first.
+- **Accounts.** Every attendee needs their own GitHub account with 2FA on, since the org should require it ([Part 3](/blog/github-organizations-and-teams)). Invite them as members before the day. Sessions 3 and 5 work best in pairs.
+- **Install Git and `gh` before Session 1**, which uses `gh` before Part 2 explains it. Send [Part 2's install and sign-in steps](/blog/git-setup-across-devices) as pre-work, and start by having everyone run `gh auth status`.
+- **Put a facilitator account on the rulesets' bypass list** so you can unstick a broken exercise without disabling the rule for everyone.
+- **Reset between cohorts** by running Session 3's offboarding drill on everyone. It doubles as a demo.
+
+## Cheat sheet
+
+The commands and settings I reach for most, taken from the parts. Each row links to the part that explains it. The examples use the fictional `acme-labs` org; swap in yours.
+
+| Group | Task | Command or setting | Part |
+|---|---|---|---|
+| Setup | Sign in | `gh auth login` | [2](/blog/git-setup-across-devices) |
+| Setup | Let Git use gh for HTTPS | `gh auth setup-git` | [2](/blog/git-setup-across-devices) |
+| Setup | Push new branches without `-u` | `git config --global push.autoSetupRemote true` | [2](/blog/git-setup-across-devices) |
+| Setup | Sign with SSH | `git config --global gpg.format ssh` + `user.signingkey` + `commit.gpgsign true` | [2](/blog/git-setup-across-devices) |
+| Daily loop | Update main | `git switch main && git pull` | [1](/blog/git-and-github-foundations) |
+| Daily loop | New branch | `git switch -c feat/name` | [1](/blog/git-and-github-foundations) |
+| Daily loop | Stage interactively | `git add -p` | [1](/blog/git-and-github-foundations) |
+| Daily loop | Undo a pushed commit | `git revert SHA` | [1](/blog/git-and-github-foundations) |
+| Daily loop | Find lost commits | `git reflog` | [1](/blog/git-and-github-foundations) |
+| Daily loop | Hand off work to another machine | `git commit -m "wip: …" && git push && gh pr create --draft --fill` | [2](/blog/git-setup-across-devices) |
+| PRs and reviews | Linked branch from an issue | `gh issue develop 42 --checkout` | [4](/blog/github-cli-issues-prs-projects) |
+| PRs and reviews | Run someone else's PR locally | `gh pr checkout 123` | [4](/blog/github-cli-issues-prs-projects) |
+| PRs and reviews | Watch CI | `gh pr checks --watch` | [4](/blog/github-cli-issues-prs-projects) |
+| PRs and reviews | Squash, auto-merge, clean up | `gh pr merge --squash --auto --delete-branch` | [5](/blog/git-branching-and-releases) |
+| Org and access | Set base permission | `gh api -X PATCH orgs/acme-labs -f default_repository_permission=read` | [3](/blog/github-organizations-and-teams) |
+| Org and access | Give a team repo access | `gh api -X PUT orgs/acme-labs/teams/web/repos/acme-labs/web -f permission=push` | [3](/blog/github-organizations-and-teams) |
+| Org and access | See rules on a branch | `gh ruleset check main --repo acme-labs/web` | [3](/blog/github-organizations-and-teams) |
+| Org and access | Require 2FA | Org Settings → Authentication security | [3](/blog/github-organizations-and-teams) |
+| Releases | Release with generated notes | `gh release create v1.4.2 --generate-notes` | [5](/blog/git-branching-and-releases) |
+| Releases | Verify a downloaded file | `gh release verify-asset v1.4.2 ./file` | [5](/blog/git-branching-and-releases) |
+| Actions | Debug a failed run | `gh run view --log-failed` | [6](/blog/github-actions-automation) |
+| Actions | Manual run with inputs | `gh workflow run f.yml -f k=v` | [6](/blog/github-actions-automation) |
+| Actions | Least privilege | `permissions: contents: read` | [6](/blog/github-actions-automation) |
+| Actions | Pin an action | `uses: owner/repo@<40-char-sha> # vX.Y.Z` | [6](/blog/github-actions-automation) |
+| Agents | A separate folder per agent or task | `git worktree add ../dir -b BRANCH main` | [2](/blog/git-setup-across-devices), [7](/blog/ai-coding-agents-on-github) |
+
+{/* TODO: add one or two Agents rows taken verbatim from Part 7's cheat sheet once it's drafted (for example, how to assign an issue to an agent, and where agent instructions live). */}
+
+## Glossary
+
+Plain-English definitions for the words the series uses most.
+
+- **Repository (repo):** a project folder plus its full history. On GitHub it also holds the issues, pull requests and settings.
+- **Commit:** a saved snapshot of the project with a message saying why it changed.
+- **Remote:** the shared copy of a repo that everyone pushes to and pulls from, usually on GitHub. Its default name is `origin`.
+- **Branch:** a private line of work. You make changes there without touching the real project until they're reviewed.
+- **Pull request (PR):** a proposal to merge a branch into `main`, with a place for review, discussion and automated checks.
+- **Draft PR:** a pull request marked "work in progress": visible and running checks, but not ready to merge.
+- **Merge:** bringing a branch's changes into another branch. **Squash and merge** turns a whole PR into one commit.
+- **Rebase:** replaying your commits on top of newer work, so the history reads as one straight line instead of a fork and a join.
+- **Issue:** a tracked piece of work: a bug, a feature or a question.
+- **Organization (org):** a shared GitHub account that belongs to a company rather than to one person.
+- **Team:** a group of people in an org. You give the team access to repos, then add or remove people from the team.
+- **Outside collaborator:** someone who isn't in the org but has access to specific repos, like a contractor.
+- **Ruleset:** a set of rules for a branch, such as "changes to `main` need a reviewed PR and passing tests".
+- **CODEOWNERS:** a file listing who owns which parts of the code. GitHub asks those people to review changes there.
+- **Workflow:** an automation file in GitHub Actions that says what to run and when.
+- **Runner:** the machine a workflow's job runs on, hosted by GitHub or by you.
+- **Artifact:** a file a workflow produces and keeps, like a build or a test report.
+- **Tag and release:** a tag is a permanent name for one commit (`v1.4.2`); a release is a tag plus notes and downloadable files.
+- **Agent:** an AI tool (Claude, Codex, Copilot) that works on an issue in its own environment and opens a pull request for a human to review.
+
+## How this guide stays current
+
+GitHub changes every week, and some of this series will be wrong within months. Every part carries a "last verified" date and ends with a **What changes fast** section listing what's most likely to drift, each with the official page to check.
+
+| Part | Last verified | Most likely to drift |
+|---|---|---|
+| [1. Foundations](/blog/git-and-github-foundations) | 7 October 2026 | VS Code's AI features, push protection coverage |
+| [2. Setup across devices](/blog/git-setup-across-devices) | 7 October 2026 | `gh` flags, Codespaces quotas |
+| [3. Orgs and teams](/blog/github-organizations-and-teams) | 7 October 2026 | Plan prices and what Free includes, new ruleset types |
+| [4. gh, issues, PRs, Projects](/blog/github-cli-issues-prs-projects) | 7 October 2026 | Issue types, sub-issues, Project automation limits |
+| [5. Branching and releases](/blog/git-branching-and-releases) | 7 October 2026 | Merge queue availability, release tool versions |
+| [6. GitHub Actions](/blog/github-actions-automation) | 7 October 2026 | Runner images, `pull_request_target` defaults, action versions |
+| [7. Agents](/blog/ai-coding-agents-on-github) | 7 October 2026 | Almost everything: plans, pricing, preview status |
+
+Branching and Git basics age slowly. Actions and agents age fast, so I re-check those first.
+
+If you find something outdated, a command that no longer works or a setting that moved, please [open an issue on this site's repo](https://github.com/bhimrazy/bhimraj.com.np/issues). Tell me the part, the section and what you saw instead. I'll fix it and bump that part's verified date.
