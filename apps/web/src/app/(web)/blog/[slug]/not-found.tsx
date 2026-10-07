@@ -1,6 +1,6 @@
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { postHref, sortedPosts } from "@/components/blog/posts";
+import { listedPosts, postHref } from "@/components/blog/posts";
 import { Container } from "@/components/container";
 import { formatDate } from "@/lib/utils";
 
@@ -21,7 +21,7 @@ export default function PostNotFound() {
           </p>
 
           <ul className="mt-10 divide-y divide-site-border border-site-border border-y">
-            {sortedPosts.slice(0, 5).map((post) => (
+            {listedPosts.slice(0, 5).map((post) => (
               <li key={post._meta.path}>
                 <Link
                   href={postHref(post)}

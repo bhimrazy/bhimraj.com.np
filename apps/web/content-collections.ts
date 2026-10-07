@@ -3,9 +3,11 @@ import { compileMarkdown } from "@content-collections/markdown";
 import { compileMDX } from "@content-collections/mdx";
 import rehypeShiki from "@shikijs/rehype";
 import rehypeSlug from "rehype-slug";
+import remarkGfm from "remark-gfm";
 import type { Pluggable } from "unified";
 import { z } from "zod";
 import rehypeArticle from "./src/components/blog/rehype-article";
+import { stripMdxComments } from "./src/components/blog/strip-mdx-comments";
 import rehypeDropDek from "./src/components/mdx/rehype-drop-dek";
 import { codeTransformers } from "./src/components/mdx/shiki-transformers";
 
@@ -26,14 +28,17 @@ const markdownOptions = {
   ],
 };
 
-// Blog posts get extra editorial markup (figures, heading anchors, dek).
+// Blog posts get GFM (tables for cheat sheets, task lists, autolinks) and
+// extra editorial markup (figures, heading anchors, dek).
 const blogMarkdownOptions = {
+  remarkPlugins: [remarkGfm],
   rehypePlugins: [...markdownOptions.rehypePlugins, rehypeArticle],
 };
 
 // The rendered body is MDX so posts can embed interactive figures. The dek is
 // shown under the title (read from `html`), so the MDX body drops it.
 const blogMdxOptions = {
+  remarkPlugins: [remarkGfm],
   rehypePlugins: [...blogMarkdownOptions.rehypePlugins, rehypeDropDek],
 };
 
@@ -50,11 +55,24 @@ const BlogPost = defineCollection({
     tags: z.array(z.string()),
     image: z.string(),
     featured: z.boolean().default(false),
+    /** Series id shared by a hub (part 0) and its parts, e.g. "github-field-guide". */
+    series: z.string().optional(),
+    /** Position in the series; 0 is the hub. */
+    part: z.number().int().min(0).optional(),
+    level: z.enum(["beginner", "intermediate", "advanced", "all"]).optional(),
+    /** Date the instructions were last checked against the real tools. */
+    verifiedAt: z.string().optional(),
   }),
   transform: async (document, context) => {
     // `html` is no longer rendered for posts; it still feeds the dek, TOC,
-    // reading time and cover detection. JSX figures are not part of it.
-    const html = await compileMarkdown(context, document, blogMarkdownOptions);
+    // reading time, RSS and cover detection. JSX figures are not part of it,
+    // and comment-only lines (draft placeholders) are dropped so they don't
+    // print as text.
+    const html = await compileMarkdown(
+      context,
+      { ...document, content: stripMdxComments(document.content) },
+      blogMarkdownOptions,
+    );
     const mdx = await compileMDX(context, document, blogMdxOptions);
     return { ...document, html, mdx };
   },

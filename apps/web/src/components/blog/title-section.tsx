@@ -1,9 +1,18 @@
-import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { ArrowLeftIcon, CheckCircledIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
+import { LevelBadge } from "@/components/mdx/level";
 import { siteConfig } from "@/config/site";
 import { cn, formatDate, getReadingTime } from "@/lib/utils";
-import { type BlogPost, tagLabel, wasUpdated } from "./posts";
+import { type BlogPost, postHref, tagLabel, wasUpdated } from "./posts";
+import {
+  getSeriesPosition,
+  partCountLabel,
+  type SeriesPosition,
+} from "./series";
+
+const kicker =
+  "mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 font-medium font-mono text-[11px] text-site-accent uppercase tracking-[1.5px]";
 
 export default function TitleSection({
   blog,
@@ -14,6 +23,7 @@ export default function TitleSection({
   dek?: string | null;
 }) {
   const updated = wasUpdated(blog) ? blog.updatedAt : null;
+  const position = getSeriesPosition(blog);
 
   return (
     <header className="mx-auto mb-10 max-w-measure sm:mb-12">
@@ -25,26 +35,30 @@ export default function TitleSection({
         All writing
       </Link>
 
-      {blog.tags.length > 0 && (
-        <p className="mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 font-medium font-mono text-[11px] text-site-accent uppercase tracking-[1.5px]">
-          {blog.tags.slice(0, 3).map((tag, i) => (
-            <span
-              key={tag}
-              className={cn(
-                "inline-flex items-center gap-2",
-                // Keep the kicker to one line on phones.
-                i > 0 && "hidden sm:inline-flex",
-              )}
-            >
-              {i > 0 && (
-                <span aria-hidden className="text-site-text-tertiary">
-                  /
-                </span>
-              )}
-              {tagLabel(tag)}
-            </span>
-          ))}
-        </p>
+      {position ? (
+        <SeriesKicker position={position} />
+      ) : (
+        blog.tags.length > 0 && (
+          <p className={kicker}>
+            {blog.tags.slice(0, 3).map((tag, i) => (
+              <span
+                key={tag}
+                className={cn(
+                  "inline-flex items-center gap-2",
+                  // Keep the kicker to one line on phones.
+                  i > 0 && "hidden sm:inline-flex",
+                )}
+              >
+                {i > 0 && (
+                  <span aria-hidden className="text-site-text-tertiary">
+                    /
+                  </span>
+                )}
+                {tagLabel(tag)}
+              </span>
+            ))}
+          </p>
+        )
       )}
 
       <h1 className="text-balance font-bold font-display text-[2rem] text-site-text leading-[1.1] tracking-tight sm:text-5xl sm:leading-[1.05]">
@@ -57,6 +71,24 @@ export default function TitleSection({
           // biome-ignore lint/security/noDangerouslySetInnerHtml: from trusted MDX
           dangerouslySetInnerHTML={{ __html: dek }}
         />
+      )}
+
+      {(blog.level || blog.verifiedAt) && (
+        <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
+          {blog.level && <LevelBadge value={blog.level} />}
+          {blog.verifiedAt && (
+            <p className="inline-flex items-center gap-1.5 font-mono text-site-text-secondary text-xs">
+              <CheckCircledIcon
+                aria-hidden
+                className="size-3.5 text-site-accent"
+              />
+              Verified{" "}
+              <time dateTime={blog.verifiedAt}>
+                {formatDate(blog.verifiedAt)}
+              </time>
+            </p>
+          )}
+        </div>
       )}
 
       <div className="mt-8 flex items-center gap-3 border-site-border border-y py-4">
@@ -98,5 +130,49 @@ export default function TitleSection({
         </div>
       </div>
     </header>
+  );
+}
+
+/** "Part 3 of 7 · The GitHub Field Guide" (linking to the hub) or "Series · 7 parts". */
+function SeriesKicker({ position }: { position: SeriesPosition }) {
+  const { series, isHub, part } = position;
+
+  if (isHub) {
+    return (
+      <p className={kicker}>
+        Series
+        <span aria-hidden className="text-site-text-tertiary">
+          ·
+        </span>
+        {partCountLabel(series)}
+      </p>
+    );
+  }
+
+  const label = (
+    <>
+      <span>
+        Part {part} of {series.parts.length}
+      </span>
+      <span aria-hidden className="text-site-text-tertiary">
+        ·
+      </span>
+      <span className="normal-case tracking-normal">{series.title}</span>
+    </>
+  );
+
+  return (
+    <p className={kicker}>
+      {series.hub ? (
+        <Link
+          href={postHref(series.hub)}
+          className="inline-flex flex-wrap items-center gap-x-2 rounded-sm transition-colors hover:text-site-accent-hover focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4"
+        >
+          {label}
+        </Link>
+      ) : (
+        label
+      )}
+    </p>
   );
 }
