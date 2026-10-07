@@ -1,0 +1,1205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Field Guide Diagrams</title>
+<style>
+/* latin */
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(_tools/fonts/DMSans-400.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin */
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(_tools/fonts/DMSans-500.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin */
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(_tools/fonts/DMSans-600.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(_tools/fonts/JetBrainsMono-400.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(_tools/fonts/JetBrainsMono-500.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(_tools/fonts/JetBrainsMono-600.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(_tools/fonts/SpaceGrotesk-500.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(_tools/fonts/SpaceGrotesk-600.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(_tools/fonts/SpaceGrotesk-700.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root{--font-display:"Space Grotesk",sans-serif;--font-body:"DM Sans",sans-serif;--font-mono:"JetBrains Mono",monospace}
+.dark{--site-bg:#0f0d0a;--site-bg-secondary:#16140f;--site-text:#f5f0e8;--site-text-secondary:#a09882;--site-text-tertiary:#706a58;--site-accent:#f59e0b;--site-accent-subtle:rgba(245,158,11,.1);--site-border:#2a2620;--site-border-hover:#3a3530;--site-card-bg:#17150f}
+.light{--site-bg:#fafaf9;--site-bg-secondary:#f5f5f4;--site-text:#1c1917;--site-text-secondary:#57534e;--site-text-tertiary:#a8a29e;--site-accent:#d97706;--site-accent-subtle:rgba(217,119,6,.08);--site-border:#e7e5e4;--site-border-hover:#d6d3d1;--site-card-bg:#ffffff}
+*{box-sizing:border-box}
+body{margin:0;background:#0f0d0a;color:#f5f0e8;font-family:var(--font-body)}
+.top{padding:40px 32px 8px}
+.top h1{font-family:var(--font-display);font-size:28px;margin:0 0 6px}
+.top p{color:#a09882;margin:0;max-width:72ch;font-size:14px}
+.dg{padding:24px 32px 8px}
+.dg header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.dg h2{font-family:var(--font-display);font-size:20px;margin:0}
+.num{font-family:var(--font-mono);color:#f59e0b;font-size:14px}
+.part{font-family:var(--font-mono);font-size:12px;color:#706a58}
+.part code{color:#a09882}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:16px;overflow:hidden;border:1px solid #2a2620}
+.theme{background:var(--site-bg);color:var(--site-text);padding:24px;display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+.fig{margin:0;min-width:0}
+.theme{min-width:0}
+.fig.wide{width:730px;max-width:100%}
+.fig.narrow{width:375px;max-width:100%}
+.frame{border:1px solid var(--site-border);background:var(--site-card-bg);border-radius:12px;padding:24px}
+.fig.narrow .frame{padding:16px 8px}
+.label{margin:0 0 16px;font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--site-text-tertiary)}
+.frame svg{display:block;width:100%;height:auto}
+figcaption{margin-top:12px;padding:0 4px;font-size:13px;line-height:1.55;color:var(--site-text-secondary)}
+@media (max-width:1600px){.row{grid-template-columns:1fr}}
+@media (max-width:600px){.dg,.top{padding-left:16px;padding-right:16px}.theme{padding:16px}.fig.wide{display:none}}
+</style>
+</head>
+<body>
+<div class="top">
+<h1>GitHub field guide: diagram prototypes</h1>
+<p>Six standalone SVGs, each with a 680-wide layout and a 360-wide mobile layout. Colours resolve from the site's <code>--site-*</code> tokens when inlined, with built-in light/dark fallbacks when used standalone. Left: warm-dark; right: light.</p>
+</div>
+
+<section class="dg" id="ecosystem-map">
+  <header><span class="num">a</span><h2>The GitHub ecosystem at a glance</h2><span class="part">Hub · <code>diagrams/ecosystem-map.svg</code> + <code>-narrow.svg</code></span></header>
+  <div class="row">
+    <div class="theme dark">
+<figure class="fig wide">
+  <div class="frame">
+    <p class="label">The map</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 680 344" width="680" height="344" role="img" aria-labelledby="gf-ecosystem-map-title-1 gf-ecosystem-map-desc-1">
+<title id="gf-ecosystem-map-title-1">The GitHub ecosystem at a glance</title>
+<desc id="gf-ecosystem-map-desc-1">Git keeps history on your machine, edited through VS Code. Git pushes and pulls to GitHub, the shared remote that holds repositories, issues, pull requests and releases. The gh CLI talks to GitHub's API. GitHub sends events to Actions runners and issues to AI agents; they report status and open pull requests back.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="680" height="344" rx="12"/>
+<text class="cap" x="100" y="32" text-anchor="middle">YOUR MACHINE</text><text class="cap" x="340" y="32" text-anchor="middle">GITHUB.COM</text><text class="cap" x="580" y="32" text-anchor="middle">AUTOMATION</text><rect class="zone" x="12" y="44" width="176" height="288" rx="12"/><rect class="n" x="24" y="60" width="70" height="54" rx="10"/><text class="t" x="59" y="83" text-anchor="middle">VS Code</text><text class="s" x="59" y="99" text-anchor="middle">editor</text><rect class="n" x="106" y="60" width="70" height="54" rx="10"/><text class="t" x="141" y="83" text-anchor="middle">gh</text><text class="s" x="141" y="99" text-anchor="middle">CLI</text><rect class="n" x="24" y="196" width="152" height="120" rx="10"/><text class="t" x="100" y="224" text-anchor="middle">Git</text><text class="s" x="100" y="242" text-anchor="middle">history on your disk</text><path class="ln" d="M44 284L148 284"/><circle class="dot" cx="52" cy="284" r="4.5"/><circle class="dot" cx="82" cy="284" r="4.5"/><circle class="dot" cx="112" cy="284" r="4.5"/><circle class="ring" cx="144" cy="284" r="6"/><text class="m" x="144" y="304" text-anchor="middle">HEAD</text><path class="ln" d="M59 116L59 194"/><path class="hd" d="M59 194L56.0 187.7L62.0 187.7Z"/><text class="m" x="66" y="160" text-anchor="start">commit</text><rect class="n on" x="260" y="44" width="160" height="288" rx="12"/><text class="tl" x="340" y="80" text-anchor="middle">GitHub</text><text class="s" x="340" y="99" text-anchor="middle">the shared remote</text><rect class="n" x="276" y="123" width="128" height="30" rx="15"/><text class="mk" x="340" y="142" text-anchor="middle">repositories</text><rect class="n" x="276" y="167" width="128" height="30" rx="15"/><text class="mk" x="340" y="186" text-anchor="middle">issues</text><rect class="n" x="276" y="211" width="128" height="30" rx="15"/><text class="mk" x="340" y="230" text-anchor="middle">pull requests</text><rect class="n" x="276" y="255" width="128" height="30" rx="15"/><text class="mk" x="340" y="274" text-anchor="middle">releases</text><path class="ln" d="M178 87L256 87"/><path class="hd" d="M256 87L249.7 90.0L249.7 84.0Z"/><text class="m" x="217" y="79" text-anchor="middle">API</text><path class="ln" d="M178 248L256 248"/><path class="hd" d="M256 248L249.7 251.0L249.7 245.0Z"/><text class="m" x="217" y="240" text-anchor="middle">push</text><path class="ln" d="M258 266L180 266"/><path class="hd" d="M180 266L186.3 263.0L186.3 269.0Z"/><text class="m" x="219" y="284" text-anchor="middle">pull</text><rect class="n" x="500" y="60" width="160" height="104" rx="10"/><text class="t" x="580" y="100" text-anchor="middle">Actions</text><text class="s" x="580" y="116" text-anchor="middle">runners do CI/CD</text><text class="s" x="580" y="132" text-anchor="middle">on every event</text><rect class="n" x="500" y="212" width="160" height="104" rx="10"/><text class="t" x="580" y="252" text-anchor="middle">AI agents</text><text class="s" x="580" y="268" text-anchor="middle">Copilot · Claude · Codex</text><text class="s" x="580" y="284" text-anchor="middle">issue in, PR out</text><path class="ln" d="M422 104L496 104"/><path class="hd" d="M496 104L489.7 107.0L489.7 101.0Z"/><text class="m" x="459" y="96" text-anchor="middle">event</text><path class="ln" d="M498 122L424 122"/><path class="hd" d="M424 122L430.3 119.0L430.3 125.0Z"/><text class="m" x="461" y="140" text-anchor="middle">status</text><path class="ln" d="M422 256L496 256"/><path class="hd" d="M496 256L489.7 259.0L489.7 253.0Z"/><text class="m" x="459" y="248" text-anchor="middle">issue</text><path class="ln" d="M498 274L424 274"/><path class="hd" d="M424 274L430.3 271.0L430.3 277.0Z"/><text class="m" x="461" y="292" text-anchor="middle">PR</text>
+</svg>
+
+  </div>
+  <figcaption>Git lives on your disk; GitHub is the shared remote. Everything else (gh, Actions, agents) talks to the remote, not to each other.</figcaption>
+</figure>
+<figure class="fig narrow">
+  <div class="frame">
+    <p class="label">The map</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 520" width="360" height="520" role="img" aria-labelledby="gf-ecosystem-map-sm-title-2 gf-ecosystem-map-sm-desc-2">
+<title id="gf-ecosystem-map-sm-title-2">The GitHub ecosystem at a glance</title>
+<desc id="gf-ecosystem-map-sm-desc-2">Git keeps history on your machine, edited through VS Code. Git pushes and pulls to GitHub, the shared remote that holds repositories, issues, pull requests and releases. The gh CLI talks to GitHub's API. GitHub sends events to Actions runners and issues to AI agents; they report status and open pull requests back.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="520" rx="12"/>
+<text class="cap" x="16" y="26" text-anchor="start">YOUR MACHINE</text><rect class="zone" x="12" y="36" width="336" height="150" rx="12"/><rect class="n" x="24" y="50" width="96" height="54" rx="10"/><text class="t" x="72" y="73" text-anchor="middle">VS Code</text><text class="s" x="72" y="89" text-anchor="middle">editor</text><rect class="n" x="24" y="118" width="96" height="54" rx="10"/><text class="t" x="72" y="141" text-anchor="middle">gh</text><text class="s" x="72" y="157" text-anchor="middle">CLI</text><rect class="n" x="180" y="50" width="156" height="122" rx="10"/><text class="t" x="258" y="76" text-anchor="middle">Git</text><text class="s" x="258" y="94" text-anchor="middle">history on your disk</text><path class="ln" d="M204 136L312 136"/><circle class="dot" cx="212" cy="136" r="4.5"/><circle class="dot" cx="242" cy="136" r="4.5"/><circle class="dot" cx="272" cy="136" r="4.5"/><circle class="ring" cx="304" cy="136" r="6"/><text class="m" x="304" y="157" text-anchor="middle">HEAD</text><path class="ln" d="M122 77L178 77"/><path class="hd" d="M178 77L171.7 80.0L171.7 74.0Z"/><text class="m" x="150" y="69" text-anchor="middle">commit</text><path class="ln" d="M72 174L72 226"/><path class="hd" d="M72 226L69.0 219.7L75.0 219.7Z"/><text class="m" x="80" y="204" text-anchor="start">API</text><path class="ln" d="M232 174L232 226"/><path class="hd" d="M232 226L229.0 219.7L235.0 219.7Z"/><text class="m" x="226" y="204" text-anchor="end">push</text><path class="ln" d="M290 228L290 176"/><path class="hd" d="M290 176L293.0 182.3L287.0 182.3Z"/><text class="m" x="296" y="204" text-anchor="start">pull</text><rect class="n on" x="12" y="230" width="336" height="132" rx="12"/><text class="tl" x="28" y="258" text-anchor="start">GitHub</text><text class="s" x="28" y="277" text-anchor="start">the shared remote</text><text class="cap" x="332" y="258" text-anchor="end">GITHUB.COM</text><rect class="n" x="28" y="291" width="148" height="26" rx="13"/><text class="mk" x="102" y="308" text-anchor="middle">repositories</text><rect class="n" x="184" y="291" width="148" height="26" rx="13"/><text class="mk" x="258" y="308" text-anchor="middle">issues</text><rect class="n" x="28" y="325" width="148" height="26" rx="13"/><text class="mk" x="102" y="342" text-anchor="middle">pull requests</text><rect class="n" x="184" y="325" width="148" height="26" rx="13"/><text class="mk" x="258" y="342" text-anchor="middle">releases</text><path class="ln" d="M60 364L60 420"/><path class="hd" d="M60 420L57.0 413.7L63.0 413.7Z"/><text class="m" x="66" y="396" text-anchor="start">event</text><path class="ln" d="M124 418L124 366"/><path class="hd" d="M124 366L127.0 372.3L121.0 372.3Z"/><text class="m" x="130" y="396" text-anchor="start">status</text><path class="ln" d="M236 364L236 420"/><path class="hd" d="M236 420L233.0 413.7L239.0 413.7Z"/><text class="m" x="242" y="396" text-anchor="start">issue</text><path class="ln" d="M300 418L300 366"/><path class="hd" d="M300 366L303.0 372.3L297.0 372.3Z"/><text class="m" x="306" y="396" text-anchor="start">PR</text><rect class="n" x="12" y="422" width="160" height="86" rx="10"/><text class="t" x="92" y="453" text-anchor="middle">Actions</text><text class="s" x="92" y="469" text-anchor="middle">runners do CI/CD</text><text class="s" x="92" y="485" text-anchor="middle">on every event</text><rect class="n" x="188" y="422" width="160" height="86" rx="10"/><text class="t" x="268" y="453" text-anchor="middle">AI agents</text><text class="s" x="268" y="469" text-anchor="middle">Copilot · Claude · Codex</text><text class="s" x="268" y="485" text-anchor="middle">issue in, PR out</text>
+</svg>
+
+  </div>
+  <figcaption>Git lives on your disk; GitHub is the shared remote. Everything else (gh, Actions, agents) talks to the remote, not to each other.</figcaption>
+</figure></div>
+    <div class="theme light">
+<figure class="fig wide">
+  <div class="frame">
+    <p class="label">The map</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 680 344" width="680" height="344" role="img" aria-labelledby="gf-ecosystem-map-title-3 gf-ecosystem-map-desc-3">
+<title id="gf-ecosystem-map-title-3">The GitHub ecosystem at a glance</title>
+<desc id="gf-ecosystem-map-desc-3">Git keeps history on your machine, edited through VS Code. Git pushes and pulls to GitHub, the shared remote that holds repositories, issues, pull requests and releases. The gh CLI talks to GitHub's API. GitHub sends events to Actions runners and issues to AI agents; they report status and open pull requests back.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="680" height="344" rx="12"/>
+<text class="cap" x="100" y="32" text-anchor="middle">YOUR MACHINE</text><text class="cap" x="340" y="32" text-anchor="middle">GITHUB.COM</text><text class="cap" x="580" y="32" text-anchor="middle">AUTOMATION</text><rect class="zone" x="12" y="44" width="176" height="288" rx="12"/><rect class="n" x="24" y="60" width="70" height="54" rx="10"/><text class="t" x="59" y="83" text-anchor="middle">VS Code</text><text class="s" x="59" y="99" text-anchor="middle">editor</text><rect class="n" x="106" y="60" width="70" height="54" rx="10"/><text class="t" x="141" y="83" text-anchor="middle">gh</text><text class="s" x="141" y="99" text-anchor="middle">CLI</text><rect class="n" x="24" y="196" width="152" height="120" rx="10"/><text class="t" x="100" y="224" text-anchor="middle">Git</text><text class="s" x="100" y="242" text-anchor="middle">history on your disk</text><path class="ln" d="M44 284L148 284"/><circle class="dot" cx="52" cy="284" r="4.5"/><circle class="dot" cx="82" cy="284" r="4.5"/><circle class="dot" cx="112" cy="284" r="4.5"/><circle class="ring" cx="144" cy="284" r="6"/><text class="m" x="144" y="304" text-anchor="middle">HEAD</text><path class="ln" d="M59 116L59 194"/><path class="hd" d="M59 194L56.0 187.7L62.0 187.7Z"/><text class="m" x="66" y="160" text-anchor="start">commit</text><rect class="n on" x="260" y="44" width="160" height="288" rx="12"/><text class="tl" x="340" y="80" text-anchor="middle">GitHub</text><text class="s" x="340" y="99" text-anchor="middle">the shared remote</text><rect class="n" x="276" y="123" width="128" height="30" rx="15"/><text class="mk" x="340" y="142" text-anchor="middle">repositories</text><rect class="n" x="276" y="167" width="128" height="30" rx="15"/><text class="mk" x="340" y="186" text-anchor="middle">issues</text><rect class="n" x="276" y="211" width="128" height="30" rx="15"/><text class="mk" x="340" y="230" text-anchor="middle">pull requests</text><rect class="n" x="276" y="255" width="128" height="30" rx="15"/><text class="mk" x="340" y="274" text-anchor="middle">releases</text><path class="ln" d="M178 87L256 87"/><path class="hd" d="M256 87L249.7 90.0L249.7 84.0Z"/><text class="m" x="217" y="79" text-anchor="middle">API</text><path class="ln" d="M178 248L256 248"/><path class="hd" d="M256 248L249.7 251.0L249.7 245.0Z"/><text class="m" x="217" y="240" text-anchor="middle">push</text><path class="ln" d="M258 266L180 266"/><path class="hd" d="M180 266L186.3 263.0L186.3 269.0Z"/><text class="m" x="219" y="284" text-anchor="middle">pull</text><rect class="n" x="500" y="60" width="160" height="104" rx="10"/><text class="t" x="580" y="100" text-anchor="middle">Actions</text><text class="s" x="580" y="116" text-anchor="middle">runners do CI/CD</text><text class="s" x="580" y="132" text-anchor="middle">on every event</text><rect class="n" x="500" y="212" width="160" height="104" rx="10"/><text class="t" x="580" y="252" text-anchor="middle">AI agents</text><text class="s" x="580" y="268" text-anchor="middle">Copilot · Claude · Codex</text><text class="s" x="580" y="284" text-anchor="middle">issue in, PR out</text><path class="ln" d="M422 104L496 104"/><path class="hd" d="M496 104L489.7 107.0L489.7 101.0Z"/><text class="m" x="459" y="96" text-anchor="middle">event</text><path class="ln" d="M498 122L424 122"/><path class="hd" d="M424 122L430.3 119.0L430.3 125.0Z"/><text class="m" x="461" y="140" text-anchor="middle">status</text><path class="ln" d="M422 256L496 256"/><path class="hd" d="M496 256L489.7 259.0L489.7 253.0Z"/><text class="m" x="459" y="248" text-anchor="middle">issue</text><path class="ln" d="M498 274L424 274"/><path class="hd" d="M424 274L430.3 271.0L430.3 277.0Z"/><text class="m" x="461" y="292" text-anchor="middle">PR</text>
+</svg>
+
+  </div>
+  <figcaption>Git lives on your disk; GitHub is the shared remote. Everything else (gh, Actions, agents) talks to the remote, not to each other.</figcaption>
+</figure>
+<figure class="fig narrow">
+  <div class="frame">
+    <p class="label">The map</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 520" width="360" height="520" role="img" aria-labelledby="gf-ecosystem-map-sm-title-4 gf-ecosystem-map-sm-desc-4">
+<title id="gf-ecosystem-map-sm-title-4">The GitHub ecosystem at a glance</title>
+<desc id="gf-ecosystem-map-sm-desc-4">Git keeps history on your machine, edited through VS Code. Git pushes and pulls to GitHub, the shared remote that holds repositories, issues, pull requests and releases. The gh CLI talks to GitHub's API. GitHub sends events to Actions runners and issues to AI agents; they report status and open pull requests back.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="520" rx="12"/>
+<text class="cap" x="16" y="26" text-anchor="start">YOUR MACHINE</text><rect class="zone" x="12" y="36" width="336" height="150" rx="12"/><rect class="n" x="24" y="50" width="96" height="54" rx="10"/><text class="t" x="72" y="73" text-anchor="middle">VS Code</text><text class="s" x="72" y="89" text-anchor="middle">editor</text><rect class="n" x="24" y="118" width="96" height="54" rx="10"/><text class="t" x="72" y="141" text-anchor="middle">gh</text><text class="s" x="72" y="157" text-anchor="middle">CLI</text><rect class="n" x="180" y="50" width="156" height="122" rx="10"/><text class="t" x="258" y="76" text-anchor="middle">Git</text><text class="s" x="258" y="94" text-anchor="middle">history on your disk</text><path class="ln" d="M204 136L312 136"/><circle class="dot" cx="212" cy="136" r="4.5"/><circle class="dot" cx="242" cy="136" r="4.5"/><circle class="dot" cx="272" cy="136" r="4.5"/><circle class="ring" cx="304" cy="136" r="6"/><text class="m" x="304" y="157" text-anchor="middle">HEAD</text><path class="ln" d="M122 77L178 77"/><path class="hd" d="M178 77L171.7 80.0L171.7 74.0Z"/><text class="m" x="150" y="69" text-anchor="middle">commit</text><path class="ln" d="M72 174L72 226"/><path class="hd" d="M72 226L69.0 219.7L75.0 219.7Z"/><text class="m" x="80" y="204" text-anchor="start">API</text><path class="ln" d="M232 174L232 226"/><path class="hd" d="M232 226L229.0 219.7L235.0 219.7Z"/><text class="m" x="226" y="204" text-anchor="end">push</text><path class="ln" d="M290 228L290 176"/><path class="hd" d="M290 176L293.0 182.3L287.0 182.3Z"/><text class="m" x="296" y="204" text-anchor="start">pull</text><rect class="n on" x="12" y="230" width="336" height="132" rx="12"/><text class="tl" x="28" y="258" text-anchor="start">GitHub</text><text class="s" x="28" y="277" text-anchor="start">the shared remote</text><text class="cap" x="332" y="258" text-anchor="end">GITHUB.COM</text><rect class="n" x="28" y="291" width="148" height="26" rx="13"/><text class="mk" x="102" y="308" text-anchor="middle">repositories</text><rect class="n" x="184" y="291" width="148" height="26" rx="13"/><text class="mk" x="258" y="308" text-anchor="middle">issues</text><rect class="n" x="28" y="325" width="148" height="26" rx="13"/><text class="mk" x="102" y="342" text-anchor="middle">pull requests</text><rect class="n" x="184" y="325" width="148" height="26" rx="13"/><text class="mk" x="258" y="342" text-anchor="middle">releases</text><path class="ln" d="M60 364L60 420"/><path class="hd" d="M60 420L57.0 413.7L63.0 413.7Z"/><text class="m" x="66" y="396" text-anchor="start">event</text><path class="ln" d="M124 418L124 366"/><path class="hd" d="M124 366L127.0 372.3L121.0 372.3Z"/><text class="m" x="130" y="396" text-anchor="start">status</text><path class="ln" d="M236 364L236 420"/><path class="hd" d="M236 420L233.0 413.7L239.0 413.7Z"/><text class="m" x="242" y="396" text-anchor="start">issue</text><path class="ln" d="M300 418L300 366"/><path class="hd" d="M300 366L303.0 372.3L297.0 372.3Z"/><text class="m" x="306" y="396" text-anchor="start">PR</text><rect class="n" x="12" y="422" width="160" height="86" rx="10"/><text class="t" x="92" y="453" text-anchor="middle">Actions</text><text class="s" x="92" y="469" text-anchor="middle">runners do CI/CD</text><text class="s" x="92" y="485" text-anchor="middle">on every event</text><rect class="n" x="188" y="422" width="160" height="86" rx="10"/><text class="t" x="268" y="453" text-anchor="middle">AI agents</text><text class="s" x="268" y="469" text-anchor="middle">Copilot · Claude · Codex</text><text class="s" x="268" y="485" text-anchor="middle">issue in, PR out</text>
+</svg>
+
+  </div>
+  <figcaption>Git lives on your disk; GitHub is the shared remote. Everything else (gh, Actions, agents) talks to the remote, not to each other.</figcaption>
+</figure></div>
+  </div>
+</section>
+
+<section class="dg" id="teams-vs-direct">
+  <header><span class="num">b</span><h2>Direct collaborators versus a team</h2><span class="part">Part 3 · <code>diagrams/teams-vs-direct.svg</code> + <code>-narrow.svg</code></span></header>
+  <div class="row">
+    <div class="theme dark">
+<figure class="fig wide">
+  <div class="frame">
+    <p class="label">Offboarding cost</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 680 284" width="680" height="284" role="img" aria-labelledby="gf-teams-vs-direct-title-5 gf-teams-vs-direct-desc-5">
+<title id="gf-teams-vs-direct-title-5">Direct collaborators versus a team</title>
+<desc id="gf-teams-vs-direct-desc-5">Left: three people are each added directly to repositories; when @asha leaves, four separate repository permissions must be removed. Right: the same people belong to an eng team that has access to the four repositories; removing @asha from the team is one edit.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="680" height="284" rx="12"/>
+<text class="cap" x="20" y="30" text-anchor="start">ADDED DIRECTLY</text><path class="ln dim" d="M104 176L242 104"/><path class="ln dim" d="M104 176L242 188"/><path class="ln dim" d="M104 126L242 62"/><path class="ln dim" d="M104 126L242 104"/><path class="ln dim" d="M104 126L242 146"/><path class="ln on" d="M104 76L242 62"/><path class="ln on" d="M104 76L242 104"/><path class="ln on" d="M104 76L242 146"/><path class="ln on" d="M104 76L242 188"/><rect class="n on" x="28" y="62" width="76" height="28" rx="14"/><text class="mk" x="66" y="80" text-anchor="middle">@asha</text><rect class="n" x="28" y="112" width="76" height="28" rx="14"/><text class="mk" x="66" y="130" text-anchor="middle">@ben</text><rect class="n" x="28" y="162" width="76" height="28" rx="14"/><text class="mk" x="66" y="180" text-anchor="middle">@chen</text><rect class="n" x="242" y="48" width="84" height="28" rx="14"/><text class="mk" x="284" y="66" text-anchor="middle">web</text><rect class="n" x="242" y="90" width="84" height="28" rx="14"/><text class="mk" x="284" y="108" text-anchor="middle">api</text><rect class="n" x="242" y="132" width="84" height="28" rx="14"/><text class="mk" x="284" y="150" text-anchor="middle">infra</text><rect class="n" x="242" y="174" width="84" height="28" rx="14"/><text class="mk" x="284" y="192" text-anchor="middle">docs</text><text class="big act" x="20" y="244" text-anchor="start">4 edits</text><text class="s" x="20" y="266" text-anchor="start">remove @asha from every repo</text><path class="ln dim dash" d="M340 24L340 268"/><text class="cap" x="360" y="30" text-anchor="start">THROUGH A TEAM</text><path class="ln dim" d="M444 176L474 126"/><path class="ln dim" d="M444 126L474 126"/><path class="ln on" d="M444 76L474 126"/><path class="ln dim" d="M554 126L582 62"/><path class="ln dim" d="M554 126L582 104"/><path class="ln dim" d="M554 126L582 146"/><path class="ln dim" d="M554 126L582 188"/><rect class="n" x="474" y="102" width="80" height="48" rx="10"/><text class="t" x="514" y="122" text-anchor="middle">eng</text><text class="s" x="514" y="138" text-anchor="middle">team</text><rect class="n on" x="368" y="62" width="76" height="28" rx="14"/><text class="mk" x="406" y="80" text-anchor="middle">@asha</text><rect class="n" x="368" y="112" width="76" height="28" rx="14"/><text class="mk" x="406" y="130" text-anchor="middle">@ben</text><rect class="n" x="368" y="162" width="76" height="28" rx="14"/><text class="mk" x="406" y="180" text-anchor="middle">@chen</text><rect class="n" x="582" y="48" width="84" height="28" rx="14"/><text class="mk" x="624" y="66" text-anchor="middle">web</text><rect class="n" x="582" y="90" width="84" height="28" rx="14"/><text class="mk" x="624" y="108" text-anchor="middle">api</text><rect class="n" x="582" y="132" width="84" height="28" rx="14"/><text class="mk" x="624" y="150" text-anchor="middle">infra</text><rect class="n" x="582" y="174" width="84" height="28" rx="14"/><text class="mk" x="624" y="192" text-anchor="middle">docs</text><text class="big act" x="360" y="244" text-anchor="start">1 edit</text><text class="s" x="360" y="266" text-anchor="start">remove @asha from the team</text>
+</svg>
+
+  </div>
+  <figcaption>Grant access to teams, not people. When someone leaves, direct grants cost one edit per repo; a team costs one edit.</figcaption>
+</figure>
+<figure class="fig narrow">
+  <div class="frame">
+    <p class="label">Offboarding cost</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 572" width="360" height="572" role="img" aria-labelledby="gf-teams-vs-direct-sm-title-6 gf-teams-vs-direct-sm-desc-6">
+<title id="gf-teams-vs-direct-sm-title-6">Direct collaborators versus a team</title>
+<desc id="gf-teams-vs-direct-sm-desc-6">Left: three people are each added directly to repositories; when @asha leaves, four separate repository permissions must be removed. Right: the same people belong to an eng team that has access to the four repositories; removing @asha from the team is one edit.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="572" rx="12"/>
+<text class="cap" x="22" y="30" text-anchor="start">ADDED DIRECTLY</text><path class="ln dim" d="M106 176L244 104"/><path class="ln dim" d="M106 176L244 188"/><path class="ln dim" d="M106 126L244 62"/><path class="ln dim" d="M106 126L244 104"/><path class="ln dim" d="M106 126L244 146"/><path class="ln on" d="M106 76L244 62"/><path class="ln on" d="M106 76L244 104"/><path class="ln on" d="M106 76L244 146"/><path class="ln on" d="M106 76L244 188"/><rect class="n on" x="30" y="62" width="76" height="28" rx="14"/><text class="mk" x="68" y="80" text-anchor="middle">@asha</text><rect class="n" x="30" y="112" width="76" height="28" rx="14"/><text class="mk" x="68" y="130" text-anchor="middle">@ben</text><rect class="n" x="30" y="162" width="76" height="28" rx="14"/><text class="mk" x="68" y="180" text-anchor="middle">@chen</text><rect class="n" x="244" y="48" width="84" height="28" rx="14"/><text class="mk" x="286" y="66" text-anchor="middle">web</text><rect class="n" x="244" y="90" width="84" height="28" rx="14"/><text class="mk" x="286" y="108" text-anchor="middle">api</text><rect class="n" x="244" y="132" width="84" height="28" rx="14"/><text class="mk" x="286" y="150" text-anchor="middle">infra</text><rect class="n" x="244" y="174" width="84" height="28" rx="14"/><text class="mk" x="286" y="192" text-anchor="middle">docs</text><text class="big act" x="22" y="244" text-anchor="start">4 edits</text><text class="s" x="22" y="266" text-anchor="start">remove @asha from every repo</text><path class="ln dim dash" d="M18 290L342 290"/><text class="cap" x="22" y="326" text-anchor="start">THROUGH A TEAM</text><path class="ln dim" d="M106 472L136 422"/><path class="ln dim" d="M106 422L136 422"/><path class="ln on" d="M106 372L136 422"/><path class="ln dim" d="M216 422L244 358"/><path class="ln dim" d="M216 422L244 400"/><path class="ln dim" d="M216 422L244 442"/><path class="ln dim" d="M216 422L244 484"/><rect class="n" x="136" y="398" width="80" height="48" rx="10"/><text class="t" x="176" y="418" text-anchor="middle">eng</text><text class="s" x="176" y="434" text-anchor="middle">team</text><rect class="n on" x="30" y="358" width="76" height="28" rx="14"/><text class="mk" x="68" y="376" text-anchor="middle">@asha</text><rect class="n" x="30" y="408" width="76" height="28" rx="14"/><text class="mk" x="68" y="426" text-anchor="middle">@ben</text><rect class="n" x="30" y="458" width="76" height="28" rx="14"/><text class="mk" x="68" y="476" text-anchor="middle">@chen</text><rect class="n" x="244" y="344" width="84" height="28" rx="14"/><text class="mk" x="286" y="362" text-anchor="middle">web</text><rect class="n" x="244" y="386" width="84" height="28" rx="14"/><text class="mk" x="286" y="404" text-anchor="middle">api</text><rect class="n" x="244" y="428" width="84" height="28" rx="14"/><text class="mk" x="286" y="446" text-anchor="middle">infra</text><rect class="n" x="244" y="470" width="84" height="28" rx="14"/><text class="mk" x="286" y="488" text-anchor="middle">docs</text><text class="big act" x="22" y="540" text-anchor="start">1 edit</text><text class="s" x="22" y="562" text-anchor="start">remove @asha from the team</text>
+</svg>
+
+  </div>
+  <figcaption>Grant access to teams, not people. When someone leaves, direct grants cost one edit per repo; a team costs one edit.</figcaption>
+</figure></div>
+    <div class="theme light">
+<figure class="fig wide">
+  <div class="frame">
+    <p class="label">Offboarding cost</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 680 284" width="680" height="284" role="img" aria-labelledby="gf-teams-vs-direct-title-7 gf-teams-vs-direct-desc-7">
+<title id="gf-teams-vs-direct-title-7">Direct collaborators versus a team</title>
+<desc id="gf-teams-vs-direct-desc-7">Left: three people are each added directly to repositories; when @asha leaves, four separate repository permissions must be removed. Right: the same people belong to an eng team that has access to the four repositories; removing @asha from the team is one edit.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="680" height="284" rx="12"/>
+<text class="cap" x="20" y="30" text-anchor="start">ADDED DIRECTLY</text><path class="ln dim" d="M104 176L242 104"/><path class="ln dim" d="M104 176L242 188"/><path class="ln dim" d="M104 126L242 62"/><path class="ln dim" d="M104 126L242 104"/><path class="ln dim" d="M104 126L242 146"/><path class="ln on" d="M104 76L242 62"/><path class="ln on" d="M104 76L242 104"/><path class="ln on" d="M104 76L242 146"/><path class="ln on" d="M104 76L242 188"/><rect class="n on" x="28" y="62" width="76" height="28" rx="14"/><text class="mk" x="66" y="80" text-anchor="middle">@asha</text><rect class="n" x="28" y="112" width="76" height="28" rx="14"/><text class="mk" x="66" y="130" text-anchor="middle">@ben</text><rect class="n" x="28" y="162" width="76" height="28" rx="14"/><text class="mk" x="66" y="180" text-anchor="middle">@chen</text><rect class="n" x="242" y="48" width="84" height="28" rx="14"/><text class="mk" x="284" y="66" text-anchor="middle">web</text><rect class="n" x="242" y="90" width="84" height="28" rx="14"/><text class="mk" x="284" y="108" text-anchor="middle">api</text><rect class="n" x="242" y="132" width="84" height="28" rx="14"/><text class="mk" x="284" y="150" text-anchor="middle">infra</text><rect class="n" x="242" y="174" width="84" height="28" rx="14"/><text class="mk" x="284" y="192" text-anchor="middle">docs</text><text class="big act" x="20" y="244" text-anchor="start">4 edits</text><text class="s" x="20" y="266" text-anchor="start">remove @asha from every repo</text><path class="ln dim dash" d="M340 24L340 268"/><text class="cap" x="360" y="30" text-anchor="start">THROUGH A TEAM</text><path class="ln dim" d="M444 176L474 126"/><path class="ln dim" d="M444 126L474 126"/><path class="ln on" d="M444 76L474 126"/><path class="ln dim" d="M554 126L582 62"/><path class="ln dim" d="M554 126L582 104"/><path class="ln dim" d="M554 126L582 146"/><path class="ln dim" d="M554 126L582 188"/><rect class="n" x="474" y="102" width="80" height="48" rx="10"/><text class="t" x="514" y="122" text-anchor="middle">eng</text><text class="s" x="514" y="138" text-anchor="middle">team</text><rect class="n on" x="368" y="62" width="76" height="28" rx="14"/><text class="mk" x="406" y="80" text-anchor="middle">@asha</text><rect class="n" x="368" y="112" width="76" height="28" rx="14"/><text class="mk" x="406" y="130" text-anchor="middle">@ben</text><rect class="n" x="368" y="162" width="76" height="28" rx="14"/><text class="mk" x="406" y="180" text-anchor="middle">@chen</text><rect class="n" x="582" y="48" width="84" height="28" rx="14"/><text class="mk" x="624" y="66" text-anchor="middle">web</text><rect class="n" x="582" y="90" width="84" height="28" rx="14"/><text class="mk" x="624" y="108" text-anchor="middle">api</text><rect class="n" x="582" y="132" width="84" height="28" rx="14"/><text class="mk" x="624" y="150" text-anchor="middle">infra</text><rect class="n" x="582" y="174" width="84" height="28" rx="14"/><text class="mk" x="624" y="192" text-anchor="middle">docs</text><text class="big act" x="360" y="244" text-anchor="start">1 edit</text><text class="s" x="360" y="266" text-anchor="start">remove @asha from the team</text>
+</svg>
+
+  </div>
+  <figcaption>Grant access to teams, not people. When someone leaves, direct grants cost one edit per repo; a team costs one edit.</figcaption>
+</figure>
+<figure class="fig narrow">
+  <div class="frame">
+    <p class="label">Offboarding cost</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 572" width="360" height="572" role="img" aria-labelledby="gf-teams-vs-direct-sm-title-8 gf-teams-vs-direct-sm-desc-8">
+<title id="gf-teams-vs-direct-sm-title-8">Direct collaborators versus a team</title>
+<desc id="gf-teams-vs-direct-sm-desc-8">Left: three people are each added directly to repositories; when @asha leaves, four separate repository permissions must be removed. Right: the same people belong to an eng team that has access to the four repositories; removing @asha from the team is one edit.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="572" rx="12"/>
+<text class="cap" x="22" y="30" text-anchor="start">ADDED DIRECTLY</text><path class="ln dim" d="M106 176L244 104"/><path class="ln dim" d="M106 176L244 188"/><path class="ln dim" d="M106 126L244 62"/><path class="ln dim" d="M106 126L244 104"/><path class="ln dim" d="M106 126L244 146"/><path class="ln on" d="M106 76L244 62"/><path class="ln on" d="M106 76L244 104"/><path class="ln on" d="M106 76L244 146"/><path class="ln on" d="M106 76L244 188"/><rect class="n on" x="30" y="62" width="76" height="28" rx="14"/><text class="mk" x="68" y="80" text-anchor="middle">@asha</text><rect class="n" x="30" y="112" width="76" height="28" rx="14"/><text class="mk" x="68" y="130" text-anchor="middle">@ben</text><rect class="n" x="30" y="162" width="76" height="28" rx="14"/><text class="mk" x="68" y="180" text-anchor="middle">@chen</text><rect class="n" x="244" y="48" width="84" height="28" rx="14"/><text class="mk" x="286" y="66" text-anchor="middle">web</text><rect class="n" x="244" y="90" width="84" height="28" rx="14"/><text class="mk" x="286" y="108" text-anchor="middle">api</text><rect class="n" x="244" y="132" width="84" height="28" rx="14"/><text class="mk" x="286" y="150" text-anchor="middle">infra</text><rect class="n" x="244" y="174" width="84" height="28" rx="14"/><text class="mk" x="286" y="192" text-anchor="middle">docs</text><text class="big act" x="22" y="244" text-anchor="start">4 edits</text><text class="s" x="22" y="266" text-anchor="start">remove @asha from every repo</text><path class="ln dim dash" d="M18 290L342 290"/><text class="cap" x="22" y="326" text-anchor="start">THROUGH A TEAM</text><path class="ln dim" d="M106 472L136 422"/><path class="ln dim" d="M106 422L136 422"/><path class="ln on" d="M106 372L136 422"/><path class="ln dim" d="M216 422L244 358"/><path class="ln dim" d="M216 422L244 400"/><path class="ln dim" d="M216 422L244 442"/><path class="ln dim" d="M216 422L244 484"/><rect class="n" x="136" y="398" width="80" height="48" rx="10"/><text class="t" x="176" y="418" text-anchor="middle">eng</text><text class="s" x="176" y="434" text-anchor="middle">team</text><rect class="n on" x="30" y="358" width="76" height="28" rx="14"/><text class="mk" x="68" y="376" text-anchor="middle">@asha</text><rect class="n" x="30" y="408" width="76" height="28" rx="14"/><text class="mk" x="68" y="426" text-anchor="middle">@ben</text><rect class="n" x="30" y="458" width="76" height="28" rx="14"/><text class="mk" x="68" y="476" text-anchor="middle">@chen</text><rect class="n" x="244" y="344" width="84" height="28" rx="14"/><text class="mk" x="286" y="362" text-anchor="middle">web</text><rect class="n" x="244" y="386" width="84" height="28" rx="14"/><text class="mk" x="286" y="404" text-anchor="middle">api</text><rect class="n" x="244" y="428" width="84" height="28" rx="14"/><text class="mk" x="286" y="446" text-anchor="middle">infra</text><rect class="n" x="244" y="470" width="84" height="28" rx="14"/><text class="mk" x="286" y="488" text-anchor="middle">docs</text><text class="big act" x="22" y="540" text-anchor="start">1 edit</text><text class="s" x="22" y="562" text-anchor="start">remove @asha from the team</text>
+</svg>
+
+  </div>
+  <figcaption>Grant access to teams, not people. When someone leaves, direct grants cost one edit per repo; a team costs one edit.</figcaption>
+</figure></div>
+  </div>
+</section>
+
+<section class="dg" id="pr-lifecycle">
+  <header><span class="num">c</span><h2>The pull request lifecycle</h2><span class="part">Part 1 / 5 · <code>diagrams/pr-lifecycle.svg</code> + <code>-narrow.svg</code></span></header>
+  <div class="row">
+    <div class="theme dark">
+<figure class="fig wide">
+  <div class="frame">
+    <p class="label">Life of a pull request</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 680 290" width="680" height="290" role="img" aria-labelledby="gf-pr-lifecycle-title-9 gf-pr-lifecycle-desc-9">
+<title id="gf-pr-lifecycle-title-9">The pull request lifecycle</title>
+<desc id="gf-pr-lifecycle-desc-9">A feature branch leaves main, collects commits, opens pull request 42, passes three checks, gets approved, merges back into main, and a later commit on main is tagged v1.4.0 and released. Each step lists its command: git switch -c, git commit, gh pr create, CI runs, gh pr review, gh pr merge, gh release create.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="680" height="290" rx="12"/>
+<text class="cap" x="50" y="30" text-anchor="middle">01</text><text class="t" x="50" y="50" text-anchor="middle">Branch</text><text class="m" x="50" y="68" text-anchor="middle">git switch -c</text><text class="cap" x="145" y="30" text-anchor="middle">02</text><text class="t" x="145" y="50" text-anchor="middle">Commit</text><text class="m" x="145" y="68" text-anchor="middle">git commit</text><text class="cap" x="240" y="30" text-anchor="middle">03</text><text class="t" x="240" y="50" text-anchor="middle">Open PR</text><text class="m" x="240" y="68" text-anchor="middle">gh pr create</text><text class="cap" x="335" y="30" text-anchor="middle">04</text><text class="t" x="335" y="50" text-anchor="middle">Checks</text><text class="m" x="335" y="68" text-anchor="middle">CI runs</text><text class="cap" x="430" y="30" text-anchor="middle">05</text><text class="t" x="430" y="50" text-anchor="middle">Review</text><text class="m" x="430" y="68" text-anchor="middle">gh pr review</text><text class="cap" x="525" y="30" text-anchor="middle">06</text><text class="t" x="525" y="50" text-anchor="middle">Merge</text><text class="m" x="525" y="68" text-anchor="middle">gh pr merge</text><text class="cap" x="620" y="30" text-anchor="middle">07</text><text class="t" x="620" y="50" text-anchor="middle">Release</text><text class="m" x="620" y="68" text-anchor="middle">gh release</text><text class="m" x="620" y="82" text-anchor="middle">create</text><path class="ln dim dash" d="M50 80L50 226"/><path class="ln dim dash" d="M145 80L145 144"/><path class="ln dim dash" d="M240 80L240 140"/><path class="ln dim dash" d="M335 80L335 140"/><path class="ln dim dash" d="M430 80L430 140"/><path class="ln dim dash" d="M525 80L525 224"/><path class="ln dim dash" d="M620 92L620 226"/><path class="ln" d="M16 236L664 236"/><text class="m" x="16" y="258" text-anchor="start">main</text><path class="ln on" d="M50 236C70 236 70 156 95 156L475 156C500 156 500 236 525 236"/><text class="m act" x="100" y="180" text-anchor="start">feat/login</text><circle class="dot" cx="50" cy="236" r="4.5"/><circle class="dot" cx="300" cy="236" r="3.5"/><circle class="dot on" cx="120" cy="156" r="4.5"/><circle class="dot on" cx="145" cy="156" r="4.5"/><circle class="dot on" cx="170" cy="156" r="4.5"/><rect class="n" x="207" y="143" width="66" height="26" rx="13"/><text class="mk" x="240" y="160" text-anchor="middle">PR #42</text><rect class="n" x="302" y="143" width="66" height="26" rx="13"/><text class="mk" x="335" y="160" text-anchor="middle">3/3 ✓</text><rect class="n" x="390" y="143" width="80" height="26" rx="13"/><text class="mk" x="430" y="160" text-anchor="middle">approved</text><circle class="ring on" cx="525" cy="236" r="7"/><circle class="dot" cx="620" cy="236" r="4.5"/><path class="n" d="M620 250l9 9h30v24h-78v-24h30z"/><text class="mk" x="620" y="276" text-anchor="middle">v1.4.0</text>
+</svg>
+
+  </div>
+  <figcaption>Every change takes the same road: branch, commit, PR, checks, review, merge, then a tag when you ship.</figcaption>
+</figure>
+<figure class="fig narrow">
+  <div class="frame">
+    <p class="label">Life of a pull request</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 496" width="360" height="496" role="img" aria-labelledby="gf-pr-lifecycle-sm-title-10 gf-pr-lifecycle-sm-desc-10">
+<title id="gf-pr-lifecycle-sm-title-10">The pull request lifecycle</title>
+<desc id="gf-pr-lifecycle-sm-desc-10">A feature branch leaves main, collects commits, opens pull request 42, passes three checks, gets approved, merges back into main, and a later commit on main is tagged v1.4.0 and released. Each step lists its command: git switch -c, git commit, gh pr create, CI runs, gh pr review, gh pr merge, gh release create.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="496" rx="12"/>
+<path class="ln" d="M40 24L40 484"/><text class="m" x="40" y="16" text-anchor="middle">main</text><path class="ln on" d="M40 52C40 74 96 74 96 96L96 350C96 372 40 372 40 382"/><circle class="dot" cx="40" cy="52" r="4.5"/><circle class="dot" cx="40" cy="220" r="3.5"/><circle class="dot on" cx="96" cy="104" r="4.5"/><circle class="dot on" cx="96" cy="118" r="4.5"/><circle class="dot on" cx="96" cy="132" r="4.5"/><rect class="n" x="63" y="171" width="66" height="26" rx="13"/><text class="mk" x="96" y="188" text-anchor="middle">PR #42</text><rect class="n" x="63" y="237" width="66" height="26" rx="13"/><text class="mk" x="96" y="254" text-anchor="middle">3/3 ✓</text><rect class="n" x="56" y="303" width="80" height="26" rx="13"/><text class="mk" x="96" y="320" text-anchor="middle">approved</text><circle class="ring on" cx="40" cy="382" r="7"/><circle class="dot" cx="40" cy="448" r="4.5"/><path class="n" d="M52 448l9 -12h52v24h-52z"/><text class="mk" x="90" y="452" text-anchor="middle">v1.4.0</text><path class="ln dim dash" d="M52 52L182 52"/><text class="t" x="192" y="49" text-anchor="start">01  Branch</text><text class="m" x="192" y="67" text-anchor="start">git switch -c</text><path class="ln dim dash" d="M106 118L182 118"/><text class="t" x="192" y="115" text-anchor="start">02  Commit</text><text class="m" x="192" y="133" text-anchor="start">git commit</text><path class="ln dim dash" d="M134 184L182 184"/><text class="t" x="192" y="181" text-anchor="start">03  Open PR</text><text class="m" x="192" y="199" text-anchor="start">gh pr create</text><path class="ln dim dash" d="M134 250L182 250"/><text class="t" x="192" y="247" text-anchor="start">04  Checks</text><text class="m" x="192" y="265" text-anchor="start">CI runs</text><path class="ln dim dash" d="M141 316L182 316"/><text class="t" x="192" y="313" text-anchor="start">05  Review</text><text class="m" x="192" y="331" text-anchor="start">gh pr review</text><path class="ln dim dash" d="M52 382L182 382"/><text class="t" x="192" y="379" text-anchor="start">06  Merge</text><text class="m" x="192" y="397" text-anchor="start">gh pr merge</text><path class="ln dim dash" d="M160 448L182 448"/><text class="t" x="192" y="445" text-anchor="start">07  Release</text><text class="m" x="192" y="463" text-anchor="start">gh release create</text>
+</svg>
+
+  </div>
+  <figcaption>Every change takes the same road: branch, commit, PR, checks, review, merge, then a tag when you ship.</figcaption>
+</figure></div>
+    <div class="theme light">
+<figure class="fig wide">
+  <div class="frame">
+    <p class="label">Life of a pull request</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 680 290" width="680" height="290" role="img" aria-labelledby="gf-pr-lifecycle-title-11 gf-pr-lifecycle-desc-11">
+<title id="gf-pr-lifecycle-title-11">The pull request lifecycle</title>
+<desc id="gf-pr-lifecycle-desc-11">A feature branch leaves main, collects commits, opens pull request 42, passes three checks, gets approved, merges back into main, and a later commit on main is tagged v1.4.0 and released. Each step lists its command: git switch -c, git commit, gh pr create, CI runs, gh pr review, gh pr merge, gh release create.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="680" height="290" rx="12"/>
+<text class="cap" x="50" y="30" text-anchor="middle">01</text><text class="t" x="50" y="50" text-anchor="middle">Branch</text><text class="m" x="50" y="68" text-anchor="middle">git switch -c</text><text class="cap" x="145" y="30" text-anchor="middle">02</text><text class="t" x="145" y="50" text-anchor="middle">Commit</text><text class="m" x="145" y="68" text-anchor="middle">git commit</text><text class="cap" x="240" y="30" text-anchor="middle">03</text><text class="t" x="240" y="50" text-anchor="middle">Open PR</text><text class="m" x="240" y="68" text-anchor="middle">gh pr create</text><text class="cap" x="335" y="30" text-anchor="middle">04</text><text class="t" x="335" y="50" text-anchor="middle">Checks</text><text class="m" x="335" y="68" text-anchor="middle">CI runs</text><text class="cap" x="430" y="30" text-anchor="middle">05</text><text class="t" x="430" y="50" text-anchor="middle">Review</text><text class="m" x="430" y="68" text-anchor="middle">gh pr review</text><text class="cap" x="525" y="30" text-anchor="middle">06</text><text class="t" x="525" y="50" text-anchor="middle">Merge</text><text class="m" x="525" y="68" text-anchor="middle">gh pr merge</text><text class="cap" x="620" y="30" text-anchor="middle">07</text><text class="t" x="620" y="50" text-anchor="middle">Release</text><text class="m" x="620" y="68" text-anchor="middle">gh release</text><text class="m" x="620" y="82" text-anchor="middle">create</text><path class="ln dim dash" d="M50 80L50 226"/><path class="ln dim dash" d="M145 80L145 144"/><path class="ln dim dash" d="M240 80L240 140"/><path class="ln dim dash" d="M335 80L335 140"/><path class="ln dim dash" d="M430 80L430 140"/><path class="ln dim dash" d="M525 80L525 224"/><path class="ln dim dash" d="M620 92L620 226"/><path class="ln" d="M16 236L664 236"/><text class="m" x="16" y="258" text-anchor="start">main</text><path class="ln on" d="M50 236C70 236 70 156 95 156L475 156C500 156 500 236 525 236"/><text class="m act" x="100" y="180" text-anchor="start">feat/login</text><circle class="dot" cx="50" cy="236" r="4.5"/><circle class="dot" cx="300" cy="236" r="3.5"/><circle class="dot on" cx="120" cy="156" r="4.5"/><circle class="dot on" cx="145" cy="156" r="4.5"/><circle class="dot on" cx="170" cy="156" r="4.5"/><rect class="n" x="207" y="143" width="66" height="26" rx="13"/><text class="mk" x="240" y="160" text-anchor="middle">PR #42</text><rect class="n" x="302" y="143" width="66" height="26" rx="13"/><text class="mk" x="335" y="160" text-anchor="middle">3/3 ✓</text><rect class="n" x="390" y="143" width="80" height="26" rx="13"/><text class="mk" x="430" y="160" text-anchor="middle">approved</text><circle class="ring on" cx="525" cy="236" r="7"/><circle class="dot" cx="620" cy="236" r="4.5"/><path class="n" d="M620 250l9 9h30v24h-78v-24h30z"/><text class="mk" x="620" y="276" text-anchor="middle">v1.4.0</text>
+</svg>
+
+  </div>
+  <figcaption>Every change takes the same road: branch, commit, PR, checks, review, merge, then a tag when you ship.</figcaption>
+</figure>
+<figure class="fig narrow">
+  <div class="frame">
+    <p class="label">Life of a pull request</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 496" width="360" height="496" role="img" aria-labelledby="gf-pr-lifecycle-sm-title-12 gf-pr-lifecycle-sm-desc-12">
+<title id="gf-pr-lifecycle-sm-title-12">The pull request lifecycle</title>
+<desc id="gf-pr-lifecycle-sm-desc-12">A feature branch leaves main, collects commits, opens pull request 42, passes three checks, gets approved, merges back into main, and a later commit on main is tagged v1.4.0 and released. Each step lists its command: git switch -c, git commit, gh pr create, CI runs, gh pr review, gh pr merge, gh release create.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="496" rx="12"/>
+<path class="ln" d="M40 24L40 484"/><text class="m" x="40" y="16" text-anchor="middle">main</text><path class="ln on" d="M40 52C40 74 96 74 96 96L96 350C96 372 40 372 40 382"/><circle class="dot" cx="40" cy="52" r="4.5"/><circle class="dot" cx="40" cy="220" r="3.5"/><circle class="dot on" cx="96" cy="104" r="4.5"/><circle class="dot on" cx="96" cy="118" r="4.5"/><circle class="dot on" cx="96" cy="132" r="4.5"/><rect class="n" x="63" y="171" width="66" height="26" rx="13"/><text class="mk" x="96" y="188" text-anchor="middle">PR #42</text><rect class="n" x="63" y="237" width="66" height="26" rx="13"/><text class="mk" x="96" y="254" text-anchor="middle">3/3 ✓</text><rect class="n" x="56" y="303" width="80" height="26" rx="13"/><text class="mk" x="96" y="320" text-anchor="middle">approved</text><circle class="ring on" cx="40" cy="382" r="7"/><circle class="dot" cx="40" cy="448" r="4.5"/><path class="n" d="M52 448l9 -12h52v24h-52z"/><text class="mk" x="90" y="452" text-anchor="middle">v1.4.0</text><path class="ln dim dash" d="M52 52L182 52"/><text class="t" x="192" y="49" text-anchor="start">01  Branch</text><text class="m" x="192" y="67" text-anchor="start">git switch -c</text><path class="ln dim dash" d="M106 118L182 118"/><text class="t" x="192" y="115" text-anchor="start">02  Commit</text><text class="m" x="192" y="133" text-anchor="start">git commit</text><path class="ln dim dash" d="M134 184L182 184"/><text class="t" x="192" y="181" text-anchor="start">03  Open PR</text><text class="m" x="192" y="199" text-anchor="start">gh pr create</text><path class="ln dim dash" d="M134 250L182 250"/><text class="t" x="192" y="247" text-anchor="start">04  Checks</text><text class="m" x="192" y="265" text-anchor="start">CI runs</text><path class="ln dim dash" d="M141 316L182 316"/><text class="t" x="192" y="313" text-anchor="start">05  Review</text><text class="m" x="192" y="331" text-anchor="start">gh pr review</text><path class="ln dim dash" d="M52 382L182 382"/><text class="t" x="192" y="379" text-anchor="start">06  Merge</text><text class="m" x="192" y="397" text-anchor="start">gh pr merge</text><path class="ln dim dash" d="M160 448L182 448"/><text class="t" x="192" y="445" text-anchor="start">07  Release</text><text class="m" x="192" y="463" text-anchor="start">gh release create</text>
+</svg>
+
+  </div>
+  <figcaption>Every change takes the same road: branch, commit, PR, checks, review, merge, then a tag when you ship.</figcaption>
+</figure></div>
+  </div>
+</section>
+
+<section class="dg" id="actions-triggers">
+  <header><span class="num">d</span><h2>What can start a GitHub Actions workflow</h2><span class="part">Part 6 · <code>diagrams/actions-triggers.svg</code> + <code>-narrow.svg</code></span></header>
+  <div class="row">
+    <div class="theme dark">
+<figure class="fig wide">
+  <div class="frame">
+    <p class="label">Six ways in</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 680 352" width="680" height="352" role="img" aria-labelledby="gf-actions-triggers-title-13 gf-actions-triggers-desc-13">
+<title id="gf-actions-triggers-title-13">What can start a GitHub Actions workflow</title>
+<desc id="gf-actions-triggers-desc-13">Six triggers feed the on: block of a workflow file: push (you push commits), pull_request (a PR opens or updates), workflow_dispatch (the Run button or gh workflow run), schedule (a cron in UTC), repository_dispatch (an outside system calls the API), and workflow_call (another workflow calls this one).</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="680" height="352" rx="12"/>
+<text class="cap" x="20" y="72" text-anchor="start">WHAT FIRES IT</text><rect class="n on" x="376" y="44" width="288" height="292" rx="12"/><text class="m" x="394" y="68" text-anchor="start"># .github/workflows/ci.yml</text><text class="mk act" x="394" y="90" text-anchor="start" font-weight="600">on:</text><rect class="n" x="16" y="100" width="290" height="32" rx="8"/><text class="cap" x="28" y="120" text-anchor="start">REPO</text><text class="s" x="108" y="120" text-anchor="start">you push commits</text><path class="ln" d="M308 116L372 116"/><path class="hd" d="M372 116L365.7 119.0L365.7 113.0Z"/><text class="mk" x="410" y="120" text-anchor="start">push:</text><text class="m" x="454.25" y="120" text-anchor="start">branches: [main]</text><rect class="n" x="16" y="140" width="290" height="32" rx="8"/><text class="cap" x="28" y="160" text-anchor="start">REPO</text><text class="s" x="108" y="160" text-anchor="start">a PR is opened or updated</text><path class="ln" d="M308 156L372 156"/><path class="hd" d="M372 156L365.7 159.0L365.7 153.0Z"/><text class="mk" x="410" y="160" text-anchor="start">pull_request:</text><rect class="n" x="16" y="180" width="290" height="32" rx="8"/><text class="cap" x="28" y="200" text-anchor="start">YOU</text><text class="s" x="108" y="200" text-anchor="start">Run button or gh workflow run</text><path class="ln" d="M308 196L372 196"/><path class="hd" d="M372 196L365.7 199.0L365.7 193.0Z"/><text class="mk" x="410" y="200" text-anchor="start">workflow_dispatch:</text><rect class="n" x="16" y="220" width="290" height="32" rx="8"/><text class="cap" x="28" y="240" text-anchor="start">CLOCK</text><text class="s" x="108" y="240" text-anchor="start">a cron schedule, in UTC</text><path class="ln" d="M308 236L372 236"/><path class="hd" d="M372 236L365.7 239.0L365.7 233.0Z"/><text class="mk" x="410" y="240" text-anchor="start">schedule:</text><text class="m" x="483.25" y="240" text-anchor="start">- cron: "0 3 * * *"</text><rect class="n" x="16" y="260" width="290" height="32" rx="8"/><text class="cap" x="28" y="280" text-anchor="start">API</text><text class="s" x="108" y="280" text-anchor="start">an outside system calls in</text><path class="ln" d="M308 276L372 276"/><path class="hd" d="M372 276L365.7 279.0L365.7 273.0Z"/><text class="mk" x="410" y="280" text-anchor="start">repository_dispatch:</text><text class="m" x="563" y="280" text-anchor="start">types: [sync]</text><rect class="n" x="16" y="300" width="290" height="32" rx="8"/><text class="cap" x="28" y="320" text-anchor="start">WORKFLOW</text><text class="s" x="108" y="320" text-anchor="start">another workflow calls this one</text><path class="ln" d="M308 316L372 316"/><path class="hd" d="M372 316L365.7 319.0L365.7 313.0Z"/><text class="mk" x="410" y="320" text-anchor="start">workflow_call:</text>
+</svg>
+
+  </div>
+  <figcaption>A workflow only runs when something in its on: block fires. This site's snapshot sync uses schedule plus workflow_dispatch.</figcaption>
+</figure>
+<figure class="fig narrow">
+  <div class="frame">
+    <p class="label">Six ways in</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 360" width="360" height="360" role="img" aria-labelledby="gf-actions-triggers-sm-title-14 gf-actions-triggers-sm-desc-14">
+<title id="gf-actions-triggers-sm-title-14">What can start a GitHub Actions workflow</title>
+<desc id="gf-actions-triggers-sm-desc-14">Six triggers feed the on: block of a workflow file: push (you push commits), pull_request (a PR opens or updates), workflow_dispatch (the Run button or gh workflow run), schedule (a cron in UTC), repository_dispatch (an outside system calls the API), and workflow_call (another workflow calls this one).</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="360" rx="12"/>
+<rect class="n on" x="196" y="14" width="152" height="332" rx="12"/><text class="mk act" x="208" y="38" text-anchor="start" font-weight="600">on:</text><text class="cap" x="16" y="38" text-anchor="start">WHAT FIRES IT</text><text class="cap" x="16" y="76" text-anchor="start">REPO</text><text class="s" x="16" y="94" text-anchor="start">you push commits</text><path class="ln" d="M166 84L200 84"/><path class="hd" d="M200 84L193.7 87.0L193.7 81.0Z"/><text class="m" x="208" y="88" text-anchor="start" style="fill:var(--tx)">push</text><text class="cap" x="16" y="124" text-anchor="start">REPO</text><text class="s" x="16" y="142" text-anchor="start">a PR opens or updates</text><path class="ln" d="M166 132L200 132"/><path class="hd" d="M200 132L193.7 135.0L193.7 129.0Z"/><text class="m" x="208" y="136" text-anchor="start" style="fill:var(--tx)">pull_request</text><text class="cap" x="16" y="172" text-anchor="start">YOU</text><text class="s" x="16" y="190" text-anchor="start">Run button or gh CLI</text><path class="ln" d="M166 180L200 180"/><path class="hd" d="M200 180L193.7 183.0L193.7 177.0Z"/><text class="m" x="208" y="184" text-anchor="start" style="fill:var(--tx)">workflow_dispatch</text><text class="cap" x="16" y="220" text-anchor="start">CLOCK</text><text class="s" x="16" y="238" text-anchor="start">cron schedule (UTC)</text><path class="ln" d="M166 228L200 228"/><path class="hd" d="M200 228L193.7 231.0L193.7 225.0Z"/><text class="m" x="208" y="232" text-anchor="start" style="fill:var(--tx)">schedule</text><text class="cap" x="16" y="268" text-anchor="start">API</text><text class="s" x="16" y="286" text-anchor="start">an outside system</text><path class="ln" d="M166 276L200 276"/><path class="hd" d="M200 276L193.7 279.0L193.7 273.0Z"/><text class="m" x="208" y="280" text-anchor="start" style="fill:var(--tx)">repository_dispatch</text><text class="cap" x="16" y="316" text-anchor="start">WORKFLOW</text><text class="s" x="16" y="334" text-anchor="start">another workflow</text><path class="ln" d="M166 324L200 324"/><path class="hd" d="M200 324L193.7 327.0L193.7 321.0Z"/><text class="m" x="208" y="328" text-anchor="start" style="fill:var(--tx)">workflow_call</text>
+</svg>
+
+  </div>
+  <figcaption>A workflow only runs when something in its on: block fires. This site's snapshot sync uses schedule plus workflow_dispatch.</figcaption>
+</figure></div>
+    <div class="theme light">
+<figure class="fig wide">
+  <div class="frame">
+    <p class="label">Six ways in</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 680 352" width="680" height="352" role="img" aria-labelledby="gf-actions-triggers-title-15 gf-actions-triggers-desc-15">
+<title id="gf-actions-triggers-title-15">What can start a GitHub Actions workflow</title>
+<desc id="gf-actions-triggers-desc-15">Six triggers feed the on: block of a workflow file: push (you push commits), pull_request (a PR opens or updates), workflow_dispatch (the Run button or gh workflow run), schedule (a cron in UTC), repository_dispatch (an outside system calls the API), and workflow_call (another workflow calls this one).</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="680" height="352" rx="12"/>
+<text class="cap" x="20" y="72" text-anchor="start">WHAT FIRES IT</text><rect class="n on" x="376" y="44" width="288" height="292" rx="12"/><text class="m" x="394" y="68" text-anchor="start"># .github/workflows/ci.yml</text><text class="mk act" x="394" y="90" text-anchor="start" font-weight="600">on:</text><rect class="n" x="16" y="100" width="290" height="32" rx="8"/><text class="cap" x="28" y="120" text-anchor="start">REPO</text><text class="s" x="108" y="120" text-anchor="start">you push commits</text><path class="ln" d="M308 116L372 116"/><path class="hd" d="M372 116L365.7 119.0L365.7 113.0Z"/><text class="mk" x="410" y="120" text-anchor="start">push:</text><text class="m" x="454.25" y="120" text-anchor="start">branches: [main]</text><rect class="n" x="16" y="140" width="290" height="32" rx="8"/><text class="cap" x="28" y="160" text-anchor="start">REPO</text><text class="s" x="108" y="160" text-anchor="start">a PR is opened or updated</text><path class="ln" d="M308 156L372 156"/><path class="hd" d="M372 156L365.7 159.0L365.7 153.0Z"/><text class="mk" x="410" y="160" text-anchor="start">pull_request:</text><rect class="n" x="16" y="180" width="290" height="32" rx="8"/><text class="cap" x="28" y="200" text-anchor="start">YOU</text><text class="s" x="108" y="200" text-anchor="start">Run button or gh workflow run</text><path class="ln" d="M308 196L372 196"/><path class="hd" d="M372 196L365.7 199.0L365.7 193.0Z"/><text class="mk" x="410" y="200" text-anchor="start">workflow_dispatch:</text><rect class="n" x="16" y="220" width="290" height="32" rx="8"/><text class="cap" x="28" y="240" text-anchor="start">CLOCK</text><text class="s" x="108" y="240" text-anchor="start">a cron schedule, in UTC</text><path class="ln" d="M308 236L372 236"/><path class="hd" d="M372 236L365.7 239.0L365.7 233.0Z"/><text class="mk" x="410" y="240" text-anchor="start">schedule:</text><text class="m" x="483.25" y="240" text-anchor="start">- cron: "0 3 * * *"</text><rect class="n" x="16" y="260" width="290" height="32" rx="8"/><text class="cap" x="28" y="280" text-anchor="start">API</text><text class="s" x="108" y="280" text-anchor="start">an outside system calls in</text><path class="ln" d="M308 276L372 276"/><path class="hd" d="M372 276L365.7 279.0L365.7 273.0Z"/><text class="mk" x="410" y="280" text-anchor="start">repository_dispatch:</text><text class="m" x="563" y="280" text-anchor="start">types: [sync]</text><rect class="n" x="16" y="300" width="290" height="32" rx="8"/><text class="cap" x="28" y="320" text-anchor="start">WORKFLOW</text><text class="s" x="108" y="320" text-anchor="start">another workflow calls this one</text><path class="ln" d="M308 316L372 316"/><path class="hd" d="M372 316L365.7 319.0L365.7 313.0Z"/><text class="mk" x="410" y="320" text-anchor="start">workflow_call:</text>
+</svg>
+
+  </div>
+  <figcaption>A workflow only runs when something in its on: block fires. This site's snapshot sync uses schedule plus workflow_dispatch.</figcaption>
+</figure>
+<figure class="fig narrow">
+  <div class="frame">
+    <p class="label">Six ways in</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 360" width="360" height="360" role="img" aria-labelledby="gf-actions-triggers-sm-title-16 gf-actions-triggers-sm-desc-16">
+<title id="gf-actions-triggers-sm-title-16">What can start a GitHub Actions workflow</title>
+<desc id="gf-actions-triggers-sm-desc-16">Six triggers feed the on: block of a workflow file: push (you push commits), pull_request (a PR opens or updates), workflow_dispatch (the Run button or gh workflow run), schedule (a cron in UTC), repository_dispatch (an outside system calls the API), and workflow_call (another workflow calls this one).</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="360" rx="12"/>
+<rect class="n on" x="196" y="14" width="152" height="332" rx="12"/><text class="mk act" x="208" y="38" text-anchor="start" font-weight="600">on:</text><text class="cap" x="16" y="38" text-anchor="start">WHAT FIRES IT</text><text class="cap" x="16" y="76" text-anchor="start">REPO</text><text class="s" x="16" y="94" text-anchor="start">you push commits</text><path class="ln" d="M166 84L200 84"/><path class="hd" d="M200 84L193.7 87.0L193.7 81.0Z"/><text class="m" x="208" y="88" text-anchor="start" style="fill:var(--tx)">push</text><text class="cap" x="16" y="124" text-anchor="start">REPO</text><text class="s" x="16" y="142" text-anchor="start">a PR opens or updates</text><path class="ln" d="M166 132L200 132"/><path class="hd" d="M200 132L193.7 135.0L193.7 129.0Z"/><text class="m" x="208" y="136" text-anchor="start" style="fill:var(--tx)">pull_request</text><text class="cap" x="16" y="172" text-anchor="start">YOU</text><text class="s" x="16" y="190" text-anchor="start">Run button or gh CLI</text><path class="ln" d="M166 180L200 180"/><path class="hd" d="M200 180L193.7 183.0L193.7 177.0Z"/><text class="m" x="208" y="184" text-anchor="start" style="fill:var(--tx)">workflow_dispatch</text><text class="cap" x="16" y="220" text-anchor="start">CLOCK</text><text class="s" x="16" y="238" text-anchor="start">cron schedule (UTC)</text><path class="ln" d="M166 228L200 228"/><path class="hd" d="M200 228L193.7 231.0L193.7 225.0Z"/><text class="m" x="208" y="232" text-anchor="start" style="fill:var(--tx)">schedule</text><text class="cap" x="16" y="268" text-anchor="start">API</text><text class="s" x="16" y="286" text-anchor="start">an outside system</text><path class="ln" d="M166 276L200 276"/><path class="hd" d="M200 276L193.7 279.0L193.7 273.0Z"/><text class="m" x="208" y="280" text-anchor="start" style="fill:var(--tx)">repository_dispatch</text><text class="cap" x="16" y="316" text-anchor="start">WORKFLOW</text><text class="s" x="16" y="334" text-anchor="start">another workflow</text><path class="ln" d="M166 324L200 324"/><path class="hd" d="M200 324L193.7 327.0L193.7 321.0Z"/><text class="m" x="208" y="328" text-anchor="start" style="fill:var(--tx)">workflow_call</text>
+</svg>
+
+  </div>
+  <figcaption>A workflow only runs when something in its on: block fires. This site's snapshot sync uses schedule plus workflow_dispatch.</figcaption>
+</figure></div>
+  </div>
+</section>
+
+<section class="dg" id="agent-loop">
+  <header><span class="num">e</span><h2>How an AI agent ships a change on GitHub</h2><span class="part">Part 7 · <code>diagrams/agent-loop.svg</code> + <code>-narrow.svg</code></span></header>
+  <div class="row">
+    <div class="theme dark">
+<figure class="fig wide">
+  <div class="frame">
+    <p class="label">The agent loop</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 680 228" width="680" height="228" role="img" aria-labelledby="gf-agent-loop-title-17 gf-agent-loop-desc-17">
+<title id="gf-agent-loop-title-17">How an AI agent ships a change on GitHub</title>
+<desc id="gf-agent-loop-desc-17">You write a scoped issue; the agent works on its own branch and opens a draft PR, never pushing to main; CI runs the same checks as for humans; a human reviews; you merge. If CI fails, the agent pushes a fix. If review requests changes, the agent revises. Both loops return to the agent.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="680" height="228" rx="12"/>
+<text class="cap" x="65" y="36" text-anchor="middle">YOU</text><rect class="n" x="21" y="48" width="88" height="64" rx="10"/><text class="t" x="65" y="76" text-anchor="middle">Issue</text><text class="s" x="65" y="92" text-anchor="middle">scoped by you</text><path class="ln" d="M111 80L128 80"/><path class="hd" d="M128 80L121.7 83.0L121.7 77.0Z"/><text class="cap" x="175" y="36" text-anchor="middle">AGENT</text><rect class="n" x="131" y="48" width="88" height="64" rx="10"/><text class="t" x="175" y="76" text-anchor="middle">Agent</text><text class="s" x="175" y="92" text-anchor="middle">own branch</text><path class="ln" d="M221 80L238 80"/><path class="hd" d="M238 80L231.7 83.0L231.7 77.0Z"/><text class="cap" x="285" y="36" text-anchor="middle">AGENT</text><rect class="n" x="241" y="48" width="88" height="64" rx="10"/><text class="t" x="285" y="76" text-anchor="middle">Draft PR</text><text class="s" x="285" y="92" text-anchor="middle">never main</text><path class="ln" d="M331 80L348 80"/><path class="hd" d="M348 80L341.7 83.0L341.7 77.0Z"/><text class="cap" x="395" y="36" text-anchor="middle">ACTIONS</text><rect class="n" x="351" y="48" width="88" height="64" rx="10"/><text class="t" x="395" y="76" text-anchor="middle">CI checks</text><text class="s" x="395" y="92" text-anchor="middle">same gates</text><path class="ln" d="M441 80L458 80"/><path class="hd" d="M458 80L451.7 83.0L451.7 77.0Z"/><text class="cap act" x="505" y="36" text-anchor="middle">YOU</text><rect class="n on" x="461" y="48" width="88" height="64" rx="10"/><text class="t" x="505" y="76" text-anchor="middle">Review</text><text class="s" x="505" y="92" text-anchor="middle">human gate</text><path class="ln" d="M551 80L568 80"/><path class="hd" d="M568 80L561.7 83.0L561.7 77.0Z"/><text class="cap" x="615" y="36" text-anchor="middle">YOU</text><rect class="n" x="571" y="48" width="88" height="64" rx="10"/><text class="t" x="615" y="76" text-anchor="middle">Merge</text><text class="s" x="615" y="92" text-anchor="middle">you decide</text><path class="ln dash" d="M395 114L395.0 138.0Q395 148 385.0 148.0L197.0 148.0Q187 148 187.0 138.0L187 116"/><path class="hd" d="M187 116L190.0 122.3L184.0 122.3Z"/><text class="m" x="291" y="166" text-anchor="middle">CI fails → agent pushes a fix</text><path class="ln dash" d="M505 114L505.0 186.0Q505 196 495.0 196.0L173.0 196.0Q163 196 163.0 186.0L163 116"/><path class="hd" d="M163 116L166.0 122.3L160.0 122.3Z"/><text class="m" x="334" y="214" text-anchor="middle">changes requested → agent revises</text>
+</svg>
+
+  </div>
+  <figcaption>The agent writes the code; CI and a human review are the gates. Nothing reaches main without you.</figcaption>
+</figure>
+<figure class="fig narrow">
+  <div class="frame">
+    <p class="label">The agent loop</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 404" width="360" height="404" role="img" aria-labelledby="gf-agent-loop-sm-title-18 gf-agent-loop-sm-desc-18">
+<title id="gf-agent-loop-sm-title-18">How an AI agent ships a change on GitHub</title>
+<desc id="gf-agent-loop-sm-desc-18">You write a scoped issue; the agent works on its own branch and opens a draft PR, never pushing to main; CI runs the same checks as for humans; a human reviews; you merge. If CI fails, the agent pushes a fix. If review requests changes, the agent revises. Both loops return to the agent.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="404" rx="12"/>
+<rect class="n" x="16" y="16" width="170" height="50" rx="10"/><text class="t" x="30" y="38" text-anchor="start">Issue</text><text class="s" x="30" y="55" text-anchor="start">scoped by you</text><text class="cap" x="174" y="37" text-anchor="end">YOU</text><path class="ln" d="M60 68L60 77"/><path class="hd" d="M60 77L57.0 70.7L63.0 70.7Z"/><rect class="n" x="16" y="80" width="170" height="50" rx="10"/><text class="t" x="30" y="102" text-anchor="start">Agent</text><text class="s" x="30" y="119" text-anchor="start">own branch</text><text class="cap" x="174" y="101" text-anchor="end">AGENT</text><path class="ln" d="M60 132L60 141"/><path class="hd" d="M60 141L57.0 134.7L63.0 134.7Z"/><rect class="n" x="16" y="144" width="170" height="50" rx="10"/><text class="t" x="30" y="166" text-anchor="start">Draft PR</text><text class="s" x="30" y="183" text-anchor="start">never main</text><text class="cap" x="174" y="165" text-anchor="end">AGENT</text><path class="ln" d="M60 196L60 205"/><path class="hd" d="M60 205L57.0 198.7L63.0 198.7Z"/><rect class="n" x="16" y="208" width="170" height="50" rx="10"/><text class="t" x="30" y="230" text-anchor="start">CI checks</text><text class="s" x="30" y="247" text-anchor="start">same gates</text><text class="cap" x="174" y="229" text-anchor="end">ACTIONS</text><path class="ln" d="M60 260L60 269"/><path class="hd" d="M60 269L57.0 262.7L63.0 262.7Z"/><rect class="n on" x="16" y="272" width="170" height="50" rx="10"/><text class="t" x="30" y="294" text-anchor="start">Review</text><text class="s" x="30" y="311" text-anchor="start">human gate</text><text class="cap act" x="174" y="293" text-anchor="end">YOU</text><path class="ln" d="M60 324L60 333"/><path class="hd" d="M60 333L57.0 326.7L63.0 326.7Z"/><rect class="n" x="16" y="336" width="170" height="50" rx="10"/><text class="t" x="30" y="358" text-anchor="start">Merge</text><text class="s" x="30" y="375" text-anchor="start">you decide</text><text class="cap" x="174" y="357" text-anchor="end">YOU</text><path class="ln dash" d="M188 233L212.0 233.0Q222 233 222.0 223.0L222.0 121.0Q222 111 212.0 111.0L190 111"/><path class="hd" d="M190 111L196.3 108.0L196.3 114.0Z"/><path class="ln dash" d="M188 297L290.0 297.0Q300 297 300.0 287.0L300.0 109.0Q300 99 290.0 99.0L190 99"/><path class="hd" d="M190 99L196.3 96.0L196.3 102.0Z"/><rect class="n" style="fill:var(--bg)" x="197" y="153" width="50" height="38" rx="6"/><text class="m" x="222" y="171" text-anchor="middle">CI</text><text class="m" x="222" y="185" text-anchor="middle">fails</text><rect class="n" style="fill:var(--bg)" x="259" y="211" width="82" height="38" rx="6"/><text class="m" x="300" y="229" text-anchor="middle">changes</text><text class="m" x="300" y="243" text-anchor="middle">requested</text>
+</svg>
+
+  </div>
+  <figcaption>The agent writes the code; CI and a human review are the gates. Nothing reaches main without you.</figcaption>
+</figure></div>
+    <div class="theme light">
+<figure class="fig wide">
+  <div class="frame">
+    <p class="label">The agent loop</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 680 228" width="680" height="228" role="img" aria-labelledby="gf-agent-loop-title-19 gf-agent-loop-desc-19">
+<title id="gf-agent-loop-title-19">How an AI agent ships a change on GitHub</title>
+<desc id="gf-agent-loop-desc-19">You write a scoped issue; the agent works on its own branch and opens a draft PR, never pushing to main; CI runs the same checks as for humans; a human reviews; you merge. If CI fails, the agent pushes a fix. If review requests changes, the agent revises. Both loops return to the agent.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="680" height="228" rx="12"/>
+<text class="cap" x="65" y="36" text-anchor="middle">YOU</text><rect class="n" x="21" y="48" width="88" height="64" rx="10"/><text class="t" x="65" y="76" text-anchor="middle">Issue</text><text class="s" x="65" y="92" text-anchor="middle">scoped by you</text><path class="ln" d="M111 80L128 80"/><path class="hd" d="M128 80L121.7 83.0L121.7 77.0Z"/><text class="cap" x="175" y="36" text-anchor="middle">AGENT</text><rect class="n" x="131" y="48" width="88" height="64" rx="10"/><text class="t" x="175" y="76" text-anchor="middle">Agent</text><text class="s" x="175" y="92" text-anchor="middle">own branch</text><path class="ln" d="M221 80L238 80"/><path class="hd" d="M238 80L231.7 83.0L231.7 77.0Z"/><text class="cap" x="285" y="36" text-anchor="middle">AGENT</text><rect class="n" x="241" y="48" width="88" height="64" rx="10"/><text class="t" x="285" y="76" text-anchor="middle">Draft PR</text><text class="s" x="285" y="92" text-anchor="middle">never main</text><path class="ln" d="M331 80L348 80"/><path class="hd" d="M348 80L341.7 83.0L341.7 77.0Z"/><text class="cap" x="395" y="36" text-anchor="middle">ACTIONS</text><rect class="n" x="351" y="48" width="88" height="64" rx="10"/><text class="t" x="395" y="76" text-anchor="middle">CI checks</text><text class="s" x="395" y="92" text-anchor="middle">same gates</text><path class="ln" d="M441 80L458 80"/><path class="hd" d="M458 80L451.7 83.0L451.7 77.0Z"/><text class="cap act" x="505" y="36" text-anchor="middle">YOU</text><rect class="n on" x="461" y="48" width="88" height="64" rx="10"/><text class="t" x="505" y="76" text-anchor="middle">Review</text><text class="s" x="505" y="92" text-anchor="middle">human gate</text><path class="ln" d="M551 80L568 80"/><path class="hd" d="M568 80L561.7 83.0L561.7 77.0Z"/><text class="cap" x="615" y="36" text-anchor="middle">YOU</text><rect class="n" x="571" y="48" width="88" height="64" rx="10"/><text class="t" x="615" y="76" text-anchor="middle">Merge</text><text class="s" x="615" y="92" text-anchor="middle">you decide</text><path class="ln dash" d="M395 114L395.0 138.0Q395 148 385.0 148.0L197.0 148.0Q187 148 187.0 138.0L187 116"/><path class="hd" d="M187 116L190.0 122.3L184.0 122.3Z"/><text class="m" x="291" y="166" text-anchor="middle">CI fails → agent pushes a fix</text><path class="ln dash" d="M505 114L505.0 186.0Q505 196 495.0 196.0L173.0 196.0Q163 196 163.0 186.0L163 116"/><path class="hd" d="M163 116L166.0 122.3L160.0 122.3Z"/><text class="m" x="334" y="214" text-anchor="middle">changes requested → agent revises</text>
+</svg>
+
+  </div>
+  <figcaption>The agent writes the code; CI and a human review are the gates. Nothing reaches main without you.</figcaption>
+</figure>
+<figure class="fig narrow">
+  <div class="frame">
+    <p class="label">The agent loop</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 404" width="360" height="404" role="img" aria-labelledby="gf-agent-loop-sm-title-20 gf-agent-loop-sm-desc-20">
+<title id="gf-agent-loop-sm-title-20">How an AI agent ships a change on GitHub</title>
+<desc id="gf-agent-loop-sm-desc-20">You write a scoped issue; the agent works on its own branch and opens a draft PR, never pushing to main; CI runs the same checks as for humans; a human reviews; you merge. If CI fails, the agent pushes a fix. If review requests changes, the agent revises. Both loops return to the agent.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="404" rx="12"/>
+<rect class="n" x="16" y="16" width="170" height="50" rx="10"/><text class="t" x="30" y="38" text-anchor="start">Issue</text><text class="s" x="30" y="55" text-anchor="start">scoped by you</text><text class="cap" x="174" y="37" text-anchor="end">YOU</text><path class="ln" d="M60 68L60 77"/><path class="hd" d="M60 77L57.0 70.7L63.0 70.7Z"/><rect class="n" x="16" y="80" width="170" height="50" rx="10"/><text class="t" x="30" y="102" text-anchor="start">Agent</text><text class="s" x="30" y="119" text-anchor="start">own branch</text><text class="cap" x="174" y="101" text-anchor="end">AGENT</text><path class="ln" d="M60 132L60 141"/><path class="hd" d="M60 141L57.0 134.7L63.0 134.7Z"/><rect class="n" x="16" y="144" width="170" height="50" rx="10"/><text class="t" x="30" y="166" text-anchor="start">Draft PR</text><text class="s" x="30" y="183" text-anchor="start">never main</text><text class="cap" x="174" y="165" text-anchor="end">AGENT</text><path class="ln" d="M60 196L60 205"/><path class="hd" d="M60 205L57.0 198.7L63.0 198.7Z"/><rect class="n" x="16" y="208" width="170" height="50" rx="10"/><text class="t" x="30" y="230" text-anchor="start">CI checks</text><text class="s" x="30" y="247" text-anchor="start">same gates</text><text class="cap" x="174" y="229" text-anchor="end">ACTIONS</text><path class="ln" d="M60 260L60 269"/><path class="hd" d="M60 269L57.0 262.7L63.0 262.7Z"/><rect class="n on" x="16" y="272" width="170" height="50" rx="10"/><text class="t" x="30" y="294" text-anchor="start">Review</text><text class="s" x="30" y="311" text-anchor="start">human gate</text><text class="cap act" x="174" y="293" text-anchor="end">YOU</text><path class="ln" d="M60 324L60 333"/><path class="hd" d="M60 333L57.0 326.7L63.0 326.7Z"/><rect class="n" x="16" y="336" width="170" height="50" rx="10"/><text class="t" x="30" y="358" text-anchor="start">Merge</text><text class="s" x="30" y="375" text-anchor="start">you decide</text><text class="cap" x="174" y="357" text-anchor="end">YOU</text><path class="ln dash" d="M188 233L212.0 233.0Q222 233 222.0 223.0L222.0 121.0Q222 111 212.0 111.0L190 111"/><path class="hd" d="M190 111L196.3 108.0L196.3 114.0Z"/><path class="ln dash" d="M188 297L290.0 297.0Q300 297 300.0 287.0L300.0 109.0Q300 99 290.0 99.0L190 99"/><path class="hd" d="M190 99L196.3 96.0L196.3 102.0Z"/><rect class="n" style="fill:var(--bg)" x="197" y="153" width="50" height="38" rx="6"/><text class="m" x="222" y="171" text-anchor="middle">CI</text><text class="m" x="222" y="185" text-anchor="middle">fails</text><rect class="n" style="fill:var(--bg)" x="259" y="211" width="82" height="38" rx="6"/><text class="m" x="300" y="229" text-anchor="middle">changes</text><text class="m" x="300" y="243" text-anchor="middle">requested</text>
+</svg>
+
+  </div>
+  <figcaption>The agent writes the code; CI and a human review are the gates. Nothing reaches main without you.</figcaption>
+</figure></div>
+  </div>
+</section>
+
+<section class="dg" id="two-devices">
+  <header><span class="num">f</span><h2>Two devices kept in sync through GitHub</h2><span class="part">Part 2 · <code>diagrams/two-devices.svg</code> + <code>-narrow.svg</code></span></header>
+  <div class="row">
+    <div class="theme dark">
+<figure class="fig wide">
+  <div class="frame">
+    <p class="label">Two machines, one setup</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 680 340" width="680" height="340" role="img" aria-labelledby="gf-two-devices-title-21 gf-two-devices-desc-21">
+<title id="gf-two-devices-title-21">Two devices kept in sync through GitHub</title>
+<desc id="gf-two-devices-desc-21">A laptop and a desktop share three things through GitHub: a dotfiles repository (pushed from one, cloned on the other), VS Code Settings Sync (sign in with GitHub on both), and a wip branch for unfinished work (push, then pull). Each machine keeps its own SSH key, which is never synced.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="680" height="340" rx="12"/>
+<rect class="n" x="16" y="48" width="150" height="272" rx="10"/><rect class="n" x="69" y="84" width="44" height="28" rx="3"/><path class="ln" d="M61 117h60"/><text class="t" x="91" y="152" text-anchor="middle">Laptop</text><text class="s" x="91" y="170" text-anchor="middle">home</text><path class="ln dim" d="M32 238L150 238"/><rect class="n" x="84" y="257" width="14" height="11" rx="2"/><path class="ln" d="M87 257v-3a4 4 0 0 1 8 0v3"/><text class="m" x="91" y="290" text-anchor="middle">own SSH key</text><text class="m" x="91" y="306" text-anchor="middle">never synced</text><rect class="n" x="514" y="48" width="150" height="272" rx="10"/><rect class="n" x="565" y="84" width="48" height="30" rx="3"/><path class="ln" d="M589 115v6M579 122h20"/><text class="t" x="589" y="152" text-anchor="middle">Desktop</text><text class="s" x="589" y="170" text-anchor="middle">office</text><path class="ln dim" d="M530 238L648 238"/><rect class="n" x="582" y="257" width="14" height="11" rx="2"/><path class="ln" d="M585 257v-3a4 4 0 0 1 8 0v3"/><text class="m" x="589" y="290" text-anchor="middle">own SSH key</text><text class="m" x="589" y="306" text-anchor="middle">never synced</text><rect class="n on" x="236" y="20" width="208" height="312" rx="12"/><text class="cap" x="340" y="44" text-anchor="middle">GITHUB</text><rect class="n" x="252" y="60" width="176" height="64" rx="10"/><text class="t" x="340" y="88" text-anchor="middle">dotfiles repo</text><text class="m" x="340" y="104" text-anchor="middle">.gitconfig · .zshrc</text><path class="ln" d="M168 92L248 92"/><path class="hd" d="M248 92L241.7 95.0L241.7 89.0Z"/><text class="m" x="202" y="84" text-anchor="middle">push</text><path class="ln" d="M432 92L510 92"/><path class="hd" d="M510 92L503.7 95.0L503.7 89.0Z"/><text class="m" x="477" y="84" text-anchor="middle">clone</text><rect class="n" x="252" y="148" width="176" height="64" rx="10"/><text class="t" x="340" y="176" text-anchor="middle">Settings Sync</text><text class="m" x="340" y="192" text-anchor="middle">settings · extensions</text><path class="ln" d="M168 180L248 180"/><path class="hd" d="M248 180L241.7 183.0L241.7 177.0Z"/><text class="m" x="202" y="172" text-anchor="middle">sign in</text><path class="ln" d="M432 180L510 180"/><path class="hd" d="M510 180L503.7 183.0L503.7 177.0Z"/><text class="m" x="477" y="172" text-anchor="middle">sign in</text><rect class="n" x="252" y="236" width="176" height="64" rx="10"/><text class="t" x="340" y="264" text-anchor="middle">wip/* branch</text><text class="m" x="340" y="280" text-anchor="middle">unfinished work</text><path class="ln" d="M168 268L248 268"/><path class="hd" d="M248 268L241.7 271.0L241.7 265.0Z"/><text class="m" x="202" y="260" text-anchor="middle">push</text><path class="ln" d="M432 268L510 268"/><path class="hd" d="M510 268L503.7 271.0L503.7 265.0Z"/><text class="m" x="477" y="260" text-anchor="middle">pull</text>
+</svg>
+
+  </div>
+  <figcaption>Config travels in a dotfiles repo, editor state through Settings Sync, unfinished work on a WIP branch. Keys stay put.</figcaption>
+</figure>
+<figure class="fig narrow">
+  <div class="frame">
+    <p class="label">Two machines, one setup</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 430" width="360" height="430" role="img" aria-labelledby="gf-two-devices-sm-title-22 gf-two-devices-sm-desc-22">
+<title id="gf-two-devices-sm-title-22">Two devices kept in sync through GitHub</title>
+<desc id="gf-two-devices-sm-desc-22">A laptop and a desktop share three things through GitHub: a dotfiles repository (pushed from one, cloned on the other), VS Code Settings Sync (sign in with GitHub on both), and a wip branch for unfinished work (push, then pull). Each machine keeps its own SSH key, which is never synced.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="430" rx="12"/>
+<rect class="n" x="16" y="14" width="328" height="70" rx="10"/><rect class="n" x="34" y="32" width="44" height="28" rx="3"/><path class="ln" d="M26 65h60"/><text class="t" x="100" y="46" text-anchor="start">Laptop</text><text class="s" x="100" y="64" text-anchor="start">home</text><rect class="n" x="229" y="43" width="14" height="11" rx="2"/><path class="ln" d="M232 43v-3a4 4 0 0 1 8 0v3"/><text class="m" x="250" y="48" text-anchor="start">own SSH key</text><rect class="n on" x="16" y="140" width="328" height="168" rx="12"/><text class="cap" x="221" y="162" text-anchor="middle">GITHUB</text><rect class="n" x="20" y="176" width="100" height="116" rx="10"/><text class="t" x="70" y="204" text-anchor="middle">dotfiles</text><text class="t" x="70" y="222" text-anchor="middle">repo</text><text class="m" x="70" y="252" text-anchor="middle">.gitconfig</text><text class="m" x="70" y="268" text-anchor="middle">.zshrc</text><path class="ln" d="M56 86L56 172"/><path class="hd" d="M56 172L53.0 165.7L59.0 165.7Z"/><text class="m" x="62" y="124" text-anchor="start">push</text><path class="ln" d="M84 294L84 342"/><path class="hd" d="M84 342L81.0 335.7L87.0 335.7Z"/><text class="m" x="78" y="322" text-anchor="end">clone</text><rect class="n" x="130" y="176" width="100" height="116" rx="10"/><text class="t" x="180" y="204" text-anchor="middle">Settings</text><text class="t" x="180" y="222" text-anchor="middle">Sync</text><text class="m" x="180" y="252" text-anchor="middle">settings</text><text class="m" x="180" y="268" text-anchor="middle">extensions</text><path class="ln" d="M166 86L166 172"/><path class="hd" d="M166 172L163.0 165.7L169.0 165.7Z"/><text class="m" x="172" y="124" text-anchor="start">sign in</text><path class="ln" d="M194 294L194 342"/><path class="hd" d="M194 342L191.0 335.7L197.0 335.7Z"/><text class="m" x="188" y="322" text-anchor="end">sign in</text><rect class="n" x="240" y="176" width="100" height="116" rx="10"/><text class="t" x="290" y="204" text-anchor="middle">wip/*</text><text class="t" x="290" y="222" text-anchor="middle">branch</text><text class="m" x="290" y="252" text-anchor="middle">unfinished</text><text class="m" x="290" y="268" text-anchor="middle">work</text><path class="ln" d="M276 86L276 172"/><path class="hd" d="M276 172L273.0 165.7L279.0 165.7Z"/><text class="m" x="282" y="124" text-anchor="start">push</text><path class="ln" d="M304 294L304 342"/><path class="hd" d="M304 342L301.0 335.7L307.0 335.7Z"/><text class="m" x="298" y="322" text-anchor="end">pull</text><rect class="n" x="16" y="346" width="328" height="70" rx="10"/><rect class="n" x="32" y="364" width="48" height="30" rx="3"/><path class="ln" d="M56 395v6M46 402h20"/><text class="t" x="100" y="378" text-anchor="start">Desktop</text><text class="s" x="100" y="396" text-anchor="start">office</text><rect class="n" x="229" y="375" width="14" height="11" rx="2"/><path class="ln" d="M232 375v-3a4 4 0 0 1 8 0v3"/><text class="m" x="250" y="380" text-anchor="start">own SSH key</text>
+</svg>
+
+  </div>
+  <figcaption>Config travels in a dotfiles repo, editor state through Settings Sync, unfinished work on a WIP branch. Keys stay put.</figcaption>
+</figure></div>
+    <div class="theme light">
+<figure class="fig wide">
+  <div class="frame">
+    <p class="label">Two machines, one setup</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 680 340" width="680" height="340" role="img" aria-labelledby="gf-two-devices-title-23 gf-two-devices-desc-23">
+<title id="gf-two-devices-title-23">Two devices kept in sync through GitHub</title>
+<desc id="gf-two-devices-desc-23">A laptop and a desktop share three things through GitHub: a dotfiles repository (pushed from one, cloned on the other), VS Code Settings Sync (sign in with GitHub on both), and a wip branch for unfinished work (push, then pull). Each machine keeps its own SSH key, which is never synced.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="680" height="340" rx="12"/>
+<rect class="n" x="16" y="48" width="150" height="272" rx="10"/><rect class="n" x="69" y="84" width="44" height="28" rx="3"/><path class="ln" d="M61 117h60"/><text class="t" x="91" y="152" text-anchor="middle">Laptop</text><text class="s" x="91" y="170" text-anchor="middle">home</text><path class="ln dim" d="M32 238L150 238"/><rect class="n" x="84" y="257" width="14" height="11" rx="2"/><path class="ln" d="M87 257v-3a4 4 0 0 1 8 0v3"/><text class="m" x="91" y="290" text-anchor="middle">own SSH key</text><text class="m" x="91" y="306" text-anchor="middle">never synced</text><rect class="n" x="514" y="48" width="150" height="272" rx="10"/><rect class="n" x="565" y="84" width="48" height="30" rx="3"/><path class="ln" d="M589 115v6M579 122h20"/><text class="t" x="589" y="152" text-anchor="middle">Desktop</text><text class="s" x="589" y="170" text-anchor="middle">office</text><path class="ln dim" d="M530 238L648 238"/><rect class="n" x="582" y="257" width="14" height="11" rx="2"/><path class="ln" d="M585 257v-3a4 4 0 0 1 8 0v3"/><text class="m" x="589" y="290" text-anchor="middle">own SSH key</text><text class="m" x="589" y="306" text-anchor="middle">never synced</text><rect class="n on" x="236" y="20" width="208" height="312" rx="12"/><text class="cap" x="340" y="44" text-anchor="middle">GITHUB</text><rect class="n" x="252" y="60" width="176" height="64" rx="10"/><text class="t" x="340" y="88" text-anchor="middle">dotfiles repo</text><text class="m" x="340" y="104" text-anchor="middle">.gitconfig · .zshrc</text><path class="ln" d="M168 92L248 92"/><path class="hd" d="M248 92L241.7 95.0L241.7 89.0Z"/><text class="m" x="202" y="84" text-anchor="middle">push</text><path class="ln" d="M432 92L510 92"/><path class="hd" d="M510 92L503.7 95.0L503.7 89.0Z"/><text class="m" x="477" y="84" text-anchor="middle">clone</text><rect class="n" x="252" y="148" width="176" height="64" rx="10"/><text class="t" x="340" y="176" text-anchor="middle">Settings Sync</text><text class="m" x="340" y="192" text-anchor="middle">settings · extensions</text><path class="ln" d="M168 180L248 180"/><path class="hd" d="M248 180L241.7 183.0L241.7 177.0Z"/><text class="m" x="202" y="172" text-anchor="middle">sign in</text><path class="ln" d="M432 180L510 180"/><path class="hd" d="M510 180L503.7 183.0L503.7 177.0Z"/><text class="m" x="477" y="172" text-anchor="middle">sign in</text><rect class="n" x="252" y="236" width="176" height="64" rx="10"/><text class="t" x="340" y="264" text-anchor="middle">wip/* branch</text><text class="m" x="340" y="280" text-anchor="middle">unfinished work</text><path class="ln" d="M168 268L248 268"/><path class="hd" d="M248 268L241.7 271.0L241.7 265.0Z"/><text class="m" x="202" y="260" text-anchor="middle">push</text><path class="ln" d="M432 268L510 268"/><path class="hd" d="M510 268L503.7 271.0L503.7 265.0Z"/><text class="m" x="477" y="260" text-anchor="middle">pull</text>
+</svg>
+
+  </div>
+  <figcaption>Config travels in a dotfiles repo, editor state through Settings Sync, unfinished work on a WIP branch. Keys stay put.</figcaption>
+</figure>
+<figure class="fig narrow">
+  <div class="frame">
+    <p class="label">Two machines, one setup</p>
+    <svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 430" width="360" height="430" role="img" aria-labelledby="gf-two-devices-sm-title-24 gf-two-devices-sm-desc-24">
+<title id="gf-two-devices-sm-title-24">Two devices kept in sync through GitHub</title>
+<desc id="gf-two-devices-sm-desc-24">A laptop and a desktop share three things through GitHub: a dotfiles repository (pushed from one, cloned on the other), VS Code Settings Sync (sign in with GitHub on both), and a wip branch for unfinished work (push, then pull). Each machine keeps its own SSH key, which is never synced.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="430" rx="12"/>
+<rect class="n" x="16" y="14" width="328" height="70" rx="10"/><rect class="n" x="34" y="32" width="44" height="28" rx="3"/><path class="ln" d="M26 65h60"/><text class="t" x="100" y="46" text-anchor="start">Laptop</text><text class="s" x="100" y="64" text-anchor="start">home</text><rect class="n" x="229" y="43" width="14" height="11" rx="2"/><path class="ln" d="M232 43v-3a4 4 0 0 1 8 0v3"/><text class="m" x="250" y="48" text-anchor="start">own SSH key</text><rect class="n on" x="16" y="140" width="328" height="168" rx="12"/><text class="cap" x="221" y="162" text-anchor="middle">GITHUB</text><rect class="n" x="20" y="176" width="100" height="116" rx="10"/><text class="t" x="70" y="204" text-anchor="middle">dotfiles</text><text class="t" x="70" y="222" text-anchor="middle">repo</text><text class="m" x="70" y="252" text-anchor="middle">.gitconfig</text><text class="m" x="70" y="268" text-anchor="middle">.zshrc</text><path class="ln" d="M56 86L56 172"/><path class="hd" d="M56 172L53.0 165.7L59.0 165.7Z"/><text class="m" x="62" y="124" text-anchor="start">push</text><path class="ln" d="M84 294L84 342"/><path class="hd" d="M84 342L81.0 335.7L87.0 335.7Z"/><text class="m" x="78" y="322" text-anchor="end">clone</text><rect class="n" x="130" y="176" width="100" height="116" rx="10"/><text class="t" x="180" y="204" text-anchor="middle">Settings</text><text class="t" x="180" y="222" text-anchor="middle">Sync</text><text class="m" x="180" y="252" text-anchor="middle">settings</text><text class="m" x="180" y="268" text-anchor="middle">extensions</text><path class="ln" d="M166 86L166 172"/><path class="hd" d="M166 172L163.0 165.7L169.0 165.7Z"/><text class="m" x="172" y="124" text-anchor="start">sign in</text><path class="ln" d="M194 294L194 342"/><path class="hd" d="M194 342L191.0 335.7L197.0 335.7Z"/><text class="m" x="188" y="322" text-anchor="end">sign in</text><rect class="n" x="240" y="176" width="100" height="116" rx="10"/><text class="t" x="290" y="204" text-anchor="middle">wip/*</text><text class="t" x="290" y="222" text-anchor="middle">branch</text><text class="m" x="290" y="252" text-anchor="middle">unfinished</text><text class="m" x="290" y="268" text-anchor="middle">work</text><path class="ln" d="M276 86L276 172"/><path class="hd" d="M276 172L273.0 165.7L279.0 165.7Z"/><text class="m" x="282" y="124" text-anchor="start">push</text><path class="ln" d="M304 294L304 342"/><path class="hd" d="M304 342L301.0 335.7L307.0 335.7Z"/><text class="m" x="298" y="322" text-anchor="end">pull</text><rect class="n" x="16" y="346" width="328" height="70" rx="10"/><rect class="n" x="32" y="364" width="48" height="30" rx="3"/><path class="ln" d="M56 395v6M46 402h20"/><text class="t" x="100" y="378" text-anchor="start">Desktop</text><text class="s" x="100" y="396" text-anchor="start">office</text><rect class="n" x="229" y="375" width="14" height="11" rx="2"/><path class="ln" d="M232 375v-3a4 4 0 0 1 8 0v3"/><text class="m" x="250" y="380" text-anchor="start">own SSH key</text>
+</svg>
+
+  </div>
+  <figcaption>Config travels in a dotfiles repo, editor state through Settings Sync, unfinished work on a WIP branch. Keys stay put.</figcaption>
+</figure></div>
+  </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 430" width="360" height="430" role="img" aria-labelledby="gf-two-devices-sm-title gf-two-devices-sm-desc">
+<title id="gf-two-devices-sm-title">Two devices kept in sync through GitHub</title>
+<desc id="gf-two-devices-sm-desc">A laptop and a desktop share three things through GitHub: a dotfiles repository (pushed from one, cloned on the other), VS Code Settings Sync (sign in with GitHub on both), and a wip branch for unfinished work (push, then pull). Each machine keeps its own SSH key, which is never synced.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="430" rx="12"/>
+<rect class="n" x="16" y="14" width="328" height="70" rx="10"/><rect class="n" x="34" y="32" width="44" height="28" rx="3"/><path class="ln" d="M26 65h60"/><text class="t" x="100" y="46" text-anchor="start">Laptop</text><text class="s" x="100" y="64" text-anchor="start">home</text><rect class="n" x="229" y="43" width="14" height="11" rx="2"/><path class="ln" d="M232 43v-3a4 4 0 0 1 8 0v3"/><text class="m" x="250" y="48" text-anchor="start">own SSH key</text><rect class="n on" x="16" y="140" width="328" height="168" rx="12"/><text class="cap" x="221" y="162" text-anchor="middle">GITHUB</text><rect class="n" x="20" y="176" width="100" height="116" rx="10"/><text class="t" x="70" y="204" text-anchor="middle">dotfiles</text><text class="t" x="70" y="222" text-anchor="middle">repo</text><text class="m" x="70" y="252" text-anchor="middle">.gitconfig</text><text class="m" x="70" y="268" text-anchor="middle">.zshrc</text><path class="ln" d="M56 86L56 172"/><path class="hd" d="M56 172L53.0 165.7L59.0 165.7Z"/><text class="m" x="62" y="124" text-anchor="start">push</text><path class="ln" d="M84 294L84 342"/><path class="hd" d="M84 342L81.0 335.7L87.0 335.7Z"/><text class="m" x="78" y="322" text-anchor="end">clone</text><rect class="n" x="130" y="176" width="100" height="116" rx="10"/><text class="t" x="180" y="204" text-anchor="middle">Settings</text><text class="t" x="180" y="222" text-anchor="middle">Sync</text><text class="m" x="180" y="252" text-anchor="middle">settings</text><text class="m" x="180" y="268" text-anchor="middle">extensions</text><path class="ln" d="M166 86L166 172"/><path class="hd" d="M166 172L163.0 165.7L169.0 165.7Z"/><text class="m" x="172" y="124" text-anchor="start">sign in</text><path class="ln" d="M194 294L194 342"/><path class="hd" d="M194 342L191.0 335.7L197.0 335.7Z"/><text class="m" x="188" y="322" text-anchor="end">sign in</text><rect class="n" x="240" y="176" width="100" height="116" rx="10"/><text class="t" x="290" y="204" text-anchor="middle">wip/*</text><text class="t" x="290" y="222" text-anchor="middle">branch</text><text class="m" x="290" y="252" text-anchor="middle">unfinished</text><text class="m" x="290" y="268" text-anchor="middle">work</text><path class="ln" d="M276 86L276 172"/><path class="hd" d="M276 172L273.0 165.7L279.0 165.7Z"/><text class="m" x="282" y="124" text-anchor="start">push</text><path class="ln" d="M304 294L304 342"/><path class="hd" d="M304 342L301.0 335.7L307.0 335.7Z"/><text class="m" x="298" y="322" text-anchor="end">pull</text><rect class="n" x="16" y="346" width="328" height="70" rx="10"/><rect class="n" x="32" y="364" width="48" height="30" rx="3"/><path class="ln" d="M56 395v6M46 402h20"/><text class="t" x="100" y="378" text-anchor="start">Desktop</text><text class="s" x="100" y="396" text-anchor="start">office</text><rect class="n" x="229" y="375" width="14" height="11" rx="2"/><path class="ln" d="M232 375v-3a4 4 0 0 1 8 0v3"/><text class="m" x="250" y="380" text-anchor="start">own SSH key</text>
+</svg>

@@ -1,0 +1,393 @@
+---
+title: "Branching and releases that don't hurt"
+description: "Pick a branching model, run pull requests end to end, ship hotfixes, and cut versioned GitHub Releases with generated notes and verifiable, immutable assets."
+publishedAt: "2026-10-07"
+updatedAt: "2026-10-07"
+tags: [github, git, branching, releases, semver, pull-requests]
+image: "/blog/github-field-guide/part-5.png"
+series: "github-field-guide"
+part: 5
+level: "intermediate"
+verifiedAt: "2026-10-07"
+---
+
+By the end of this part you'll be able to pick a branching model for your team and defend it, take a pull request from branch to merge without surprises, ship a hotfix on a bad day, and publish versioned releases with generated notes that nobody can quietly swap out later. It's written for team leads and startup engineers setting this up, and for beginners who want to know why the team works the way it does.
+
+<Callout type="founder" title="The short version">
+- Keep one main line of code (`main`) that is always safe to ship. Everyone works on short-lived copies (branches) and merges back through a reviewed pull request.
+- Small pull requests, merged often, beat big ones merged rarely. They are easier to review and easier to undo.
+- Unfinished features can ship "switched off" behind a feature flag, so code can go out before the feature does.
+- A release is a named, numbered snapshot (`v1.4.2`) with notes. GitHub can write the notes for you from merged pull requests.
+- Turn on immutable releases so a published version can never be swapped for something else.
+</Callout>
+
+<Callout type="skip">
+Skip to [Versions and tags](#versions-and-tags) if your team already merges small PRs into a protected `main` and you only need the release half.
+</Callout>
+
+## What a branching model actually decides
+
+<Level value="beginner" />
+
+A branch is a movable pointer to a line of commits. Creating one is cheap. The hard part is agreeing as a team on three questions:
+
+1. **Where does finished work live?** Usually a single branch, `main`.
+2. **How long may other branches live?** Hours, days, or months.
+3. **How does code get from "merged" to "in front of users"?** On every merge, on a schedule, or when someone cuts a release.
+
+A branching model is just a named set of answers. The answers matter more than the name. Long-lived branches drift from `main`, and the longer they drift, the more painful the merge. Nearly every rule below exists to keep branches short.
+
+{/* VOICE: a short memory of a long-lived branch that hurt to merge, at work or in OSS (Lightning AI). What did it teach you? */}
+
+## Four models, compared honestly
+
+<Level value="intermediate" />
+
+### GitHub Flow
+
+`main` is always deployable. You branch from `main`, commit, open a pull request, get review and green CI, merge, deploy, and delete the branch. That's the whole model. GitHub documents it as six steps: create a branch, make changes, create a pull request, address review comments, merge, delete the branch ([GitHub flow](https://docs.github.com/en/get-started/using-github/github-flow)).
+
+### Trunk-based development
+
+Everyone integrates into `main` (the "trunk") at least daily. Branches live hours, not days. Work that isn't ready ships hidden behind a feature flag. It needs fast, trustworthy CI and the discipline to keep flags tidy. [trunkbaseddevelopment.com](https://trunkbaseddevelopment.com) is the standard reference.
+
+In practice, GitHub Flow with very small PRs and flags *is* trunk-based development. The difference is how strictly you hold to "merge today".
+
+### GitFlow
+
+A long-lived `develop` branch next to `main`, plus `feature/*`, `release/*` and `hotfix/*` branches with rules for which merges where. It was designed for software shipped as numbered versions on a schedule. The original 2010 post now carries a note from its author suggesting simpler flows for continuously delivered web apps ([A successful Git branching model](https://nvie.com/posts/a-successful-git-branching-model/)).
+
+### Release branches
+
+Not a full model, but an add-on to GitHub Flow. When you must support an old version (a mobile app in review, an on-prem customer stuck on 1.4), you cut `release/1.4` from `main` and only accept fixes there. Fixes land on `main` first and are copied back.
+
+### Which one?
+
+| Your situation | Pick |
+|---|---|
+| 1–10 engineers, web or SaaS, deploy on merge | GitHub Flow |
+| Strong CI, deploys several times a day, flags in place | Trunk-based |
+| You ship numbered versions and support more than one | GitHub Flow plus release branches |
+| App-store or on-prem release trains with a QA phase | GitFlow, reluctantly |
+| Open source library | GitHub Flow plus tags plus release automation |
+
+<Details summary="Why I don't recommend GitFlow for a startup">
+GitFlow solves a real problem: several versions in flight at once, each with its own QA. Most startups don't have that problem. They have one production, and they want changes in it quickly. With GitFlow, every change crosses two long-lived branches (`develop`, then `main`), so you pay merge and coordination costs on every feature without getting anything back.
+
+If you later need to support old versions, add release branches to GitHub Flow. You get the one useful part of GitFlow without the ceremony.
+</Details>
+
+## The startup default
+
+<Level value="intermediate" />
+
+Do this:
+
+1. **Protect `main`.** Require a pull request, at least one approval, and passing status checks. Block force pushes and deletion. Use a ruleset so the same rules can later cover every repo in the org. [Part 3](/blog/github-organizations-and-teams) walks through rulesets.
+2. **Short-lived branches.** Aim for a branch that lives under two days. Name it after the work: `fix/login-redirect`, `feat/invoice-export`.
+3. **Small PRs.** One idea per PR. If the description needs headings, it's probably two PRs.
+4. **Squash merges.** One PR becomes one commit on `main`, titled after the PR. History reads like a changelog and `git revert` undoes a whole change in one go. In **Settings → General → Pull Requests**, allow squash merging only, default the commit message to the PR title, and turn on "Automatically delete head branches" ([merge methods](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github)).
+5. **Feature flags.** Merge unfinished work switched off. Deploying code and releasing a feature become two separate decisions. Delete the flag once the feature is fully on, or flags pile up into a second, hidden branching model.
+
+A feature flag can be as simple as an environment variable read at startup. You don't need a vendor on day one.
+
+```ts title="src/flags.ts"
+export const flags = {
+  invoiceExport: process.env.FLAG_INVOICE_EXPORT === "1",
+};
+```
+
+{/* VOICE: what your current team actually does (squash vs merge commits, PR size norms) and one thing you'd change. No employer-confidential details. */}
+
+## A pull request, end to end
+
+<Level value="beginner" />
+
+{/* FIGURE: pr-lifecycle — a branch leaves main, commits accumulate, PR opens as draft, CI runs, review requested (CODEOWNERS), changes requested and pushed, approval, optional merge queue, squash merge to main, branch deleted, deploy. Toggle: with/without merge queue. */}
+
+Here is the whole loop from the terminal. [Part 4](/blog/github-cli-issues-prs-projects) covers `gh` in depth.
+
+```console
+$ git switch main
+$ git pull --ff-only
+$ git switch -c fix/login-redirect
+$ git commit -am "fix: keep ?next= param on login redirect"
+$ git push -u origin fix/login-redirect
+$ gh pr create --draft --fill
+$ gh pr checks --watch
+$ gh pr ready
+$ gh pr merge --squash --auto --delete-branch
+```
+
+What each stage is for:
+
+1. **Branch from fresh `main`.** `--ff-only` refuses to create a surprise merge commit if your local `main` has drifted.
+2. **Open early as a draft.** CI starts running and teammates can see the direction before you've sunk a day into it.
+3. **Checks.** Required status checks must pass. Read failures in the PR's **Checks** tab or with `gh run view --log-failed`.
+4. **Review.** CODEOWNERS (see [Part 3](/blog/github-organizations-and-teams)) requests the right reviewers automatically. Reply to every comment, push fixes as new commits (reviewers can see what changed since they looked), and re-request review.
+5. **Merge.** `--auto` turns on auto-merge: GitHub merges by itself once approvals and checks are satisfied. You need "Allow auto-merge" enabled in the repo settings ([auto-merge](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request)).
+6. **Clean up.** The branch is deleted, and if `main` deploys on merge, you're live.
+
+<Callout type="tip" title="Keep your branch current without rewriting it">
+If `main` moved while you worked, `git pull --rebase origin main` replays your commits on top. Before anyone has reviewed, that's fine. After review starts, prefer merging `main` into your branch (or the **Update branch** button) so reviewers don't lose their place. Squash merging flattens it all at the end anyway.
+</Callout>
+
+## Hotfixes
+
+<Level value="intermediate" />
+
+A hotfix is an urgent fix for something broken in production. The goal is to make it boring: same path as any other change, just faster.
+
+**With GitHub Flow**, a hotfix is a normal PR with a fast track:
+
+```console
+$ git switch main && git pull --ff-only
+$ git switch -c hotfix/checkout-500
+$ git commit -am "fix: handle empty cart in checkout total"
+$ git push -u origin hotfix/checkout-500
+$ gh pr create --fill --label hotfix
+$ gh pr merge --squash --auto --delete-branch
+```
+
+Then tag a patch release (see below). Resist bypassing review. A one-line reviewer glance at 2 a.m. still catches the typo that turns one outage into two. If your ruleset allows bypass for admins, use it only when CI itself is broken, and write down why.
+
+**With release branches**, fix `main` first, then copy the commit back. `-x` records where the commit came from:
+
+```console
+$ git switch release/1.4
+$ git pull --ff-only
+$ git cherry-pick -x 3f2a91c
+$ git push origin release/1.4
+```
+
+Fixing `main` first guarantees the bug doesn't come back in the next release. The opposite order (fix the release branch, "remember" to forward-port) is how regressions are born. See [`git cherry-pick`](https://git-scm.com/docs/git-cherry-pick).
+
+{/* VOICE: a real hotfix you shipped (or watched shipped). What made it calm or chaotic? Keep numbers and employer details out unless public. */}
+
+## Merge queue
+
+<Level value="advanced" />
+
+A busy `main` has a race. Two PRs each pass CI against yesterday's `main`, both merge, and the combination breaks. Requiring branches to be up to date fixes this but forces every author to rebase and re-run CI after every merge.
+
+A merge queue does that work for you. When a PR is ready, it joins the queue. GitHub builds a temporary branch with the latest `main` plus the PRs ahead of it, runs your required checks there, and merges only if they pass ([managing a merge queue](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue)).
+
+**Availability:** at the time of writing, merge queues are available in any public repository owned by an organization, or in private repositories owned by organizations using GitHub Enterprise Cloud. Personal repositories and private repos on Free or Team don't get it.
+
+Your CI must also run for queue builds. Add the `merge_group` event next to `pull_request`, or the queue waits forever for checks that never report:
+
+```yaml title=".github/workflows/ci.yml"
+on:
+  pull_request:
+  merge_group: # [!code ++]
+```
+
+With a queue in place, `gh pr merge` adds the PR to the queue once required checks pass ([gh pr merge](https://cli.github.com/manual/gh_pr_merge)).
+
+Do you need one? Not at five engineers. Reach for it when PRs regularly break `main` in combination, or authors spend real time clicking **Update branch**.
+
+## Versions and tags
+
+<Level value="intermediate" />
+
+[Semantic Versioning](https://semver.org) gives a version three numbers, `MAJOR.MINOR.PATCH`:
+
+- **PATCH** (`1.4.1` → `1.4.2`): bug fixes, nothing new.
+- **MINOR** (`1.4.2` → `1.5.0`): new features, nothing breaks.
+- **MAJOR** (`1.5.0` → `2.0.0`): something that used to work now works differently.
+
+Before `1.0.0`, anything may change. That's the honest version for a young product.
+
+A tag is a permanent name for one commit. Use annotated tags (they carry an author, date and message) and push them explicitly, since `git push` doesn't send tags by default:
+
+```console
+$ git switch main && git pull --ff-only
+$ git tag -a v1.4.2 -m "v1.4.2"
+$ git push origin v1.4.2
+```
+
+Web apps that deploy on every merge often don't need versions for users. Tags still help: they mark what was live on a given day and give you something to roll back to. Libraries, CLIs, mobile apps and APIs with clients need versions.
+
+## GitHub Releases with generated notes
+
+<Level value="intermediate" />
+
+A GitHub Release is a tag plus notes plus optional files (assets), shown on the repo's **Releases** page. GitHub can write the notes from the PRs merged since the last release, grouped by label. Configure the groups in `.github/release.yml` ([automatically generated release notes](https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes)):
+
+```yaml title=".github/release.yml"
+changelog:
+  exclude:
+    labels:
+      - skip-changelog
+  categories:
+    - title: Breaking changes
+      labels:
+        - breaking-change
+    - title: Features
+      labels:
+        - feature
+    - title: Fixes
+      labels:
+        - bug
+    - title: Other changes
+      labels:
+        - "*"
+```
+
+`"*"` catches every PR that didn't match an earlier category. PRs with an excluded label drop out entirely, and `exclude` also accepts an `authors` list if you want to hide a bot's PRs.
+
+This only works if PRs carry labels. Make labelling part of review, or let an action add them from the branch name or changed paths.
+
+Create the release from the terminal:
+
+```console
+$ gh release create v1.4.2 --generate-notes
+$ gh release create v1.5.0 --draft --generate-notes --title "v1.5.0"
+$ gh release list
+```
+
+If the tag doesn't exist yet, `gh release create` creates it from the default branch (use `--target` to pick another, or `--verify-tag` to refuse) ([gh release create](https://cli.github.com/manual/gh_release_create)).
+
+## Release automation: which tool when
+
+<Level value="advanced" />
+
+Typing `gh release create` by hand is fine for a handful of releases a year. Past that, a tool should decide the next version and write the changelog. Three are widely used:
+
+| Tool | How it decides the version | Human control | Best for |
+|---|---|---|---|
+| [release-please](https://github.com/googleapis/release-please-action) | Reads [Conventional Commits](https://www.conventionalcommits.org) (`fix:`, `feat:`, `feat!:`) | High: it keeps a "release PR" open; merging it tags and releases | Apps and libraries that already use commit conventions |
+| [changesets](https://github.com/changesets/changesets) | Contributors add a small changeset file per PR saying what changed and how big | Highest: every bump is written down by a person | JavaScript monorepos publishing several packages |
+| [semantic-release](https://github.com/semantic-release/semantic-release) | Reads commit messages on every merge to `main` | Lowest: every qualifying merge publishes | Libraries that want zero-touch publishing |
+
+My default is release-please. With squash merges, the PR title becomes the commit message, so you only need to enforce Conventional Commits on PR titles, not on every commit. The release PR is a natural "are we ready?" checkpoint, and nothing ships until a human merges it.
+
+<Details summary="Deep dive: a minimal release-please workflow">
+This runs on every push to `main`, keeps the release PR up to date, and creates the tag and GitHub Release when that PR merges. Check the action's README for the current major version and options.
+
+```yaml title=".github/workflows/release-please.yml"
+name: release-please
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v5
+        with:
+          release-type: simple
+```
+
+release-please opens PRs with the workflow token, so you may also need to enable "Allow GitHub Actions to create and approve pull requests" under **Settings → Actions → General**.
+
+One catch: PRs and tags created with the default `GITHUB_TOKEN` don't trigger most other workflows. If you build assets on `release: published`, either build them in this same workflow or have release-please use a GitHub App token. [Part 6](/blog/github-actions-automation) covers why.
+</Details>
+
+## Immutable releases and attestations
+
+<Level value="advanced" />
+
+Normally a maintainer, or an attacker with a maintainer's token, can delete a release asset and upload a different file under the same name, or move a tag to another commit. Anyone downloading `v1.4.2` later gets something different from what you shipped.
+
+Immutable releases close that gap. They went generally available on 28 October 2025 ([changelog](https://github.blog/changelog/2025-10-28-immutable-releases-are-now-generally-available/)). Once you publish a release as immutable:
+
+- Assets can't be added, modified or deleted.
+- The tag is protected: it can't be moved or deleted. If you delete the release, you can't reuse that tag name.
+- The release gets a signed attestation (in Sigstore bundle format) recording what was published.
+- Titles and notes stay editable.
+
+Enable it per repository or for the whole organization in settings. Only new releases are immutable; existing ones stay mutable unless you republish them ([immutable releases](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/immutable-releases)).
+
+Because assets lock at publish time, change your habit to **draft, attach, publish**:
+
+```console
+$ gh release create v1.4.2 --draft --generate-notes
+$ gh release upload v1.4.2 ./dist/acme-cli-linux-amd64.tar.gz
+$ gh release edit v1.4.2 --draft=false
+```
+
+Anyone can then check the release and any file they downloaded:
+
+```console
+$ gh release verify v1.4.2 -R acme-labs/api
+$ gh release verify-asset v1.4.2 ./acme-cli-linux-amd64.tar.gz -R acme-labs/api
+```
+
+`gh release verify [<tag>]` checks that the release has a valid signed attestation. `gh release verify-asset [<tag>] <file-path>` checks that a local file is byte-for-byte the asset that release published. Leave out the tag to check the latest release, and add `--format json` to get the attestation itself ([gh release verify](https://cli.github.com/manual/gh_release_verify), [gh release verify-asset](https://cli.github.com/manual/gh_release_verify-asset)).
+
+<Callout type="note">
+Immutability protects the release, not your build. If your CI is compromised before the asset is uploaded, you get a perfectly attested bad file. Pair it with the Actions hardening in [Part 6](/blog/github-actions-automation).
+</Callout>
+
+## Exercises
+
+<Exercise title="Protect main and ship a squash-merged PR" time="20 min">
+1. In a sandbox repo (for example `acme-labs/web`), create a branch ruleset for `main`: require a pull request with one approval, require a status check, block force pushes.
+2. In **Settings → General → Pull Requests**, allow squash merging only, default the message to the PR title, enable auto-merge and automatic branch deletion.
+3. Try `git push origin main` directly. Watch it get rejected.
+4. Make a change on `fix/readme-typo`, open a draft PR with `gh pr create --draft --fill`, mark it ready, and run `gh pr merge --squash --auto --delete-branch`.
+5. Have a teammate approve it.
+
+**Done when:** `git log --oneline -1 main` shows one commit titled after your PR, and the branch is gone from GitHub.
+
+<Details summary="Solution: if the push wasn't rejected">
+Check that the ruleset's enforcement status is **Active** (not **Evaluate**), that it targets the default branch, and that you aren't on its bypass list. Admins on the bypass list can push straight through.
+</Details>
+</Exercise>
+
+<Exercise title="Cut an immutable release and verify it" time="25 min">
+1. Add the `.github/release.yml` from this part. Create `feature` and `bug` labels.
+2. Merge two small PRs, one labelled `feature`, one `bug`.
+3. Turn on immutable releases in the repo settings.
+4. Run `gh release create v0.1.0 --draft --generate-notes`, upload any file with `gh release upload`, then publish with `gh release edit v0.1.0 --draft=false`.
+5. Download the asset and run `gh release verify v0.1.0` and `gh release verify-asset v0.1.0 <file>`.
+6. Change one byte of the downloaded file and run `verify-asset` again.
+
+**Done when:** the notes show your PRs under **Features** and **Fixes**, both verify commands pass on the real file, and `verify-asset` fails on the edited one.
+</Exercise>
+
+## Cheat sheet
+
+| Task | Command or setting |
+|---|---|
+| Fresh branch from `main` | `git switch main && git pull --ff-only && git switch -c feat/x` |
+| Draft PR from commits | `gh pr create --draft --fill` |
+| Watch CI | `gh pr checks --watch` |
+| Squash, auto-merge, clean up | `gh pr merge --squash --auto --delete-branch` |
+| Backport a fix | `git cherry-pick -x <sha>` on `release/x.y` |
+| Queue-aware CI trigger | `on: merge_group` alongside `pull_request` |
+| Annotated tag | `git tag -a v1.4.2 -m "v1.4.2" && git push origin v1.4.2` |
+| Release with generated notes | `gh release create v1.4.2 --generate-notes` |
+| Group notes by label | `.github/release.yml` with `changelog.categories` |
+| Draft, attach, publish | `--draft`, then `gh release upload`, then `gh release edit --draft=false` |
+| Verify a release | `gh release verify v1.4.2` |
+| Verify a downloaded file | `gh release verify-asset v1.4.2 ./file` |
+| Squash-only merges | Settings → General → Pull Requests |
+
+## What changes fast
+
+- **Merge queue availability** by plan and repo type. Check [managing a merge queue](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue).
+- **`gh release verify` flags and output.** Check `gh release verify --help` and the [manual](https://cli.github.com/manual/gh_release_verify).
+- **Immutable release and attestation behavior.** Check [immutable releases](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/immutable-releases) and the [changelog](https://github.blog/changelog/).
+- **Release tooling versions** (release-please, changesets, semantic-release). Check each project's README before copying a version number.
+- **Ruleset options.** Check [available rules for rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets).
+
+## Further reading
+
+- [GitHub flow](https://docs.github.com/en/get-started/using-github/github-flow)
+- [About rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets)
+- [About merge methods on GitHub](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github)
+- [Managing a merge queue](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue)
+- [Automatically generated release notes](https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes)
+- [Immutable releases](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/immutable-releases)
+- [gh release create](https://cli.github.com/manual/gh_release_create), [gh release verify](https://cli.github.com/manual/gh_release_verify), [gh release verify-asset](https://cli.github.com/manual/gh_release_verify-asset)
+- [git cherry-pick](https://git-scm.com/docs/git-cherry-pick) and [git tag](https://git-scm.com/docs/git-tag)
+- [Semantic Versioning](https://semver.org) and [Conventional Commits](https://www.conventionalcommits.org)

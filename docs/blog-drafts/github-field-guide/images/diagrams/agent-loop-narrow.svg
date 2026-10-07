@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 404" width="360" height="404" role="img" aria-labelledby="gf-agent-loop-sm-title gf-agent-loop-sm-desc">
+<title id="gf-agent-loop-sm-title">How an AI agent ships a change on GitHub</title>
+<desc id="gf-agent-loop-sm-desc">You write a scoped issue; the agent works on its own branch and opens a draft PR, never pushing to main; CI runs the same checks as for humans; a human reviews; you merge. If CI fails, the agent pushes a fix. If review requests changes, the agent revises. Both loops return to the agent.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="404" rx="12"/>
+<rect class="n" x="16" y="16" width="170" height="50" rx="10"/><text class="t" x="30" y="38" text-anchor="start">Issue</text><text class="s" x="30" y="55" text-anchor="start">scoped by you</text><text class="cap" x="174" y="37" text-anchor="end">YOU</text><path class="ln" d="M60 68L60 77"/><path class="hd" d="M60 77L57.0 70.7L63.0 70.7Z"/><rect class="n" x="16" y="80" width="170" height="50" rx="10"/><text class="t" x="30" y="102" text-anchor="start">Agent</text><text class="s" x="30" y="119" text-anchor="start">own branch</text><text class="cap" x="174" y="101" text-anchor="end">AGENT</text><path class="ln" d="M60 132L60 141"/><path class="hd" d="M60 141L57.0 134.7L63.0 134.7Z"/><rect class="n" x="16" y="144" width="170" height="50" rx="10"/><text class="t" x="30" y="166" text-anchor="start">Draft PR</text><text class="s" x="30" y="183" text-anchor="start">never main</text><text class="cap" x="174" y="165" text-anchor="end">AGENT</text><path class="ln" d="M60 196L60 205"/><path class="hd" d="M60 205L57.0 198.7L63.0 198.7Z"/><rect class="n" x="16" y="208" width="170" height="50" rx="10"/><text class="t" x="30" y="230" text-anchor="start">CI checks</text><text class="s" x="30" y="247" text-anchor="start">same gates</text><text class="cap" x="174" y="229" text-anchor="end">ACTIONS</text><path class="ln" d="M60 260L60 269"/><path class="hd" d="M60 269L57.0 262.7L63.0 262.7Z"/><rect class="n on" x="16" y="272" width="170" height="50" rx="10"/><text class="t" x="30" y="294" text-anchor="start">Review</text><text class="s" x="30" y="311" text-anchor="start">human gate</text><text class="cap act" x="174" y="293" text-anchor="end">YOU</text><path class="ln" d="M60 324L60 333"/><path class="hd" d="M60 333L57.0 326.7L63.0 326.7Z"/><rect class="n" x="16" y="336" width="170" height="50" rx="10"/><text class="t" x="30" y="358" text-anchor="start">Merge</text><text class="s" x="30" y="375" text-anchor="start">you decide</text><text class="cap" x="174" y="357" text-anchor="end">YOU</text><path class="ln dash" d="M188 233L212.0 233.0Q222 233 222.0 223.0L222.0 121.0Q222 111 212.0 111.0L190 111"/><path class="hd" d="M190 111L196.3 108.0L196.3 114.0Z"/><path class="ln dash" d="M188 297L290.0 297.0Q300 297 300.0 287.0L300.0 109.0Q300 99 290.0 99.0L190 99"/><path class="hd" d="M190 99L196.3 96.0L196.3 102.0Z"/><rect class="n" style="fill:var(--bg)" x="197" y="153" width="50" height="38" rx="6"/><text class="m" x="222" y="171" text-anchor="middle">CI</text><text class="m" x="222" y="185" text-anchor="middle">fails</text><rect class="n" style="fill:var(--bg)" x="259" y="211" width="82" height="38" rx="6"/><text class="m" x="300" y="229" text-anchor="middle">changes</text><text class="m" x="300" y="243" text-anchor="middle">requested</text>
+</svg>

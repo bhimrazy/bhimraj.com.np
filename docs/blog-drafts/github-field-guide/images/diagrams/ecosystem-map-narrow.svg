@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="gf" viewBox="0 0 360 520" width="360" height="520" role="img" aria-labelledby="gf-ecosystem-map-sm-title gf-ecosystem-map-sm-desc">
+<title id="gf-ecosystem-map-sm-title">The GitHub ecosystem at a glance</title>
+<desc id="gf-ecosystem-map-sm-desc">Git keeps history on your machine, edited through VS Code. Git pushes and pulls to GitHub, the shared remote that holds repositories, issues, pull requests and releases. The gh CLI talks to GitHub's API. GitHub sends events to Actions runners and issues to AI agents; they report status and open pull requests back.</desc>
+<style>.gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+@media (prefers-color-scheme:dark){.gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}}
+:where(.light,[data-theme=light]) .gf{--f-bg:#ffffff;--f-bg2:#f5f5f4;--f-bg3:#e7e5e4;--f-tx:#1c1917;--f-tx2:#57534e;--f-tx3:#a8a29e;--f-ac:#d97706;--f-acs:rgba(217,119,6,0.08);--f-bd:#e7e5e4;--f-bdh:#d6d3d1;--f-act:#b45309;--f-node:#f5f5f4}
+:where(.dark,[data-theme=dark]) .gf{--f-bg:#17150f;--f-bg2:#16140f;--f-bg3:#1f1c16;--f-tx:#f5f0e8;--f-tx2:#a09882;--f-tx3:#706a58;--f-ac:#f59e0b;--f-acs:rgba(245,158,11,0.1);--f-bd:#2a2620;--f-bdh:#3a3530;--f-act:#f59e0b;--f-node:#1f1c16}
+.gf{--bg:var(--site-card-bg,var(--f-bg));--tx:var(--site-text,var(--f-tx));--tx2:var(--site-text-secondary,var(--f-tx2));--tx3:var(--site-text-tertiary,var(--f-tx3));--ac:var(--site-accent,var(--f-ac));--acs:var(--site-accent-subtle,var(--f-acs));--bd:var(--site-border,var(--f-bd));--bdh:var(--site-border-hover,var(--f-bdh));--node:var(--f-node);--act:var(--f-act)}
+.gf .bg{fill:var(--bg)}
+.gf .n{fill:var(--node);stroke:var(--bdh);stroke-width:1}
+.gf .n.on{fill:var(--acs);stroke:var(--ac);stroke-width:1.5}
+.gf .zone{fill:none;stroke:var(--bdh);stroke-width:1;stroke-dasharray:3 4}
+.gf .ln{fill:none;stroke:var(--tx3);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.gf .ln.on{stroke:var(--ac);stroke-width:2}
+.gf .ln.dim{stroke:var(--bdh)}
+.gf .ln.dash{stroke-dasharray:4 4}
+.gf .hd{fill:var(--tx3)}
+.gf .hd.on{fill:var(--ac)}
+.gf .hd.dim{fill:var(--bdh)}
+.gf .dot{fill:var(--tx2)}
+.gf .dot.on{fill:var(--ac)}
+.gf .ring{fill:var(--bg);stroke:var(--tx3);stroke-width:1.5}
+.gf .ring.on{stroke:var(--ac);stroke-width:2}
+.gf .ac{fill:var(--ac)}
+.gf text{font-family:var(--font-body,"DM Sans"),system-ui,sans-serif;fill:var(--tx)}
+.gf .t{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:600;font-size:14px;fill:var(--tx)}
+.gf .tl{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:18px;fill:var(--tx)}
+.gf .s{font-size:12px;fill:var(--tx2)}
+.gf .m{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:11px;fill:var(--tx2)}
+.gf .mk{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:12px;fill:var(--tx)}
+.gf .cap{font-family:var(--font-mono,"JetBrains Mono"),ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;fill:var(--tx2)}
+.gf .act{fill:var(--act)}
+.gf .big{font-family:var(--font-display,"Space Grotesk"),system-ui,sans-serif;font-weight:700;font-size:22px}</style>
+<rect class="bg" width="360" height="520" rx="12"/>
+<text class="cap" x="16" y="26" text-anchor="start">YOUR MACHINE</text><rect class="zone" x="12" y="36" width="336" height="150" rx="12"/><rect class="n" x="24" y="50" width="96" height="54" rx="10"/><text class="t" x="72" y="73" text-anchor="middle">VS Code</text><text class="s" x="72" y="89" text-anchor="middle">editor</text><rect class="n" x="24" y="118" width="96" height="54" rx="10"/><text class="t" x="72" y="141" text-anchor="middle">gh</text><text class="s" x="72" y="157" text-anchor="middle">CLI</text><rect class="n" x="180" y="50" width="156" height="122" rx="10"/><text class="t" x="258" y="76" text-anchor="middle">Git</text><text class="s" x="258" y="94" text-anchor="middle">history on your disk</text><path class="ln" d="M204 136L312 136"/><circle class="dot" cx="212" cy="136" r="4.5"/><circle class="dot" cx="242" cy="136" r="4.5"/><circle class="dot" cx="272" cy="136" r="4.5"/><circle class="ring" cx="304" cy="136" r="6"/><text class="m" x="304" y="157" text-anchor="middle">HEAD</text><path class="ln" d="M122 77L178 77"/><path class="hd" d="M178 77L171.7 80.0L171.7 74.0Z"/><text class="m" x="150" y="69" text-anchor="middle">commit</text><path class="ln" d="M72 174L72 226"/><path class="hd" d="M72 226L69.0 219.7L75.0 219.7Z"/><text class="m" x="80" y="204" text-anchor="start">API</text><path class="ln" d="M232 174L232 226"/><path class="hd" d="M232 226L229.0 219.7L235.0 219.7Z"/><text class="m" x="226" y="204" text-anchor="end">push</text><path class="ln" d="M290 228L290 176"/><path class="hd" d="M290 176L293.0 182.3L287.0 182.3Z"/><text class="m" x="296" y="204" text-anchor="start">pull</text><rect class="n on" x="12" y="230" width="336" height="132" rx="12"/><text class="tl" x="28" y="258" text-anchor="start">GitHub</text><text class="s" x="28" y="277" text-anchor="start">the shared remote</text><text class="cap" x="332" y="258" text-anchor="end">GITHUB.COM</text><rect class="n" x="28" y="291" width="148" height="26" rx="13"/><text class="mk" x="102" y="308" text-anchor="middle">repositories</text><rect class="n" x="184" y="291" width="148" height="26" rx="13"/><text class="mk" x="258" y="308" text-anchor="middle">issues</text><rect class="n" x="28" y="325" width="148" height="26" rx="13"/><text class="mk" x="102" y="342" text-anchor="middle">pull requests</text><rect class="n" x="184" y="325" width="148" height="26" rx="13"/><text class="mk" x="258" y="342" text-anchor="middle">releases</text><path class="ln" d="M60 364L60 420"/><path class="hd" d="M60 420L57.0 413.7L63.0 413.7Z"/><text class="m" x="66" y="396" text-anchor="start">event</text><path class="ln" d="M124 418L124 366"/><path class="hd" d="M124 366L127.0 372.3L121.0 372.3Z"/><text class="m" x="130" y="396" text-anchor="start">status</text><path class="ln" d="M236 364L236 420"/><path class="hd" d="M236 420L233.0 413.7L239.0 413.7Z"/><text class="m" x="242" y="396" text-anchor="start">issue</text><path class="ln" d="M300 418L300 366"/><path class="hd" d="M300 366L303.0 372.3L297.0 372.3Z"/><text class="m" x="306" y="396" text-anchor="start">PR</text><rect class="n" x="12" y="422" width="160" height="86" rx="10"/><text class="t" x="92" y="453" text-anchor="middle">Actions</text><text class="s" x="92" y="469" text-anchor="middle">runners do CI/CD</text><text class="s" x="92" y="485" text-anchor="middle">on every event</text><rect class="n" x="188" y="422" width="160" height="86" rx="10"/><text class="t" x="268" y="453" text-anchor="middle">AI agents</text><text class="s" x="268" y="469" text-anchor="middle">Copilot · Claude · Codex</text><text class="s" x="268" y="485" text-anchor="middle">issue in, PR out</text>
+</svg>
