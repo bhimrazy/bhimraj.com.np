@@ -27,7 +27,7 @@ function ProofItem({ mark, value, label, href, external }: Proof) {
       <span className="mt-4 whitespace-nowrap font-bold font-display text-[22px] text-site-text tracking-tight sm:text-[28px]">
         {value}
       </span>
-      <span className="mt-1 text-pretty text-site-text-tertiary text-xs leading-snug sm:text-[13px]">
+      <span className="mt-1 text-pretty text-site-text-secondary text-xs leading-snug sm:text-[13px]">
         {label}
       </span>
     </>
@@ -173,7 +173,7 @@ export default async function HeroSection() {
             <div className="flex flex-wrap items-center gap-3">
               <Button
                 asChild
-                className="h-10 rounded-lg border-0 bg-site-accent px-4 font-semibold text-white hover:bg-site-accent/85 focus-visible:ring-2 focus-visible:ring-site-accent focus-visible:ring-offset-2 focus-visible:ring-offset-site-bg sm:px-6"
+                className="h-10 rounded-lg border-0 bg-site-accent px-4 font-semibold text-site-on-accent hover:bg-site-accent/85 focus-visible:ring-2 focus-visible:ring-site-accent focus-visible:ring-offset-2 focus-visible:ring-offset-site-bg sm:px-6"
               >
                 <Link href="/oss">See my OSS work →</Link>
               </Button>

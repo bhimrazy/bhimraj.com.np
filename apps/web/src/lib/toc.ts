@@ -21,6 +21,21 @@ function decodeEntities(text: string): string {
   });
 }
 
+/**
+ * Remove every tag, repeating until nothing changes so a tag split by another
+ * tag (`<scr<b>ipt>`) can't survive a single pass (CodeQL
+ * js/incomplete-multi-character-sanitization).
+ */
+function stripTags(html: string): string {
+  let previous: string;
+  let text = html;
+  do {
+    previous = text;
+    text = text.replace(/<[^>]*>/g, "");
+  } while (text !== previous);
+  return text;
+}
+
 /** Extract h2/h3 headings with their IDs from compiled HTML. */
 export function extractToc(html: string): TocItem[] {
   const items: TocItem[] = [];
@@ -33,7 +48,7 @@ export function extractToc(html: string): TocItem[] {
     const id = match[2];
     // Strip inner HTML tags (incl. the empty permalink anchor), decode
     // entities, and drop trailing colons like "References:".
-    const text = decodeEntities(match[3].replace(/<[^>]+>/g, ""))
+    const text = decodeEntities(stripTags(match[3]))
       .trim()
       .replace(/\s*:$/, "");
     if (id && text) {
