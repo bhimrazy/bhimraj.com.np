@@ -91,7 +91,7 @@ function FeaturedPost({ post }: { post: BlogPost }) {
           <Link
             href={postHref(post)}
             className={cn(
-              "rounded-sm transition-colors after:absolute after:inset-0 group-hover:text-site-accent",
+              "rounded-sm transition-colors after:absolute after:inset-0 after:z-10 group-hover:text-site-accent",
               focusRing,
             )}
           >
@@ -174,7 +174,7 @@ function TagList({ tags, className }: { tags: string[]; className?: string }) {
 function groupByYear(posts: BlogPost[]): [number, BlogPost[]][] {
   const groups = new Map<number, BlogPost[]>();
   for (const post of posts) {
-    const year = new Date(post.publishedAt).getFullYear();
+    const year = new Date(post.publishedAt).getUTCFullYear();
     groups.set(year, [...(groups.get(year) ?? []), post]);
   }
   return [...groups.entries()];
