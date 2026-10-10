@@ -28,7 +28,7 @@ export default function MobileToc({
             On this page
           </span>
           <span className="font-mono text-[11px] text-site-text-tertiary">
-            {items.length} sections
+            {items.length} {items.length === 1 ? "section" : "sections"}
           </span>
         </span>
         <ChevronDownIcon className="size-4 text-site-text-tertiary transition-transform duration-200 group-open:rotate-180 motion-reduce:transition-none" />
