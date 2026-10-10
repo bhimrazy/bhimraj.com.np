@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useReducer, useRef } from "react";
+import { type CSSProperties, useId, useReducer, useRef } from "react";
 import {
   ControlBar,
   ControlButton,
@@ -21,14 +21,15 @@ import {
   initialBrokerState,
   lag,
   type Mode,
+  retainedOffsets,
 } from "./broker-sim";
 
 /** One-line narration of the current state. */
 function narrate(state: BrokerState) {
   const c2 = state.consumers[1];
-  const behind = c2 ? lag(state, c2) > 2 : false;
+  const behind = lag(state, c2) > 2;
   if (state.mode === "pubsub") {
-    if (c2?.paused) {
+    if (c2.paused) {
       return "C2 is paused, so the broker keeps every event C2 hasn't read. Nothing is deleted until both subscribers have it.";
     }
     if (behind) {
@@ -36,11 +37,11 @@ function narrate(state: BrokerState) {
     }
     return "Each event goes to both subscribers and is deleted once both have consumed it.";
   }
-  if (c2?.paused) {
+  if (c2.paused) {
     return "C2 is paused. The log keeps events whether or not anyone has read them, until they age out.";
   }
   if (behind) {
-    return "C2 is re-reading retained events from an earlier offset while C1 stays live.";
+    return "C2 is reading older retained events while C1 stays live.";
   }
   return "Consumed events stay in the log (the last 12 here), so any consumer can step back in.";
 }
@@ -66,10 +67,30 @@ function firstFrame(): BrokerState {
   return { ...s, published: null, delivered: [] };
 }
 
-/** x of the left edge of the slot holding `offset`. */
-function slotX(state: BrokerState, offset: number, slots: number) {
-  const first = state.nextOffset - slots;
-  return X0 + (offset - first) * PITCH;
+/** A dot flying between two points (the `fly` keyframes read --fx/--fy → --tx/--ty). */
+function Flight({
+  from,
+  to,
+}: {
+  from: [number, number];
+  to: [number, number];
+}) {
+  return (
+    <circle
+      r={3.5}
+      cx={0}
+      cy={0}
+      className="animate-fly fill-site-accent motion-reduce:hidden"
+      style={
+        {
+          "--fx": `${from[0]}px`,
+          "--fy": `${from[1]}px`,
+          "--tx": `${to[0]}px`,
+          "--ty": `${to[1]}px`,
+        } as CSSProperties
+      }
+    />
+  );
 }
 
 export function PubSubSimulator() {
@@ -87,10 +108,9 @@ export function PubSubSimulator() {
   const clipId = `pubsub-clip${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
 
   const firstVisible = state.nextOffset - slots;
-  const offsets: number[] = [];
-  for (let o = Math.max(firstVisible, state.head); o < state.nextOffset; o++) {
-    offsets.push(o);
-  }
+  /** x of the left edge of the slot holding `offset`. */
+  const slotX = (offset: number) => X0 + (offset - firstVisible) * PITCH;
+  const offsets = retainedOffsets(state).filter((o) => o >= firstVisible);
   const minOffset = Math.min(...state.consumers.map((c) => c.offset));
   const c2 = state.consumers[1];
 
@@ -154,7 +174,7 @@ export function PubSubSimulator() {
           x={X0 - 12}
           y={LOG_Y + CELL / 2 + 11}
           textAnchor="end"
-          className="fill-site-text-tertiary font-mono text-[9px]"
+          className="fill-site-text-secondary font-mono text-[9px]"
         >
           {state.mode === "pubsub" ? "queue" : "log"}
         </text>
@@ -187,7 +207,7 @@ export function PubSubSimulator() {
               <g
                 key={o}
                 className="transition-transform duration-500 ease-out motion-reduce:transition-none"
-                style={{ transform: `translateX(${slotX(state, o, slots)}px)` }}
+                style={{ transform: `translateX(${slotX(o)}px)` }}
               >
                 <rect
                   x={0}
@@ -210,7 +230,7 @@ export function PubSubSimulator() {
                   className={cn(
                     "font-mono text-[9px]",
                     consumedByAll
-                      ? "fill-site-text-tertiary"
+                      ? "fill-site-text-secondary"
                       : "fill-site-accent",
                   )}
                 >
@@ -223,29 +243,21 @@ export function PubSubSimulator() {
 
         {/* Publish flight */}
         {state.published !== null && (
-          <circle
+          <Flight
             key={`pub-${state.published}`}
-            r={3.5}
-            cx={0}
-            cy={0}
-            className="animate-fly fill-site-accent motion-reduce:hidden"
-            style={
-              {
-                "--fx": `${producerX}px`,
-                "--fy": `${PRODUCER_Y + 14}px`,
-                "--tx": `${producerX}px`,
-                "--ty": `${LOG_Y + CELL / 2}px`,
-              } as React.CSSProperties
-            }
+            from={[producerX, PRODUCER_Y + 14]}
+            to={[producerX, LOG_Y + CELL / 2]}
           />
         )}
 
         {/* Consumers */}
         {state.consumers.map((c, i) => {
-          const rowY = ROW_Y[i] ?? ROW_Y[0];
+          const rowY = ROW_Y[i];
           const behind = c.offset < firstVisible;
-          const x =
-            Math.max(slotX(state, c.offset, slots), X0) - (PITCH - CELL) / 2;
+          const x = Math.max(slotX(c.offset), X0) - (PITCH - CELL) / 2;
+          const stroke = c.paused
+            ? "stroke-site-border-hover"
+            : "stroke-site-text-tertiary";
           return (
             <g
               key={c.id}
@@ -258,22 +270,14 @@ export function PubSubSimulator() {
                 x2={0}
                 y2={rowY - 12}
                 strokeWidth={1.25}
-                className={
-                  c.paused
-                    ? "stroke-site-border-hover"
-                    : "stroke-site-text-tertiary"
-                }
+                className={stroke}
                 strokeDasharray={c.paused ? "2 3" : undefined}
               />
               <path
                 d={`M-4 ${LOG_Y + CELL + 9}L0 ${LOG_Y + CELL + 3}L4 ${LOG_Y + CELL + 9}`}
                 fill="none"
                 strokeWidth={1.25}
-                className={
-                  c.paused
-                    ? "stroke-site-border-hover"
-                    : "stroke-site-text-tertiary"
-                }
+                className={stroke}
               />
               <rect
                 x={-38}
@@ -283,12 +287,7 @@ export function PubSubSimulator() {
                 rx={6}
                 strokeWidth={1.25}
                 strokeDasharray={c.paused ? "3 3" : undefined}
-                className={cn(
-                  "fill-site-card",
-                  c.paused
-                    ? "stroke-site-border-hover"
-                    : "stroke-site-text-tertiary",
-                )}
+                className={cn("fill-site-card", stroke)}
               />
               <text
                 x={0}
@@ -303,7 +302,7 @@ export function PubSubSimulator() {
                 >
                   {c.id}
                 </tspan>
-                <tspan className="fill-site-text-tertiary">
+                <tspan className="fill-site-text-secondary">
                   {c.paused ? " paused" : ` lag ${lag(state, c)}`}
                 </tspan>
               </text>
@@ -312,7 +311,7 @@ export function PubSubSimulator() {
                   x={-44}
                   y={rowY + 4}
                   textAnchor="end"
-                  className="fill-site-text-tertiary font-mono text-[9px]"
+                  className="fill-site-text-secondary font-mono text-[9px]"
                 >
                   ← {firstVisible - c.offset} more
                 </text>
@@ -324,23 +323,12 @@ export function PubSubSimulator() {
         {/* Delivery flights: from the event's slot down to its consumer. */}
         {state.delivered.map((d) => {
           const i = state.consumers.findIndex((c) => c.id === d.consumerId);
-          const rowY = ROW_Y[i] ?? ROW_Y[0];
-          const x = slotX(state, d.offset, slots) + CELL / 2;
+          const x = slotX(d.offset) + CELL / 2;
           return (
-            <circle
+            <Flight
               key={`${d.consumerId}-${d.offset}-${state.tick}`}
-              r={3.5}
-              cx={0}
-              cy={0}
-              className="animate-fly fill-site-accent motion-reduce:hidden"
-              style={
-                {
-                  "--fx": `${x}px`,
-                  "--fy": `${LOG_Y + CELL / 2}px`,
-                  "--tx": `${x + PITCH / 2}px`,
-                  "--ty": `${rowY - 12}px`,
-                } as React.CSSProperties
-              }
+              from={[x, LOG_Y + CELL / 2]}
+              to={[x + PITCH / 2, ROW_Y[i] - 12]}
             />
           );
         })}
@@ -358,15 +346,13 @@ export function PubSubSimulator() {
             { value: "stream", label: "event streaming" },
           ]}
         />
-        {c2 && (
-          <ControlButton
-            onClick={() => dispatch({ type: "togglePause", id: c2.id })}
-            active={c2.paused}
-          >
-            {c2.paused ? `resume ${c2.id}` : `pause ${c2.id}`}
-          </ControlButton>
-        )}
-        {c2 && state.mode === "stream" && (
+        <ControlButton
+          onClick={() => dispatch({ type: "togglePause", id: c2.id })}
+          active={c2.paused}
+        >
+          {c2.paused ? `resume ${c2.id}` : `pause ${c2.id}`}
+        </ControlButton>
+        {state.mode === "stream" && (
           <ControlButton
             onClick={() => {
               if (c2.offset !== state.head)

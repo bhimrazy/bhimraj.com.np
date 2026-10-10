@@ -1,14 +1,13 @@
-import type { KeyboardEvent, ReactNode } from "react";
+import type { KeyboardEvent } from "react";
 import { cn } from "@/lib/utils";
-import type { Stage, UNetShapes } from "./unet-shapes";
+import type { SkipConnection, Stage, UNetShapes } from "./unet-shapes";
 
 /* Hook-free SVG of the UNet as a "U": squares sized by spatial size, skips as horizontal arrows. */
 
 const W = 660;
-const DY = 50;
 /** Narrow layout: taller levels, bigger marks (viewBox 660×398, matched by UNetExplorer). */
 const NARROW = { dy: 74, top: 60, minSide: 9, unknownSide: 18 };
-const WIDE = { dy: DY, top: 48, minSide: 5, unknownSide: 12 };
+const WIDE = { dy: 50, top: 48, minSide: 5, unknownSide: 12 };
 type Geometry = typeof WIDE;
 
 /** Per-level inward step of the encoder/decoder columns (the U's sides). */
@@ -44,31 +43,60 @@ function layout(shapes: UNetShapes, g: Geometry) {
   return { pos, height: y(shapes.depth - 1) + 42 };
 }
 
-/** Where a stage's channel label goes, so labels never sit on the U's lines. */
-function channelLabel(stage: Stage, p: Point, s: number) {
-  if (stage.level === 0 || stage.kind === "bottleneck") {
-    return { x: p.x, y: p.y - s / 2 - 6, anchor: "middle" as const };
+type Label = { x: number; y: number; anchor: "start" | "middle" | "end" };
+
+/** Channel and size label spots, outside the U and clear of its lines. */
+function labelSpots(
+  stage: Stage,
+  p: Point,
+  s: number,
+): { channel: Label; size: Label } {
+  const above = p.y - s / 2 - 6;
+  const below = p.y + s / 2 + 13;
+  if (stage.kind !== "encoder" && stage.kind !== "decoder") {
+    const channel: Label = { x: p.x, y: above, anchor: "middle" };
+    return { channel, size: { ...channel, y: below } };
   }
-  if (stage.kind === "encoder") {
-    return { x: p.x - s / 2 - 7, y: p.y + 4, anchor: "end" as const };
+  // Encoders label outward to the left, decoders to the right.
+  const dir = stage.kind === "encoder" ? -1 : 1;
+  const anchor = dir < 0 ? "end" : "start";
+  if (stage.level === 0) {
+    // The top row's sides hold the in/out connectors, so go above and below.
+    const channel: Label = { x: p.x, y: above, anchor: "middle" };
+    return { channel, size: { x: p.x - dir * 4, y: below, anchor } };
   }
-  return { x: p.x + s / 2 + 7, y: p.y + 4, anchor: "start" as const };
+  const channel: Label = { x: p.x + dir * (s / 2 + 7), y: p.y + 4, anchor };
+  return { channel, size: { ...channel, y: p.y + 17 } };
 }
 
-/** Where a stage's spatial-size label goes: outside the U, clear of the connectors. */
-function sizeLabel(stage: Stage, p: Point, s: number) {
-  const below = p.y + s / 2 + 13;
-  if (stage.kind === "encoder") {
-    return stage.level === 0
-      ? { x: p.x + 4, y: below, anchor: "end" as const }
-      : { x: p.x - s / 2 - 7, y: p.y + 17, anchor: "end" as const };
-  }
-  if (stage.kind === "decoder") {
-    return stage.level === 0
-      ? { x: p.x - 4, y: below, anchor: "start" as const }
-      : { x: p.x + s / 2 + 7, y: p.y + 17, anchor: "start" as const };
-  }
-  return { x: p.x, y: below, anchor: "middle" as const };
+/** Line colour: accent when lit, fainter when its size is unknown. */
+function lineStroke(on: boolean, unknown: boolean) {
+  if (on) return "stroke-site-accent";
+  return unknown ? "stroke-site-border" : "stroke-site-border-hover";
+}
+
+/** Label colour: accent when lit, fainter when its size is unknown. */
+function textFill(on: boolean, unknown: boolean) {
+  if (on) return "fill-site-accent";
+  return unknown ? "fill-site-text-tertiary" : "fill-site-text-secondary";
+}
+
+function squareColors(failed: boolean, unknown: boolean, on: boolean) {
+  if (failed) return "fill-site-accent-subtle stroke-site-accent";
+  if (unknown) return "fill-none stroke-site-border-hover";
+  if (on) return "fill-site-accent-subtle stroke-site-accent";
+  return "fill-site-bg-tertiary stroke-site-text-tertiary";
+}
+
+function skipText(skip: SkipConnection) {
+  if (skip.cropTo === null) return "crop —";
+  if (skip.fromSize === skip.cropTo) return "copy";
+  return `crop ${skip.fromSize}→${skip.cropTo}`;
+}
+
+function sizeText(stage: Stage, failed: boolean) {
+  if (failed) return "✕";
+  return stage.size === null ? "—" : `${stage.size}²`;
 }
 
 export function UNetSvg({
@@ -91,7 +119,7 @@ export function UNetSvg({
   /** Taller layout for narrow screens. */
   narrow?: boolean;
   /** Makes each feature map a focusable button. */
-  onSelect?: (id: string) => void;
+  onSelect?: (id: string | null) => void;
   describe?: (stage: Stage) => string;
   title: string;
   className?: string;
@@ -119,7 +147,7 @@ export function UNetSvg({
         let d = `M${p.x} ${p.y}L${q.x} ${q.y}`;
         if (b.kind === "bottleneck") d = `M${p.x} ${p.y}V${q.y}H${q.x}`;
         if (a.kind === "bottleneck") d = `M${p.x} ${p.y}H${q.x}V${q.y}`;
-        const dim = !known(b.id);
+        const dim = b.size === null;
         return (
           <path
             key={b.id}
@@ -130,11 +158,7 @@ export function UNetSvg({
             strokeDasharray={dim ? "2 4" : undefined}
             className={cn(
               "transition-colors duration-300",
-              lit(a.id) && lit(b.id)
-                ? "stroke-site-accent"
-                : dim
-                  ? "stroke-site-border"
-                  : "stroke-site-border-hover",
+              lineStroke(lit(a.id) && lit(b.id), dim),
             )}
           />
         );
@@ -148,11 +172,7 @@ export function UNetSvg({
         const x2 = q.x - side(known(skip.to) ? skip.cropTo : null, g) / 2 - 3;
         const on = lit(skip.to) && lit(skip.from);
         const unknown = skip.cropTo === null;
-        const stroke = on
-          ? "stroke-site-accent"
-          : unknown
-            ? "stroke-site-border"
-            : "stroke-site-border-hover";
+        const stroke = lineStroke(on, unknown);
         return (
           <g key={skip.to}>
             <line
@@ -179,18 +199,10 @@ export function UNetSvg({
                 textAnchor="middle"
                 className={cn(
                   "font-mono text-[10px] max-sm:hidden",
-                  on
-                    ? "fill-site-accent"
-                    : unknown
-                      ? "fill-site-border-hover"
-                      : "fill-site-text-tertiary",
+                  textFill(on, unknown),
                 )}
               >
-                {unknown
-                  ? "crop —"
-                  : skip.fromSize === skip.cropTo
-                    ? "copy"
-                    : `crop ${skip.fromSize}→${skip.cropTo}`}
+                {skipText(skip)}
               </text>
             )}
           </g>
@@ -203,9 +215,8 @@ export function UNetSvg({
         const on = lit(stage.id);
         const failed = shapes.failedAt === stage.id;
         const unknown = stage.size === null;
-        const label = channelLabel(stage, p, s);
-        const sizeAt = sizeLabel(stage, p, s);
-        const body: ReactNode = (
+        const label = labelSpots(stage, p, s);
+        const body = (
           <>
             <rect
               x={p.x - s / 2}
@@ -222,13 +233,7 @@ export function UNetSvg({
               }
               className={cn(
                 "transition-[x,y,width,height,fill,stroke] duration-300 ease-out motion-reduce:transition-none",
-                failed
-                  ? "fill-site-accent-subtle stroke-site-accent"
-                  : unknown
-                    ? "fill-none stroke-site-border-hover"
-                    : on
-                      ? "fill-site-accent-subtle stroke-site-accent"
-                      : "fill-site-bg-tertiary stroke-site-text-tertiary",
+                squareColors(failed, unknown, on),
                 onSelect &&
                   "group-hover:stroke-site-text-secondary group-focus-visible:fill-site-accent/15 group-focus-visible:stroke-2 group-focus-visible:stroke-site-accent",
               )}
@@ -244,30 +249,26 @@ export function UNetSvg({
             {!compact && (
               <>
                 <text
-                  x={label.x}
-                  y={label.y}
-                  textAnchor={label.anchor}
+                  x={label.channel.x}
+                  y={label.channel.y}
+                  textAnchor={label.channel.anchor}
                   className={cn(
                     "font-mono text-[11px] max-sm:text-[24px]",
-                    on || failed
-                      ? "fill-site-accent"
-                      : unknown
-                        ? "fill-site-text-tertiary"
-                        : "fill-site-text-secondary",
+                    textFill(on || failed, unknown),
                   )}
                 >
                   {stage.channels}
                 </text>
                 <text
-                  x={sizeAt.x}
-                  y={sizeAt.y}
-                  textAnchor={sizeAt.anchor}
+                  x={label.size.x}
+                  y={label.size.y}
+                  textAnchor={label.size.anchor}
                   className={cn(
                     "font-mono text-[10px] max-sm:hidden",
-                    failed ? "fill-site-accent" : "fill-site-text-tertiary",
+                    textFill(failed, unknown),
                   )}
                 >
-                  {failed ? "✕" : unknown ? "—" : `${stage.size}²`}
+                  {sizeText(stage, failed)}
                 </text>
               </>
             )}
@@ -276,10 +277,12 @@ export function UNetSvg({
 
         if (!onSelect) return <g key={stage.id}>{body}</g>;
 
+        // Click or Enter toggles; hovering with a mouse only selects.
+        const toggle = () => onSelect(selected === stage.id ? null : stage.id);
         const onKeyDown = (e: KeyboardEvent) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            onSelect(stage.id);
+            toggle();
           }
         };
         return (
@@ -290,7 +293,7 @@ export function UNetSvg({
             tabIndex={0}
             aria-label={describe?.(stage)}
             aria-pressed={selected === stage.id}
-            onClick={() => onSelect(stage.id)}
+            onClick={toggle}
             onKeyDown={onKeyDown}
             onPointerEnter={(e) => {
               if (e.pointerType === "mouse") onSelect(stage.id);

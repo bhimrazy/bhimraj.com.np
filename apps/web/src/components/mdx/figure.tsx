@@ -23,27 +23,32 @@ export function Figure({
         )}
       >
         {label ? (
-          <p className="mb-4 font-mono text-[10px] text-site-text-tertiary uppercase tracking-[0.14em]">
+          <p className="mb-4 font-mono text-[10px] text-site-text-secondary uppercase tracking-[0.14em]">
             {label}
           </p>
         ) : null}
         {children}
       </div>
       {caption ? (
-        <figcaption className="mt-3 px-1 text-[13px] text-site-text-tertiary leading-relaxed">
-          {caption}
-        </figcaption>
+        <figcaption className="px-1 leading-relaxed">{caption}</figcaption>
       ) : null}
     </figure>
   );
 }
 
-/** One-sentence narration of what a figure is showing right now. */
-export function Narration({ children }: { children: ReactNode }) {
+/** One-sentence narration; `live={false}` while autoplaying so it isn't read out every step. */
+export function Narration({
+  children,
+  live = true,
+}: {
+  children: ReactNode;
+  live?: boolean;
+}) {
   return (
     <p
-      aria-live="polite"
-      className="mt-4 min-h-10 text-[13px] text-site-text-secondary leading-relaxed"
+      aria-live={live ? "polite" : "off"}
+      // Room for three lines on phones, so the figure doesn't jump as it changes.
+      className="mt-4 min-h-16 text-[13px] text-site-text-secondary leading-relaxed sm:min-h-10"
     >
       {children}
     </p>
