@@ -3,14 +3,15 @@ import { Container } from "@/components/container";
 import { JsonLd } from "@/components/json-ld";
 import { CiteButton } from "@/components/research/cite-button";
 import { Card, CardContent } from "@/components/ui/card";
+import { pageMetadata } from "@/lib/metadata";
 import { buildScholarlyArticleJsonLd } from "@/lib/structured-data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Research",
   description:
     "Academic publications and research notes on AI, computer vision, and deep learning.",
-  alternates: { canonical: "/research" },
-};
+  path: "/research",
+});
 
 const PUBLICATIONS = [
   {

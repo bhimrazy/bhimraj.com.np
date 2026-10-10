@@ -21,9 +21,28 @@ function escapeXml(value: string): string {
 
 function toRfc822(dateString: string): string {
   const date = new Date(dateString);
-  return Number.isNaN(date.getTime())
-    ? new Date().toUTCString()
-    : date.toUTCString();
+  if (Number.isNaN(date.getTime())) {
+    throw new Error(`Invalid post date in feed: ${dateString}`);
+  }
+  return date.toUTCString();
+}
+
+/**
+ * Feed readers resolve relative URLs against their own origin, so make every
+ * root-relative `src`/`href` absolute. The empty heading permalink anchors
+ * (`#…`) are meaningless outside the page, so they are dropped.
+ */
+function absolutizeHtml(html: string, baseUrl: string): string {
+  return (
+    html
+      .replace(/<a class="heading-anchor"[^>]*><\/a>/g, "")
+      // Interactive figures are MDX-only; the markdown pass leaves their
+      // opening tags behind as escaped text (`&#x3C;Step …>`), which reads
+      // as garbage in a feed. The prose around them is kept.
+      .replace(/&#x3C;\/?[A-Z][A-Za-z]*(?:\s[^<>]*)?>\s*/g, "")
+      .replace(/<p>\s*<\/p>/g, "")
+      .replace(/\b(src|href)="\/(?!\/)/g, `$1="${baseUrl}/`)
+  );
 }
 
 /**
@@ -39,10 +58,16 @@ export function buildRssFeed(posts: FeedPost[]): string {
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
   );
 
+  const newest = Math.max(
+    0,
+    ...sorted.flatMap((p) =>
+      [p.publishedAt, p.updatedAt]
+        .filter((d): d is string => Boolean(d))
+        .map((d) => new Date(d).getTime()),
+    ),
+  );
   const lastBuildDate =
-    sorted.length > 0
-      ? toRfc822(sorted[0].publishedAt)
-      : new Date().toUTCString();
+    newest > 0 ? new Date(newest).toUTCString() : new Date().toUTCString();
 
   const items = sorted
     .map((post) => {
@@ -54,7 +79,7 @@ export function buildRssFeed(posts: FeedPost[]): string {
       <pubDate>${toRfc822(post.publishedAt)}</pubDate>
       <description>${escapeXml(post.description)}</description>
       ${post.tags.map((tag) => `<category>${escapeXml(tag)}</category>`).join("\n      ")}
-      <content:encoded><![CDATA[${post.html}]]></content:encoded>
+      <content:encoded><![CDATA[${absolutizeHtml(post.html, baseUrl)}]]></content:encoded>
       <dc:creator>${escapeXml(siteConfig.author.name)}</dc:creator>
     </item>`;
     })

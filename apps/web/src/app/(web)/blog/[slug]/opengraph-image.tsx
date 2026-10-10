@@ -1,4 +1,5 @@
 import { allBlogPosts } from "content-collections";
+import { notFound } from "next/navigation";
 import { OG_CONTENT_TYPE, OG_SIZE, renderOgImage } from "@/lib/og";
 import { getReadingTime } from "@/lib/utils";
 
@@ -16,11 +17,12 @@ export default async function Image({
 }) {
   const { slug } = await params;
   const post = allBlogPosts.find((p) => p._meta.path === slug);
+  if (!post) notFound();
 
   return renderOgImage({
     eyebrow: "Blog",
-    title: post?.title ?? "Bhimraj Yadav",
-    meta: post ? getReadingTime(post.html) : undefined,
-    tags: post?.tags ?? [],
+    title: post.title,
+    meta: getReadingTime(post.html),
+    tags: post.tags,
   });
 }
