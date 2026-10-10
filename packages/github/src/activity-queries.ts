@@ -22,7 +22,7 @@ export type OSSActivity = {
   issuesOpened: number;
 };
 
-/** A metric the site can link to as a GitHub search, so every number is checkable. */
+/** A metric the site can link to as the GitHub search behind it. */
 export type OSSActivityMetric = keyof OSSActivity;
 
 /**

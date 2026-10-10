@@ -31,7 +31,7 @@ export default async function HeroSection() {
           {/* Left: content */}
           <div>
             <span className="mb-5 inline-flex items-center gap-2 font-mono text-[13px] text-site-accent">
-              <span className="h-2 w-2 animate-pulse-dot rounded-full bg-green-500" />
+              <span className="h-2 w-2 animate-pulse-dot rounded-full bg-site-success" />
               Available for collaboration
             </span>
 
