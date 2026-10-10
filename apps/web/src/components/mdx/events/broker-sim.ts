@@ -1,15 +1,7 @@
 /**
- * A tiny, deterministic model of the two messaging models described in
- * `content/blog/event-driven-architecture.mdx`:
- *
- * - "pubsub": the broker keeps an event until every subscriber has consumed
- *   it, then deletes it so it can't be consumed again.
- * - "stream": the broker retains events (up to `retention` of them) whether
- *   or not they were consumed; consumers track their own offset and can step
- *   back in, e.g. to replay from the earliest retained event.
- *
- * Events are identified by a monotonically increasing offset. A consumer's
- * `offset` is the next event it will read.
+ * Deterministic model of the post's two messaging styles.
+ * - pubsub: an event is deleted once every subscriber has read it.
+ * - stream: events are retained; consumers keep their own offset and can replay.
  */
 
 export type Mode = "pubsub" | "stream";
@@ -46,11 +38,7 @@ export type BrokerAction =
   | { type: "replay"; id: string }
   | { type: "reset" };
 
-/**
- * The producer publishes on these ticks (repeating). It averages ~0.6 events
- * per tick, while a running consumer reads 1 per tick, so a consumer that was
- * paused or replayed catches up again.
- */
+/** Publish ticks (~0.6 events/tick vs 1 read/tick), so a lagging consumer catches up. */
 const PUBLISH_PATTERN = [1, 0, 1, 1, 0, 1, 0, 1, 0, 1] as const;
 
 export function initialBrokerState(

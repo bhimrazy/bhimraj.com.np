@@ -1,10 +1,6 @@
 /**
- * Timelines for the ride-pricing example in
- * `content/blog/event-driven-architecture.mdx`: A manages driver
- * availability, B manages ride demand, C prices a ride from both.
- *
- * Time is in "network hops" (one message = 1 unit, plus a little processing
- * between hops); it is illustrative, not measured.
+ * Timelines for the post's ride-pricing example (A: drivers, B: demand, C: price).
+ * Time is in illustrative "hops", not measured.
  */
 
 export interface Message {

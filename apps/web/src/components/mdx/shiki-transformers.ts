@@ -14,11 +14,7 @@ function parseTitle(meta: string | undefined): string | null {
   return match ? (match[1] ?? match[2] ?? null) : null;
 }
 
-/**
- * - Numbers every line (`data-line`, 1-based) so figures such as
- *   `<CodeWalkthrough>` can target lines with CSS.
- * - Wraps blocks that have a `title="…"` meta in a titled frame.
- */
+/** Adds 1-based `data-line` to every line and wraps `title="…"` blocks in a titled frame. */
 function transformerCodeFrame(): ShikiTransformer {
   return {
     name: "site:code-frame",
@@ -49,13 +45,7 @@ function transformerCodeFrame(): ShikiTransformer {
   };
 }
 
-/**
- * Shared by every code block on the site:
- * - ```` ```python {1,4-6} ```` highlights lines from the meta string,
- * - `# [!code highlight]`, `[!code focus]`, `[!code ++]` / `[!code --]`,
- *   `[!code error]` / `[!code warning]` comments work inside the code,
- * - ```` ```python title="unet.py" ```` adds a filename bar.
- */
+/** Every code block: `{1,4-6}` line highlights, `[!code …]` notations, `title="…"` filename bar. */
 export const codeTransformers: ShikiTransformer[] = [
   transformerMetaHighlight(),
   transformerNotationHighlight(),
