@@ -1,0 +1,103 @@
+---
+title: "Deploying a Vision-Language Model with LitServe: Qwen2-VL End to End"
+description: "A practical walkthrough of serving Alibaba's Qwen2-VL behind a production API with LitServe — request decoding, image handling, batching, streaming, and the multimodal gotchas that text-only tutorials skip."
+publishedAt: "2026-07-06"
+updatedAt: "2026-07-06"
+tags: ["LitServe", "Multimodal", "Qwen", "Model Serving", "Tutorial"]
+image: "/blog/qwen2-vl-litserve/cover.png"
+featured: false
+---
+
+> **DRAFT** — move to `apps/web/src/content/blog/` to publish. Code is adapted from my [chat-with-qwen2-vl](https://github.com/bhimrazy/chat-with-qwen2-vl) repo — re-verify against the current LitServe and transformers APIs before publishing, and update model/version pins to whatever is current.
+
+Text-only LLM serving tutorials are everywhere. Vision-language models are where they fall apart: suddenly your API has to accept images, preprocessing is heavier than tokenization, and payload sizes jump from kilobytes to megabytes. I maintain a set of LitServe deployment examples for VLMs — [Qwen2-VL](https://github.com/bhimrazy/chat-with-qwen2-vl), Llama 3.2 Vision, Phi-3 Vision — and this post walks through the Qwen2-VL one end to end, including the parts the happy path skips.
+
+## Why LitServe for this
+
+[LitServe](https://github.com/Lightning-AI/LitServe) (from Lightning AI — full disclosure, I'm a contributor) is a FastAPI-based serving engine where you implement one class with three methods — `decode_request`, `predict`, `encode_response` — and get batching, streaming, autoscaling workers, and GPU management for free. For VLMs this structure earns its keep: image decoding and preprocessing get a well-defined place (`decode_request`) that runs *outside* the GPU-bound `predict` path, instead of being smeared through a hand-rolled FastAPI route.
+
+Engines like vLLM will give you higher raw token throughput on pure LLM workloads; the LitServe sweet spot is when you need arbitrary Python around the model — multimodal IO, custom pre/post-processing, multiple models in one server — with an OpenAI-compatible API surface.
+
+## The model
+
+Qwen2-VL is Alibaba's open VLM family (2B/7B/72B), notable for *naive dynamic resolution* — it processes images at native resolution into a variable number of visual tokens instead of resizing everything to a fixed square, which is why it's strong at document parsing and dense text in images ([Wang et al., 2024, arXiv:2409.12191](https://arxiv.org/abs/2409.12191)). The 7B-Instruct variant fits in FP16/BF16 on a single 24 GB GPU for modest context.
+
+## The server, method by method
+
+```python
+import litserve as ls
+from transformers import Qwen2VLForConditionalGeneration, AutoProcessor
+from qwen_vl_utils import process_vision_info
+
+
+class Qwen2VLAPI(ls.LitAPI):
+    def setup(self, device):
+        model_id = "Qwen/Qwen2-VL-7B-Instruct"
+        self.model = Qwen2VLForConditionalGeneration.from_pretrained(
+            model_id, torch_dtype="auto", device_map=device
+        )
+        self.processor = AutoProcessor.from_pretrained(model_id)
+
+    def decode_request(self, request):
+        # OpenAI-style messages; images arrive as URLs or base64 data URIs
+        messages = request["messages"]
+        text = self.processor.apply_chat_template(
+            messages, tokenize=False, add_generation_prompt=True
+        )
+        image_inputs, video_inputs = process_vision_info(messages)
+        return self.processor(
+            text=[text], images=image_inputs, videos=video_inputs,
+            padding=True, return_tensors="pt",
+        ).to(self.model.device)
+
+    def predict(self, inputs):
+        generated = self.model.generate(**inputs, max_new_tokens=512)
+        trimmed = [
+            out[len(inp):] for inp, out in zip(inputs.input_ids, generated)
+        ]
+        return self.processor.batch_decode(
+            trimmed, skip_special_tokens=True,
+            clean_up_tokenization_spaces=False,
+        )[0]
+
+    def encode_response(self, output):
+        return {"role": "assistant", "content": output}
+
+
+if __name__ == "__main__":
+    server = ls.LitServer(Qwen2VLAPI(), accelerator="auto")
+    server.run(port=8000)
+```
+
+Three deliberate choices worth calling out:
+
+1. **`setup` loads once per worker.** Model load is the expensive part; LitServe calls it at startup, per device, so requests never pay it.
+2. **`decode_request` owns all multimodal parsing.** URL fetching, base64 decode, and pixel preprocessing happen here — keeping `predict` as pure GPU time, which matters once you enable batching (the framework can overlap decode of the next request with predict of the current one).
+3. **Trim the prompt from the output.** `generate` returns prompt + completion; forgetting to slice `input_ids` off is the most common VLM serving bug I see.
+
+## The gotchas text tutorials skip
+
+- **Payload size limits.** A phone photo is 3–8 MB; base64 inflates it ~33%. Raise your proxy's body limit (nginx `client_max_body_size`) or prefer image URLs, and validate/downscale absurd resolutions in `decode_request` — Qwen2-VL's dynamic resolution means a 4000×3000 image becomes a *lot* of visual tokens, blowing both latency and context.
+- **Batching multimodal inputs is uneven.** Two requests can have wildly different visual token counts, so batch latency is set by the heaviest image. Start with small `max_batch_size` (2–4) and measure; VLM batching pays off less than text-only intuition suggests.
+- **Streaming still matters.** Generation dominates end-to-end latency; LitServe supports streaming responses (`stream=True` on the server, yield from `predict`) and the perceived-latency win for chat UIs is large.
+- **Memory headroom.** Visual tokens land in the same KV cache as text; budget for images ≈ hundreds-to-thousands of extra tokens each. If you're new to why that's the constraint, see my KV cache post (draft #3 in this series).
+
+## Trying it
+
+The repo has a ready client and a one-click Lightning Studio:
+
+```bash
+git clone https://github.com/bhimrazy/chat-with-qwen2-vl && cd chat-with-qwen2-vl
+pip install -r requirements.txt
+python server.py   # LitServe API on :8000
+python client.py   # sends image + question
+```
+
+Or run it hosted: [Deploy & chat with Qwen2-VL on Lightning Studios](https://lightning.ai/bhimrajyadav/studios/deploy-and-chat-with-qwen2-vl-using-litserve).
+
+## References
+
+1. Wang et al., *Qwen2-VL: Enhancing Vision-Language Model's Perception of the World at Any Resolution*, 2024 — <https://arxiv.org/abs/2409.12191>
+2. LitServe — Lightning AI — <https://github.com/Lightning-AI/LitServe>
+3. chat-with-qwen2-vl (source for this post) — <https://github.com/bhimrazy/chat-with-qwen2-vl>
+4. Qwen2-VL model card — <https://huggingface.co/Qwen/Qwen2-VL-7B-Instruct>

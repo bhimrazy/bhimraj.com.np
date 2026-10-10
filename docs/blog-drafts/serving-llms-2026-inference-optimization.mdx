@@ -1,0 +1,86 @@
+---
+title: "Serving LLMs in 2026: A Field Guide to Inference Optimization"
+description: "Why inference is now the biggest line item in AI budgets — and a practical tour of the techniques that cut it: continuous batching, paged KV cache, quantization, speculative decoding, and disaggregated serving."
+publishedAt: "2026-07-06"
+updatedAt: "2026-07-06"
+tags: ["LLM", "Inference", "Model Serving", "LitServe", "vLLM", "AI Infrastructure"]
+image: "/blog/serving-llms-2026/cover.png"
+featured: true
+---
+
+> **DRAFT** — move to `apps/web/src/content/blog/` to publish. Needs a cover image at the path above.
+
+Training gets the headlines, but inference pays the bills. Once a model ships, every user request costs GPU time — and for most teams deploying LLMs in 2026, cumulative inference spend overtook training cost within months of launch. That's why "inference engineering" has quietly become one of the most in-demand skills in AI infrastructure.
+
+I contribute to [LitServe](https://github.com/Lightning-AI/LitServe) and have built serving examples for vision-language models like Qwen2-VL and Llama 3.2 Vision, so I spend a lot of time thinking about the gap between "the model runs" and "the model serves 200 concurrent users without melting the GPU budget." This post is the map I wish I'd had: the five techniques that matter, why they work, and when to reach for each.
+
+## Why LLM inference is different
+
+A transformer generates text in two phases with completely different performance profiles:
+
+- **Prefill** — the prompt is processed in one parallel pass. This is compute-bound: the GPU's matrix units are saturated.
+- **Decode** — tokens are generated one at a time, each step reading the entire model's weights plus the growing KV cache. This is memory-bandwidth-bound: the GPU spends most of its time waiting on memory, not computing.
+
+Almost every optimization below is an attack on one of these two bottlenecks.
+
+## 1. Continuous batching: the free 10×
+
+Naive serving processes one request at a time, or batches requests that arrive together and holds the batch until the *slowest* request finishes. Continuous batching (introduced by Orca) schedules at the *iteration* level instead: when one sequence finishes, a waiting request slots into the freed batch position immediately. Orca reported up to 36.9× throughput improvement over static batching at comparable latency ([Yu et al., OSDI 2022](https://www.usenix.org/conference/osdi22/presentation/yu)).
+
+Every serious serving framework — vLLM, SGLang, TensorRT-LLM, LitServe — implements some form of this. If your serving stack doesn't, that's your first fix, before touching quantization or hardware.
+
+## 2. Paged KV cache: stop wasting VRAM
+
+During decode, each sequence stores key/value tensors for every token seen so far. Pre-allocating contiguous memory for the *maximum possible* sequence length wastes enormous amounts of VRAM — the vLLM team measured 60–80% waste in existing systems. PagedAttention borrows virtual-memory paging from operating systems: the KV cache is stored in fixed-size blocks that don't need to be contiguous, cutting waste to under 4% and enabling 2–4× higher throughput at the same latency ([Kwon et al., SOSP 2023, arXiv:2309.06180](https://arxiv.org/abs/2309.06180)).
+
+Related, on the model side: grouped-query attention (GQA) shares key/value heads across query heads, shrinking the KV cache itself with minimal quality loss ([Ainslie et al., 2023, arXiv:2305.13245](https://arxiv.org/abs/2305.13245)). Nearly every open model you'd deploy in 2026 — Llama, Qwen, DeepSeek — ships with GQA, and the 2026 research frontier pushes further with hybrid attention/state-space designs (Mamba-style layers in Nemotron-3 and Qwen3.6) precisely to tame KV-cache growth on long, agentic contexts ([Raschka, LLM Research Papers: The 2026 List](https://magazine.sebastianraschka.com/p/llm-research-papers-2026-part1)).
+
+For multi-turn and agentic workloads, prefix caching matters just as much: SGLang's RadixAttention reuses KV cache across requests that share a prompt prefix (system prompts, few-shot examples, conversation history), which is most requests in an agent loop ([Zheng et al., arXiv:2312.07104](https://arxiv.org/abs/2312.07104)).
+
+## 3. Quantization: FP8 is the new default
+
+Decode is bandwidth-bound, so halving the bytes per weight roughly doubles the tokens per second you can pull through the same GPU. The 2026 hierarchy in practice:
+
+- **FP8** — the default on H100/B200-class hardware. Hardware-native since Hopper, with accuracy loss that is negligible for Llama/Qwen/DeepSeek-class models. The format itself was standardized across NVIDIA/Arm/Intel ([Micikevicius et al., 2022, arXiv:2209.05433](https://arxiv.org/abs/2209.05433)).
+- **INT4 weight-only (AWQ / GPTQ)** — for squeezing a model onto smaller GPUs. GPTQ quantizes 175B-scale models to 4 bits with minor perplexity impact ([Frantar et al., arXiv:2210.17323](https://arxiv.org/abs/2210.17323)); AWQ protects the ~1% of salient weight channels that matter most, and holds up better on instruction-tuned and multimodal models ([Lin et al., MLSys 2024, arXiv:2306.00978](https://arxiv.org/abs/2306.00978)).
+
+Rule of thumb: FP8 when you have the hardware and care about quality headroom; INT4 when VRAM is the binding constraint. Always re-run your evals after quantizing — aggregate benchmarks hide task-specific regressions.
+
+## 4. Speculative decoding: buying latency with compute
+
+Decode wastes most of the big model's compute — so let a small *draft* model propose several tokens cheaply, then have the big model verify them in a single parallel pass. Rejection sampling guarantees output identical in distribution to the big model alone; speedups of 2–3× are typical when the draft model agrees often ([Leviathan et al., 2022, arXiv:2211.17192](https://arxiv.org/abs/2211.17192); [Chen et al., 2023, arXiv:2302.01318](https://arxiv.org/abs/2302.01318)).
+
+This is the tool for tight time-to-first-token and per-user latency SLAs — a chat product, an IDE assistant. It's *not* a throughput tool: the draft model consumes compute you could have spent on more batched requests.
+
+## 5. Disaggregated serving: prefill and decode on separate pools
+
+The 2026 architecture trend: since prefill is compute-bound and decode is bandwidth-bound, run them on *separate GPU pools* sized independently, and ship the KV cache from prefill workers to decode workers over fast interconnect. This is the core design of NVIDIA Dynamo and the Kubernetes-native [llm-d](https://llm-d.ai/blog) project, whose recent posts detail exactly the hard parts: KV-cache transfer cost dominating time-to-first-token, cache-aware routing, and tiered KV offload to CPU and filesystem.
+
+You don't need this for a single-node deployment. You do need to understand it the moment you're running many replicas and your p99 is dominated by long-prompt requests stalling short ones.
+
+## A decision checklist
+
+| Symptom | Reach for |
+|---|---|
+| GPU busy but throughput low | Continuous batching, paged KV cache |
+| VRAM full before compute is | Quantization (FP8 → INT4), GQA models |
+| p50 latency too high for one user | Speculative decoding |
+| Repeated system prompts / agent loops | Prefix caching (RadixAttention) |
+| Multi-replica, mixed workloads, bad p99 | Disaggregated prefill/decode, smart routing |
+
+Start with the serving framework defaults (vLLM or SGLang give you #1, #2, and prefix caching for free; LitServe if you need arbitrary Python around the model — preprocessing, multimodal IO, custom batching). Add quantization once evals are in place. Reach for speculative decoding and disaggregation only when a measured SLA forces you to.
+
+## References
+
+1. Yu et al., *Orca: A Distributed Serving System for Transformer-Based Generative Models*, OSDI 2022 — <https://www.usenix.org/conference/osdi22/presentation/yu>
+2. Kwon et al., *Efficient Memory Management for LLM Serving with PagedAttention*, SOSP 2023 — <https://arxiv.org/abs/2309.06180>
+3. Ainslie et al., *GQA: Training Generalized Multi-Query Transformer Models*, 2023 — <https://arxiv.org/abs/2305.13245>
+4. Zheng et al., *SGLang: Efficient Execution of Structured Language Model Programs*, 2023 — <https://arxiv.org/abs/2312.07104>
+5. Micikevicius et al., *FP8 Formats for Deep Learning*, 2022 — <https://arxiv.org/abs/2209.05433>
+6. Frantar et al., *GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers*, 2022 — <https://arxiv.org/abs/2210.17323>
+7. Lin et al., *AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration*, MLSys 2024 — <https://arxiv.org/abs/2306.00978>
+8. Leviathan et al., *Fast Inference from Transformers via Speculative Decoding*, 2022 — <https://arxiv.org/abs/2211.17192>
+9. Chen et al., *Accelerating Large Language Model Decoding with Speculative Sampling*, 2023 — <https://arxiv.org/abs/2302.01318>
+10. llm-d project blog — distributed inference, KV transfer, disaggregation — <https://llm-d.ai/blog>
+11. Raschka, *LLM Research Papers: The 2026 List (January to May)* — <https://magazine.sebastianraschka.com/p/llm-research-papers-2026-part1>
+12. LitServe — <https://github.com/Lightning-AI/LitServe>

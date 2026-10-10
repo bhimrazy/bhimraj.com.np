@@ -1,0 +1,161 @@
+---
+title: "From Autocomplete to Agents: The Rise of LLMs and the Dawn of the Agentic Era"
+description: "How language models went from finishing our sentences to finishing our tasks — a story of scaling laws, emergent abilities, tool use, and the agentic loop that is quietly rewriting how software gets built."
+publishedAt: "2026-07-06"
+updatedAt: "2026-07-06"
+tags:
+  [
+    llm,
+    large-language-models,
+    ai-agents,
+    agentic-ai,
+    transformers,
+    tool-use,
+    mcp,
+    rag,
+    ai-engineering,
+  ]
+image: "/blog/agentic-era/rise-of-llms-and-the-agentic-era.png"
+featured: true
+---
+
+In 2019, the most impressive thing a language model did for me was finish my sentences in Gmail. It was a party trick — useful, forgettable, and about as far from "intelligence" as a calculator.
+
+Seven years later, I routinely describe a feature in a paragraph of plain English, walk away to make tea, and come back to a branch with passing tests. The model didn't just *suggest* code. It read the codebase, formed a plan, edited files, ran the test suite, read the failures, and fixed them — in a loop, without me.
+
+Something fundamental changed between those two moments. This post is the story of that change: how large language models rose from statistical parrots to capable collaborators, and why the shift we're living through now — the **agentic era** — is less about smarter models and more about a deceptively simple idea: *put the model in a loop and give it tools.*
+
+## Act I: The Quiet Years — Attention Was All We Needed
+
+For decades, getting a computer to handle language meant hand-crafted pipelines: tokenizers, parsers, part-of-speech taggers, task-specific models stitched together with duct tape and grad-student tears. Every task — translation, summarization, sentiment — got its own bespoke system.
+
+Then in 2017, a Google paper with a cheeky title — *"Attention Is All You Need"* — introduced the **Transformer**. Its core trick, self-attention, let a model weigh every token against every other token in a sequence, in parallel. No recurrence, no fragile long-distance memory. Just attention, stacked deep.
+
+The Transformer had two properties that turned out to matter more than its benchmark scores:
+
+1. **It parallelized beautifully.** Unlike RNNs, you could throw an entire GPU cluster at it and it would happily eat everything.
+2. **It scaled predictably.** More data, more parameters, more compute — loss went down, on a smooth power-law curve.
+
+That second property became the **scaling laws** (Kaplan et al., 2020; refined by DeepMind's Chinchilla work in 2022), and it quietly changed the economics of the field. For the first time, you could plot a line and *predict* how much better a model would get before spending millions training it. AI research turned into an engineering discipline with a budget curve.
+
+But the scaling laws hid a surprise the curves didn't show.
+
+### The surprise: emergence
+
+As models grew — GPT-2 at 1.5B parameters, GPT-3 at 175B — they started doing things nobody explicitly trained them to do. Give GPT-3 a few examples of a task *in the prompt* and it would pick up the pattern and continue it. Translation, arithmetic, code completion — abilities that simply *appeared* past certain scale thresholds.
+
+This was **in-context learning**, and it broke the old mental model. You no longer trained a model per task. You had one giant model, and the task lived in the prompt. The prompt became the program.
+
+> The model stopped being the product. The *conversation* with the model became the product.
+
+## Act II: The ChatGPT Moment — Everyone Meets the Machine
+
+Raw GPT-3 was powerful but feral. It completed text; it didn't *help* you. Ask it a question and it might respond with three more questions, because that's what internet text looks like.
+
+Two techniques tamed it:
+
+- **Instruction tuning** — fine-tuning on examples of instructions paired with good responses, teaching the model that a question deserves an answer.
+- **RLHF** (reinforcement learning from human feedback) — humans rank model outputs, a reward model learns those preferences, and the LLM is optimized against it. Alignment, at scale, by vibes.
+
+In November 2022, OpenAI wrapped this recipe in a chat box and shipped ChatGPT. A hundred million users in two months. My non-technical friends were suddenly asking me about "prompts." The demo *was* the product, and the product was a conversation.
+
+The years that followed were the **chatbot era**, and its story was a story of stretching limits:
+
+- **Context windows** exploded — from 4K tokens to 100K to over a million. Entire codebases and books fit in a single prompt.
+- **[RAG (retrieval-augmented generation)](/blog/rag-vs-fine-tuning-vs-agents)** became the standard answer to "the model doesn't know my data": embed your documents, retrieve the relevant chunks, stuff them into the prompt. Half the AI startups of 2023 were, structurally, this.
+- **Open-weight models** — LLaMA, Mistral, Qwen — put GPT-3.5-class (and later far better) capability on consumer hardware, and an entire ecosystem of fine-tuning, quantization, and local inference bloomed around them.
+- **Reasoning models** arrived in 2024–2025: models trained to spend more tokens *thinking* before answering, trading inference-time compute for reliability on hard problems. A second scaling axis, discovered years after the first.
+
+And yet — for all of it, the chatbot had a ceiling. It could tell you *how* to fix your bug. It could not fix your bug. The model was a brain in a jar: brilliant, and unable to touch anything.
+
+## Act III: Hands for the Brain — Tool Use Changes Everything
+
+The unlock was almost embarrassingly simple. Instead of asking the model for an *answer*, you ask it for an *action*:
+
+> "Here are the tools you can use: `search_web(query)`, `run_code(source)`, `read_file(path)`. Reply with a tool call, and I'll execute it and show you the result."
+
+The model emits structured output — a function name and arguments. Your code executes it. The result goes back into the context. The model reads it and decides what to do next.
+
+That's it. That's the whole trick. **Function calling** shipped in mid-2023, and it converted the LLM from an oracle into an operator. The model could now query databases, hit APIs, browse the web, run code — anything you could wrap in a function signature.
+
+And once a model can act, the obvious next question is: *what if we let it keep acting?*
+
+## The Agentic Loop
+
+Strip away the hype, and an AI agent is about fifteen lines of pseudocode:
+
+```python
+def agent(task: str, tools: list[Tool]) -> str:
+    context = [task]
+    while True:
+        action = llm(context, tools)     # model decides what to do next
+
+        if action.is_final_answer:
+            return action.content        # done — report back
+
+        result = execute(action.tool, action.args)  # do the thing
+        context.append(action)           # remember what it tried
+        context.append(result)           # ...and what happened
+```
+
+An LLM, a set of tools, and a loop. The model proposes an action, the harness executes it, the observation feeds back in, and the model — seeing the *consequences* of its own decisions — course-corrects and continues until the job is done.
+
+What makes this loop powerful isn't any single step. It's the feedback. A chatbot that writes buggy code just hands you buggy code. An agent that writes buggy code *runs the tests, reads the stack trace, and fixes it* — the same way you would. The loop converts a fallible one-shot predictor into a system that recovers from its own mistakes.
+
+The pattern had been circling academia for a while — ReAct (2022) formalized the reason-act-observe cycle — but for two years the models were too weak to survive it. Early 2023 experiments like AutoGPT were gloriously chaotic: agents that burned $40 of API credits planning a grocery list, then forgot what they were doing. The loop amplifies whatever you put in it, including incompetence.
+
+What changed wasn't the loop. It was the models growing reliable enough that errors stopped compounding faster than the agent could correct them. Somewhere in 2024–2025, that curve crossed the threshold — and everything downstream of it caught fire at once.
+
+## Welcome to the Agentic Era
+
+Look at what shipped once the loop started working:
+
+**Coding agents came first**, because software is the perfect habitat: the tools are mature (compilers, tests, linters, git), the feedback is instant, and success is checkable. Claude Code, Cursor, Devin, Copilot's agent mode — by 2025, "I let the agent take a pass at it first" went from confession to standard workflow. Coding agents are to this era what chat was to 2023: the interface everyone copies.
+
+**Protocols emerged**, which is how you know a technology is maturing. The **Model Context Protocol (MCP)**, open-sourced by Anthropic in late 2024, standardized how models discover and call tools — a USB-C port for AI, replacing the N×M mess of custom integrations. Slack, GitHub, Postgres, your internal admin panel: wrap it in an MCP server once, and every agent can use it.
+
+**Agents got hands and eyes.** Computer-use models operate real GUIs — screenshots in, mouse and keyboard actions out. Deep-research agents browse for twenty minutes and return cited reports. The boundary of "what can be automated" moved from *things with an API* to *things with a screen*.
+
+**Agents started managing agents.** An orchestrator decomposes the task, fans out to specialized sub-agents — one searching, one writing, one reviewing — and integrates the results. Compute is shifting from *answering* to *orchestrating*.
+
+The through-line: we stopped asking "what does the model know?" and started asking "what can the model *do* — and how well does it recover when it's wrong?"
+
+## What Still Breaks (a.k.a. Why You Still Have a Job)
+
+I serve and deploy these models as part of my open-source work, and I promise you the agentic era is not a solved problem. The honest list:
+
+**Reliability compounds badly.** An agent that's 95% reliable per step is ~36% reliable across twenty steps. Long-horizon tasks remain the frontier, and every serious agent product is secretly an error-recovery product. The engineering that matters — checkpointing, verification steps, knowing when to ask a human — lives in the harness, not the model.
+
+**Security is genuinely scary.** An agent that reads untrusted content (a web page, an email, an issue comment) can be *prompt-injected* — instructions hidden in data. Combine private data access, untrusted content, and the ability to act, and you have what security researchers call the lethal trifecta. There is no clean fix yet; there is only sandboxing, least privilege, and human approval on dangerous actions.
+
+**Evaluation is the bottleneck.** Chatbot quality was vibes; agent quality is *outcomes*, and outcomes are expensive to measure. The teams shipping reliable agents are the ones treating evals like a first-class product — building task suites and regression-testing behavior the way we regression-test code.
+
+**Cost and latency are architecture now.** An agentic task can burn hundreds of model calls. Caching, model routing (small models for easy steps, frontier models for hard ones), and [serving efficiency](/blog/llm-serving-in-production) stopped being optimizations and became the difference between a product and a demo.
+
+None of these are reasons for cynicism. They're the job description. Every platform shift lands like this — the capability arrives before the reliability, and the decade of engineering that follows is where the actual value gets built. The web had a decade of this. So will agents.
+
+## What This Means If You Build Software
+
+A few convictions I've formed watching this unfold from the trenches:
+
+1. **The skill is shifting from writing code to specifying and verifying it.** The engineers thriving with agents are the ones who write precise specs, decompose problems cleanly, and review ruthlessly. That was always the senior-engineer skill set; agents just made it the *whole* skill set.
+
+2. **[Context engineering](/blog/context-engineering-guide) beats prompt engineering.** The craft is no longer magic words. It's deciding what the model sees: which files, which docs, which tools, which memory persists across sessions. An agent's performance is mostly a function of its information diet.
+
+3. **Build for agents as users.** Your APIs, your docs, your error messages — agents consume them now. A clear error message is no longer developer courtesy; it's what lets the loop self-correct instead of spiral. The `llms.txt` files and MCP servers appearing everywhere are early signs of software being redesigned for machine operators.
+
+4. **The loop is the product.** Models are increasingly interchangeable commodities behind an API. The durable engineering lives in the harness: the tools, the guardrails, the evals, the recovery logic. If you're building in this space, that's where your moat is.
+
+## The Era That's Just Beginning
+
+Here's the framing I keep coming back to.
+
+The rise of LLMs — 2017 to 2022 — was the story of a *capability*: machines learned language, and with it, a compressed image of human knowledge. The chatbot era — 2023 onward — was the story of an *interface*: we learned to talk to that capability.
+
+The agentic era is the story of *delegation*. For the first time, we hand software a goal instead of instructions and expect it to figure out the steps. That's not a bigger autocomplete. That's a different relationship with computers — one where the unit of work is not the keystroke or the function call, but the outcome.
+
+The autocomplete finished my sentences. The agents are starting to finish my tasks. What they'll finish next is the most interesting open question in software — and for once, we won't have to wait long for the answer.
+
+---
+
+*If you're exploring this space, the best way in is embarrassingly direct: take a real task from your week, give an agent the tools it needs, and watch where the loop breaks. The gap between the demo and your workload is where all the interesting engineering lives.*

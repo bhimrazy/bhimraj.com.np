@@ -138,6 +138,38 @@
   }
 }
 
+/*
+ * Smooth expand/collapse for native <details> expanders.
+ * Uses ::details-content + interpolate-size to animate to `auto` height
+ * (Chromium 131+ / Safari 26+); unsupported browsers just snap open, which
+ * is the same behavior as before. `allow-discrete` keeps content visible
+ * (and clickable links focusable) until the close transition finishes.
+ */
+@utility details-animated {
+  interpolate-size: allow-keywords;
+
+  &::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    opacity: 0;
+    transition:
+      block-size 300ms ease,
+      opacity 250ms ease,
+      content-visibility 300ms allow-discrete;
+  }
+
+  &[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::details-content {
+      transition: none;
+    }
+  }
+}
+
 @layer base {
   *,
   ::after,

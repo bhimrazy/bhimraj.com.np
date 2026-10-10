@@ -1,0 +1,93 @@
+---
+title: "RAG vs Fine-Tuning vs Agents: How to Actually Choose in 2026"
+description: "Stop asking which technique is better. RAG, fine-tuning, and agentic retrieval solve different problems — knowledge, behavior, and process. A decision framework with real failure modes, costs, and the hybrid patterns that win in production."
+publishedAt: "2026-07-06"
+updatedAt: "2026-07-06"
+tags:
+  [
+    rag,
+    fine-tuning,
+    retrieval-augmented-generation,
+    lora,
+    ai-agents,
+    llm,
+    embeddings,
+    ai-engineering,
+  ]
+image: "/blog/rag-vs-fine-tuning/rag-vs-fine-tuning-vs-agents.png"
+---
+
+Every few weeks someone asks me a version of the same question: *"Should we use RAG or fine-tune a model?"* And every time, the honest answer is that the question is malformed — like asking whether your app needs a database or a config file. They're not competitors. They solve different problems, fail in different ways, and in most serious systems, coexist.
+
+Here's the framework I actually use, with the failure modes the blog posts skip.
+
+## The one-sentence versions
+
+- **RAG** changes *what the model knows* — at request time, by retrieving relevant documents into the context window.
+- **Fine-tuning** changes *how the model behaves* — permanently, by updating weights on your examples.
+- **Agents** change *how the model works* — by letting it take multiple steps, use tools, and find information itself.
+
+The single most useful heuristic:
+
+> **Knowledge problems → RAG. Behavior problems → fine-tuning. Process problems → agents.**
+
+If the model gives well-formed answers that are factually wrong or outdated, that's a knowledge problem. If it knows the facts but answers in the wrong style, format, or tone — behavior. If the task needs many steps, lookups, or decisions that depend on intermediate results — process.
+
+Now the honest details.
+
+## RAG: the default, for good reasons
+
+Retrieval-augmented generation is where nearly every production system should start, because it has properties nothing else offers:
+
+- **Freshness for free.** Update the document store; the next query sees it. No retraining.
+- **Traceability.** The model can cite what it retrieved. When it's wrong, you inspect the retrieved chunks and know *why* — a debugging property fine-tuning fundamentally lacks.
+- **Access control.** Retrieval respects per-user permissions. You cannot make a fine-tuned model forget something for *some* users — weights don't do row-level security.
+- **Cheap iteration.** The pipeline is software: chunking, embedding, indexing, ranking. Every piece can be measured and improved independently.
+
+### Where RAG actually fails
+
+The demos hide these; production doesn't:
+
+1. **Retrieval quality is the whole ballgame.** The generator is rarely the weak link — the retriever is. Garbage chunks in, confident garbage out. Hybrid search (semantic + BM25 keyword) plus a reranker is the boring, correct baseline; exact identifiers, SKUs, and error codes will humiliate pure vector search.
+2. **Chunking decides your ceiling.** Split a table from its header or a clause from its condition and no downstream cleverness recovers the meaning. Structure-aware chunking (respect headings, keep tables whole) matters more than embedding model choice.
+3. **RAG can't synthesize what it can't retrieve.** "Summarize the themes across all 500 contracts" isn't a top-k problem. Aggregation questions need a different design — pre-computed summaries, or an agent that iterates.
+4. **Stale indexes lie confidently.** The failure mode of a neglected RAG system isn't "I don't know" — it's fluent answers from last year's documents.
+
+## Fine-tuning: powerful, misunderstood, oversold
+
+First, the correction that saves people the most money: **fine-tuning is a poor way to inject knowledge.** Facts learned via fine-tuning are compressed into weights — unattributable, unevictable, and prone to blending with what the base model already believed (hello, hallucination). If your goal is "make the model know our docs," you almost certainly want RAG.
+
+What fine-tuning is *genuinely* excellent at:
+
+- **Format and style compliance.** Output that must always match a schema, a voice, a house style — a few thousand examples beat a thousand-token prompt of instructions, forever.
+- **Narrow-domain fluency.** Teaching the *dialect* of your domain — medical coding, legal citations, your proprietary DSL — where the base model is generically capable but unidiomatic.
+- **Distillation: the killer economic use case.** Use a frontier model to generate excellent outputs for your specific task, fine-tune a small open model on them, serve at 10–50× lower cost and latency. This is the pattern that quietly powers most "we replaced GPT-x with our own model" stories.
+- **Shrinking prompts.** Behavior baked into weights doesn't need re-explaining on every call. At high volume, that's real money.
+
+### Where fine-tuning bites
+
+- **It's a snapshot.** The world moves; your weights don't. Anything time-sensitive baked in is already decaying.
+- **Evaluation debt.** You now own a model. Every future change needs regression testing against *your* eval suite — which means you need one. Teams consistently underestimate this and overestimate the GPU cost (LoRA/QLoRA made the compute cheap; the *process* is what's expensive).
+- **Catastrophic forgetting.** Tune hard on your narrow task and general capability quietly erodes. You won't notice until an off-distribution input hits production.
+
+## Agents: retrieval grows a brain
+
+The newest option reframes the problem: instead of *you* deciding what context the model needs (RAG's job), give the model search tools and let it find out. This is **agentic retrieval**, and it's eating static RAG from the top end. See [the agentic loop](/blog/rise-of-llms-and-the-agentic-era) for the mechanics — the short version is: model proposes a search, reads results, refines, repeats.
+
+Why it wins on hard questions: multi-hop queries ("Which of our customers renewed after the pricing change *and* filed a support ticket about it?") are a sequence of lookups where each depends on the last. No single retrieval pass answers that; a loop does.
+
+Why it doesn't replace RAG: **cost and latency are brutal.** Agentic retrieval means many model calls per question — seconds to minutes, not milliseconds. For high-volume, straightforward queries, static RAG remains an order of magnitude cheaper. And agents amplify retrieval failures: a bad search result doesn't just produce a bad answer, it steers the next three steps.
+
+## The decision framework
+
+Questions in order; stop at the first yes:
+
+1. **Does the base model with a good prompt already do it?** Ship that. (This step is skipped disturbingly often.)
+2. **Is it failing on facts it couldn't know — your data, recent events?** → RAG.
+3. **Is it failing on multi-step questions, or does retrieval need iteration?** → Add agentic search on top of your indexes.
+4. **Is it failing on format, tone, or domain dialect — with the facts right?** → Fine-tune (LoRA first).
+5. **Is it succeeding but too expensive or slow at volume?** → Distill onto a smaller model.
+
+And the pattern that production systems converge on isn't any single answer — it's the stack: **a prompt that sets behavior, RAG for live knowledge, agentic retrieval for the hard tail of queries, and (once volume justifies it) a fine-tuned small model to cut serving costs.** The canonical sequence: *prompt → RAG → fine-tune → distill.* Each stage is only justified when the previous one measurably fails — which means the real prerequisite for all of this is an eval set that can tell you *what kind* of failure you're looking at.
+
+That's the unglamorous punchline. The teams that choose well aren't the ones with strong opinions about techniques. They're the ones who can look at a hundred failures and say: these forty are retrieval misses, these thirty are formatting, these twenty need multi-step reasoning, and these ten are the model just being dumb. Classify your failures, and the RAG-vs-fine-tuning debate mostly answers itself.

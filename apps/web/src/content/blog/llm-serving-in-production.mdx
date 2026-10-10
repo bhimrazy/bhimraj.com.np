@@ -1,0 +1,96 @@
+---
+title: "LLM Serving in Production: What Actually Matters (From Someone Who Builds Serving Tools)"
+description: "Continuous batching, KV cache, quantization, speculative decoding — a practical tour of how LLM inference really works in production, why GPUs sit idle while your bill grows, and how to think about the serving stack in 2026."
+publishedAt: "2026-07-06"
+updatedAt: "2026-07-06"
+tags:
+  [
+    llm-serving,
+    llm-inference,
+    vllm,
+    litserve,
+    kv-cache,
+    continuous-batching,
+    quantization,
+    gpu,
+    mlops,
+    ai-engineering,
+  ]
+image: "/blog/llm-serving/llm-serving-in-production.png"
+---
+
+There's a moment every team hits after their AI feature takes off: the first serious GPU bill arrives, someone opens a dashboard, and discovers the expensive hardware is idle most of the time — while users complain about latency.
+
+That paradox — *idle GPUs and slow responses, simultaneously* — is the defining puzzle of LLM serving, and understanding it is the closest thing this field has to a superpower. I work on serving infrastructure in open source ([LitServe](https://github.com/Lightning-AI/LitServe), part of the Lightning AI ecosystem), and this post is the mental model I wish everyone had before their first production deployment.
+
+## The two-phase secret of LLM inference
+
+Everything starts from one fact: generating text has two radically different phases.
+
+**Prefill** — the model processes your entire prompt in one parallel pass. This is compute-bound: thousands of tokens crunched at once, GPU compute units saturated, matrix multiplies flying. GPUs love this.
+
+**Decode** — the model generates output *one token at a time*. Each new token requires reading the entire model's weights from GPU memory... to produce a few kilobytes of math. This is **memory-bandwidth-bound**: the compute units spend most of their time waiting for weights to stream in. Generating token 500 requires the same full-weight read as token 1.
+
+This is why your GPU is "idle while busy." During decode — which dominates most workloads — utilization of the *compute* is a fraction of capacity, because the bottleneck is the memory bus. A single request generating a long response uses maybe 2–5% of what the GPU could theoretically do.
+
+The entire modern serving stack is a series of increasingly clever answers to one question: *how do we stop wasting the other 95%?*
+
+## Answer #1: Batching — but the naive version fails
+
+If one decode step wastes the GPU, run many requests' decode steps together: the weights are read from memory *once* per step and applied to every sequence in the batch. Batch 32 requests and you've nearly 32×'d your throughput for almost free.
+
+The catch: classic *static* batching waits to collect a batch, runs it to completion, then starts the next. LLM responses have wildly different lengths — one request generates 10 tokens, its batchmate generates 2,000. Everyone waits for the longest. Utilization craters again, plus latency spikes.
+
+The fix that made modern serving possible is **continuous batching** (also called in-flight batching): the batch is rebuilt *every decode step*. A finished request exits immediately; a queued request joins immediately. The GPU always chews on a full batch, no one waits for a stranger's essay. This one idea is most of the difference between naive PyTorch serving and vLLM-class engines — think order-of-magnitude throughput.
+
+## Answer #2: The KV cache — where your VRAM actually goes
+
+Attention requires each new token to look at the keys and values of every previous token. Recomputing those every step would be quadratic madness, so engines cache them — the **KV cache**. That cache is the hidden protagonist of serving:
+
+- It grows linearly with every token in every active sequence.
+- For a 70B-class model, a single long conversation's cache can run into **gigabytes**.
+- Your maximum batch size — and therefore your throughput — is usually capped not by compute but by *how many KV caches fit in VRAM*.
+
+Early engines allocated each request's maximum possible cache up front — like a hotel that charges you for a month because you *might* stay that long. Most of it was reserved but never used; memory "full," GPU starving. **PagedAttention** (vLLM's founding idea, 2023) applied virtual-memory thinking: split the cache into small pages, allocate on demand, share identical pages between requests. Waste dropped from ~60–80% to near zero, batches got dramatically bigger, and every serious engine adopted some variant of it.
+
+The practical corollary everyone eventually learns: **long contexts are a memory tax on every single decode step.** That 100K-token context you stuffed with "just in case" documents isn't just slower to prefill — it occupies VRAM that could have hosted ten other requests, for the entire duration of generation. [Context engineering](/blog/context-engineering-guide) isn't just quality hygiene; it's directly a serving-cost lever.
+
+Related and just as impactful: **prefix caching.** If many requests share a long common prefix — a system prompt, a document, an agent's tool definitions — the engine can compute that prefix's KV cache once and reuse it. Agentic workloads, which resend a growing transcript on every loop iteration, live or die by this.
+
+## Answer #3: Make the model smaller or the steps fewer
+
+**Quantization** — store weights in fewer bits (FP8, INT4 via AWQ/GPTQ, etc.). In a memory-bandwidth-bound world, halving the bytes per weight isn't just a memory saving — it nearly *doubles decode speed*, because the bottleneck is streaming those bytes. Modern 4–8 bit quantization typically costs low single-digit percentage points of quality; for most products that trade is a no-brainer, but run your own evals — quantization hits some capabilities (math, long-tail knowledge) harder than others.
+
+**Speculative decoding** — a small "draft" model proposes several tokens; the big model verifies them in one parallel pass (verification is cheap — it's prefill-shaped!). Accepted tokens ship; rejected ones fall back to normal decoding. Output is *provably identical* to the big model alone, but 2–3× faster when the draft model guesses well. Free lunch, paid for in engineering complexity.
+
+## The metrics that matter (and the trade-off nobody escapes)
+
+Four numbers describe any serving deployment:
+
+| Metric | What it is | Who cares |
+|---|---|---|
+| **TTFT** | Time to first token | Users staring at a blank screen |
+| **TPOT / ITL** | Time per output token after the first | Users watching text stream |
+| **Throughput** | Total tokens/sec across all requests | Your finance team |
+| **Goodput** | Throughput *that meets your latency SLO* | The only honest number |
+
+The fundamental tension: **throughput and latency fight.** Bigger batches → more tokens/sec → each individual token waits longer. Any benchmark that quotes throughput without a latency constraint is marketing. Decide your SLO first (e.g., "TTFT < 1s, ≥ 30 tok/s per user"), then maximize throughput *under* it — that's goodput, and it's the number to put on the dashboard.
+
+One more production reality the benchmarks hide: **prefill and decode interfere.** A new request's heavy prefill can stall every streaming user's next token. Engines mitigate with chunked prefill (slice the prompt into pieces interleaved with decode steps) or, at large scale, *disaggregation* — separate GPU pools for prefill and decode, connected by a KV-cache transfer. That's what the big API providers run.
+
+## So what should *you* actually run?
+
+The 2026 decision tree, compressed:
+
+1. **Most teams should not self-host.** If your volume is modest or spiky, per-token APIs win on cost and always win on operational burden. Self-hosting starts making sense with sustained volume, strict data requirements, or fine-tuned/custom models.
+2. **Self-hosting an open-weight LLM?** Use a dedicated inference engine — **vLLM** (the default), **SGLang** (excellent, especially for structured output and agentic patterns), or **TensorRT-LLM** (peak NVIDIA performance, more lock-in). Never raw `transformers` in a web framework — you'd be leaving the entire contents of this post on the table.
+3. **Serving anything else — or composing models into a product?** Real products are rarely one LLM: there's an embedder, a reranker, a vision model, business logic, streaming, auth. That composition layer is where a serving *framework* earns its keep — it's exactly the gap LitServe exists to fill (GPU autoscaling, batching, streaming for arbitrary Python/PyTorch, with engines like vLLM slotting in underneath for the LLM piece).
+4. **Whatever you choose, load-test with *your* traffic shape.** Short-prompt/long-output chat workloads and long-prompt/short-output RAG workloads have opposite bottlenecks (decode-bound vs prefill-bound). A config tuned for one is mis-tuned for the other — and agentic traffic, with its huge shared prefixes and bursty loops, is a third shape entirely.
+
+## The bigger picture
+
+Serving used to be the afterthought — the "deployment" chapter at the end of the ML book. The agentic era inverted that: when a single user task fans out into hundreds of model calls, inference efficiency stops being an infrastructure detail and becomes product economics. Speed is a feature; cost-per-task decides what's viable to build at all.
+
+The teams shipping durable AI products in 2026 treat the serving stack the way great backend teams treat databases: not a black box, but a system whose physics — prefill vs decode, memory bandwidth, KV cache pressure — they actually understand. That understanding is maybe two afternoons of learning.
+
+This post was the first afternoon. Go run a load test for the second.

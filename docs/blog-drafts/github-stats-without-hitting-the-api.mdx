@@ -1,0 +1,72 @@
+---
+title: "Live-ish GitHub Stats on a Static Site: The Snapshot Pattern"
+description: "My portfolio shows PR counts, star history, and contribution graphs — without a single GitHub API call at build or request time. Here's the snapshot-and-sync architecture, and why it beats both live fetching and hardcoding."
+publishedAt: "2026-07-06"
+updatedAt: "2026-07-06"
+tags: ["Next.js", "GitHub API", "Architecture", "Static Sites", "TypeScript"]
+image: "/blog/github-snapshot/cover.png"
+featured: false
+---
+
+> **DRAFT** — move to `apps/web/src/content/blog/` to publish. This one is about *this site's* own architecture — add a screenshot of the OSS page and the sync PR for flavor.
+
+Every developer portfolio wants to show GitHub activity — stars, merged PRs, contribution graphs. There are two obvious ways to do it, and both are bad:
+
+1. **Fetch live at request/build time.** Now your site's uptime depends on GitHub's API, you're managing tokens in your hosting provider, rate limits bite during traffic spikes, and unauthenticated requests cap at 60/hour.
+2. **Hardcode the numbers.** They're stale the day after you write them, and updating them is manual toil you *will* stop doing.
+
+This site uses a third pattern I'd recommend for any "external data that changes slowly" problem: **snapshot the data into the repo, and let CI keep it fresh.**
+
+## The architecture
+
+Three pieces, all in a small workspace package (`packages/github`):
+
+**1. Fetchers + a sync command.** A `sync` script hits the GitHub GraphQL/REST APIs once — merged PRs per repo, star counts, star history, contribution totals — and writes everything to a single committed `data/snapshot.json`. It's the *only* code that ever talks to GitHub, and the only place a token is needed. The fetch targets live in one config file:
+
+```ts
+const lightningRepos = [
+  "litdata", "LitServe", "litgpt", "pytorch-lightning", /* … */
+].map((repo) => `Lightning-AI/${repo}`);
+
+export const githubConfig = {
+  username: "bhimrazy",
+  ossRepos: [...lightningRepos, "ekzhu/datasketch", "bhimrazy/receipt-ocr"],
+  featuredRepo: "bhimrazy/receipt-ocr",
+  ossStartYear: 2024,
+} as const;
+```
+
+**2. Pure accessors.** The web app never parses the snapshot ad hoc. It imports typed functions — `getOSSStats()`, `getGitHubStars()`, `getLightningAIEcosystemStats()` — that read the committed JSON synchronously. Pages stay server components, builds are hermetic and fast, and `next build` works offline with zero env vars.
+
+**3. A daily GitHub Action.** A scheduled workflow reruns `sync` and — only if the data actually changed — opens a PR with the refreshed snapshot. Merging is a one-click review; the git history doubles as a time series of my stats for free.
+
+```
+GitHub APIs ──(daily Action + token)──▶ snapshot.json ──(commit/PR)──▶ repo
+                                             │
+             Next.js build ◀── typed accessors (no network, no token)
+```
+
+## Why this beats the alternatives
+
+- **Reliability:** the site literally cannot go down because of GitHub. The failure mode of a broken sync is *slightly stale data plus a red CI run*, not a broken page.
+- **Reviewability:** data changes arrive as diffs in a PR. When GitHub's API returns something weird (deprecated fields, a renamed repo), you see it in review, not in production.
+- **Type safety end to end:** the snapshot is validated with Zod schemas at sync time, so the accessors can be plain typed reads. Bad data fails the sync job, never the build.
+- **Free history:** every merged sync PR is a dated snapshot. The star-history chart on my OSS page needs no extra storage — the data model just accretes.
+
+The same pattern fits anything slow-changing and external: npm download counts, publication lists from ORCID, Strava totals, RSS-sourced "appearances" pages. The rule of thumb: **if the data changes slower than you deploy, it belongs in the repo, not behind a runtime fetch.**
+
+## Trade-offs, honestly
+
+- Freshness is bounded by sync cadence (daily here). Fine for stats; wrong for anything real-time.
+- The snapshot file lives in git — keep it scoped (mine stays well under a megabyte) or move to LFS/artifact storage.
+- Auto-merge vs. manual review of sync PRs is a judgment call; I keep review manual so schema drift never lands silently.
+
+Source for all of this is public: [github.com/bhimrazy/bhimraj.com.np](https://github.com/bhimrazy/bhimraj.com.np) — see `packages/github` and `.github/workflows/sync-github.yml`.
+
+## References
+
+1. GitHub GraphQL API docs — <https://docs.github.com/en/graphql>
+2. GitHub Actions: scheduled workflows — <https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule>
+3. peter-evans/create-pull-request (Action used for sync PRs) — <https://github.com/peter-evans/create-pull-request>
+4. Zod — TypeScript-first schema validation — <https://zod.dev>
+5. This site's source — <https://github.com/bhimrazy/bhimraj.com.np>

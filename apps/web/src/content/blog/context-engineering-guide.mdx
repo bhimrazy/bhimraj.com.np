@@ -1,0 +1,136 @@
+---
+title: "Context Engineering: Why Prompt Engineering Died and What Replaced It"
+description: "Prompt engineering was about magic words. Context engineering is about information architecture — deciding what a model sees, remembers, and forgets. Here's a practical guide to the skill that actually determines whether your AI system works."
+publishedAt: "2026-07-06"
+updatedAt: "2026-07-06"
+tags:
+  [
+    context-engineering,
+    prompt-engineering,
+    llm,
+    ai-agents,
+    rag,
+    context-window,
+    ai-engineering,
+    memory,
+  ]
+image: "/blog/context-engineering/context-engineering-guide.png"
+---
+
+Somewhere in 2023, "prompt engineer" was going to be the job title of the decade. Companies posted six-figure listings for people who knew the magic words. Twitter threads promised the ten prompts that would change your life.
+
+That job quietly disappeared — not because prompting stopped mattering, but because we discovered it was the smallest part of a much bigger problem. The models got good enough that clever phrasing stopped being the bottleneck. What remained was a harder, more interesting question:
+
+> Out of everything your system knows — documents, history, tools, user data — what exactly should the model see *right now*, in what form, and in what order?
+
+That question has a name now: **context engineering**. It's the discipline of designing everything that fills a model's context window, and in my experience it explains more of the gap between AI demos and AI products than any other single factor.
+
+## The mental model: an LLM is a pure function
+
+Strip away the mystique, and every LLM call is a stateless function:
+
+```
+output = model(context)
+```
+
+That's the entire interface. The model has no memory of your last call, no access to your database, no idea who your user is. **Everything it knows about your problem arrives through the context window** — the tens or hundreds of thousands of tokens you assemble for each call.
+
+This framing sounds obvious, but taking it seriously changes how you debug. When an AI system misbehaves, engineers instinctively blame the model or fiddle with the prompt's wording. The better first question is almost always: *what was actually in the context?* Nine times out of ten, the failure is an information problem — the model never saw the file it needed, or saw a stale version, or saw it buried under 40K tokens of irrelevant chat history.
+
+The model is fixed. The context is yours. Engineer it.
+
+## Why "just stuff everything in" doesn't work
+
+Context windows exploded — a million tokens sounds like infinite. So why not dump everything in and let the model sort it out?
+
+Three reasons, all measurable:
+
+1. **Attention degrades.** Models don't use context uniformly. Information buried in the middle of a long context gets recalled worse than information at the edges (the well-documented "lost in the middle" effect). Needle-in-a-haystack benchmarks are near-perfect, but real tasks require *synthesizing* scattered facts — and there, quality visibly drops as context bloats. Practitioners call the accumulated junk **context rot**.
+
+2. **Irrelevance actively misleads.** A model given fifteen half-relevant documents doesn't ignore twelve of them; it tries to honor all fifteen. Contradictory or outdated context doesn't get averaged away — it produces confident, wrong answers.
+
+3. **Tokens are money and latency.** Every token in context is paid for on every call. An agent making 200 calls with a bloated 150K-token context isn't 2× more expensive than a lean 20K one — with caching subtleties, it can be 10× — and slower on every step.
+
+So the job is curation under a budget. Which turns out to look a lot like a discipline software engineers already know: **information architecture** with the constraints of **cache design**.
+
+## The four operations of context engineering
+
+Nearly everything in practice reduces to four verbs. (This taxonomy — write, select, compress, isolate — has become the standard way to organize the field.)
+
+### 1. Select — retrieve what's relevant
+
+The RAG playbook: embed your knowledge, retrieve the top-k chunks relevant to the query, include them in context. But selection is bigger than vector search:
+
+- **Hybrid retrieval** (semantic + keyword/BM25) beats either alone; embeddings miss exact identifiers, keywords miss paraphrases.
+- **Agentic retrieval** is eating static RAG: instead of one-shot top-k, give the model search *tools* — `grep`, a query endpoint, a doc index — and let it iteratively find what it needs. A coding agent that greps the repo pulls fresher, more precise context than any pre-built embedding pipeline.
+- **Just-in-time beats just-in-case.** Load a lightweight identifier (file path, doc title) and fetch the full content only when the model asks. This is the idea behind skills, tool discovery, and progressive disclosure patterns.
+
+### 2. Write — persist beyond the window
+
+The context window is RAM; anything that must survive needs to be written to disk:
+
+- **Scratchpads** — an agent working a long task writes intermediate findings to a file, freeing its window while keeping the knowledge recoverable.
+- **Memory files** — persistent notes across sessions: user preferences, project conventions, past decisions. The `CLAUDE.md` / `AGENTS.md` pattern is exactly this — a curated, human-editable memory the agent loads at startup.
+- **The key discipline is curation.** Memory that only accretes becomes context rot with a filesystem. Good memory systems update and *delete*.
+
+### 3. Compress — fit more meaning in fewer tokens
+
+- **Summarization at boundaries.** When a conversation approaches the window limit, summarize the oldest turns and continue — keeping decisions and constraints, dropping the play-by-play. Every serious agent harness does this ("compaction").
+- **Structure beats prose.** A table of API endpoints costs a fraction of the paragraphs describing them. Schemas, signatures, and bullet summaries are dense; conversational filler is not.
+- **Prune tool outputs.** A 30K-token JSON response usually contains 500 tokens the model needs. Filter before it enters context, not after.
+
+### 4. Isolate — split context across boundaries
+
+The most underused operation. Instead of one model juggling everything:
+
+- **Sub-agents** get a clean window and a narrow brief ("find where auth tokens are validated; report the file and line"). The orchestrator receives the *conclusion* — a paragraph — instead of inheriting fifty file reads.
+- **Sandboxed execution**: run code or process data outside the model, return only results.
+
+Isolation is the answer to a hard truth: a single context window doing planning, execution, and review accumulates the residue of all three. Clean rooms produce clean work.
+
+## Context engineering for agents is a different sport
+
+Everything above applies doubly to [agents](/blog/rise-of-llms-and-the-agentic-era), because agents generate their *own* context as they run. Every tool call appends output the engineer never reviewed. A twenty-step task can inflate the window with stack traces, file dumps, and dead ends — and the agent's later decisions are made while marinating in that residue.
+
+The practical playbook that's emerged:
+
+- **System prompts at the right altitude** — specific enough to guide behavior, general enough to leave the model heuristics rather than brittle if-else rules.
+- **Few, sharp tools.** Bloated tool catalogs with overlapping purposes confuse selection. If a human engineer couldn't say which tool to use, neither can the model.
+- **Compact at milestones**, not arbitrarily — end of a plan phase, after tests pass — so summaries capture *state*, not conversation.
+- **Poison awareness.** One hallucinated "fact" written into context early gets treated as ground truth for the rest of the run. Verification steps exist to flush contamination out.
+
+## A worked example
+
+A support bot answering billing questions. Version one — the way everyone builds it first:
+
+```text
+[system prompt: 2K tokens of rules]
+[entire help center: 60K tokens]
+[full chat history: whatever it is]
+[user question]
+```
+
+It works in the demo and degrades in production: slow, expensive, and increasingly wrong as history grows and the help center drifts out of date.
+
+The context-engineered version:
+
+```text
+[system prompt: 800 tokens, role + hard rules only]
+[user profile summary: plan, region, open tickets — 200 tokens, fetched live]
+[retrieved: top 3 relevant help articles, current versions — 3K tokens]
+[conversation: last 6 turns verbatim + summary of anything older — 1.5K tokens]
+[tools: lookup_invoice, check_subscription — schemas only]
+[user question]
+```
+
+Same model. A tenth of the tokens. Sharper answers — because the model can *see* the signal. And when it's wrong, you can read the assembled context and know exactly why, which is the property that makes the system debuggable at all.
+
+## The uncomfortable conclusion
+
+Prompt engineering asked: *how do I phrase my request?* Context engineering asks: *what information does this decision require, and how do I get it there reliably?*
+
+The second question has no magic words. It's systems design — retrieval quality, memory schemas, token budgets, isolation boundaries — which is why it didn't become a Twitter-thread skill and did become an engineering discipline.
+
+And it compounds with everything else: the best model with poor context loses to a mid model with excellent context. If the agentic era's lesson was *the loop is the product*, context engineering's lesson is the corollary: **the loop is only as good as its information diet.**
+
+Feed your models well.
