@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-09T16:14:56.107Z",
-  "stars": 1091,
+  "generatedAt": "2026-10-10T15:23:56.110Z",
+  "stars": 1090,
   "contributions": 503,
   "lightningCommits": 417,
   "featuredRepo": {
@@ -186,23 +186,23 @@
         "fullName": "Lightning-AI/litdata",
         "description": "Speed up model training by fixing data loading.",
         "prs": 100,
-        "stars": 615,
-        "forks": 111
+        "stars": 616,
+        "forks": 110
       },
       {
         "name": "LitServe",
         "fullName": "Lightning-AI/LitServe",
         "description": "A minimal Python framework for building custom AI inference servers with full control over logic, batching, and scaling.",
         "prs": 61,
-        "stars": 3944,
-        "forks": 310
+        "stars": 3946,
+        "forks": 309
       },
       {
         "name": "PyTorch Lightning",
         "fullName": "Lightning-AI/pytorch-lightning",
         "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
         "prs": 54,
-        "stars": 31394,
+        "stars": 31395,
         "forks": 3818
       },
       {
@@ -210,8 +210,8 @@
         "fullName": "Lightning-AI/litgpt",
         "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
         "prs": 30,
-        "stars": 13696,
-        "forks": 1517
+        "stars": 13698,
+        "forks": 1519
       }
     ]
   },
@@ -223,8 +223,8 @@
       "description": "Speed up model training by fixing data loading.",
       "commits": 128,
       "prs": 100,
-      "stars": 615,
-      "forks": 111
+      "stars": 616,
+      "forks": 110
     },
     {
       "name": "pytorch-lightning",
@@ -233,7 +233,7 @@
       "description": "Pretrain, finetune ANY AI model of ANY size on 1 or 10,000+ GPUs with zero code changes.",
       "commits": 108,
       "prs": 54,
-      "stars": 31394,
+      "stars": 31395,
       "forks": 3818
     },
     {
@@ -243,8 +243,8 @@
       "description": "A minimal Python framework for building custom AI inference servers with full control over logic, batching, and scaling.",
       "commits": 82,
       "prs": 61,
-      "stars": 3944,
-      "forks": 310
+      "stars": 3946,
+      "forks": 309
     },
     {
       "name": "receipt-ocr",
@@ -253,7 +253,7 @@
       "description": "An efficient OCR engine for receipt image processing.",
       "commits": 71,
       "prs": 27,
-      "stars": 741,
+      "stars": 740,
       "forks": 88
     },
     {
@@ -263,8 +263,8 @@
       "description": "20+ high-performance LLMs with recipes to pretrain, finetune and deploy at scale.",
       "commits": 48,
       "prs": 30,
-      "stars": 13696,
-      "forks": 1517
+      "stars": 13698,
+      "forks": 1519
     },
     {
       "name": "utilities",
@@ -273,7 +273,7 @@
       "description": "Common Python utilities and GitHub Actions in Lightning Ecosystem",
       "commits": 22,
       "prs": 12,
-      "stars": 62,
+      "stars": 63,
       "forks": 23
     },
     {
@@ -283,7 +283,7 @@
       "description": "Machine learning metrics for distributed, scalable PyTorch applications.",
       "commits": 19,
       "prs": 13,
-      "stars": 2474,
+      "stars": 2476,
       "forks": 544
     },
     {
