@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { featuredLabel } from "@/components/blog/posts";
+import { featuredLabel } from "@/components/blog/featured-label";
 
 const now = Date.parse("2026-10-11T00:00:00Z");
 
