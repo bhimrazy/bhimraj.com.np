@@ -71,10 +71,10 @@ export function wasUpdated(post: BlogPost): post is BlogPost & {
   updatedAt: string;
 } {
   if (!post.updatedAt) return false;
-  return (
-    new Date(post.updatedAt).toDateString() !==
-    new Date(post.publishedAt).toDateString()
-  );
+  // Compare UTC calendar days: frontmatter dates parse as UTC midnight, so
+  // local-time comparison would depend on the build machine's time zone.
+  const day = (value: string) => new Date(value).toISOString().slice(0, 10);
+  return day(post.updatedAt) !== day(post.publishedAt);
 }
 
 const DEK = /^\s*<p class="article-dek">([\s\S]*?)<\/p>\s*/;
