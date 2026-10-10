@@ -19,15 +19,20 @@ export function Timeline() {
   const oldest = earlier.at(-1)?.date ?? recent.at(-1)?.date ?? "";
 
   return (
-    <div className="flex flex-col gap-10">
-      {recentGroups.map(([year, items]) => (
-        <YearGroup key={year} year={year} items={items} />
-      ))}
+    <div>
+      <div className="flex flex-col gap-10">
+        {recentGroups.map(([year, items]) => (
+          <YearGroup key={year} year={year} items={items} />
+        ))}
+      </div>
 
       {earlier.length > 0 && (
         <JourneyReveal
           label={`Show full journey · ${earlier.length} earlier ${earlier.length === 1 ? "moment" : "moments"}, back to ${oldest}`}
         >
+          {/* No outer gap before the first group: the rail must run straight
+              into the collapsed part (the reveal clips overflow, so spacing
+              lives inside the list, never as a negative margin). */}
           <div className="flex flex-col gap-10">
             {earlierGroups.map(([year, items], i) => (
               <YearGroup
@@ -35,6 +40,7 @@ export function Timeline() {
                 year={year}
                 items={items}
                 headless={i === 0 && continuesYear}
+                leading={i === 0 && !continuesYear}
               />
             ))}
           </div>
@@ -48,13 +54,17 @@ function YearGroup({
   year,
   items,
   headless = false,
+  leading = false,
 }: {
   year: string;
   items: TimelineItem[];
+  /** Continues the previous group's year: no heading, rail runs on. */
   headless?: boolean;
+  /** First group after the fold that starts a new year. */
+  leading?: boolean;
 }) {
   return (
-    <div className={headless ? "-mt-10" : undefined}>
+    <div className={leading ? "mt-10" : undefined}>
       {!headless && (
         <div className="mb-4 flex items-center gap-3">
           <span className="font-bold font-display text-site-text text-xl">
@@ -65,20 +75,32 @@ function YearGroup({
       )}
 
       <ol className="relative ml-2 border-site-border border-l">
-        {items.map((item) => (
+        {items.map((item, i) => (
           <li
             key={item.title}
             className={
-              headless
+              headless && i === 0
                 ? "relative pt-10 pb-10 pl-8 last:pb-0"
                 : "relative pb-10 pl-8 last:pb-0"
             }
           >
             {/* Rail node: milestones get a bigger, ringed dot. */}
             {item.milestone ? (
-              <span className="absolute top-1 -left-[7px] size-3.5 rounded-full border-2 border-site-bg bg-site-accent ring-4 ring-site-accent/20" />
+              <span
+                className={
+                  headless && i === 0
+                    ? "absolute top-11 -left-[7px] size-3.5 rounded-full border-2 border-site-bg bg-site-accent ring-4 ring-site-accent/20"
+                    : "absolute top-1 -left-[7px] size-3.5 rounded-full border-2 border-site-bg bg-site-accent ring-4 ring-site-accent/20"
+                }
+              />
             ) : (
-              <span className="absolute top-1.5 -left-1.25 size-2.5 rounded-full border-2 border-site-border-hover bg-site-bg" />
+              <span
+                className={
+                  headless && i === 0
+                    ? "absolute top-11.5 -left-1.25 size-2.5 rounded-full border-2 border-site-border-hover bg-site-bg"
+                    : "absolute top-1.5 -left-1.25 size-2.5 rounded-full border-2 border-site-border-hover bg-site-bg"
+                }
+              />
             )}
             <span className="font-medium font-mono text-[11px] text-site-accent uppercase tracking-[1px]">
               {item.date}
