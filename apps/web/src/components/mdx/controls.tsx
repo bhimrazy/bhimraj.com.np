@@ -35,7 +35,7 @@ export function ControlButton({
     <button
       type="button"
       className={cn(
-        "inline-flex h-7 items-center gap-1.5 rounded-md border border-site-border px-2.5 font-mono text-[11px] text-site-text-secondary transition-colors hover:border-site-border-hover hover:text-site-text disabled:pointer-events-none disabled:opacity-40",
+        "inline-flex h-7 items-center gap-1.5 rounded-md border border-site-border px-2.5 font-mono text-[11px] text-site-text-secondary transition-colors hover:border-site-border-hover hover:text-site-text disabled:pointer-events-none disabled:opacity-40 aria-disabled:cursor-default aria-disabled:opacity-40 aria-disabled:hover:border-site-border aria-disabled:hover:text-site-text-secondary",
         active && "border-site-accent/60 text-site-accent",
         focusRing,
         className,
