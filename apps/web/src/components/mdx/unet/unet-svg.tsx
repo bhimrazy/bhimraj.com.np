@@ -236,7 +236,7 @@ export function UNetSvg({
                       ? "fill-site-accent-subtle stroke-site-accent"
                       : "fill-site-bg-tertiary stroke-site-text-tertiary",
                 onSelect &&
-                  "group-hover:stroke-site-text-secondary group-focus-visible:stroke-2 group-focus-visible:stroke-site-accent",
+                  "group-hover:stroke-site-text-secondary group-focus-visible:fill-site-accent/15 group-focus-visible:stroke-2 group-focus-visible:stroke-site-accent",
               )}
             />
             {failed && (

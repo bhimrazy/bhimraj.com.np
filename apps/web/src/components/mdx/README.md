@@ -11,8 +11,9 @@ and rendered by `<MDXContent>` in `app/(web)/blog/[slug]/page.tsx`. Components i
 - The server-rendered frame is meaningful (final or representative state, narration
   visible), so RSS, link previews, no-JS and reduced motion still get the point.
 - Quiet: `<Figure>` frame, thin strokes, mono labels, amber only for the active thing,
-  colors from `--site-*` tokens. Animate `transform`/`opacity`, CSS transitions or rAF,
-  no motion library.
+  colors from `--site-*` tokens. Prefer animating `transform`/`opacity`; transitions on
+  SVG geometry are fine for a diagram of a dozen shapes. CSS transitions or rAF, no
+  motion library.
 - `prefers-reduced-motion`: no autoplay, instant changes, controls still work. Pause
   offscreen and in hidden tabs. Anything that moves on its own for more than 5s has
   a pause button (WCAG 2.2.2).

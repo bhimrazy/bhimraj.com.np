@@ -122,7 +122,7 @@ export function computeUNetShapes(config: UNetConfig): UNetShapes {
       if (next < 1) {
         fail(
           id,
-          `Too small: ${bottleneck ? "the bottleneck" : `encoder level ${i + 1}`} gets a ${pooled}×${pooled} map, and two 3×3 convolutions without padding shrink it to nothing.`,
+          `Too small: ${bottleneck ? "the bottleneck" : `encoder level ${i + 1}`} gets a ${pooled}×${pooled} map, and two 3×3 convolutions${padding ? "" : " without padding"} shrink it to nothing.`,
         );
       } else {
         out = next;
@@ -152,22 +152,17 @@ export function computeUNetShapes(config: UNetConfig): UNetShapes {
     const skip = encoder[level];
     const upSize = x === null ? null : x * 2;
     let out: number | null = null;
+    // The encoder shrinks faster than the decoder grows, so a skip is never
+    // smaller than the upsampled map; only the convolutions can fail here.
     if (known() && upSize !== null && skip.size !== null) {
-      if (skip.size < upSize) {
+      const next = doubleConvOut(upSize, padding);
+      if (next < 1) {
         fail(
           id,
-          `Skip at level ${level + 1} is ${skip.size}×${skip.size}, smaller than the ${upSize}×${upSize} upsampled map, so _center_crop can't match it.`,
+          `Too small: decoder level ${level + 1} upsamples to ${upSize}×${upSize}, and two 3×3 convolutions${padding ? "" : " without padding"} shrink it to nothing.`,
         );
       } else {
-        const next = doubleConvOut(upSize, padding);
-        if (next < 1) {
-          fail(
-            id,
-            `Too small: decoder level ${level + 1} upsamples to ${upSize}×${upSize}, and two 3×3 convolutions without padding shrink it to nothing.`,
-          );
-        } else {
-          out = next;
-        }
+        out = next;
       }
     }
     skips.push({
