@@ -1,4 +1,5 @@
 import { allProjects } from "content-collections";
+import { notFound } from "next/navigation";
 import { OG_CONTENT_TYPE, OG_SIZE, renderOgImage } from "@/lib/og";
 
 export const size = OG_SIZE;
@@ -15,10 +16,11 @@ export default async function Image({
 }) {
   const { slug } = await params;
   const project = allProjects.find((p) => p._meta.path === slug);
+  if (!project) notFound();
 
   return renderOgImage({
     eyebrow: "Project",
-    title: project?.title ?? "Bhimraj Yadav",
-    tags: project?.tags ?? [],
+    title: project.title,
+    tags: project.tags,
   });
 }

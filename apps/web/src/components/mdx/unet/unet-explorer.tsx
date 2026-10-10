@@ -66,7 +66,7 @@ function stageDetail(stage: Stage, shapes: UNetShapes, padding: Padding) {
       : "padding=1 keeps the size";
   switch (stage.kind) {
     case "input":
-      return `torch.randn${formatShape(stage).replace("[", "(").replace("]", ")")}`;
+      return `torch.randn${formatShape(stage).replace(/\[/g, "(").replace(/\]/g, ")")}`;
     case "output":
       return `1×1 Conv2d maps ${shapes.stages.at(-2)?.channels} channels to ${stage.channels} per pixel`;
     case "encoder":
