@@ -14,6 +14,7 @@ import { ActivityBreakdown } from "@/components/oss/activity-breakdown";
 import { ContributionGraph } from "@/components/oss/contribution-graph";
 import { Timeline } from "@/components/oss/timeline";
 import { siteConfig } from "@/config/site";
+import { formatCompact } from "@/lib/format";
 import { formatDate } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -29,11 +30,6 @@ const UTM = siteConfig.utmParams;
 // First OSS milestone — joining the Lightning AI Studios Publisher Program —
 // matches the Timeline component's first entry ("Mar 2024") below.
 const OSS_START_DATE = "2024-03-01";
-
-function formatCount(n: number): string {
-  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
-  return String(n);
-}
 
 function repoUrl(fullName: string, org: string): string {
   if (org.toLowerCase() === USERNAME.toLowerCase()) {
@@ -76,7 +72,7 @@ export default async function OSSPage() {
 
   const stats = [
     {
-      value: `${formatCount(oss.totalCommits)}+`,
+      value: `${formatCompact(oss.totalCommits)}+`,
       label: "Contributions",
     },
     {
@@ -84,7 +80,7 @@ export default async function OSSPage() {
       label: "PRs Merged",
     },
     {
-      value: `${formatCount(ownStars)}+`,
+      value: `${formatCompact(ownStars)}+`,
       label: "Stars Earned",
     },
     { value: activeSpan, label: "Active Since Mar 2024" },
@@ -203,8 +199,8 @@ export default async function OSSPage() {
               <div className="grid shrink-0 grid-cols-2 gap-x-3 gap-y-0.5 font-mono text-[11px] text-site-text-tertiary sm:ml-auto sm:flex sm:items-center">
                 <span className="text-site-accent">{c.commits} commits</span>
                 {c.prs > 0 && <span>{c.prs} PRs</span>}
-                <span>★ {formatCount(c.stars)}</span>
-                <span>⑂ {formatCount(c.forks)}</span>
+                <span>★ {formatCompact(c.stars)}</span>
+                <span>⑂ {formatCompact(c.forks)}</span>
               </div>
             </a>
           ))}

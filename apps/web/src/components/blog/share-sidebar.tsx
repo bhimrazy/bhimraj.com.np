@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { capture } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
@@ -16,16 +16,23 @@ export default function ShareSidebar({
   orientation = "vertical",
 }: ShareSidebarProps) {
   const [copied, setCopied] = useState(false);
+  const resetTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const encodedUrl = encodeURIComponent(url);
   const encodedTitle = encodeURIComponent(title);
 
-  const copyLink = () => {
-    navigator.clipboard.writeText(url).then(() => {
-      setCopied(true);
-      capture("blog_link_copied", { slug: window.location.pathname });
-      setTimeout(() => setCopied(false), 2000);
-    });
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      // Denied permission or an insecure context: the button simply stays
+      // in its idle state rather than throwing an unhandled rejection.
+      return;
+    }
+    setCopied(true);
+    capture("blog_link_copied", { slug: window.location.pathname });
+    clearTimeout(resetTimer.current);
+    resetTimer.current = setTimeout(() => setCopied(false), 2000);
   };
 
   const shareLinks = [
@@ -113,6 +120,9 @@ export default function ShareSidebar({
       ))}
 
       {/* Copy link */}
+      <span role="status" className="sr-only">
+        {copied ? "Link copied" : ""}
+      </span>
       <button
         type="button"
         onClick={copyLink}

@@ -26,7 +26,13 @@ export function formatDate(dateOrString: Date | string): string {
 export function formatMonthDay(dateOrString: Date | string): string {
   const date =
     typeof dateOrString === "string" ? new Date(dateOrString) : dateOrString;
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  // Dates in frontmatter are plain "YYYY-MM-DD" strings (parsed as UTC), so
+  // format them in UTC too or a build west of Greenwich shifts them a day.
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  });
 }
 
 /**
