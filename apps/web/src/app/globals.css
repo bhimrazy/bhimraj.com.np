@@ -17,6 +17,7 @@
   --site-accent: #d97706;
   --site-accent-hover: #f59e0b;
   --site-accent-subtle: rgba(217, 119, 6, 0.08);
+  --site-success: #16a34a;
   --site-border: #e7e5e4;
   --site-border-hover: #d6d3d1;
   --site-card-bg: #ffffff;
@@ -35,6 +36,7 @@
   --site-accent: #f59e0b;
   --site-accent-hover: #fbbf24;
   --site-accent-subtle: rgba(245, 158, 11, 0.1);
+  --site-success: #22c55e;
   --site-border: #2a2620;
   --site-border-hover: #3a3530;
   --site-card-bg: #17150f;
@@ -57,6 +59,7 @@
   --color-site-accent: var(--site-accent);
   --color-site-accent-hover: var(--site-accent-hover);
   --color-site-accent-subtle: var(--site-accent-subtle);
+  --color-site-success: var(--site-success);
   --color-site-border: var(--site-border);
   --color-site-border-hover: var(--site-border-hover);
   --color-site-card: var(--site-card-bg);
