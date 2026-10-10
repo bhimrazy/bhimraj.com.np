@@ -120,7 +120,9 @@ export function buildScholarlyArticleJsonLd(
     isPartOf: { "@type": "Periodical", name: article.venue },
     author: article.authors
       .split(",")
-      .map((name) => ({ "@type": "Person", name: name.trim() })),
+      .map((name) => name.trim())
+      .filter((name) => name && !/^et al\.?$/i.test(name))
+      .map((name) => ({ "@type": "Person", name })),
   };
 }
 

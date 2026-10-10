@@ -44,7 +44,7 @@ export function PathTimeline() {
           eyebrow="The path so far"
           title="From client work to cutting framework releases"
         >
-          Five years, condensed. The{" "}
+          The path so far, condensed. The{" "}
           <Link
             href="/oss"
             className="text-site-accent underline decoration-site-accent/40 underline-offset-4 hover:decoration-site-accent"

@@ -35,7 +35,7 @@ export async function generateMetadata({
   const project = allProjects.find((p) => p._meta.path === slug);
 
   if (!project) {
-    return { title: `Project not found | ${siteConfig.name}` };
+    return { title: "Project not found" };
   }
 
   const projectURL = `/projects/${project._meta.path}`;

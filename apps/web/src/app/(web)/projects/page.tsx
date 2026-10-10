@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import ProjectSection from "@/components/projects/project-section";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Projects",
   description:
     "Open-source AI projects spanning multimodal LLMs, model serving, computer vision, and developer tools.",
-  alternates: { canonical: "/projects" },
-};
+  path: "/projects",
+});
 
 export default function Projects() {
   return (

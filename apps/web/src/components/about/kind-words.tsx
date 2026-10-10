@@ -90,7 +90,7 @@ function QuoteCaption({
       <span className="min-w-0">
         <span className="block font-medium text-site-text text-sm">
           {quote.author}
-          <span className="font-normal text-site-text-tertiary">
+          <span className="font-normal text-site-text-secondary">
             {" "}
             · {quote.role}
           </span>
@@ -100,12 +100,12 @@ function QuoteCaption({
             href={quote.href}
             target="_blank"
             rel="nofollow noopener noreferrer"
-            className="block font-mono text-[11px] text-site-text-tertiary transition-colors hover:text-site-accent"
+            className="block font-mono text-[11px] text-site-text-secondary transition-colors hover:text-site-accent"
           >
             {quote.context} ↗
           </a>
         ) : (
-          <span className="block font-mono text-[11px] text-site-text-tertiary">
+          <span className="block font-mono text-[11px] text-site-text-secondary">
             {quote.context}
           </span>
         )}

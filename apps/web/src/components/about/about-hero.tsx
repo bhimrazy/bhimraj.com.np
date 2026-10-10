@@ -101,7 +101,7 @@ export function AboutHero() {
             <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
               <Button
                 asChild
-                className="rounded-lg border-0 bg-site-accent px-6 font-semibold text-white hover:bg-site-accent/85"
+                className="rounded-lg border-0 bg-site-accent px-6 font-semibold text-site-on-accent hover:bg-site-accent/85"
               >
                 <a href="#contact">Get in touch</a>
               </Button>
@@ -129,7 +129,7 @@ export function AboutHero() {
                   alt="Portrait of Bhimraj Yadav"
                   fill
                   priority
-                  sizes="(min-width: 1024px) 340px, 85vw"
+                  sizes="(min-width: 1024px) 340px, (min-width: 640px) 320px, 256px"
                   className="object-cover"
                 />
                 <div
@@ -143,16 +143,16 @@ export function AboutHero() {
                 />
               </div>
 
-              <figcaption className="flex items-end justify-between gap-4 border-site-border border-t px-4 py-3 font-mono text-[11px] dark:border-white/6">
-                <div className="whitespace-nowrap">
+              <figcaption className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1 border-site-border border-t px-4 py-3 font-mono text-[11px] dark:border-white/6">
+                <div>
                   <p className="font-semibold text-site-text uppercase tracking-[1px]">
                     Kathmandu, Nepal
                   </p>
-                  <p className="mt-0.5 text-site-text-tertiary">
+                  <p className="mt-0.5 text-site-text-secondary">
                     27.7172° N · 85.3240° E
                   </p>
                 </div>
-                <p className="whitespace-nowrap text-right text-site-text-tertiary">
+                <p className="text-right text-site-text-secondary">
                   <span className="block text-site-accent">
                     <KathmanduTime />
                   </span>

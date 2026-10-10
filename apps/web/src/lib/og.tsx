@@ -54,7 +54,11 @@ function loadFonts(): Promise<Font[]> {
       weight,
       style: "normal" as const,
     })),
-  );
+  ).catch((error: unknown) => {
+    // Don't cache a failed read; the next render retries.
+    fonts = undefined;
+    throw error;
+  });
   return fonts;
 }
 
@@ -72,7 +76,10 @@ type OgCardProps = {
  */
 export async function renderOgImage(props: OgCardProps) {
   return new Response(await renderOgPng(props), {
-    headers: { "Content-Type": OG_CONTENT_TYPE },
+    headers: {
+      "Content-Type": OG_CONTENT_TYPE,
+      "Cache-Control": "public, max-age=31536000, immutable",
+    },
   });
 }
 

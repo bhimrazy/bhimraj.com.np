@@ -16,7 +16,7 @@ export function Toolbox() {
         <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-site-border bg-site-border md:grid-cols-3 dark:border-white/5 dark:bg-white/5">
           {TOOLBOX.map(({ group, items }) => (
             <div key={group} className="bg-site-card p-6 dark:bg-site-bg">
-              <h3 className="font-mono text-[11px] text-site-text-tertiary uppercase tracking-[1.2px]">
+              <h3 className="font-mono text-[11px] text-site-text-secondary uppercase tracking-[1.2px]">
                 {group}
               </h3>
               <ul className="mt-4 flex flex-wrap gap-2">

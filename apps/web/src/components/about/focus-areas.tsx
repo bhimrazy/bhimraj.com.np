@@ -8,6 +8,7 @@ import {
 import Link from "next/link";
 import type { ComponentType } from "react";
 import { Container } from "@/components/container";
+import { formatCompact } from "@/lib/format";
 import { SectionHeading } from "./section-heading";
 
 type Area = {
@@ -19,11 +20,6 @@ type Area = {
   proof: string[];
   link: { label: string; href: string };
 };
-
-function formatCount(n: number): string {
-  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
-  return String(n);
-}
 
 export function FocusAreas() {
   const repos = getContributedRepos();
@@ -75,7 +71,7 @@ export function FocusAreas() {
       kicker: "Research & applied",
       body: "Semantic segmentation research published in IEEE Access, 3D medical imaging with MONAI, and an open-source receipt OCR engine.",
       proof: receiptOcr
-        ? [`★ ${formatCount(receiptOcr.stars)} · ${receiptOcr.name}`]
+        ? [`★ ${formatCompact(receiptOcr.stars)} · ${receiptOcr.name}`]
         : [],
       link: { label: "Research", href: "/research" },
     },
@@ -113,7 +109,7 @@ export function FocusAreas() {
                   <span className="flex size-10 items-center justify-center rounded-xl border border-site-accent/25 bg-site-accent-subtle text-site-accent">
                     <Icon className="size-4.5" />
                   </span>
-                  <span className="font-mono text-[11px] text-site-text-tertiary uppercase tracking-[1px]">
+                  <span className="font-mono text-[11px] text-site-text-secondary uppercase tracking-[1px]">
                     {area.kicker}
                   </span>
                 </div>

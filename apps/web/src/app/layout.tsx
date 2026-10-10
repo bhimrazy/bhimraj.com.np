@@ -24,13 +24,6 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: siteConfig.author.name, url: siteConfig.url }],
   creator: siteConfig.author.username,
-  alternates: {
-    types: {
-      "application/rss+xml": [
-        { title: `${siteConfig.name} — RSS Feed`, url: "/feed.xml" },
-      ],
-    },
-  },
   // OG/Twitter images are supplied by the root `opengraph-image.tsx` /
   // `twitter-image.tsx` file conventions (a branded default card); every
   // other route either inherits this or defines its own image files.
@@ -92,6 +85,16 @@ export default function RootLayout({
       suppressHydrationWarning
       data-scroll-behavior="smooth"
     >
+      <head>
+        {/* Rendered here, not via `alternates.types`: every page sets its own
+            `alternates` (canonical), which replaces the root one wholesale. */}
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title={`${siteConfig.name} — RSS Feed`}
+          href="/feed.xml"
+        />
+      </head>
       <body className="flex min-h-dvh flex-col antialiased">
         <ThemeProvider
           attribute="class"

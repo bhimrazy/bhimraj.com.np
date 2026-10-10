@@ -7,6 +7,7 @@ import {
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Container } from "@/components/container";
+import { formatCompact } from "@/lib/format";
 import { SectionHeading } from "./section-heading";
 
 const FACTS: readonly { term: string; detail: ReactNode }[] = [
@@ -37,11 +38,6 @@ const FACTS: readonly { term: string; detail: ReactNode }[] = [
   },
 ];
 
-function formatCount(n: number): string {
-  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
-  return String(n);
-}
-
 const SYNC_DATE = new Intl.DateTimeFormat("en-US", {
   month: "short",
   day: "numeric",
@@ -52,10 +48,10 @@ const SYNC_DATE = new Intl.DateTimeFormat("en-US", {
 export function AtAGlance() {
   const oss = getOSSStats();
   const stats = [
-    { value: `${formatCount(oss.totalCommits)}+`, label: "Contributions" },
+    { value: `${formatCompact(oss.totalCommits)}+`, label: "Contributions" },
     { value: `${oss.totalPrs}`, label: "PRs merged" },
     { value: `${getContributedRepos().length}`, label: "OSS repos" },
-    { value: `${formatCount(getGitHubStars())}+`, label: "Stars earned" },
+    { value: `${formatCompact(getGitHubStars())}+`, label: "Stars earned" },
   ];
   const syncedOn = SYNC_DATE.format(new Date(getSnapshotMeta().generatedAt));
 
@@ -77,7 +73,7 @@ export function AtAGlance() {
                 key={term}
                 className="grid grid-cols-1 gap-1 px-5 py-4 sm:grid-cols-[140px_1fr] sm:gap-6 sm:px-6"
               >
-                <dt className="font-mono text-[11px] text-site-text-tertiary uppercase leading-6 tracking-[1.2px]">
+                <dt className="font-mono text-[11px] text-site-text-secondary uppercase leading-6 tracking-[1.2px]">
                   {term}
                 </dt>
                 <dd className="text-[15px] text-site-text leading-6">
@@ -98,13 +94,13 @@ export function AtAGlance() {
                   <span className="font-bold font-display text-3xl text-site-text tracking-tight sm:text-4xl">
                     {stat.value}
                   </span>
-                  <span className="mt-1.5 font-mono text-[11px] text-site-text-tertiary uppercase tracking-[1px]">
+                  <span className="mt-1.5 font-mono text-[11px] text-site-text-secondary uppercase tracking-[1px]">
                     {stat.label}
                   </span>
                 </div>
               ))}
             </div>
-            <p className="mt-3 flex items-center gap-2 font-mono text-[11px] text-site-text-tertiary">
+            <p className="mt-3 flex items-center gap-2 font-mono text-[11px] text-site-text-secondary">
               <span
                 aria-hidden
                 className="size-1.5 rounded-full bg-site-accent"
