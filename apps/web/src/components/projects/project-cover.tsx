@@ -63,7 +63,10 @@ export function ProjectCover({
   const cx = picked.reduce((sum, p) => sum + p.x, 0) / picked.length;
   const cy = picked.reduce((sum, p) => sum + p.y, 0) / picked.length;
   const stars = [...new Set(picked)].sort(
-    (a, b) => Math.atan2(a.y - cy, a.x - cx) - Math.atan2(b.y - cy, b.x - cx),
+    (a, b) =>
+      Math.atan2(a.y - cy, a.x - cx) - Math.atan2(b.y - cy, b.x - cx) ||
+      a.x - b.x ||
+      a.y - b.y,
   );
 
   return (

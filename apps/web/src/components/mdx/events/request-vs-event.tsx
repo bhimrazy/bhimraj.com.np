@@ -34,7 +34,7 @@ const y = (t: number) => TOP + t * UNIT;
 /** Narration indexed by the request-driven message that is in flight. */
 const STORY = [
   "Both customers ask C for a ride price.",
-  "Request-driven C has to ask A for driver availability. Event-driven C already has it from the stream, so it answers.",
+  "Request-driven C has to ask A for driver availability. Event-driven C answers from the latest driver state it already holds; the stream keeps that current.",
   "A replies. The request-driven customer is still waiting.",
   "Now C asks B for ride demand.",
   "B replies. Meanwhile A and B keep publishing changes to the stream on their own schedule.",

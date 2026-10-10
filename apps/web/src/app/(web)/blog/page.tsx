@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
 };
 
-const years = sortedPosts.map((p) => new Date(p.publishedAt).getFullYear());
+const years = sortedPosts.map((p) => new Date(p.publishedAt).getUTCFullYear());
 const span =
   years.length > 0
     ? [Math.min(...years), Math.max(...years)]

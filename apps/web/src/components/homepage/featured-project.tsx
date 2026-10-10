@@ -38,7 +38,7 @@ export default function FeaturedProjectCard() {
 
   const spark = buildSparkline(repo.history);
   const sinceYear = repo.history[0]
-    ? new Date(repo.history[0].t).getFullYear()
+    ? new Date(repo.history[0].t).getUTCFullYear()
     : null;
 
   return (

@@ -35,7 +35,7 @@ export default function BlogPreview() {
             >
               <time
                 dateTime={post.publishedAt}
-                className="hidden w-24 shrink-0 pt-0.5 font-mono text-[12px] text-site-text-tertiary sm:block"
+                className="hidden w-24 shrink-0 pt-0.5 font-mono text-[12px] text-site-text-secondary sm:block"
               >
                 {formatShortDate(post.publishedAt)}
               </time>

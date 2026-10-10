@@ -75,6 +75,7 @@ function toCaptionChildren(p: Element): Node[] {
 
 function transformFigures(parent: Parent) {
   const { children } = parent;
+  let seenImage = false;
   for (let i = 0; i < children.length; i++) {
     const node = children[i];
     if (!isElement(node, "p")) continue;
@@ -83,7 +84,14 @@ function transformFigures(parent: Parent) {
     const img = content[0];
     if (content.length !== 1 || !isElement(img, "img")) continue;
 
-    img.properties.loading = "lazy";
+    // The first figure is often the largest thing above the fold (it may even
+    // be the cover), so it loads eagerly; the rest wait until scrolled near.
+    if (seenImage) {
+      img.properties.loading = "lazy";
+    } else {
+      img.properties.fetchPriority = "high";
+      seenImage = true;
+    }
     img.properties.decoding = "async";
 
     const figure: Element = {
@@ -154,18 +162,36 @@ export default function rehypeArticle() {
         parent.children[index] = {
           type: "element",
           tagName: "div",
-          properties: { className: ["table-wrap"], tabIndex: 0 },
+          properties: {
+            className: ["table-wrap"],
+            tabIndex: 0,
+            role: "region",
+            ariaLabel: "Scrollable table",
+          },
           children: [el],
         };
       }
 
       const href = el.properties.href;
       if (el.tagName === "a" && typeof href === "string") {
-        if (/^https?:\/\//.test(href) && !href.includes("bhimraj.com.np")) {
+        if (isExternal(href)) {
           el.properties.target = "_blank";
           el.properties.rel = ["noopener", "noreferrer"];
         }
       }
     });
   };
+}
+
+/** Absolute http(s) links to any host other than this site's. */
+function isExternal(href: string): boolean {
+  if (!/^https?:\/\//.test(href)) return false;
+  try {
+    const { hostname } = new URL(href);
+    return (
+      hostname !== "bhimraj.com.np" && !hostname.endsWith(".bhimraj.com.np")
+    );
+  } catch {
+    return false;
+  }
 }

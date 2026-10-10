@@ -11,15 +11,21 @@ import {
 
 /** Live `matchMedia` result; `serverValue` is used for SSR and hydration. */
 export function useMediaQuery(query: string, serverValue = false) {
-  return useSyncExternalStore(
-    (onChange) => {
+  // Stable callbacks, or useSyncExternalStore re-subscribes on every render
+  // (and the timed figures render every frame).
+  const subscribe = useCallback(
+    (onChange: () => void) => {
       const mql = window.matchMedia(query);
       mql.addEventListener("change", onChange);
       return () => mql.removeEventListener("change", onChange);
     },
-    () => window.matchMedia(query).matches,
-    () => serverValue,
+    [query],
   );
+  const getSnapshot = useCallback(
+    () => window.matchMedia(query).matches,
+    [query],
+  );
+  return useSyncExternalStore(subscribe, getSnapshot, () => serverValue);
 }
 
 /** `true` when the reader asked for reduced motion (and on the server, so nothing autoplays before hydration). */
@@ -107,7 +113,10 @@ export function useTimeline(
     // Playing from the end replays from the start.
     let current = tRef.current >= duration ? 0 : tRef.current;
     const frame = (now: number) => {
-      current = Math.min(duration, current + ((now - last) / 1000) * rate);
+      // rAF pauses in hidden tabs; cap the step so coming back doesn't jump
+      // the whole animation to its end.
+      const delta = Math.min(now - last, 100);
+      current = Math.min(duration, current + (delta / 1000) * rate);
       last = now;
       setT(current);
       if (current < duration) raf = requestAnimationFrame(frame);
