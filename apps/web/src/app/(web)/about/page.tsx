@@ -7,13 +7,15 @@ import { GetInTouch } from "@/components/about/get-in-touch";
 import { KindWords } from "@/components/about/kind-words";
 import { PathTimeline } from "@/components/about/path-timeline";
 import { Toolbox } from "@/components/about/toolbox";
+import { JsonLd } from "@/components/json-ld";
 import { siteConfig } from "@/config/site";
+import { buildPersonJsonLd, type JsonLdObject } from "@/lib/structured-data";
 
 // The root layout's title template appends " · Bhimraj Yadav" to `title`;
 // share cards get the full name.
 const TITLE = "About · Bhimraj Yadav";
 const DESCRIPTION =
-  "Software engineer in Kathmandu, Nepal. Building production software at Fetchly Labs, on the LitData core team and a Tier 2 OSS contributor at Lightning AI, and an IEEE Access–published researcher.";
+  "Software engineer in Kathmandu, Nepal. Fetchly Labs, LitData core team, Tier 2 OSS contributor at Lightning AI, and IEEE Access–published researcher.";
 
 export const metadata: Metadata = {
   title: "About",
@@ -21,6 +23,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/about" },
   openGraph: {
     type: "profile",
+    locale: "en_US",
     url: "/about",
     title: TITLE,
     description: DESCRIPTION,
@@ -34,46 +37,43 @@ export const metadata: Metadata = {
   },
 };
 
-/** schema.org ProfilePage — helps search engines connect the profiles. */
-const JSON_LD = {
-  "@context": "https://schema.org",
-  "@type": "ProfilePage",
-  url: `${siteConfig.url}/about`,
-  mainEntity: {
-    "@type": "Person",
-    name: siteConfig.author.name,
-    alternateName: siteConfig.author.username,
-    jobTitle: siteConfig.author.designation,
-    image: `${siteConfig.url}${siteConfig.author.avatar}`,
-    url: siteConfig.url,
-    worksFor: { "@type": "Organization", name: "Fetchly Labs" },
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Kathmandu",
-      addressCountry: "NP",
+/** schema.org ProfilePage around the same Person the homepage declares. */
+function profileJsonLd(): JsonLdObject {
+  const { "@context": _context, ...person } = buildPersonJsonLd();
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    url: `${siteConfig.url}/about`,
+    mainEntity: {
+      ...person,
+      worksFor: { "@type": "Organization", name: "Fetchly Labs" },
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Kathmandu",
+        addressCountry: "NP",
+      },
+      knowsAbout: [
+        "Machine learning infrastructure",
+        "Model serving",
+        "Computer vision",
+        "PyTorch Lightning",
+        "LitServe",
+        "LitData",
+      ],
+      sameAs: [
+        ...new Set([
+          ...(person.sameAs as string[]),
+          ...SOCIAL_LINKS.map((link) => link.href),
+        ]),
+      ],
     },
-    knowsAbout: [
-      "Machine learning infrastructure",
-      "Model serving",
-      "Computer vision",
-      "PyTorch Lightning",
-      "LitServe",
-      "LitData",
-    ],
-    sameAs: SOCIAL_LINKS.map((link) => link.href),
-  },
-};
+  };
+}
 
 export default function AboutPage() {
   return (
     <main>
-      <script
-        type="application/ld+json"
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: static JSON-LD built from site config, with `<` escaped
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(JSON_LD).replace(/</g, "\\u003c"),
-        }}
-      />
+      <JsonLd data={profileJsonLd()} />
       <AboutHero />
       <AtAGlance />
       <PathTimeline />

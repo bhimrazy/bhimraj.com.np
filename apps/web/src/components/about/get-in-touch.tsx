@@ -8,7 +8,7 @@ import {
 import type { ComponentType } from "react";
 import { Container } from "@/components/container";
 import { SOCIAL_LINKS } from "./data";
-import { KathmanduTime } from "./local-time";
+import { KathmanduTimePill } from "./local-time";
 import { SectionHeading } from "./section-heading";
 
 const ICONS: Record<
@@ -59,7 +59,7 @@ export function GetInTouch() {
                 these.
               </SectionHeading>
 
-              <h3 className="font-mono text-[11px] text-site-text-tertiary uppercase tracking-[1.2px]">
+              <h3 className="font-mono text-[11px] text-site-text-secondary uppercase tracking-[1.2px]">
                 Open to
               </h3>
               <ul className="mt-4 flex flex-col gap-3">
@@ -77,12 +77,9 @@ export function GetInTouch() {
                 ))}
               </ul>
 
-              <p className="mt-8 inline-flex items-center gap-2 rounded-full border border-site-border bg-site-bg px-3.5 py-1.5 font-mono text-[12px] text-site-text-secondary dark:border-white/6">
-                <span className="text-site-accent">
-                  <KathmanduTime />
-                </span>
+              <KathmanduTimePill className="mt-8 inline-flex items-center gap-2 rounded-full border border-site-border bg-site-bg px-3.5 py-1.5 font-mono text-[12px] text-site-text-secondary dark:border-white/6">
                 in Kathmandu right now
-              </p>
+              </KathmanduTimePill>
             </div>
 
             {/* Links */}
@@ -104,7 +101,7 @@ export function GetInTouch() {
                         <span className="block font-medium text-site-text text-sm">
                           {link.label}
                         </span>
-                        <span className="block truncate font-mono text-[12px] text-site-text-tertiary">
+                        <span className="block truncate font-mono text-[12px] text-site-text-secondary">
                           {link.handle}
                         </span>
                       </span>

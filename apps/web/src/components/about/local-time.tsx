@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 const FORMAT = new Intl.DateTimeFormat("en-US", {
   hour: "numeric",
@@ -8,12 +8,8 @@ const FORMAT = new Intl.DateTimeFormat("en-US", {
   timeZone: "Asia/Kathmandu",
 });
 
-/**
- * Current time in Kathmandu, so collaborators can tell at a glance whether a
- * message will land during the day. Renders a placeholder until mounted — the
- * clock is client-only, so the server output stays static.
- */
-export function KathmanduTime() {
+/** The clock is client-only; `null` until mounted keeps the server output static. */
+function useKathmanduTime(): string | null {
   const [time, setTime] = useState<string | null>(null);
 
   useEffect(() => {
@@ -23,5 +19,32 @@ export function KathmanduTime() {
     return () => window.clearInterval(id);
   }, []);
 
+  return time;
+}
+
+/**
+ * Current time in Kathmandu, so collaborators can tell at a glance whether a
+ * message will land during the day. Shows a placeholder until mounted.
+ */
+export function KathmanduTime() {
+  const time = useKathmanduTime();
   return <span className="tabular-nums">{time ?? "--:--"}</span>;
+}
+
+/** A whole pill around the clock; rendered only once the time is known. */
+export function KathmanduTimePill({
+  className,
+  children,
+}: {
+  className?: string;
+  children: ReactNode;
+}) {
+  const time = useKathmanduTime();
+  if (!time) return null;
+  return (
+    <p className={className}>
+      <span className="text-site-accent tabular-nums">{time}</span>
+      {children}
+    </p>
+  );
 }
