@@ -50,12 +50,14 @@ export default function SubscribeForm() {
         aria-label="Email address"
         autoComplete="email"
         className="h-10 flex-1 rounded-lg border border-site-border bg-site-bg text-site-text text-sm placeholder:text-site-text-tertiary focus-visible:border-site-accent/40 focus-visible:ring-site-accent/15 dark:border-white/6"
-        disabled={loading}
+        // readOnly rather than disabled, so the field keeps focus while submitting.
+        readOnly={loading}
       />
-      {/* Honeypot: invisible to people, filled in by naive bots. */}
+      {/* Honeypot: invisible to people, filled in by naive bots. The name is
+          deliberately meaningless so browser autofill never touches it. */}
       <input
         type="text"
-        name="website"
+        name="hp-leave-empty"
         tabIndex={-1}
         autoComplete="off"
         aria-hidden="true"

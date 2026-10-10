@@ -365,7 +365,6 @@ export function PubSubSimulator() {
         {c2 && (
           <ControlButton
             onClick={() => dispatch({ type: "togglePause", id: c2.id })}
-            aria-pressed={c2.paused}
             active={c2.paused}
           >
             {c2.paused ? `resume ${c2.id}` : `pause ${c2.id}`}
@@ -373,8 +372,11 @@ export function PubSubSimulator() {
         )}
         {c2 && state.mode === "stream" && (
           <ControlButton
-            onClick={() => dispatch({ type: "replay", id: c2.id })}
-            disabled={c2.offset === state.head}
+            onClick={() => {
+              if (c2.offset !== state.head)
+                dispatch({ type: "replay", id: c2.id });
+            }}
+            aria-disabled={c2.offset === state.head}
           >
             replay {c2.id} from {state.head}
           </ControlButton>

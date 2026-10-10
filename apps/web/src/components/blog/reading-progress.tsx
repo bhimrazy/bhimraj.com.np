@@ -45,8 +45,7 @@ export default function ReadingProgress({ targetId }: { targetId: string }) {
     >
       <div
         ref={barRef}
-        className="h-full origin-left bg-site-accent"
-        style={{ transform: "scaleX(0)" }}
+        className="h-full origin-left scale-x-0 bg-site-accent"
       />
     </div>
   );
