@@ -74,7 +74,7 @@ export default function ContactSection() {
                   className={cn(
                     "rounded-lg px-5 font-semibold focus-visible:ring-2 focus-visible:ring-site-accent focus-visible:ring-offset-2 focus-visible:ring-offset-site-bg",
                     primary
-                      ? "border-0 bg-site-accent text-white hover:bg-site-accent/85"
+                      ? "border-0 bg-site-accent text-site-on-accent hover:bg-site-accent/85"
                       : "text-site-text",
                   )}
                 >

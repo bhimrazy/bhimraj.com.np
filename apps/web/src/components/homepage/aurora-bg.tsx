@@ -155,8 +155,9 @@ export default function AuroraBg() {
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(canvas);
 
-    const intersectionObserver = new IntersectionObserver(([entry]) => {
-      onScreen = entry?.isIntersecting ?? true;
+    const intersectionObserver = new IntersectionObserver((entries) => {
+      // Entries arrive oldest first; the newest one is the current state.
+      onScreen = entries.at(-1)?.isIntersecting ?? true;
       sync();
     });
     intersectionObserver.observe(canvas);
