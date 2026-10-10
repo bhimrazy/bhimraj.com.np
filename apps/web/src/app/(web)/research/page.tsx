@@ -16,12 +16,13 @@ export const metadata: Metadata = pageMetadata({
 const PUBLICATIONS = [
   {
     title:
-      "A Comparative Study of State-of-the-Art Deep Learning Models for Semantic Segmentation of Pores in SEM Images",
+      "A Comparative Study of State-of-the-Art Deep Learning Models for Semantic Segmentation of Pores in Scanning Electron Microscope Images of Activated Carbon",
     authors: "B. Pokharel, B. Yadav, et al.",
     venue: "IEEE Access",
     year: "2024",
     volume: "vol. 12, pp. 50217–50243",
-    doi: "https://ieeexplore.ieee.org/document/10458140",
+    // DOI 10.1109/ACCESS.2024.3381523 — resolves to this IEEE Xplore record.
+    doi: "https://ieeexplore.ieee.org/document/10478488",
     abstract:
       "A systematic comparison of modern deep learning architectures for semantic segmentation of pore structures in scanning electron microscope (SEM) images, with applications in materials science and quality control.",
     tags: ["Computer Vision", "Semantic Segmentation", "SEM", "Deep Learning"],

@@ -65,7 +65,7 @@ export default function NewsletterForm() {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@example.com"
+          placeholder="Your email address"
           required
           aria-label="Email for newsletter"
           className="h-10 flex-1 rounded-lg border border-site-border bg-site-bg text-site-text text-sm placeholder:text-site-text-tertiary focus-visible:border-site-accent/50 focus-visible:ring-site-accent/20 dark:border-white/8 dark:bg-site-bg-secondary"
