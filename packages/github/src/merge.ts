@@ -1,3 +1,4 @@
+import type { FreshSnapshot } from "./snapshot";
 import type {
   ContributedRepo,
   GitHubSnapshot,
@@ -31,10 +32,21 @@ export type MergeResult = {
  * fall within `DROP_TOLERANCE`. `generatedAt` always advances.
  */
 export function mergeSnapshot(
-  next: GitHubSnapshot,
+  next: FreshSnapshot,
   prev: GitHubSnapshot | null,
 ): MergeResult {
-  if (!prev) return { snapshot: next, anomalies: [] };
+  if (!prev) {
+    return {
+      snapshot: {
+        ...next,
+        ossActivity: {
+          ...next.ossActivity,
+          prsOpen: next.ossActivity.prsOpen ?? 0,
+        },
+      },
+      anomalies: [],
+    };
+  }
 
   const anomalies: SnapshotAnomaly[] = [];
 
@@ -166,7 +178,7 @@ function mergeRepoList<T extends RepoCard>(
  * lost a repo to a failed fetch — revert the whole bucket, `byRepo` included.
  */
 function mergeMonths(
-  next: GitHubSnapshot,
+  next: FreshSnapshot,
   prev: GitHubSnapshot,
   record: (field: string, prev: number, next: number) => number,
 ): GitHubSnapshot["monthlyContributions"] {
@@ -188,7 +200,7 @@ function mergeMonths(
 
 /** Failed stargazer pages truncate the history, so keep whichever is longer. */
 function mergeFeaturedRepo(
-  next: GitHubSnapshot,
+  next: FreshSnapshot,
   prev: GitHubSnapshot,
   keepCount: KeepFn,
 ): GitHubSnapshot["featuredRepo"] {
@@ -216,11 +228,11 @@ function mergeFeaturedRepo(
 
 /**
  * Every activity metric is cumulative except `prsOpen`, which falls whenever a
- * PR merges. A failed search reads as 0, so an open-PR count of exactly 0
- * against a non-zero previous one is treated as a failed fetch.
+ * PR merges. A failed fetch arrives as `null` and keeps the previous value;
+ * a fetched 0 is a real "nothing open right now".
  */
 function mergeActivity(
-  next: GitHubSnapshot,
+  next: FreshSnapshot,
   prev: GitHubSnapshot,
   keepMax: KeepFn,
   record: (field: string, prev: number, next: number) => number,
@@ -239,8 +251,8 @@ function mergeActivity(
       b.issuesResolved,
     ),
     prsOpen:
-      a.prsOpen === 0 && b.prsOpen > 0
-        ? record("ossActivity.prsOpen", b.prsOpen, a.prsOpen)
+      a.prsOpen === null
+        ? record("ossActivity.prsOpen", b.prsOpen, 0)
         : a.prsOpen,
     issuesHelped: keepMax(
       "ossActivity.issuesHelped",

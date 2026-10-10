@@ -51,7 +51,10 @@ export function getOSSActivity(): GitHubSnapshot["ossActivity"] {
   return snapshot.ossActivity;
 }
 
-/** A github.com search per activity metric, so visitors can verify each count. */
+/**
+ * A github.com search per activity metric. Four of them reproduce the count;
+ * `issuesResolved` lists the merged PRs the distinct-issue count came from.
+ */
 export function getOSSActivitySearchUrls(): Record<OSSActivityMetric, string> {
   const queries = ossActivityQueries(
     username,
