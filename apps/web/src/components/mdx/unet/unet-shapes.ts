@@ -1,18 +1,8 @@
 /**
- * Tensor-shape arithmetic for the UNet in
- * `content/blog/pytorch-unet-image-segmentation-implementation.mdx`.
- *
- * It mirrors the post's PyTorch code rather than the paper:
- * - `DoubleConvBlock`: two `Conv2d(kernel_size=3, padding=p)` layers
- *   (BatchNorm + ReLU keep the shape).
- * - `Encoder`: a `DoubleConvBlock` per level, `MaxPool2d(2)` between levels.
- * - `Decoder`: `ConvTranspose2d(c, c/2, 2, 2)`, `_center_crop` of the matching
- *   encoder feature, `torch.cat(dim=1)`, then a `DoubleConvBlock`.
- * - `UNet.output`: a 1×1 `Conv2d` to `out_channels`.
- *
- * Every stage is always returned. When an input is too small, the stage that
- * fails is reported in `failedAt`, and it and every later stage get
- * `size: null` (unknown) instead of made-up numbers.
+ * Shape arithmetic mirroring the UNet post's PyTorch code (not the paper):
+ * two 3×3 convs per level, MaxPool2d(2) down, ConvTranspose2d(2, 2) up,
+ * center-crop + concat on skips, 1×1 conv out.
+ * Too-small inputs set `failedAt`; that stage and later ones get `size: null`.
  */
 
 export type Padding = 0 | 1;
@@ -26,7 +16,7 @@ export interface UNetConfig {
   padding: Padding;
 }
 
-/** The configuration the post's code runs (`UNet(channels=[3, 64, 128, 256, 512, 1024], out_channels=1)` on a 572×572 input). */
+/** What the post runs: 572×572 input, channels [3…1024], 1 output channel. */
 export const POST_CONFIG = {
   channels: [3, 64, 128, 256, 512, 1024],
   outChannels: 1,
@@ -152,8 +142,7 @@ export function computeUNetShapes(config: UNetConfig): UNetShapes {
     const skip = encoder[level];
     const upSize = x === null ? null : x * 2;
     let out: number | null = null;
-    // The encoder shrinks faster than the decoder grows, so a skip is never
-    // smaller than the upsampled map; only the convolutions can fail here.
+    // A skip is never smaller than the upsampled map; only the convs can fail.
     if (known() && upSize !== null && skip.size !== null) {
       const next = doubleConvOut(upSize, padding);
       if (next < 1) {

@@ -11,8 +11,7 @@ import {
 
 /** Live `matchMedia` result; `serverValue` is used for SSR and hydration. */
 export function useMediaQuery(query: string, serverValue = false) {
-  // Stable callbacks, or useSyncExternalStore re-subscribes on every render
-  // (and the timed figures render every frame).
+  // Stable callbacks, or useSyncExternalStore re-subscribes every render.
   const subscribe = useCallback(
     (onChange: () => void) => {
       const mql = window.matchMedia(query);
@@ -28,12 +27,12 @@ export function useMediaQuery(query: string, serverValue = false) {
   return useSyncExternalStore(subscribe, getSnapshot, () => serverValue);
 }
 
-/** `true` when the reader asked for reduced motion (and on the server, so nothing autoplays before hydration). */
+/** Reduced motion; `true` on the server so nothing autoplays before hydration. */
 export function usePrefersReducedMotion() {
   return useMediaQuery("(prefers-reduced-motion: reduce)", true);
 }
 
-/** Tracks whether an element is on screen, so figures stop animating offscreen. */
+/** Whether the element is on screen. */
 function useInView<T extends Element>(ref: RefObject<T | null>) {
   const [inView, setInView] = useState(false);
   useEffect(() => {
@@ -49,11 +48,7 @@ function useInView<T extends Element>(ref: RefObject<T | null>) {
   return inView;
 }
 
-/**
- * Play/pause state for a figure. Autoplays the first time the figure scrolls
- * into view unless the reader prefers reduced motion; `running` is only true
- * while the figure is visible and the tab is in the foreground.
- */
+/** Play/pause: autoplays on first view (not with reduced motion); runs only while visible. */
 export function usePlayback<T extends Element>(ref: RefObject<T | null>) {
   const reducedMotion = usePrefersReducedMotion();
   const inView = useInView(ref);
@@ -89,11 +84,7 @@ export function useInterval(onTick: () => void, ms: number, running: boolean) {
   }, [ms, running]);
 }
 
-/**
- * A requestAnimationFrame clock from 0 to `duration` (in the figure's own
- * time units, advanced at `rate` units per second). Starts at `duration` so
- * the server-rendered frame is the finished picture.
- */
+/** rAF clock from 0 to `duration` at `rate` units/s; starts at the end so SSR shows the finished frame. */
 export function useTimeline(
   duration: number,
   rate: number,
@@ -113,8 +104,7 @@ export function useTimeline(
     // Playing from the end replays from the start.
     let current = tRef.current >= duration ? 0 : tRef.current;
     const frame = (now: number) => {
-      // rAF pauses in hidden tabs; cap the step so coming back doesn't jump
-      // the whole animation to its end.
+      // Cap the step so returning from a hidden tab doesn't jump to the end.
       const delta = Math.min(now - last, 100);
       current = Math.min(duration, current + (delta / 1000) * rate);
       last = now;

@@ -23,7 +23,7 @@ import {
   type Mode,
 } from "./broker-sim";
 
-/** One sentence for what the reader is looking at (changes only with the model or C2's status). */
+/** One-line narration of the current state. */
 function narrate(state: BrokerState) {
   const c2 = state.consumers[1];
   const behind = c2 ? lag(state, c2) > 2 : false;
@@ -45,11 +45,7 @@ function narrate(state: BrokerState) {
   return "Consumed events stay in the log (the last 12 here), so any consumer can step back in.";
 }
 
-/*
- * Geometry (SVG user units). The log reads oldest → newest, left to right;
- * the producer appends on the right, consumers sit under the offset they
- * will read next.
- */
+/* SVG geometry: log runs oldest → newest left to right; consumers sit under their next offset. */
 const RETENTION = 12;
 const PITCH = 30;
 const CELL = 24;
