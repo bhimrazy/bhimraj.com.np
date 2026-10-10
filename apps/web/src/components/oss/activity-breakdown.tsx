@@ -10,6 +10,8 @@ type Tile = {
   metric: OSSActivityMetric;
   label: string;
   hint: string;
+  /** What the GitHub link shows; defaults to the search that reproduces the count. */
+  linkLabel?: string;
 };
 
 /** Reviews lead: it's the metric a merged-PR count hides the most. */
@@ -18,6 +20,8 @@ const SECONDARY: readonly Tile[] = [
     metric: "issuesResolved",
     label: "Issues resolved",
     hint: "Closed by my merged pull requests",
+    // The search lists the PRs; the number is the distinct issues they closed.
+    linkLabel: "See the PRs",
   },
   {
     metric: "issuesHelped",
@@ -27,7 +31,7 @@ const SECONDARY: readonly Tile[] = [
   {
     metric: "prsOpen",
     label: "PRs in review",
-    hint: "Open right now, ready for review",
+    hint: "Open at the last sync, awaiting review",
   },
   {
     metric: "issuesOpened",
@@ -39,11 +43,53 @@ const SECONDARY: readonly Tile[] = [
 const tileClass =
   "group relative flex flex-col overflow-hidden rounded-xl border border-site-border bg-site-card p-5 transition-colors hover:border-site-border-hover focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:hover:border-white/10";
 
-function VerifyHint() {
+function VerifyHint({ label }: { label?: string }) {
   return (
     <span className="mt-auto whitespace-nowrap pt-3 font-mono text-[11px] text-site-text-tertiary transition-colors group-hover:text-site-accent">
-      Verify<span className="hidden sm:inline"> on GitHub</span> ↗
+      {label ?? (
+        <>
+          Verify<span className="hidden sm:inline"> on GitHub</span>
+        </>
+      )}{" "}
+      ↗
     </span>
+  );
+}
+
+/** Two bars that make the reviewed-to-merged ratio visible at a glance. */
+function ReviewedVsMerged({
+  reviewed,
+  merged,
+}: {
+  reviewed: number;
+  merged: number;
+}) {
+  const rows = [
+    { label: "Reviewed for others", value: reviewed, bar: "bg-site-accent" },
+    { label: "Merged of my own", value: merged, bar: "bg-site-text-tertiary" },
+  ];
+  return (
+    <dl
+      aria-label="Reviewed versus merged pull requests"
+      className="relative mt-5 mb-2 flex max-w-sm flex-col gap-2"
+    >
+      {rows.map((row) => (
+        <div key={row.label} className="grid grid-cols-[1fr_auto] gap-x-3">
+          <dt className="font-mono text-[11px] text-site-text-tertiary uppercase tracking-[1px]">
+            {row.label}
+          </dt>
+          <dd className="font-mono text-[11px] text-site-text-secondary tabular-nums">
+            {row.value}
+          </dd>
+          <dd className="col-span-2 h-1.5 overflow-hidden rounded-full bg-site-bg-tertiary">
+            <span
+              className={cn("block h-full rounded-full", row.bar)}
+              style={{ width: `${(row.value / reviewed) * 100}%` }}
+            />
+          </dd>
+        </div>
+      ))}
+    </dl>
   );
 }
 
@@ -55,9 +101,6 @@ export function ActivityBreakdown() {
   const activity = getOSSActivity();
   const urls = getOSSActivitySearchUrls();
   const { totalPrs } = getOSSStats();
-
-  // An empty block (snapshot predates these metrics) is worse than none.
-  if (activity.prsReviewed === 0) return null;
 
   const reviewRatio = totalPrs > 0 ? activity.prsReviewed / totalPrs : 0;
 
@@ -80,13 +123,19 @@ export function ActivityBreakdown() {
           PRs reviewed for other contributors
         </span>
         {reviewRatio > 1 && (
-          <p className="relative mt-3 max-w-sm text-site-text-secondary text-sm leading-relaxed">
-            That&apos;s{" "}
-            <strong className="font-semibold text-site-accent">
-              {reviewRatio.toFixed(1)}×
-            </strong>{" "}
-            the {totalPrs} pull requests of my own that have merged.
-          </p>
+          <>
+            <p className="relative mt-3 max-w-sm text-site-text-secondary text-sm leading-relaxed">
+              That&apos;s{" "}
+              <strong className="font-semibold text-site-accent">
+                {reviewRatio.toFixed(1)}×
+              </strong>{" "}
+              the {totalPrs} pull requests of my own that have merged.
+            </p>
+            <ReviewedVsMerged
+              reviewed={activity.prsReviewed}
+              merged={totalPrs}
+            />
+          </>
         )}
         <span className="relative mt-auto">
           <VerifyHint />
@@ -106,8 +155,8 @@ export function ActivityBreakdown() {
             {tile.metric === "prsOpen" && (
               <span
                 role="img"
-                aria-label="Live"
-                className="size-2 animate-pulse-dot rounded-full bg-green-500 motion-reduce:animate-none"
+                aria-label="Open"
+                className="size-2 rounded-full bg-site-success"
               />
             )}
           </span>
@@ -117,7 +166,7 @@ export function ActivityBreakdown() {
           <span className="mt-0.5 text-site-text-tertiary text-xs leading-snug">
             {tile.hint}
           </span>
-          <VerifyHint />
+          <VerifyHint label={tile.linkLabel} />
         </a>
       ))}
     </div>

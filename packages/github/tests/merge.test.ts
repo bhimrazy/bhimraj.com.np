@@ -254,7 +254,7 @@ describe("mergeSnapshot", () => {
     ]);
   });
 
-  it("lets the open-PR count fall, but not to a zero from a failed search", () => {
+  it("lets the open-PR count fall, even to zero", () => {
     const prev = snapshot();
     const fell = mergeSnapshot(
       snapshot({ ossActivity: { ...prev.ossActivity, prsOpen: 12 } }),
@@ -263,10 +263,32 @@ describe("mergeSnapshot", () => {
     expect(fell.snapshot.ossActivity.prsOpen).toBe(12);
     expect(fell.anomalies).toEqual([]);
 
-    const zeroed = mergeSnapshot(
+    const none = mergeSnapshot(
       snapshot({ ossActivity: { ...prev.ossActivity, prsOpen: 0 } }),
       prev,
     );
-    expect(zeroed.snapshot.ossActivity.prsOpen).toBe(30);
+    expect(none.snapshot.ossActivity.prsOpen).toBe(0);
+    expect(none.anomalies).toEqual([]);
+  });
+
+  it("holds the previous open-PR count when the fetch failed", () => {
+    const prev = snapshot();
+    const failed = mergeSnapshot(
+      { ...prev, ossActivity: { ...prev.ossActivity, prsOpen: null } },
+      prev,
+    );
+    expect(failed.snapshot.ossActivity.prsOpen).toBe(30);
+    expect(failed.anomalies).toEqual([
+      { field: "ossActivity.prsOpen", prev: 30, next: 0 },
+    ]);
+  });
+
+  it("writes a failed open-PR fetch as 0 when there is no previous snapshot", () => {
+    const prev = snapshot();
+    const first = mergeSnapshot(
+      { ...prev, ossActivity: { ...prev.ossActivity, prsOpen: null } },
+      null,
+    );
+    expect(first.snapshot.ossActivity.prsOpen).toBe(0);
   });
 });
