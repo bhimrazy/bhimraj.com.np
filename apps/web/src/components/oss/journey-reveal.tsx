@@ -3,6 +3,9 @@
 import { type ReactNode, useId, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
+/** Must match the `duration-500` on the grid below. */
+const DURATION_MS = 500;
+
 /**
  * The older part of the journey, collapsed behind one button. Everything is
  * server-rendered; this only animates `grid-template-rows` 0fr → 1fr (works in
@@ -19,16 +22,40 @@ export function JourneyReveal({
 }) {
   const [open, setOpen] = useState(false);
   const id = useId();
-  const anchor = useRef<HTMLDivElement>(null);
+  const button = useRef<HTMLButtonElement>(null);
 
   const toggle = () => {
     const next = !open;
     setOpen(next);
-    if (!next) anchor.current?.scrollIntoView({ block: "nearest" });
+    if (next) return;
+
+    // Collapsing from the bottom of a long list: the content above the
+    // button folds away, so without help the button (and the reader's place)
+    // would fly up by the list's height and the shrinking page would clamp
+    // the scroll position. Keep the button where it is on screen instead.
+    const el = button.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const started = performance.now();
+    const pin = () => {
+      // Instant: the page sets scroll-behavior: smooth, which would turn
+      // each correction into its own animation.
+      window.scrollBy({
+        top: el.getBoundingClientRect().top - top,
+        behavior: "instant",
+      });
+      if (!reduced && performance.now() - started < DURATION_MS + 50) {
+        requestAnimationFrame(pin);
+      }
+    };
+    requestAnimationFrame(pin);
   };
 
   return (
-    <div ref={anchor} className="scroll-mt-24">
+    <div>
       <div
         id={id}
         className={cn(
@@ -36,13 +63,9 @@ export function JourneyReveal({
           open ? "visible grid-rows-[1fr]" : "invisible grid-rows-[0fr]",
         )}
       >
-        <div
-          inert={!open}
-          className={cn(
-            "min-h-0 overflow-hidden transition-opacity delay-100 duration-300 motion-reduce:transition-none",
-            open ? "opacity-100" : "opacity-0",
-          )}
-        >
+        {/* No opacity fade here: the text must be visible while the region
+            grows, or it reads as a blank block filling in. */}
+        <div inert={!open} className="min-h-0 overflow-hidden">
           {children}
         </div>
       </div>
@@ -57,6 +80,7 @@ export function JourneyReveal({
           )}
         />
         <button
+          ref={button}
           type="button"
           aria-expanded={open}
           aria-controls={id}
