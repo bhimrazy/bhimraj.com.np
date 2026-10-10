@@ -67,21 +67,28 @@ export function usePlayback<T extends Element>(ref: RefObject<T | null>) {
     setPlaying,
     toggle: useCallback(() => setPlaying((p) => !p), []),
     running: playing && inView,
-    reducedMotion,
   };
+}
+
+/** A ref holding the latest `value`, for effects that shouldn't re-run when it changes. */
+function useLatest<T>(value: T) {
+  const ref = useRef(value);
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref;
 }
 
 /** Calls `onTick` every `ms` while `running` (and the tab is visible). */
 export function useInterval(onTick: () => void, ms: number, running: boolean) {
-  const tick = useRef(onTick);
-  tick.current = onTick;
+  const tick = useLatest(onTick);
   useEffect(() => {
     if (!running) return;
     const id = window.setInterval(() => {
       if (document.visibilityState === "visible") tick.current();
     }, ms);
     return () => window.clearInterval(id);
-  }, [ms, running]);
+  }, [ms, running, tick]);
 }
 
 /** rAF clock from 0 to `duration` at `rate` units/s; starts at the end so SSR shows the finished frame. */
@@ -92,10 +99,8 @@ export function useTimeline(
   onEnd: () => void,
 ) {
   const [t, setT] = useState(duration);
-  const tRef = useRef(t);
-  tRef.current = t;
-  const end = useRef(onEnd);
-  end.current = onEnd;
+  const tRef = useLatest(t);
+  const end = useLatest(onEnd);
 
   useEffect(() => {
     if (!running) return;
@@ -114,7 +119,7 @@ export function useTimeline(
     };
     raf = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(raf);
-  }, [duration, rate, running]);
+  }, [duration, rate, running, tRef, end]);
 
   return [t, setT] as const;
 }
