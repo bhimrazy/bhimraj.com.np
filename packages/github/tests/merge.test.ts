@@ -23,6 +23,13 @@ function snapshot(overrides: Partial<GitHubSnapshot> = {}): GitHubSnapshot {
       ],
     },
     ossStats: { totalCommits: 435, totalPrs: 257 },
+    ossActivity: {
+      prsReviewed: 400,
+      issuesResolved: 60,
+      prsOpen: 30,
+      issuesHelped: 200,
+      issuesOpened: 50,
+    },
     lightningEcosystem: {
       totalPrs: 208,
       repos: [
@@ -228,5 +235,60 @@ describe("mergeSnapshot", () => {
     );
 
     expect(merged.featuredRepo?.fullName).toBe("bhimrazy/receipt-ocr");
+  });
+
+  it("holds cumulative activity metrics that a failed fetch zeroed out", () => {
+    const prev = snapshot();
+    const { snapshot: merged, anomalies } = mergeSnapshot(
+      snapshot({
+        ossActivity: { ...prev.ossActivity, prsReviewed: 0, issuesResolved: 0 },
+      }),
+      prev,
+    );
+
+    expect(merged.ossActivity.prsReviewed).toBe(400);
+    expect(merged.ossActivity.issuesResolved).toBe(60);
+    expect(anomalies.map((a) => a.field)).toEqual([
+      "ossActivity.prsReviewed",
+      "ossActivity.issuesResolved",
+    ]);
+  });
+
+  it("lets the open-PR count fall, even to zero", () => {
+    const prev = snapshot();
+    const fell = mergeSnapshot(
+      snapshot({ ossActivity: { ...prev.ossActivity, prsOpen: 12 } }),
+      prev,
+    );
+    expect(fell.snapshot.ossActivity.prsOpen).toBe(12);
+    expect(fell.anomalies).toEqual([]);
+
+    const none = mergeSnapshot(
+      snapshot({ ossActivity: { ...prev.ossActivity, prsOpen: 0 } }),
+      prev,
+    );
+    expect(none.snapshot.ossActivity.prsOpen).toBe(0);
+    expect(none.anomalies).toEqual([]);
+  });
+
+  it("holds the previous open-PR count when the fetch failed", () => {
+    const prev = snapshot();
+    const failed = mergeSnapshot(
+      { ...prev, ossActivity: { ...prev.ossActivity, prsOpen: null } },
+      prev,
+    );
+    expect(failed.snapshot.ossActivity.prsOpen).toBe(30);
+    expect(failed.anomalies).toEqual([
+      { field: "ossActivity.prsOpen", prev: 30, next: 0 },
+    ]);
+  });
+
+  it("writes a failed open-PR fetch as 0 when there is no previous snapshot", () => {
+    const prev = snapshot();
+    const first = mergeSnapshot(
+      { ...prev, ossActivity: { ...prev.ossActivity, prsOpen: null } },
+      null,
+    );
+    expect(first.snapshot.ossActivity.prsOpen).toBe(0);
   });
 });
