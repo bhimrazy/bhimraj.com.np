@@ -130,7 +130,7 @@ function ArchiveRow({ post }: { post: BlogPost }) {
           <Link
             href={postHref(post)}
             className={cn(
-              "rounded-sm transition-colors after:absolute after:inset-0 group-hover:text-site-accent",
+              "rounded-sm transition-colors after:absolute after:inset-0 after:z-10 group-hover:text-site-accent",
               focusRing,
             )}
           >
