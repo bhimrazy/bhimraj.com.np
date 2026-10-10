@@ -15,7 +15,7 @@ export function ControlBar({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[11px] text-site-text-tertiary",
+        "flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[11px] text-site-text-secondary",
         className,
       )}
       {...props}
@@ -78,7 +78,7 @@ export function Segmented<T extends string>({
     <div
       role="group"
       aria-label={label}
-      className="inline-flex h-7 items-center rounded-md border border-site-border p-0.5"
+      className="inline-flex h-8 items-center rounded-md border border-site-border p-0.5"
     >
       {options.map((o) => (
         <button
@@ -87,7 +87,7 @@ export function Segmented<T extends string>({
           aria-pressed={o.value === value}
           onClick={() => onChange(o.value)}
           className={cn(
-            "h-full rounded-[5px] px-2.5 font-mono text-[11px] text-site-text-tertiary transition-colors hover:text-site-text",
+            "h-full rounded-[5px] px-2.5 font-mono text-[11px] text-site-text-secondary transition-colors hover:text-site-text",
             o.value === value && "bg-site-bg-tertiary text-site-text",
             focusRing,
           )}

@@ -21,13 +21,8 @@ const PAD_X = 30;
 /** Time units per second of playback. */
 const RATE = 1.5;
 
-const ACTOR_LABEL: Record<string, string> = {
-  customer: "customer",
-  C: "C · price",
-  A: "A · drivers",
-  B: "B · demand",
-  stream: "stream",
-};
+/** What each service owns, shown under its name. */
+const ROLE: Record<string, string> = { C: "price", A: "drivers", B: "demand" };
 
 const y = (t: number) => TOP + t * UNIT;
 
@@ -72,16 +67,16 @@ function LaneSvg({ lane, t }: { lane: Lane; t: number }) {
               a === "customer" ? "fill-site-text" : "fill-site-text-secondary",
             )}
           >
-            {a === "C" || a === "A" || a === "B" ? a : ACTOR_LABEL[a]}
+            {a}
           </text>
-          {(a === "C" || a === "A" || a === "B") && (
+          {ROLE[a] && (
             <text
               x={x(a)}
               y={30}
               textAnchor="middle"
-              className="fill-site-text-tertiary font-mono text-[8.5px]"
+              className="fill-site-text-secondary font-mono text-[8.5px]"
             >
-              {ACTOR_LABEL[a]?.split(" · ")[1]}
+              {ROLE[a]}
             </text>
           )}
           <line
@@ -195,7 +190,7 @@ export function RequestVsEvent() {
           </div>
         ))}
       </div>
-      <Narration>{narrate(t)}</Narration>
+      <Narration live={!playing}>{narrate(t)}</Narration>
       <ControlBar className="mt-3">
         <PlayButton playing={playing} onToggle={toggle} label="sequence" />
         <label htmlFor={scrubId} className="sr-only">
@@ -203,6 +198,7 @@ export function RequestVsEvent() {
         </label>
         <Scrubber
           id={scrubId}
+          aria-valuetext={`t = ${t.toFixed(1)} hops`}
           min={0}
           max={DURATION}
           step={0.05}

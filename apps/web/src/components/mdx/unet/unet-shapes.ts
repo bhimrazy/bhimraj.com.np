@@ -38,7 +38,7 @@ export interface Stage {
   op: string;
 }
 
-interface SkipConnection {
+export interface SkipConnection {
   level: number;
   from: string;
   to: string;
@@ -199,10 +199,7 @@ export function computeUNetShapes(config: UNetConfig): UNetShapes {
 }
 
 /** `[N, C, H, W]` as PyTorch prints it; unknown sizes print as "—". */
-export function formatShape(
-  stage: Pick<Stage, "channels" | "size">,
-  batch = 1,
-) {
+export function formatShape(stage: Pick<Stage, "channels" | "size">) {
   const s = stage.size ?? "—";
-  return `[${batch}, ${stage.channels}, ${s}, ${s}]`;
+  return `[1, ${stage.channels}, ${s}, ${s}]`;
 }

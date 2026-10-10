@@ -54,14 +54,16 @@ export function WalkthroughClient({
   };
 
   const onKeyDown = (e: KeyboardEvent) => {
-    // Leave Alt/Cmd+Arrow alone: that's browser back/forward.
+    // Leave Alt/Cmd+Arrow alone (browser back/forward), and arrows inside the
+    // code panel, which scroll the code.
     if (e.altKey || e.metaKey || e.ctrlKey) return;
+    if (codeRef.current?.contains(e.target as Node)) return;
     if (e.key === "ArrowRight") go(index + 1);
     else if (e.key === "ArrowLeft") go(index - 1);
   };
 
   // Scoped <style> dims inactive lines, so SSR already highlights step 1.
-  const selector = step?.lines
+  const selector = step.lines
     .map((n) => `[data-walkthrough="${scopeId}"] .line[data-line="${n}"]`)
     .join(",");
 
@@ -77,7 +79,7 @@ export function WalkthroughClient({
             <span className="text-site-accent tabular-nums">
               {index + 1}/{steps.length}
             </span>{" "}
-            <span className="text-site-text">{step?.title}</span>
+            <span className="text-site-text">{step.title}</span>
           </p>
           <div className="flex shrink-0 items-center gap-1.5">
             {steps.map((s, i) => (
