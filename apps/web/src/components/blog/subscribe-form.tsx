@@ -45,7 +45,7 @@ export default function SubscribeForm() {
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="you@example.com"
+        placeholder="Your email address"
         required
         aria-label="Email address"
         autoComplete="email"
