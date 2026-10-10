@@ -5,11 +5,11 @@ import {
 } from "@radix-ui/react-icons";
 import { allProjects } from "content-collections";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/container";
 import { ExternalLinkIcon, withUtm } from "@/components/projects/link-utils";
+import { ProjectCover } from "@/components/projects/project-cover";
 import { Badge } from "@/components/ui/badge";
 import { siteConfig } from "@/config/site";
 import type { Project } from "@/lib/types";
@@ -179,14 +179,13 @@ export default async function ProjectDetail({
             </div>
           </div>
 
-          {/* OG image */}
-          <div className="relative mb-10 aspect-2/1 w-full overflow-hidden rounded-xl border border-site-border">
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 768px"
+          {/* Same generated cover as the list card, so projects that share a
+              GitHub repo (and its OpenGraph card) still look distinct here. */}
+          <div className="group relative mb-10 aspect-2/1 w-full overflow-hidden rounded-xl border border-site-border bg-site-bg-secondary">
+            <ProjectCover
+              slug={project._meta.path}
+              githubLink={project.githubLink}
+              category={project.category}
             />
           </div>
 

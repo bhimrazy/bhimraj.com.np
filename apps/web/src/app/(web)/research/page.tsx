@@ -137,13 +137,7 @@ export default function ResearchPage() {
               <CardContent className="relative p-6">
                 <div className="flex gap-5">
                   {/* Accent bar */}
-                  <div
-                    className="w-1 shrink-0 rounded-full"
-                    style={{
-                      background:
-                        "linear-gradient(180deg, var(--site-accent), transparent)",
-                    }}
-                  />
+                  <div className="w-1 shrink-0 rounded-full bg-linear-to-b from-site-accent to-transparent" />
                   <div className="min-w-0 flex-1">
                     <div className="mb-3 flex flex-wrap items-center gap-2">
                       <span className="rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[11px] text-site-accent">
@@ -158,7 +152,7 @@ export default function ResearchPage() {
                           href={pub.doi}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="relative z-10 inline-flex items-center gap-1.5 rounded-md border border-site-border bg-site-bg-secondary px-2.5 py-1 font-mono text-[11px] text-site-text-secondary transition-colors hover:border-site-border-hover hover:text-site-text"
+                          className="inline-flex items-center gap-1.5 rounded-md border border-site-border bg-site-bg-secondary px-2.5 py-1 font-mono text-[11px] text-site-text-secondary transition-colors hover:border-site-border-hover hover:text-site-text"
                         >
                           View on IEEE
                         </a>
@@ -200,7 +194,7 @@ export default function ResearchPage() {
           keep coming back to when reasoning about model architecture and
           training.
         </p>
-        <ol className="mb-4 flex flex-col gap-4">
+        <div className="mb-4 flex flex-col gap-4">
           {READING_NOTES.map((note, i) => (
             <Card
               key={note.title}
@@ -234,7 +228,7 @@ export default function ResearchPage() {
               </CardContent>
             </Card>
           ))}
-        </ol>
+        </div>
       </Container>
     </main>
   );

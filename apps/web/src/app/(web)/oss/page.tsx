@@ -17,10 +17,11 @@ import { siteConfig } from "@/config/site";
 import { formatCompact } from "@/lib/format";
 import { formatDate } from "@/lib/utils";
 
+const ROUNDED_COMMITS = Math.floor(getOSSStats().totalCommits / 100) * 100;
+
 export const metadata: Metadata = {
   title: "Open Source Journey — Bhimraj Yadav",
-  description:
-    "200+ contributions across PyTorch Lightning, LitServe, LitData, and LitGPT. My open source story.",
+  description: `${ROUNDED_COMMITS}+ contributions across PyTorch Lightning, LitServe, LitData, and LitGPT. My open source story.`,
   alternates: { canonical: "/oss" },
 };
 
@@ -43,8 +44,8 @@ function monthsBetween(fromISO: string, toISO: string): number {
   const from = new Date(fromISO);
   const to = new Date(toISO);
   return (
-    (to.getFullYear() - from.getFullYear()) * 12 +
-    (to.getMonth() - from.getMonth())
+    (to.getUTCFullYear() - from.getUTCFullYear()) * 12 +
+    (to.getUTCMonth() - from.getUTCMonth())
   );
 }
 
@@ -153,7 +154,8 @@ export default async function OSSPage() {
           Key Contributions
         </h2>
         <p className="mb-6 text-site-text-secondary text-sm">
-          Every repo where I have more than one contribution — live from GitHub.
+          Every repo where I have more than one contribution — synced daily from
+          GitHub.
         </p>
         <div className="mb-12 divide-y divide-site-border overflow-hidden rounded-xl border border-site-border bg-site-card dark:divide-white/4 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary">
           {contributions.map((c) => (

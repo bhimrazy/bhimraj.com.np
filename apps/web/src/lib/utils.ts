@@ -18,6 +18,9 @@ export function formatDate(dateOrString: Date | string): string {
     month: "long",
     day: "numeric",
     year: "numeric",
+    // "YYYY-MM-DD" strings parse as UTC; format in UTC too so a build west
+    // of Greenwich doesn't print the previous day.
+    timeZone: "UTC",
   };
   return date?.toLocaleDateString("en-US", options);
 }

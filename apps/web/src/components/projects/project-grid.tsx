@@ -57,6 +57,9 @@ export function ProjectGrid({ projects }: { projects: ProjectCardData[] }) {
         })}
       </fieldset>
 
+      <p aria-live="polite" className="sr-only">
+        {visible.length} {visible.length === 1 ? "project" : "projects"}
+      </p>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {visible.map((project) => (
           <ProjectCard key={project.slug} project={project} />
@@ -87,12 +90,13 @@ function ProjectCard({ project }: { project: ProjectCardData }) {
           githubLink={project.githubLink}
           category={project.category}
         />
-        {project.featured && (
-          <span className="absolute top-2.5 right-2.5 rounded-md bg-site-accent px-2 py-0.5 font-mono text-[10px] text-site-bg uppercase tracking-[0.5px]">
-            Featured
-          </span>
-        )}
       </Link>
+      {/* Outside the aria-hidden cover link, so assistive tech hears it too. */}
+      {project.featured && (
+        <span className="absolute top-2.5 right-2.5 rounded-md bg-site-accent px-2 py-0.5 font-mono text-[10px] text-site-on-accent uppercase tracking-[0.5px]">
+          Featured
+        </span>
+      )}
 
       <div className="flex flex-1 flex-col px-5 py-5">
         {/* Tags */}
