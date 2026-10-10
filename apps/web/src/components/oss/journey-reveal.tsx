@@ -52,7 +52,7 @@ export function JourneyReveal({
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-x-0 bottom-full h-24 bg-linear-to-t from-site-bg to-transparent transition-opacity duration-300 motion-reduce:transition-none",
+            "pointer-events-none absolute inset-x-0 bottom-full h-16 bg-linear-to-t from-site-bg to-transparent transition-opacity duration-300 motion-reduce:transition-none",
             open && "opacity-0",
           )}
         />
@@ -61,7 +61,7 @@ export function JourneyReveal({
           aria-expanded={open}
           aria-controls={id}
           onClick={toggle}
-          className="inline-flex items-center gap-2 rounded-md border border-site-border bg-site-card px-3.5 py-2 font-mono text-[12px] text-site-text transition-colors hover:border-site-accent/60 hover:text-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
+          className="inline-flex items-center gap-2 rounded-md border border-site-border bg-site-card px-3.5 py-2 text-left font-mono text-[12px] text-site-text transition-colors hover:border-site-accent/60 hover:text-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
         >
           {open ? "Show fewer" : label}
           <span
