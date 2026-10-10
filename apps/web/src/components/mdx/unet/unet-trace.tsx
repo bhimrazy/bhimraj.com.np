@@ -8,10 +8,6 @@ import { UNetSvg } from "./unet-svg";
 
 const shapes = computeUNetShapes(POST_CONFIG);
 
-function find(id: string): Stage | undefined {
-  return shapes.stages.find((s) => s.id === id);
-}
-
 function shortName(stage: Stage) {
   if (stage.kind === "encoder") return `enc ${stage.level + 1}`;
   if (stage.kind === "decoder") return `dec ${stage.level + 1}`;
@@ -20,7 +16,6 @@ function shortName(stage: Stage) {
 
 /** Static mini UNet with some maps lit, e.g. `<UNetTrace at="enc-3 bottleneck" />`. */
 export function UNetTrace({ at }: { at: string }) {
-  if (!shapes.ok) return null;
   const ids = new Set(at.split(/\s+/).filter(Boolean));
   const lit = shapes.stages.filter((s) => ids.has(s.id));
   const skips = shapes.skips.filter((k) => ids.has(k.from) && ids.has(k.to));
@@ -57,6 +52,6 @@ export function UNetTrace({ at }: { at: string }) {
 
 /** The `[N, C, H, W]` shape of a stage in the post's UNet, e.g. `<Shape of="enc-0" />`. */
 export function Shape({ of }: { of: string }) {
-  const stage = find(of);
+  const stage = shapes.stages.find((s) => s.id === of);
   return <code>{stage ? formatShape(stage) : "?"}</code>;
 }
