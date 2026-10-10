@@ -18,12 +18,7 @@ function shortName(stage: Stage) {
   return stage.kind;
 }
 
-/**
- * A small static UNet with some feature maps lit, e.g.
- * `<UNetTrace at="enc-3 bottleneck dec-3" />`, and their shapes listed
- * underneath. Shapes come from the post's configuration (572×572 input,
- * unpadded convolutions).
- */
+/** Static mini UNet with some maps lit, e.g. `<UNetTrace at="enc-3 bottleneck" />`. */
 export function UNetTrace({ at }: { at: string }) {
   if (!shapes.ok) return null;
   const ids = new Set(at.split(/\s+/).filter(Boolean));
