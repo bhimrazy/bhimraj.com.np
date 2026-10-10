@@ -2,17 +2,11 @@ import type { KeyboardEvent, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import type { Stage, UNetShapes } from "./unet-shapes";
 
-/*
- * Pure SVG renderer for the UNet figure (no hooks, so the server can render
- * it too), laid out like the paper's "U": encoder levels stacked down the
- * left, the bottleneck as a flat bottom, decoder levels rising on the right,
- * and skip connections as long horizontal arrows across. Each feature map is
- * a square whose side is proportional to its spatial size.
- */
+/* Hook-free SVG of the UNet as a "U": squares sized by spatial size, skips as horizontal arrows. */
 
 const W = 660;
 const DY = 50;
-/** Narrow screens get taller levels and bigger minimum marks (the SVG is scaled down ~2×). Its viewBox is 660×398; UNetExplorer reserves that aspect ratio. */
+/** Narrow layout: taller levels, bigger marks (viewBox 660×398, matched by UNetExplorer). */
 const NARROW = { dy: 74, top: 60, minSide: 9, unknownSide: 18 };
 const WIDE = { dy: DY, top: 48, minSide: 5, unknownSide: 12 };
 type Geometry = typeof WIDE;
@@ -24,7 +18,7 @@ const DEC_X = W - ENC_X;
 const IO_GAP = 76;
 /** Invisible hit target per map. */
 const HIT_W = 58;
-/** Input size that maps to the largest square; keeps squares comparable as the input changes. */
+/** Input size drawn as the largest square, so sizes stay comparable. */
 const REF_SIZE = 640;
 const MAX_SIDE = 40;
 
