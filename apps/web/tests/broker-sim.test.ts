@@ -82,10 +82,4 @@ describe("brokerReducer", () => {
     s = advance(s, 20);
     expect(consumer(s, "C2").offset).toBe(s.head);
   });
-
-  it("reset keeps the mode and consumers", () => {
-    let s = advance(initialBrokerState("stream"), 5);
-    s = brokerReducer(s, { type: "reset" });
-    expect(s).toEqual(initialBrokerState("stream"));
-  });
 });

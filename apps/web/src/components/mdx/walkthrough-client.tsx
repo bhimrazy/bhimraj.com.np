@@ -60,8 +60,7 @@ export function WalkthroughClient({
     else if (e.key === "ArrowLeft") go(index - 1);
   };
 
-  // Dim every line except the active step's. Rendered as a scoped <style> so
-  // the server-rendered first frame already shows step 1 highlighted.
+  // Scoped <style> dims inactive lines, so SSR already highlights step 1.
   const selector = step?.lines
     .map((n) => `[data-walkthrough="${scopeId}"] .line[data-line="${n}"]`)
     .join(",");

@@ -1,18 +1,14 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-/**
- * The frame every interactive (or static) figure in a post sits in: a quiet
- * card with an optional small uppercase label, the visual, and a short
- * caption underneath (numbered "Fig. N" by the article styles).
- */
+/** Frame for every post figure: optional label, the visual, a caption. */
 export function Figure({
   label,
   caption,
   children,
   className,
 }: {
-  /** A two-to-four word title shown in the frame's header row. */
+  /** Short header title. */
   label?: string;
   caption?: ReactNode;
   children: ReactNode;

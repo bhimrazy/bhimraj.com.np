@@ -1,8 +1,4 @@
-/**
- * Runs after `rehype-article` in the MDX pipeline and removes the dek it
- * made from a leading `<h2>`. The page renders the dek under the title
- * (from `post.html`, via `splitDek`), so the MDX body must not repeat it.
- */
+/** Removes the dek from the MDX body; the page already shows it under the title. */
 
 interface Node {
   type: string;

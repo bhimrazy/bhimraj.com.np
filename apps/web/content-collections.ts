@@ -31,8 +31,7 @@ const blogMarkdownOptions = {
   rehypePlugins: [...markdownOptions.rehypePlugins, rehypeArticle],
 };
 
-// The rendered body is MDX so posts can embed interactive figures. The dek is
-// shown under the title (read from `html`), so the MDX body drops it.
+// Rendered as MDX for figures; the dek shows under the title, so the body drops it.
 const blogMdxOptions = {
   rehypePlugins: [...blogMarkdownOptions.rehypePlugins, rehypeDropDek],
 };
@@ -52,8 +51,7 @@ const BlogPost = defineCollection({
     featured: z.boolean().default(false),
   }),
   transform: async (document, context) => {
-    // `html` is no longer rendered for posts; it still feeds the dek, TOC,
-    // reading time and cover detection. JSX figures are not part of it.
+    // Not rendered; feeds the dek, TOC, reading time and cover detection.
     const html = await compileMarkdown(context, document, blogMarkdownOptions);
     const mdx = await compileMDX(context, document, blogMdxOptions);
     return { ...document, html, mdx };
