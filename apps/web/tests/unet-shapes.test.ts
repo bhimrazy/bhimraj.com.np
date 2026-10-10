@@ -161,6 +161,16 @@ describe("computeUNetShapes with an input that's too small", () => {
     expect(r.output.size).toBe(4);
   });
 
+  it("fails at the bottleneck with padding too, and says so without blaming padding", () => {
+    const r = computeUNetShapes({ ...POST_CONFIG, inputSize: 8, padding: 1 });
+    expect(r.ok).toBe(false);
+    expect(r.failedAt).toBe("bottleneck");
+    expect(r.error).not.toContain("without padding");
+    expect(
+      computeUNetShapes({ ...POST_CONFIG, inputSize: 128, padding: 1 }).ok,
+    ).toBe(true);
+  });
+
   it("rejects a non-positive input at the input stage", () => {
     const { r } = sizes(0);
     expect(r.failedAt).toBe("input");
