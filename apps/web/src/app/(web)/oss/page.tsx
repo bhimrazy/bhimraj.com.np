@@ -4,7 +4,7 @@ import {
   getMonthlyContributions,
   getOSSActivity,
   getOSSStats,
-  ossStartYear,
+  getSnapshotMeta,
   username,
 } from "@bhimrazy/github";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
@@ -15,22 +15,46 @@ import { ContributionGraph } from "@/components/oss/contribution-graph";
 import { Timeline } from "@/components/oss/timeline";
 import { siteConfig } from "@/config/site";
 import { formatCompact } from "@/lib/format";
+import { formatDate } from "@/lib/utils";
+
+const ROUNDED_COMMITS = Math.floor(getOSSStats().totalCommits / 100) * 100;
 
 export const metadata: Metadata = {
   title: "Open Source Journey — Bhimraj Yadav",
-  description:
-    "200+ contributions across PyTorch Lightning, LitServe, LitData, and LitGPT. My open source story.",
+  description: `${ROUNDED_COMMITS}+ contributions across PyTorch Lightning, LitServe, LitData, and LitGPT. My open source story.`,
   alternates: { canonical: "/oss" },
 };
 
 const USERNAME = username;
 const UTM = siteConfig.utmParams;
 
+// First OSS milestone — joining the Lightning AI Studios Publisher Program —
+// matches the Timeline component's first entry ("Mar 2024") below.
+const OSS_START_DATE = "2024-03-01";
+
 function repoUrl(fullName: string, org: string): string {
   if (org.toLowerCase() === USERNAME.toLowerCase()) {
     return `https://github.com/${fullName}?${UTM}`;
   }
   return `https://github.com/${fullName}/pulls?q=is%3Apr+author%3A${USERNAME}+is%3Amerged&${UTM}`;
+}
+
+/** Months elapsed between two ISO-ish date strings (year/month precision). */
+function monthsBetween(fromISO: string, toISO: string): number {
+  const from = new Date(fromISO);
+  const to = new Date(toISO);
+  return (
+    (to.getUTCFullYear() - from.getUTCFullYear()) * 12 +
+    (to.getUTCMonth() - from.getUTCMonth())
+  );
+}
+
+function formatActiveSpan(totalMonths: number): string {
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+  if (years === 0) return `${months}mo`;
+  if (months === 0) return `${years}yr`;
+  return `${years}yr ${months}mo`;
 }
 
 export default async function OSSPage() {
@@ -40,9 +64,10 @@ export default async function OSSPage() {
   // Hidden while the committed snapshot predates the activity metrics.
   const hasActivity = getOSSActivity().prsReviewed > 0;
   const ownStars = getGitHubStars();
+  const { generatedAt } = getSnapshotMeta();
 
-  const currentYear = monthly.at(-1)?.year ?? ossStartYear;
-  const yearsActive = currentYear - ossStartYear;
+  const monthsActive = monthsBetween(OSS_START_DATE, generatedAt);
+  const activeSpan = formatActiveSpan(monthsActive);
 
   const maxRepoCommits = Math.max(...contributions.map((c) => c.commits), 1);
 
@@ -59,7 +84,7 @@ export default async function OSSPage() {
       value: `${formatCompact(ownStars)}+`,
       label: "Stars Earned",
     },
-    { value: `${yearsActive}+`, label: "Years Active" },
+    { value: activeSpan, label: "Active Since Mar 2024" },
   ];
 
   return (
@@ -81,7 +106,7 @@ export default async function OSSPage() {
         </div>
 
         {/* Stats */}
-        <div className="mb-12 grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-site-border shadow-lg/2 transition-shadow duration-200 hover:shadow-xl/5 sm:grid-cols-4">
+        <div className="mb-3 grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-site-border shadow-lg/2 transition-shadow duration-200 hover:shadow-xl/5 sm:grid-cols-4">
           {stats.map((stat) => (
             <div
               key={stat.label}
@@ -96,6 +121,11 @@ export default async function OSSPage() {
             </div>
           ))}
         </div>
+
+        {/* Synced-from-GitHub trust caption */}
+        <p className="mb-12 text-right font-mono text-[11px] text-site-text-tertiary">
+          Synced from GitHub {formatDate(generatedAt)}
+        </p>
 
         {/* Maintainer work beyond merged PRs — hidden while the snapshot predates it */}
         {hasActivity && (
@@ -124,7 +154,8 @@ export default async function OSSPage() {
           Key Contributions
         </h2>
         <p className="mb-6 text-site-text-secondary text-sm">
-          Every repo where I have more than one contribution — live from GitHub.
+          Every repo where I have more than one contribution — synced daily from
+          GitHub.
         </p>
         <div className="mb-12 divide-y divide-site-border overflow-hidden rounded-xl border border-site-border bg-site-card dark:divide-white/4 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary">
           {contributions.map((c) => (
@@ -134,6 +165,7 @@ export default async function OSSPage() {
               target="_blank"
               rel="nofollow noopener noreferrer"
               className="group relative isolate flex flex-col gap-1.5 overflow-hidden px-4 py-3 sm:flex-row sm:items-center sm:gap-4 sm:px-5"
+              title={c.fullName}
             >
               {/* Commit-volume bar — ranks repos at a glance */}
               <span
@@ -145,9 +177,9 @@ export default async function OSSPage() {
               />
 
               {/* Repo + org */}
-              <div className="flex items-center gap-2 sm:w-60 sm:shrink-0">
+              <div className="flex min-w-0 items-center gap-2 sm:w-72 sm:shrink-0 lg:w-80">
                 <GitHubLogoIcon className="h-3.5 w-3.5 shrink-0 text-site-text-tertiary transition-colors group-hover:text-site-accent" />
-                <h3 className="truncate font-display font-semibold text-[15px] text-site-text">
+                <h3 className="min-w-0 truncate font-display font-semibold text-[15px] text-site-text">
                   {c.name}
                 </h3>
                 <span className="ml-auto shrink-0 rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[10px] text-site-accent sm:ml-0">
@@ -166,7 +198,7 @@ export default async function OSSPage() {
               )}
 
               {/* Stats */}
-              <div className="flex items-center gap-x-3 font-mono text-[11px] text-site-text-tertiary sm:ml-auto sm:shrink-0">
+              <div className="grid shrink-0 grid-cols-2 gap-x-3 gap-y-0.5 font-mono text-[11px] text-site-text-tertiary sm:ml-auto sm:flex sm:items-center">
                 <span className="text-site-accent">{c.commits} commits</span>
                 {c.prs > 0 && <span>{c.prs} PRs</span>}
                 <span>★ {formatCompact(c.stars)}</span>

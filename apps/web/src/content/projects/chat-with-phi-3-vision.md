@@ -3,6 +3,7 @@ title: "Chat with Phi 3.5 Vision"
 description: "Deploy and chat with Microsoft's Phi 3.5-vision multimodal LLM. LitServe handles high-performance inference while a Streamlit frontend gives you multi-image chat, comparison, and video summarization."
 publishedAt: "2024-05-23"
 tags: [LitServe, Multimodal, LLM, Streamlit]
+category: "Multimodal LLMs"
 image: "https://opengraph.githubassets.com/1/bhimrazy/chat-with-phi-3-vision"
 githubLink: "https://github.com/bhimrazy/chat-with-phi-3-vision"
 liveLink: "https://lightning.ai/bhimrajyadav/studios/deploy-and-chat-with-phi-3-vision-128k-instruct"

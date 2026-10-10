@@ -3,6 +3,7 @@ title: "LitServe Examples"
 description: "A curated collection of production-grade AI serving examples built on LitServe — Lightning AI's high-performance inference engine. Covers speech, vision, LLMs, embeddings, and object detection."
 publishedAt: "2024-10-15"
 tags: [LitServe, AI, APIs, Production]
+category: "Model Serving"
 image: "https://opengraph.githubassets.com/1/bhimrazy/litserve-examples"
 githubLink: "https://github.com/bhimrazy/litserve-examples"
 ---
