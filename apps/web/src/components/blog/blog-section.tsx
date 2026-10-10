@@ -1,23 +1,36 @@
 import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { cacheLife } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { cn, formatDate, formatMonthDay, getReadingTime } from "@/lib/utils";
-import { type BlogPost, postHref, sortedPosts, tagLabel } from "./posts";
+import {
+  type BlogPost,
+  featuredLabel,
+  postHref,
+  sortedPosts,
+  tagLabel,
+} from "./posts";
 
 const focusRing =
   "focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4";
 
 /** Featured post (flagged `featured`, else the newest), then a year-grouped archive. */
-export default function BlogSection() {
+export default async function BlogSection() {
+  // "Today" for the Latest badge; cached like the footer's year, so the page
+  // stays prerendered and the label re-evaluates daily.
+  "use cache";
+  cacheLife("days");
+
   const featured = sortedPosts.find((p) => p.featured) ?? sortedPosts[0];
   if (!featured) return null;
+  const label = featuredLabel(featured, Date.now());
 
   const rest = sortedPosts.filter((p) => p !== featured);
   const years = groupByYear(rest);
 
   return (
     <>
-      <FeaturedPost post={featured} />
+      <FeaturedPost post={featured} label={label} />
 
       {rest.length > 0 && (
         <section aria-labelledby="archive" className="mt-20">
@@ -59,7 +72,13 @@ export default function BlogSection() {
   );
 }
 
-function FeaturedPost({ post }: { post: BlogPost }) {
+function FeaturedPost({
+  post,
+  label,
+}: {
+  post: BlogPost;
+  label: string | null;
+}) {
   return (
     <article className="group relative grid overflow-hidden rounded-2xl border border-site-border bg-site-card transition-colors duration-200 hover:border-site-border-hover md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] dark:border-white/6 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:hover:border-white/12">
       <div className="relative aspect-video overflow-hidden border-site-border border-b bg-site-bg-secondary md:aspect-auto md:min-h-88 md:border-r md:border-b-0 dark:border-white/6">
@@ -75,9 +94,11 @@ function FeaturedPost({ post }: { post: BlogPost }) {
 
       <div className="flex flex-col p-6 sm:p-8 lg:p-10">
         <div className="mb-5 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-site-text-tertiary text-xs">
-          <span className="rounded-full bg-site-accent-subtle px-2.5 py-0.5 font-medium text-[10px] text-site-accent uppercase tracking-[1.5px]">
-            {post.featured ? "Featured" : "Latest"}
-          </span>
+          {label && (
+            <span className="rounded-full bg-site-accent-subtle px-2.5 py-0.5 font-medium text-[10px] text-site-accent uppercase tracking-[1.5px]">
+              {label}
+            </span>
+          )}
           <span className="whitespace-nowrap">
             <time dateTime={post.publishedAt}>
               {formatDate(post.publishedAt)}
