@@ -15,6 +15,15 @@ import {
 
 export type { OSSActivity, OSSActivityMetric } from "../activity-queries";
 
+/**
+ * What a sync run fetches. Cumulative counters come back as 0 when their
+ * request fails (the merge keeps the previous maximum), but `prsOpen` is a
+ * live count where 0 is a legitimate answer, so a failed fetch is `null`.
+ */
+export type FreshOSSActivity = Omit<OSSActivity, "prsOpen"> & {
+  prsOpen: number | null;
+};
+
 const closingIssuesPageSchema = z.object({
   data: z.object({
     search: z.object({
@@ -81,19 +90,21 @@ function countIssuesResolved(
 }
 
 /**
- * Fetches every `OSSActivity` metric. A metric whose request fails comes back
- * as 0 — the snapshot merge then holds the last good value.
+ * Fetches every `OSSActivity` metric. A cumulative metric whose request fails
+ * comes back as 0 — the snapshot merge then holds the last good value. The
+ * open-PR count is live, so its failure is `null` rather than a fake zero.
  */
 export async function getOSSActivity(
   username: string,
   repos: readonly string[],
-): Promise<OSSActivity> {
+): Promise<FreshOSSActivity> {
   const scope = ossSearchScope(username, repos);
   const queries = ossActivityQueries(username, scope);
 
-  const orZero = <E>(
+  const orFallback = <E, F>(
     metric: OSSActivityMetric,
     effect: Effect.Effect<number, E>,
+    fallback: F,
   ) =>
     effect.pipe(
       Effect.tapError((error) =>
@@ -101,15 +112,17 @@ export async function getOSSActivity(
           log.warn("activity metric failed", { metric }, error),
         ),
       ),
-      Effect.catchAll(() => Effect.succeed(0)),
+      Effect.catchAll(() => Effect.succeed(fallback)),
     );
+  const orZero = <E>(metric: OSSActivityMetric, e: Effect.Effect<number, E>) =>
+    orFallback(metric, e, 0);
 
   const [prsReviewed, prsOpen, issuesHelped, issuesOpened, issuesResolved] =
     await Effect.runPromise(
       Effect.all(
         [
           orZero("prsReviewed", searchIssueCount(queries.prsReviewed)),
-          orZero("prsOpen", searchIssueCount(queries.prsOpen)),
+          orFallback("prsOpen", searchIssueCount(queries.prsOpen), null),
           orZero("issuesHelped", searchIssueCount(queries.issuesHelped)),
           orZero("issuesOpened", searchIssueCount(queries.issuesOpened)),
           orZero("issuesResolved", countIssuesResolved(username, scope)),
