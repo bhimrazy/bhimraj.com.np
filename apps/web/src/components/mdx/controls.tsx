@@ -3,10 +3,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-/*
- * Small, quiet controls shared by the interactive figures. Mono labels,
- * hairline borders, amber only for the active state.
- */
+/* Shared figure controls: mono labels, hairline borders, amber when active. */
 
 const focusRing =
   "focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2";

@@ -1,23 +1,7 @@
 import { Children, isValidElement, type ReactNode } from "react";
 import { WalkthroughClient, type WalkthroughStep } from "./walkthrough-client";
 
-/**
- * A code walkthrough: one code block, several `<Step>`s that each highlight
- * some of its lines.
- *
- * ```mdx
- * <CodeWalkthrough caption="…">
- *
- * ```python
- * …
- * ```
- *
- * <Step lines="1-3" title="Encode">Prose for this step.</Step>
- * <Step lines="5,7-9" title="Decode">…</Step>
- *
- * </CodeWalkthrough>
- * ```
- */
+/** One code block plus `<Step lines="1-3" title="…">` children that highlight its lines. */
 export function CodeWalkthrough({
   children,
   caption,

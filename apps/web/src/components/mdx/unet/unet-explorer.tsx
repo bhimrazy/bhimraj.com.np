@@ -100,11 +100,7 @@ function summary(shapes: UNetShapes, inputSize: number, padding: Padding) {
   return `${inputSize - out} px lost because MaxPool2d floors odd sizes; inputs divisible by ${2 ** (shapes.depth - 1)} keep their size.`;
 }
 
-/**
- * The post's UNet with every feature-map shape computed from its code.
- * Controls: input size and conv padding. Hover, focus or tap a map for its
- * shape and the code that produces it.
- */
+/** The post's UNet with shapes computed from its code; pick a map to see its shape and source. */
 export function UNetExplorer() {
   const [inputSize, setInputSize] = useState<number>(POST_CONFIG.inputSize);
   const [padding, setPadding] = useState<Padding>(POST_CONFIG.padding);
