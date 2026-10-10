@@ -3,13 +3,8 @@ import { cacheLife } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { cn, formatDate, formatMonthDay, getReadingTime } from "@/lib/utils";
-import {
-  type BlogPost,
-  featuredLabel,
-  postHref,
-  sortedPosts,
-  tagLabel,
-} from "./posts";
+import { featuredLabel } from "./featured-label";
+import { type BlogPost, postHref, sortedPosts, tagLabel } from "./posts";
 
 const focusRing =
   "focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4";
