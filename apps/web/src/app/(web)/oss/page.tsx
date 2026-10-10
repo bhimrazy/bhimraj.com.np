@@ -15,15 +15,16 @@ import { ContributionGraph } from "@/components/oss/contribution-graph";
 import { Timeline } from "@/components/oss/timeline";
 import { siteConfig } from "@/config/site";
 import { formatCompact } from "@/lib/format";
+import { pageMetadata } from "@/lib/metadata";
 import { formatDate } from "@/lib/utils";
 
 const ROUNDED_COMMITS = Math.floor(getOSSStats().totalCommits / 100) * 100;
 
-export const metadata: Metadata = {
-  title: "Open Source Journey — Bhimraj Yadav",
+export const metadata: Metadata = pageMetadata({
+  title: "Open Source Journey",
   description: `${ROUNDED_COMMITS}+ contributions across PyTorch Lightning, LitServe, LitData, and LitGPT. My open source story.`,
-  alternates: { canonical: "/oss" },
-};
+  path: "/oss",
+});
 
 const USERNAME = username;
 const UTM = siteConfig.utmParams;

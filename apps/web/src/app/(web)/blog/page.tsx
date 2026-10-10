@@ -3,29 +3,14 @@ import BlogSection from "@/components/blog/blog-section";
 import { sortedPosts } from "@/components/blog/posts";
 import { Container } from "@/components/container";
 import { blog } from "@/config/blog";
-import { siteConfig } from "@/config/site";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+// No explicit images: the generated card in ./opengraph-image.tsx applies.
+export const metadata: Metadata = pageMetadata({
   title: blog.title,
   description: blog.description,
-  alternates: { canonical: blog.url },
-  openGraph: {
-    type: "website",
-    url: blog.url,
-    title: blog.title,
-    description: blog.description,
-    siteName: siteConfig.name,
-    images: blog.images,
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: siteConfig.author.handle,
-    creator: siteConfig.author.handle,
-    title: blog.title,
-    description: blog.description,
-    images: blog.images,
-  },
-};
+  path: "/blog",
+});
 
 const years = sortedPosts.map((p) => new Date(p.publishedAt).getUTCFullYear());
 const span =

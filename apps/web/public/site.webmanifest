@@ -1,6 +1,7 @@
 {
-  "name": "bhimraj.com.np",
-  "short_name": "bhimraj.com.np",
+  "name": "Bhimraj Yadav – Software Engineer & OSS Contributor",
+  "short_name": "Bhimraj Yadav",
+  "description": "Software Engineer at Fetchly Labs and Tier 2 OSS contributor at Lightning AI. Writing about engineering, open source, and AI from Kathmandu, Nepal.",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -13,7 +14,7 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "theme_color": "#0f0d0a",
+  "background_color": "#0f0d0a",
   "display": "standalone"
 }
