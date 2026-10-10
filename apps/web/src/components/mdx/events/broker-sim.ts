@@ -35,8 +35,7 @@ export type BrokerAction =
   | { type: "tick" }
   | { type: "setMode"; mode: Mode }
   | { type: "togglePause"; id: string }
-  | { type: "replay"; id: string }
-  | { type: "reset" };
+  | { type: "replay"; id: string };
 
 /** Publish ticks (~0.6 events/tick vs 1 read/tick), so a lagging consumer catches up. */
 const PUBLISH_PATTERN = [1, 0, 1, 1, 0, 1, 0, 1, 0, 1] as const;
@@ -71,14 +70,12 @@ export function retainedOffsets(state: BrokerState) {
 }
 
 function trim(state: BrokerState): BrokerState {
-  let head = state.head;
-  if (state.mode === "pubsub") {
-    // Delete everything every subscriber has consumed.
-    head = Math.min(state.nextOffset, ...state.consumers.map((c) => c.offset));
-  } else {
-    head = Math.max(head, state.nextOffset - state.retention);
-  }
-  head = Math.max(head, state.head);
+  // Pub/sub deletes what every subscriber has consumed; a stream keeps `retention`.
+  const keepFrom =
+    state.mode === "pubsub"
+      ? Math.min(state.nextOffset, ...state.consumers.map((c) => c.offset))
+      : state.nextOffset - state.retention;
+  const head = Math.max(state.head, keepFrom);
   // A consumer that fell behind the retention window skips ahead.
   const consumers = state.consumers.map((c) =>
     c.offset < head ? { ...c, offset: head } : c,
@@ -137,12 +134,6 @@ export function brokerReducer(
           c.id === action.id ? { ...c, offset: state.head } : c,
         ),
       };
-    case "reset":
-      return initialBrokerState(
-        state.mode,
-        state.consumers.map((c) => c.id),
-        state.retention,
-      );
   }
 }
 
