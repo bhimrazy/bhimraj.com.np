@@ -1,7 +1,10 @@
-/** Compact count for stars/forks: 725 → "725", 31361 → "31.4k". */
+/**
+ * Compact count: exact with a thousands separator under 10k ("1,093"), one
+ * floored decimal above ("31.3k"). Flooring keeps a trailing "+" honest.
+ */
 export function formatCompact(n: number): string {
-  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
-  return String(n);
+  if (n >= 10_000) return `${Math.floor(n / 100) / 10}k`;
+  return n.toLocaleString("en-US");
 }
 
 const shortDate = new Intl.DateTimeFormat("en-US", {
