@@ -1,5 +1,5 @@
 import { featuredRepo, ossRepos, username } from "./config";
-import { getOSSActivity } from "./fetchers/activity";
+import { type FreshOSSActivity, getOSSActivity } from "./fetchers/activity";
 import {
   getGitHubContributions,
   getMonthlyContributions,
@@ -12,12 +12,17 @@ import {
 import { getFeaturedRepoStats, getGitHubStars } from "./fetchers/stars";
 import type { GitHubSnapshot } from "./types";
 
+/** A just-fetched snapshot: like the committed one, but a failed open-PR fetch is `null`. */
+export type FreshSnapshot = Omit<GitHubSnapshot, "ossActivity"> & {
+  ossActivity: FreshOSSActivity;
+};
+
 /**
  * Fetches everything the site needs from GitHub and assembles a single snapshot
  * object. Runs in a plain Node/Bun process (the sync command), authenticated via
  * `GITHUB_TOKEN`, so it gets the full data without the request-time rate limits.
  */
-export async function buildSnapshot(): Promise<GitHubSnapshot> {
+export async function buildSnapshot(): Promise<FreshSnapshot> {
   const lightningRepos = ossRepos.filter((r) => r.startsWith("Lightning-AI/"));
 
   const [

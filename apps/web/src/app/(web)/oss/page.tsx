@@ -2,6 +2,7 @@ import {
   getContributedRepos,
   getGitHubStars,
   getMonthlyContributions,
+  getOSSActivity,
   getOSSStats,
   getSnapshotMeta,
   username,
@@ -63,6 +64,8 @@ export default async function OSSPage() {
   const contributions = getContributedRepos();
   const oss = getOSSStats();
   const monthly = getMonthlyContributions();
+  // Hidden while the committed snapshot predates the activity metrics.
+  const hasActivity = getOSSActivity().prsReviewed > 0;
   const ownStars = getGitHubStars();
   const { generatedAt } = getSnapshotMeta();
 
@@ -101,7 +104,7 @@ export default async function OSSPage() {
           <p className="max-w-2xl text-lg text-site-text-secondary leading-relaxed">
             Contributing to open source has shaped how I write software, think
             about APIs, and collaborate at scale. Here&apos;s the story — with
-            live numbers straight from GitHub.
+            numbers synced daily from GitHub.
           </p>
         </div>
 
@@ -127,17 +130,19 @@ export default async function OSSPage() {
           Synced from GitHub {formatDate(generatedAt)}
         </p>
 
-        {/* Maintainer work beyond merged PRs */}
-        <h2 className="mb-2 font-bold font-display text-2xl text-site-text">
-          Beyond the merge button
-        </h2>
-        <p className="mb-6 text-site-text-secondary text-sm">
-          Reviews, resolved issues, and support threads across the same repos —
-          each number links to the GitHub search behind it.
-        </p>
-        <div className="mb-12">
-          <ActivityBreakdown />
-        </div>
+        {/* Maintainer work beyond merged PRs — hidden while the snapshot predates it */}
+        {hasActivity && (
+          <section className="mb-12">
+            <h2 className="mb-2 font-bold font-display text-2xl text-site-text">
+              Beyond the merge button
+            </h2>
+            <p className="mb-6 text-site-text-secondary text-sm">
+              Reviews, resolved issues, and support threads across the same
+              repos — each number links to the GitHub search behind it.
+            </p>
+            <ActivityBreakdown />
+          </section>
+        )}
 
         {/* Contribution graph */}
         <h2 className="mb-6 font-bold font-display text-2xl text-site-text">
