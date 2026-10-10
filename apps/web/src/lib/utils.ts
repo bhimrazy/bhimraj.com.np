@@ -18,8 +18,24 @@ export function formatDate(dateOrString: Date | string): string {
     month: "long",
     day: "numeric",
     year: "numeric",
+    // "YYYY-MM-DD" strings parse as UTC; format in UTC too so a build west
+    // of Greenwich doesn't print the previous day.
+    timeZone: "UTC",
   };
   return date?.toLocaleDateString("en-US", options);
+}
+
+/** Formats a date as "Oct 16" — for lists already grouped by year. */
+export function formatMonthDay(dateOrString: Date | string): string {
+  const date =
+    typeof dateOrString === "string" ? new Date(dateOrString) : dateOrString;
+  // Dates in frontmatter are plain "YYYY-MM-DD" strings (parsed as UTC), so
+  // format them in UTC too or a build west of Greenwich shifts them a day.
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  });
 }
 
 /**
