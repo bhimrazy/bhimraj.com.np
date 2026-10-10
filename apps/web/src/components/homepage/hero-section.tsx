@@ -146,7 +146,7 @@ export default async function HeroSection() {
               href="#contact"
               className="group mb-5 inline-flex items-center gap-2 rounded-full border border-site-border bg-site-card/70 py-1 pr-3 pl-2.5 font-mono text-[12px] text-site-text-secondary backdrop-blur-sm transition-colors hover:border-site-accent/40 hover:text-site-text focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2 sm:mb-6"
             >
-              <span className="size-1.5 rounded-full bg-green-500 motion-safe:animate-pulse-dot" />
+              <span className="size-1.5 rounded-full bg-site-success motion-safe:animate-pulse-dot" />
               Available for collaboration
               <span
                 aria-hidden
