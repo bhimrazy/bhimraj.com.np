@@ -89,12 +89,6 @@ describe("computeUNetShapes", () => {
     expect(depth).toBe(4);
     expect(output.size).toBe(484);
   });
-
-  it("reports inputs that are too small instead of returning bad shapes", () => {
-    const result = computeUNetShapes({ ...POST_CONFIG, inputSize: 64 });
-    expect(result.ok).toBe(false);
-    expect(result.error).toMatch(/Too small/);
-  });
 });
 
 describe("computeUNetShapes with an input that's too small", () => {

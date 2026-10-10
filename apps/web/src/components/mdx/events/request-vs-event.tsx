@@ -174,10 +174,7 @@ function LaneSvg({ lane, t }: { lane: Lane; t: number }) {
   );
 }
 
-/**
- * Side-by-side sequence diagrams for the post's ride-pricing example. The
- * server renders the finished picture; Play replays it on a shared clock.
- */
+/** Request-driven vs event-driven, side by side. SSR shows the end; Play replays it. */
 export function RequestVsEvent() {
   const ref = useRef<HTMLDivElement>(null);
   const { playing, setPlaying, toggle, running } = usePlayback(ref);
