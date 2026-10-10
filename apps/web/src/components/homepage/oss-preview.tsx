@@ -1,130 +1,165 @@
-import {
-  getContributedRepos,
-  getLightningAIEcosystemStats,
-  getOSSStats,
-} from "@bhimrazy/github";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
+import { getLightningAIEcosystemStats } from "@bhimrazy/github";
 import { Container } from "@/components/container";
+import { SectionHeading } from "@/components/section-heading";
 import { siteConfig } from "@/config/site";
+import { formatCompact } from "@/lib/format";
+import { cn } from "@/lib/utils";
+import FeaturedProjectCard from "./featured-project";
+import { surface } from "./surface";
 
 const UTM = siteConfig.utmParams;
 
-function formatStars(n: number): string {
-  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
-  return String(n);
-}
+/** Accent ramp for the bar segments, strongest first; the remainder is neutral. */
+const SEGMENT_TONES = [
+  "bg-site-accent",
+  "bg-site-accent/70",
+  "bg-site-accent/45",
+  "bg-site-accent/25",
+] as const;
+const REST_TONE = "bg-site-text-tertiary/35";
+
+type Segment = {
+  key: string;
+  name: string;
+  prs: number;
+  tone: string;
+  href?: string;
+  description?: string;
+  stars?: number;
+};
 
 export default async function OSSPreview() {
-  const { repos } = getLightningAIEcosystemStats();
-  const { totalPrs, totalCommits } = getOSSStats();
-  const contributedRepos = getContributedRepos();
+  const { totalPrs, repos } = getLightningAIEcosystemStats();
 
-  const topRepos = repos.slice(0, 3);
-  const ecosystemStars = repos.reduce((sum, repo) => sum + repo.stars, 0);
-
-  const stats = [
-    { value: `${totalCommits}+`, label: "Contributions" },
-    { value: `${totalPrs}+`, label: "PRs Merged" },
-    { value: formatStars(ecosystemStars), label: "Ecosystem Stars" },
-    { value: `${contributedRepos.length}+`, label: "Repos Contributed" },
-  ];
+  const tracked: Segment[] = repos.map((repo, i) => ({
+    key: repo.fullName,
+    name: repo.name,
+    prs: repo.prs,
+    tone: SEGMENT_TONES[i] ?? REST_TONE,
+    href: `https://github.com/${repo.fullName}/pulls?q=is%3Apr+author%3A${siteConfig.author.username}+is%3Amerged&${UTM}`,
+    description: repo.description,
+    stars: repo.stars,
+  }));
+  // totalPrs is an org-wide search; the rest landed in smaller Lightning repos.
+  const restPrs = Math.max(
+    0,
+    totalPrs - tracked.reduce((sum, s) => sum + s.prs, 0),
+  );
+  const segments: Segment[] = restPrs
+    ? [
+        ...tracked,
+        {
+          key: "rest",
+          name: "Other Lightning AI repos",
+          prs: restPrs,
+          tone: REST_TONE,
+        },
+      ]
+    : tracked;
+  const barTotal = segments.reduce((sum, s) => sum + s.prs, 0) || 1;
 
   return (
-    <section className="relative overflow-hidden border-site-border/40 border-y bg-site-bg-secondary/30 py-32 dark:bg-white/1.5">
-      {/* Full-bleed accent line — marks this as the page's centerpiece */}
+    <section
+      id="open-source"
+      className="relative scroll-mt-20 border-site-border/60 border-y bg-site-bg-secondary/40 py-24 sm:py-28 dark:border-white/4 dark:bg-white/1.5"
+    >
       <div className="pointer-events-none absolute top-0 left-1/2 h-px w-2/3 -translate-x-1/2 bg-linear-to-r from-transparent via-site-accent/40 to-transparent" />
 
-      <Container className="relative">
-        {/* Section header — centered to break the section rhythm */}
-        <div className="mx-auto mb-12 max-w-2xl text-center">
-          <span className="font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">
-            Open Source
-          </span>
-          <h2 className="mt-2 font-bold font-display text-3xl text-site-text leading-tight sm:text-4xl">
-            Contributing to the ecosystem
-          </h2>
-          <p className="mt-3 text-base text-site-text-secondary">
-            Merged work across PyTorch Lightning, LitServe, LitData, and the
-            wider open-source ecosystem.
-          </p>
-        </div>
+      <Container>
+        <SectionHeading
+          index="01"
+          eyebrow="Open source"
+          title="Where the merged PRs land"
+          description="As a Tier 2 contributor at Lightning AI, most of my open-source work goes into the stack teams use to load data, train, and serve models."
+          action={{ href: "/oss", label: "Full OSS journey" }}
+        />
 
-        {/* Stats band — the OSS data is the strongest asset, rendered large */}
-        <div className="mb-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-site-border/50 bg-site-border/30 sm:grid-cols-4 dark:border-white/5 dark:bg-white/5">
-          {stats.map((stat) => (
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
+          {/* Contributor: PR distribution across the Lightning AI stack */}
+          <div className={cn(surface, "p-6 sm:p-7")}>
+            <p className="font-mono text-[11px] text-site-text-tertiary uppercase tracking-[1.2px]">
+              Share of merged PRs · Lightning AI
+            </p>
+
             <div
-              key={stat.label}
-              className="bg-site-card px-6 py-7 text-center dark:bg-site-bg"
+              className="mt-4 flex h-3 w-full gap-0.5 overflow-hidden rounded-full"
+              role="img"
+              aria-label={segments
+                .map((s) => `${s.name}: ${s.prs} merged PRs`)
+                .join(", ")}
             >
-              <div className="font-bold font-display text-3xl text-site-text sm:text-4xl">
-                {stat.value}
-              </div>
-              <div className="mt-1.5 font-mono text-[11px] text-site-text-tertiary uppercase tracking-[1px]">
-                {stat.label}
-              </div>
+              {segments.map((s) => (
+                <span
+                  key={s.key}
+                  className={cn(
+                    "h-full first:rounded-l-full last:rounded-r-full",
+                    s.tone,
+                  )}
+                  style={{ width: `${(s.prs / barTotal) * 100}%` }}
+                />
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* Repo cards */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {topRepos.map((repo) => (
-            <a
-              key={repo.name}
-              href={`https://github.com/${repo.fullName}/pulls?q=is%3Apr+author%3Abhimrazy+is%3Amerged&${UTM}`}
-              target="_blank"
-              rel="nofollow noopener noreferrer"
-              className="group block"
-            >
-              <div className="relative h-full overflow-hidden rounded-xl border border-site-border bg-site-card px-6 py-5 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-site-border-hover group-hover:shadow-xl/5 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:group-hover:border-white/10 dark:group-hover:shadow-site-accent-subtle">
-                {/* Hover glow */}
-                <span className="pointer-events-none absolute -top-16 -right-12 size-40 rounded-full bg-site-accent-subtle opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-100" />
-
-                <div className="relative flex h-full flex-col">
-                  {/* Icon + org badge */}
-                  <div className="mb-3 flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <GitHubLogoIcon className="h-4 w-4 text-site-text-tertiary" />
-                      <span className="rounded-full bg-site-accent-subtle px-2.5 py-0.5 font-mono font-semibold text-[10px] text-site-accent uppercase tracking-[0.5px]">
-                        Lightning AI
+            <ul className="mt-6 divide-y divide-site-border/60 dark:divide-white/5">
+              {segments.map((s) => {
+                const row = (
+                  <>
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "mt-1.5 size-2.5 shrink-0 rounded-sm",
+                        s.tone,
+                      )}
+                    />
+                    <span className="min-w-0 flex-1">
+                      <span className="flex flex-wrap items-baseline gap-x-2">
+                        <span className="font-display font-semibold text-site-text transition-colors group-hover:text-site-accent">
+                          {s.name}
+                        </span>
+                        {s.stars !== undefined && (
+                          <span className="font-mono text-[11px] text-site-text-tertiary">
+                            ★ {formatCompact(s.stars)}
+                          </span>
+                        )}
                       </span>
-                    </div>
-                    <span className="font-mono font-semibold text-[11px] text-site-accent">
-                      {repo.prs} PRs
+                      {s.description && (
+                        <span className="mt-0.5 line-clamp-1 block text-site-text-secondary text-sm">
+                          {s.description}
+                        </span>
+                      )}
                     </span>
-                  </div>
-
-                  <h3 className="mb-2 font-display font-semibold text-base text-site-text">
-                    {repo.name}
-                  </h3>
-                  <p className="mb-4 flex-1 text-site-text-secondary text-sm leading-relaxed">
-                    {repo.description}
-                  </p>
-
-                  {/* Meta */}
-                  <div className="flex items-center gap-4 text-site-text-tertiary text-xs">
-                    <span className="flex items-center gap-1.5">
-                      <span className="h-2.5 w-2.5 rounded-full bg-[#3572A5]" />
-                      Python
+                    <span className="shrink-0 text-right">
+                      <span className="block font-bold font-display text-lg text-site-text tabular-nums leading-none">
+                        {s.prs}
+                      </span>
+                      <span className="font-mono text-[10px] text-site-text-tertiary uppercase tracking-[0.5px]">
+                        PRs
+                      </span>
                     </span>
-                    <span>★ {formatStars(repo.stars)}</span>
-                    <span>⑂ {formatStars(repo.forks)}</span>
-                  </div>
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
+                  </>
+                );
+                return (
+                  <li key={s.key}>
+                    {s.href ? (
+                      <a
+                        href={s.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group -mx-3 flex items-start gap-3 rounded-lg px-3 py-3.5 transition-colors hover:bg-site-bg-secondary/70 focus-visible:outline-2 focus-visible:outline-site-accent dark:hover:bg-white/3"
+                      >
+                        {row}
+                      </a>
+                    ) : (
+                      <div className="flex items-start gap-3 py-3.5">{row}</div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
 
-        {/* CTA */}
-        <div className="mt-10 text-center">
-          <Link
-            href="/oss"
-            className="inline-flex items-center gap-1.5 font-medium text-site-accent text-sm transition-opacity hover:opacity-80"
-          >
-            View full OSS journey →
-          </Link>
+          {/* Maintainer: the self-authored project */}
+          <FeaturedProjectCard />
         </div>
       </Container>
     </section>

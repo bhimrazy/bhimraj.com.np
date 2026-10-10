@@ -18,6 +18,7 @@
   --site-accent-hover: #f59e0b;
   --site-accent-subtle: rgba(217, 119, 6, 0.08);
   --site-success: #16a34a;
+  --site-on-accent: #1c1917;
   --site-border: #e7e5e4;
   --site-border-hover: #d6d3d1;
   --site-card-bg: #ffffff;
@@ -37,6 +38,7 @@
   --site-accent-hover: #fbbf24;
   --site-accent-subtle: rgba(245, 158, 11, 0.1);
   --site-success: #22c55e;
+  --site-on-accent: #0f0d0a;
   --site-border: #2a2620;
   --site-border-hover: #3a3530;
   --site-card-bg: #17150f;
@@ -60,16 +62,13 @@
   --color-site-accent-hover: var(--site-accent-hover);
   --color-site-accent-subtle: var(--site-accent-subtle);
   --color-site-success: var(--site-success);
+  --color-site-on-accent: var(--site-on-accent);
   --color-site-border: var(--site-border);
   --color-site-border-hover: var(--site-border-hover);
   --color-site-card: var(--site-card-bg);
 
   /* Animations */
   --animate-pulse-dot: pulse-dot 2s ease infinite;
-  --animate-blink: blink 1s step-end infinite;
-  --animate-float-dot: float-dot 6s ease-in-out infinite;
-  --animate-glow-pulse: glow-pulse 4s ease-in-out infinite;
-  --animate-light-sweep: light-sweep 5s ease-in-out infinite;
   --animate-fly: fly 0.5s ease-in-out forwards;
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
@@ -99,31 +98,6 @@
       opacity: 0.4;
     }
   }
-  @keyframes blink {
-    50% {
-      border-color: transparent;
-    }
-  }
-  @keyframes float-dot {
-    0%,
-    100% {
-      transform: translateY(0) scale(1);
-    }
-    50% {
-      transform: translateY(-12px) scale(1.2);
-    }
-  }
-  @keyframes glow-pulse {
-    0%,
-    100% {
-      opacity: 0.15;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.25;
-      transform: scale(1.1);
-    }
-  }
   /* A dot travelling between two points (set --fx/--fy → --tx/--ty). */
   @keyframes fly {
     from {
@@ -137,22 +111,6 @@
       transform: translate(var(--tx), var(--ty));
       opacity: 0;
     }
-  }
-  @keyframes light-sweep {
-    0%,
-    100% {
-      transform: translateX(-100%);
-    }
-    50% {
-      transform: translateX(200%);
-    }
-  }
-}
-
-@utility site-card-hover {
-  background: var(--site-card-bg);
-  &:hover {
-    background: var(--site-bg-secondary);
   }
 }
 
