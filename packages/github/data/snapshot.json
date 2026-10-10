@@ -185,13 +185,6 @@
     "issuesHelped": 222,
     "issuesOpened": 53
   },
-  "ossActivity": {
-    "prsReviewed": 445,
-    "issuesResolved": 69,
-    "prsOpen": 34,
-    "issuesHelped": 222,
-    "issuesOpened": 53
-  },
   "lightningEcosystem": {
     "totalPrs": 280,
     "repos": [
