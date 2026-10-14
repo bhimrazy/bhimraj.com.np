@@ -139,10 +139,14 @@ export function UNetExplorer() {
       <UNetSvg {...svg} className="max-sm:hidden" />
       <UNetSvg {...svg} narrow className="sm:hidden" />
 
-      <div
-        className="mt-3 min-h-18 space-y-1 border-site-border border-t pt-3 text-[13px]"
-        aria-live="polite"
-      >
+      {/* Announce only what changed, not the whole panel on every slider step. */}
+      <p aria-live="polite" className="sr-only">
+        {shapes.error ??
+          (stage
+            ? `${stageTitle(stage, shapes.depth)}: ${formatShape(stage)}`
+            : "")}
+      </p>
+      <div className="mt-3 min-h-18 space-y-1 border-site-border border-t pt-3 text-sm">
         {shapes.error ? (
           <p className="text-site-text-secondary">
             <span className="font-mono text-site-accent">✕</span> {shapes.error}
@@ -186,7 +190,7 @@ export function UNetExplorer() {
               </span>
             </p>
             <p className="text-site-text-tertiary">
-              {summary(shapes, inputSize, padding)} Hover or tap a feature map
+              {summary(shapes, inputSize, padding)} Click or tap a feature map
               to see its shape and code.
             </p>
           </>

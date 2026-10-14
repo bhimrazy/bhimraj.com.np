@@ -20,7 +20,7 @@ const buttonVariants = cva(
         link: "text-site-accent underline-offset-4 hover:underline",
         /** Post figures: mono, hairline border; aria-disabled keeps focus. */
         figure:
-          "border border-site-border font-mono font-normal text-2xs text-site-text-secondary hover:border-site-border-hover hover:text-site-text aria-disabled:cursor-default aria-disabled:opacity-40 aria-disabled:hover:border-site-border aria-disabled:hover:text-site-text-secondary",
+          "border border-site-border font-mono font-normal text-2xs text-site-text-secondary hover:border-site-border-hover focus-visible:ring-2 focus-visible:ring-site-accent hover:text-site-text aria-disabled:cursor-default aria-disabled:opacity-40 aria-disabled:hover:border-site-border aria-disabled:hover:text-site-text-secondary",
       },
       size: {
         default: "h-9 px-4 py-2",
