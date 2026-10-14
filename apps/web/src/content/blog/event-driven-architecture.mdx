@@ -66,12 +66,6 @@ Typically, a broker handles the transmission of event messages between publish
 
 In the event streaming model, event producers publish *streams* of events to a broker. Event consumers subscribe to the streams, but instead of receiving and consuming every event as it is published, they can step into each stream at any point and consume only the events they want. The key difference here is that the events are retained by the broker even after the consumers have received them.
 
-Try both models below: pause a consumer to watch the broker hold its backlog, then switch to event streaming to see consumed events stay in the log and be replayed.
-
-<Figure label="Pub/sub vs event streaming" caption="One producer, a broker and two subscribers. In pub/sub, an event is deleted once every subscriber has consumed it. In event streaming, the broker keeps the last 12 events whether or not they were consumed, so a consumer can step back in at an earlier offset.">
-  <PubSubSimulator />
-</Figure>
-
 A data streaming platform, such as **Apache Kafka**, manages the logging and transmission of tremendous volumes of events at very high throughput (literally trillions of event records per day, in real-time, without performance lag). A streaming platform offers certain characteristics a message broker does not:
 
 - **Event persistence:** Because consumers may consume events at any time after they are published, event streaming records are *persistent*—they are maintained for a configurable amount of time, anywhere from fractions of a second to forever. This enables event stream applications to process historical data, as well as real-time data.

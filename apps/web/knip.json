@@ -1,5 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "entry": ["src/content/**/*.mdx"],
   "next": {
     "config": ["next.config.{js,ts,cjs,mjs}"],
     "entry": [

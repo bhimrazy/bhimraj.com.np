@@ -1,7 +1,6 @@
 import { allBlogPosts } from "content-collections";
 import { notFound } from "next/navigation";
 import { OG_CONTENT_TYPE, OG_SIZE, renderOgImage } from "@/lib/og";
-import { getReadingTime } from "@/lib/utils";
 
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
@@ -22,7 +21,7 @@ export default async function Image({
   return renderOgImage({
     eyebrow: "Blog",
     title: post.title,
-    meta: getReadingTime(post.html),
+    meta: post.readingTime,
     tags: post.tags,
   });
 }

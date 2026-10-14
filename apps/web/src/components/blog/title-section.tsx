@@ -2,17 +2,10 @@ import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
-import { cn, formatDate, getReadingTime } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import { type BlogPost, tagLabel, wasUpdated } from "./posts";
 
-export default function TitleSection({
-  blog,
-  dek,
-}: {
-  blog: BlogPost;
-  /** Trusted HTML subtitle split from the post body (see `splitDek`). */
-  dek?: string | null;
-}) {
+export default function TitleSection({ blog }: { blog: BlogPost }) {
   const updated = wasUpdated(blog) ? blog.updatedAt : null;
 
   return (
@@ -51,12 +44,10 @@ export default function TitleSection({
         {blog.title}
       </h1>
 
-      {dek && (
-        <p
-          className="mt-5 text-pretty font-display text-site-text-secondary text-xl leading-snug tracking-tight sm:text-2xl"
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: from trusted MDX
-          dangerouslySetInnerHTML={{ __html: dek }}
-        />
+      {blog.dek && (
+        <p className="mt-5 text-pretty font-display text-site-text-secondary text-xl leading-snug tracking-tight sm:text-2xl">
+          {blog.dek}
+        </p>
       )}
 
       <div className="mt-8 flex items-center gap-3 border-site-border border-y py-4">
@@ -84,7 +75,7 @@ export default function TitleSection({
                 {formatDate(blog.publishedAt)}
               </time>
               <span aria-hidden> · </span>
-              {getReadingTime(blog.html)}
+              {blog.readingTime}
             </span>
             {updated && (
               <span>

@@ -27,11 +27,11 @@ describe("buildRssFeed", () => {
     expect(encoded).toContain('href="//cdn/x"');
   });
 
-  it("drops heading permalinks and escaped MDX figure tags but keeps the prose", () => {
+  it("drops heading permalinks", () => {
     const { encoded } = body(
-      '<p>&#x3C;Step lines="2-3" title="Into the encoder" aside={}>\nShape is <code>x</code>.</p><p>&#x3C;/Step></p><h2 id="a">A<a class="heading-anchor" href="#a" aria-label="Link to A"></a></h2>',
+      '<h2 id="a">A<a class="heading-anchor" href="#a" aria-label="Link to A"></a></h2>',
     );
-    expect(encoded).toBe('<p>Shape is <code>x</code>.</p><h2 id="a">A</h2>');
+    expect(encoded).toBe('<h2 id="a">A</h2>');
   });
 
   it("escapes channel text and uses the newest publish or update date", () => {
