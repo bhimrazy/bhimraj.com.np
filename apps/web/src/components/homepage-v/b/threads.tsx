@@ -79,9 +79,9 @@ export default function Threads() {
       <Container className="px-4 sm:px-8">
         <SectionHeading
           index="01"
-          eyebrow="What I do"
-          title="Where my time goes"
-          description="A full-time job, open source, consulting, research, and sharing what I learn."
+          eyebrow="Work"
+          title="What I work on"
+          description="Products, open source, infrastructure, and some research and writing on the side."
         />
 
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6">
