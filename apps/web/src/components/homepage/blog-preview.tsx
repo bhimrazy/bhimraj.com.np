@@ -1,7 +1,6 @@
 import { allBlogPosts } from "content-collections";
 import Link from "next/link";
 import { Container } from "@/components/container";
-import { getReadingTime } from "@/lib/utils";
 
 const sortedPosts = [...allBlogPosts]
   .sort(
@@ -40,7 +39,7 @@ export default function BlogPreview() {
                 </h3>
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-site-text-tertiary text-sm">
-                    {getReadingTime(post.html)}
+                    {post.readingTime}
                   </span>
                   {post.tags?.slice(0, 2).map((tag: string) => (
                     <span

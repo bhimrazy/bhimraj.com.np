@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import CodeCopyButtons from "@/components/blog/code-copy-buttons";
 import MobileToc from "@/components/blog/mobile-toc";
 import PostEnd from "@/components/blog/post-end";
-import { coverInBody, getPost, splitDek } from "@/components/blog/posts";
+import { getPost } from "@/components/blog/posts";
 import ReadingProgress from "@/components/blog/reading-progress";
 import ShareSidebar from "@/components/blog/share-sidebar";
 import SponsorCard from "@/components/blog/sponsor-card";
@@ -16,7 +16,6 @@ import { Container } from "@/components/container";
 import { mdxComponents } from "@/components/mdx/mdx-components";
 import { ads } from "@/config/ads";
 import { siteConfig } from "@/config/site";
-import { extractToc } from "@/lib/toc";
 
 export async function generateMetadata({
   params,
@@ -95,10 +94,8 @@ export default async function BlogPostPage({
   const post = getPost(slug);
   if (!post) notFound();
 
-  const { dek, body } = splitDek(post.html);
-  const tocItems = extractToc(body);
   const postUrl = `${siteConfig.url}/blog/${post._meta.path}`;
-  const showCover = Boolean(post.image) && !coverInBody(post);
+  const showCover = Boolean(post.image) && !post.coverInBody;
 
   return (
     <main id="top" className="pt-28 pb-24 sm:pt-32">
@@ -111,13 +108,13 @@ export default async function BlogPostPage({
         <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,var(--container-wide))_minmax(0,1fr)] xl:gap-12">
           <aside className="hidden xl:block">
             <div className="sticky top-28 ml-auto max-w-52">
-              <Toc items={tocItems} />
+              <Toc items={post.toc} />
               {ads[0]?.enabled && <SponsorCard ad={ads[0]} />}
             </div>
           </aside>
 
           <article className="mx-auto min-w-0 max-w-wide xl:mx-0">
-            <TitleSection blog={post} dek={dek} />
+            <TitleSection blog={post} />
 
             {showCover && (
               <figure className="mb-12 overflow-hidden rounded-xl border border-site-border dark:border-white/6">
@@ -133,7 +130,7 @@ export default async function BlogPostPage({
               </figure>
             )}
 
-            <MobileToc items={tocItems} className="xl:hidden" />
+            <MobileToc items={post.toc} className="xl:hidden" />
 
             <div id="post-body" className="prose article-prose max-w-none">
               <MDXContent code={post.mdx} components={mdxComponents} />
