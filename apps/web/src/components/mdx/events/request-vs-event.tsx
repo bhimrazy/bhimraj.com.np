@@ -1,9 +1,10 @@
 "use client";
 
-import { useId, useRef } from "react";
-import { ControlBar, PlayButton, Scrubber } from "@/components/mdx/controls";
+import { useRef } from "react";
+import { ControlBar, PlayButton } from "@/components/mdx/controls";
 import { Narration } from "@/components/mdx/figure";
 import { usePlayback, useTimeline } from "@/components/mdx/hooks";
+import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import {
   DURATION,
@@ -63,7 +64,7 @@ function LaneSvg({ lane, t }: { lane: Lane; t: number }) {
             y={18}
             textAnchor="middle"
             className={cn(
-              "font-mono text-[10px]",
+              "font-mono text-3xs",
               a === "customer" ? "fill-site-text" : "fill-site-text-secondary",
             )}
           >
@@ -107,7 +108,7 @@ function LaneSvg({ lane, t }: { lane: Lane; t: number }) {
         <text
           x={cx + 8}
           y={y(lane.wait.end) + 14}
-          className="fill-site-accent font-mono text-[10px]"
+          className="fill-site-accent font-mono text-3xs"
         >
           waited {lane.wait.hops} hops
         </text>
@@ -176,14 +177,13 @@ export function RequestVsEvent() {
   const [t, setT] = useTimeline(DURATION, RATE, running, () =>
     setPlaying(false),
   );
-  const scrubId = useId();
 
   return (
     <div ref={ref}>
       <div className="grid gap-6 sm:grid-cols-2 sm:gap-8">
         {[REQUEST_DRIVEN, EVENT_DRIVEN].map((lane) => (
           <div key={lane.title}>
-            <p className="mb-2 font-mono text-[11px] text-site-text-secondary">
+            <p className="mb-2 font-mono text-2xs text-site-text-secondary">
               {lane.title}
             </p>
             <LaneSvg lane={lane} t={t} />
@@ -193,20 +193,18 @@ export function RequestVsEvent() {
       <Narration live={!playing}>{narrate(t)}</Narration>
       <ControlBar className="mt-3">
         <PlayButton playing={playing} onToggle={toggle} label="sequence" />
-        <label htmlFor={scrubId} className="sr-only">
-          Time
-        </label>
-        <Scrubber
-          id={scrubId}
+        <Slider
+          aria-label="Time"
           aria-valuetext={`t = ${t.toFixed(1)} hops`}
           min={0}
           max={DURATION}
           step={0.05}
-          value={t}
-          onChange={(e) => {
+          value={[t]}
+          onValueChange={([v]) => {
             setPlaying(false);
-            setT(Number(e.target.value));
+            setT(v);
           }}
+          className="min-w-0 flex-1"
         />
         <span className="w-14 text-right tabular-nums" aria-hidden="true">
           t = {t.toFixed(1)}

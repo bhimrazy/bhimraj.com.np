@@ -10,7 +10,7 @@ import {
 } from "react";
 
 /** Live `matchMedia` result; `serverValue` is used for SSR and hydration. */
-export function useMediaQuery(query: string, serverValue = false) {
+function useMediaQuery(query: string, serverValue = false) {
   // Stable callbacks, or useSyncExternalStore re-subscribes every render.
   const subscribe = useCallback(
     (onChange: () => void) => {
@@ -77,18 +77,6 @@ function useLatest<T>(value: T) {
     ref.current = value;
   });
   return ref;
-}
-
-/** Calls `onTick` every `ms` while `running` (and the tab is visible). */
-export function useInterval(onTick: () => void, ms: number, running: boolean) {
-  const tick = useLatest(onTick);
-  useEffect(() => {
-    if (!running) return;
-    const id = window.setInterval(() => {
-      if (document.visibilityState === "visible") tick.current();
-    }, ms);
-    return () => window.clearInterval(id);
-  }, [ms, running, tick]);
 }
 
 /** rAF clock from 0 to `duration` at `rate` units/s; starts at the end so SSR shows the finished frame. */
