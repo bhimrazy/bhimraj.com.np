@@ -6,7 +6,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
-import { cn, formatDate, getReadingTime } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import {
   type BlogPost,
   getRelatedPosts,
@@ -221,7 +221,7 @@ function KeepReading({ related }: { related: RelatedPost[] }) {
                   {post.title}
                 </h3>
                 <p className="mt-auto pt-4 font-mono text-site-text-tertiary text-xs">
-                  {formatDate(post.publishedAt)} · {getReadingTime(post.html)}
+                  {formatDate(post.publishedAt)} · {post.readingTime}
                 </p>
               </div>
             </Link>

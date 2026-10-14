@@ -23,6 +23,11 @@ export function CodeWalkthrough({
       code.push(child);
     }
   });
+  if (steps.length === 0) {
+    throw new Error(
+      '<CodeWalkthrough> needs at least one <Step lines="…" title="…">.',
+    );
+  }
 
   return (
     <WalkthroughClient caption={caption} steps={steps}>
