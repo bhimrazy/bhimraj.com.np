@@ -5,35 +5,30 @@ import rehypeShiki from "@shikijs/rehype";
 import rehypeSlug from "rehype-slug";
 import type { Pluggable } from "unified";
 import { z } from "zod";
+import { postMeta, remarkDropDek } from "./src/components/blog/post-meta";
 import rehypeArticle from "./src/components/blog/rehype-article";
-import rehypeDropDek from "./src/components/mdx/rehype-drop-dek";
 import { codeTransformers } from "./src/components/mdx/shiki-transformers";
 
-const markdownOptions = {
-  rehypePlugins: [
-    rehypeSlug,
-    [
-      rehypeShiki,
-      {
-        themes: {
-          dark: "github-dark",
-          light: "github-light",
-        },
-        defaultColor: false,
-        transformers: codeTransformers,
+const rehypePlugins: Pluggable[] = [
+  rehypeSlug,
+  [
+    rehypeShiki,
+    {
+      themes: {
+        dark: "github-dark",
+        light: "github-light",
       },
-    ] as Pluggable,
+      defaultColor: false,
+      transformers: codeTransformers,
+    },
   ],
-};
+];
 
-// Blog posts get extra editorial markup (figures, heading anchors, dek).
-const blogMarkdownOptions = {
-  rehypePlugins: [...markdownOptions.rehypePlugins, rehypeArticle],
-};
-
-// Rendered as MDX for figures; the dek shows under the title, so the body drops it.
+// Blog posts get extra editorial markup (figures, heading anchors); the dek
+// shows under the title, so the body drops it.
 const blogMdxOptions = {
-  rehypePlugins: [...blogMarkdownOptions.rehypePlugins, rehypeDropDek],
+  remarkPlugins: [remarkDropDek],
+  rehypePlugins: [...rehypePlugins, rehypeArticle],
 };
 
 const BlogPost = defineCollection({
@@ -51,10 +46,8 @@ const BlogPost = defineCollection({
     featured: z.boolean().default(false),
   }),
   transform: async (document, context) => {
-    // Not rendered; feeds the dek, TOC, reading time and cover detection.
-    const html = await compileMarkdown(context, document, blogMarkdownOptions);
     const mdx = await compileMDX(context, document, blogMdxOptions);
-    return { ...document, html, mdx };
+    return { ...document, ...postMeta(document.content, document.image), mdx };
   },
 });
 
@@ -82,7 +75,7 @@ const Project = defineCollection({
       .default("Model Serving"),
   }),
   transform: async (document, context) => {
-    const html = await compileMarkdown(context, document, markdownOptions);
+    const html = await compileMarkdown(context, document, { rehypePlugins });
     return {
       ...document,
       html,

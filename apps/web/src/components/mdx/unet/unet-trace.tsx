@@ -14,9 +14,18 @@ function shortName(stage: Stage) {
   return stage.kind;
 }
 
+/** Throws on a typo, so a bad id in a post fails the build. */
+function stageById(id: string) {
+  const stage = shapes.stages.find((s) => s.id === id);
+  if (stage) return stage;
+  const valid = shapes.stages.map((s) => s.id).join(", ");
+  throw new Error(`Unknown UNet stage "${id}". Valid ids: ${valid}.`);
+}
+
 /** Static mini UNet with some maps lit, e.g. `<UNetTrace at="enc-3 bottleneck" />`. */
 export function UNetTrace({ at }: { at: string }) {
   const ids = new Set(at.split(/\s+/).filter(Boolean));
+  for (const id of ids) stageById(id);
   const lit = shapes.stages.filter((s) => ids.has(s.id));
   const skips = shapes.skips.filter((k) => ids.has(k.from) && ids.has(k.to));
   const title = `UNet with ${lit.map((s) => `${shortName(s)} ${formatShape(s)}`).join(", ")} highlighted`;
@@ -24,7 +33,7 @@ export function UNetTrace({ at }: { at: string }) {
   return (
     <div>
       <UNetSvg shapes={shapes} highlight={ids} compact title={title} />
-      <ul className="mt-3 space-y-0.5 font-mono text-[11px] text-site-text-tertiary">
+      <ul className="mt-3 space-y-0.5 font-mono text-2xs text-site-text-tertiary">
         {/* Long paths list only their ends, so every step stays short. */}
         {(lit.length > 3 ? [lit[0], lit[lit.length - 1]] : lit).map((s, i) => (
           <li key={s.id} className="flex justify-between gap-3">
@@ -52,6 +61,5 @@ export function UNetTrace({ at }: { at: string }) {
 
 /** The `[N, C, H, W]` shape of a stage in the post's UNet, e.g. `<Shape of="enc-0" />`. */
 export function Shape({ of }: { of: string }) {
-  const stage = shapes.stages.find((s) => s.id === of);
-  return <code>{stage ? formatShape(stage) : "?"}</code>;
+  return <code>{formatShape(stageById(of))}</code>;
 }
