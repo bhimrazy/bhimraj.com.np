@@ -30,7 +30,8 @@ and rendered by `<MDXContent>` in `app/(web)/blog/[slug]/page.tsx`. Components i
 
 - `figure.tsx`: `Figure` (frame, label, caption; captions are numbered "Fig. N" by
   the article CSS) and `Narration` (one live sentence under a figure).
-- `controls.tsx`: `ControlBar`, `ControlButton`, `PlayButton`, `Segmented`, `Scrubber`.
+- `controls.tsx`: `ControlBar`, `PlayButton`, `Segmented` (on shadcn `Button` and
+  `ToggleGroup`); sliders are a native `<input type="range">` with `accent-site-accent`.
 - `hooks.ts`: `usePlayback` (autoplay once in view unless reduced motion),
   `useInterval` (ticks only while running and the tab is visible), `useTimeline`
   (rAF clock that starts at the end so SSR shows the finished picture),

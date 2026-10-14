@@ -208,7 +208,7 @@ export function UNetExplorer() {
           step={4}
           value={inputSize}
           onChange={(e) => setInputSize(Number(e.target.value))}
-          className="h-8 min-w-0 min-w-32 flex-1 cursor-pointer accent-site-accent"
+          className="h-8 min-w-32 flex-1 cursor-pointer accent-site-accent"
         />
         <Segmented<"0" | "1">
           label="Convolution padding"
