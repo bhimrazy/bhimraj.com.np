@@ -243,6 +243,11 @@
      code blocks, figures and tables are allowed to use. */
   --container-measure: 38rem;
   --container-wide: 46rem;
+
+  /* Small mono text in figures. T-shirt names so tailwind-merge in cn()
+     treats them as font sizes, not colours. */
+  --text-2xs: 0.6875rem;
+  --text-3xs: 0.625rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

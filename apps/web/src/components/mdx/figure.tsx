@@ -23,7 +23,7 @@ export function Figure({
         )}
       >
         {label ? (
-          <p className="mb-4 font-mono text-[10px] text-site-text-secondary uppercase tracking-[0.14em]">
+          <p className="mb-4 font-mono text-3xs text-site-text-secondary uppercase tracking-[0.14em]">
             {label}
           </p>
         ) : null}

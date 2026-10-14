@@ -198,7 +198,7 @@ export function UNetSvg({
                 x={(x1 + x2) / 2}
                 y={p.y - 5}
                 textAnchor="middle"
-                className={cn("font-mono text-[10px]", textFill(on, unknown))}
+                className={cn("font-mono text-3xs", textFill(on, unknown))}
               >
                 {skipText(skip)}
               </text>
@@ -252,7 +252,7 @@ export function UNetSvg({
                   textAnchor={label.channel.anchor}
                   className={cn(
                     "font-mono",
-                    narrow ? "text-[24px]" : "text-[11px]",
+                    narrow ? "text-2xl" : "text-2xs",
                     textFill(on || failed, unknown),
                   )}
                 >
@@ -264,7 +264,7 @@ export function UNetSvg({
                     y={label.size.y}
                     textAnchor={label.size.anchor}
                     className={cn(
-                      "font-mono text-[10px]",
+                      "font-mono text-3xs",
                       textFill(failed, unknown),
                     )}
                   >

@@ -75,7 +75,7 @@ export function WalkthroughClient({
       {/* biome-ignore lint/a11y/noStaticElementInteractions: arrow-key shortcuts for the step buttons inside */}
       <div onKeyDown={onKeyDown}>
         <div className="flex items-center gap-3 border-site-border border-b px-4 py-3 sm:px-5">
-          <p className="min-w-0 flex-1 truncate font-mono text-[11px] text-site-text-tertiary">
+          <p className="min-w-0 flex-1 truncate font-mono text-2xs text-site-text-tertiary">
             <span className="text-site-accent tabular-nums">
               {index + 1}/{steps.length}
             </span>{" "}
@@ -125,7 +125,7 @@ export function WalkthroughClient({
         <p aria-live="polite" className="sr-only">
           Step {index + 1} of {steps.length}: {step.title}
         </p>
-        <div className="grid px-4 py-4 text-[14px] text-site-text-secondary leading-relaxed sm:px-5 [&_code]:rounded [&_code]:bg-site-bg-tertiary [&_code]:px-1 [&_code]:py-px [&_code]:font-mono [&_code]:text-[12px] [&_code]:text-site-text [&_p+p]:mt-2">
+        <div className="grid px-4 py-4 text-site-text-secondary text-sm leading-relaxed sm:px-5 [&_code]:rounded [&_code]:bg-site-bg-tertiary [&_code]:px-1 [&_code]:py-px [&_code]:font-mono [&_code]:text-site-text [&_code]:text-xs [&_p+p]:mt-2">
           {/* Steps share one grid cell, so the panel is as tall as the
               tallest step and the code below never jumps. */}
           {steps.map((s, i) => (

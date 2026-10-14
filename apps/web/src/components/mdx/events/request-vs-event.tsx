@@ -63,7 +63,7 @@ function LaneSvg({ lane, t }: { lane: Lane; t: number }) {
             y={18}
             textAnchor="middle"
             className={cn(
-              "font-mono text-[10px]",
+              "font-mono text-3xs",
               a === "customer" ? "fill-site-text" : "fill-site-text-secondary",
             )}
           >
@@ -107,7 +107,7 @@ function LaneSvg({ lane, t }: { lane: Lane; t: number }) {
         <text
           x={cx + 8}
           y={y(lane.wait.end) + 14}
-          className="fill-site-accent font-mono text-[10px]"
+          className="fill-site-accent font-mono text-3xs"
         >
           waited {lane.wait.hops} hops
         </text>
@@ -183,7 +183,7 @@ export function RequestVsEvent() {
       <div className="grid gap-6 sm:grid-cols-2 sm:gap-8">
         {[REQUEST_DRIVEN, EVENT_DRIVEN].map((lane) => (
           <div key={lane.title}>
-            <p className="mb-2 font-mono text-[11px] text-site-text-secondary">
+            <p className="mb-2 font-mono text-2xs text-site-text-secondary">
               {lane.title}
             </p>
             <LaneSvg lane={lane} t={t} />
