@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { ControlBar, Scrubber, Segmented } from "@/components/mdx/controls";
+import { ControlBar, Segmented } from "@/components/mdx/controls";
 import {
   computeUNetShapes,
   formatShape,
@@ -200,14 +200,15 @@ export function UNetExplorer() {
             {inputSize}×{inputSize}
           </span>
         </label>
-        <Scrubber
+        <input
+          type="range"
           id={sliderId}
           min={128}
           max={640}
           step={4}
           value={inputSize}
           onChange={(e) => setInputSize(Number(e.target.value))}
-          className="min-w-32"
+          className="h-8 min-w-0 min-w-32 flex-1 cursor-pointer accent-site-accent"
         />
         <Segmented<"0" | "1">
           label="Convolution padding"

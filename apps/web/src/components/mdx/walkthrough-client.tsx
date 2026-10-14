@@ -7,9 +7,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { ControlButton } from "@/components/mdx/controls";
 import { Figure } from "@/components/mdx/figure";
 import { usePrefersReducedMotion } from "@/components/mdx/hooks";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export type WalkthroughStep = {
@@ -103,22 +103,25 @@ export function WalkthroughClient({
               </button>
             ))}
             {/* aria-disabled rather than disabled, so focus never drops to <body>. */}
-            <ControlButton
-              className="ml-2 w-7 justify-center px-0"
+            <Button
+              variant="figure"
+              size="icon-sm"
+              className="ml-2"
               onClick={() => go(index - 1)}
               aria-disabled={index === 0}
               aria-label="Previous step"
             >
               ←
-            </ControlButton>
-            <ControlButton
-              className="w-7 justify-center px-0"
+            </Button>
+            <Button
+              variant="figure"
+              size="icon-sm"
               onClick={() => go(index + 1)}
               aria-disabled={index === steps.length - 1}
               aria-label="Next step"
             >
               →
-            </ControlButton>
+            </Button>
           </div>
         </div>
 

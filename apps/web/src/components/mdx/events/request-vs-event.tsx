@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useRef } from "react";
-import { ControlBar, PlayButton, Scrubber } from "@/components/mdx/controls";
+import { ControlBar, PlayButton } from "@/components/mdx/controls";
 import { Narration } from "@/components/mdx/figure";
 import { usePlayback, useTimeline } from "@/components/mdx/hooks";
 import { cn } from "@/lib/utils";
@@ -196,7 +196,8 @@ export function RequestVsEvent() {
         <label htmlFor={scrubId} className="sr-only">
           Time
         </label>
-        <Scrubber
+        <input
+          type="range"
           id={scrubId}
           aria-valuetext={`t = ${t.toFixed(1)} hops`}
           min={0}
@@ -207,6 +208,7 @@ export function RequestVsEvent() {
             setPlaying(false);
             setT(Number(e.target.value));
           }}
+          className="h-8 min-w-0 flex-1 cursor-pointer accent-site-accent"
         />
         <span className="w-14 text-right tabular-nums" aria-hidden="true">
           t = {t.toFixed(1)}
