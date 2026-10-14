@@ -278,8 +278,7 @@ export function UNetSvg({
 
         if (!onSelect) return <g key={stage.id}>{body}</g>;
 
-        // A mouse selects on hover and click, and leaving keeps the selection
-        // (the panel below has links). Taps and Enter/Space toggle.
+        // Hover only highlights; click, tap or Enter/Space toggles the selection.
         const toggle = () => onSelect(selected === stage.id ? null : stage.id);
         const onKeyDown = (e: KeyboardEvent) => {
           if (e.key === "Enter" || e.key === " ") {
@@ -296,13 +295,7 @@ export function UNetSvg({
             aria-label={describe?.(stage)}
             aria-pressed={selected === stage.id}
             onKeyDown={onKeyDown}
-            onPointerEnter={(e) => {
-              if (e.pointerType === "mouse") onSelect(stage.id);
-            }}
-            onPointerUp={(e) => {
-              if (e.pointerType === "mouse") onSelect(stage.id);
-              else toggle();
-            }}
+            onClick={toggle}
             className="group cursor-pointer outline-none"
           >
             {/* Generous invisible hit area for touch. */}
