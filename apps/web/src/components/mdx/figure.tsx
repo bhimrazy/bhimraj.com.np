@@ -24,7 +24,7 @@ export function Figure({
         )}
       >
         {label ? (
-          <p className="mb-4 font-mono text-3xs text-site-text-secondary uppercase tracking-[0.14em]">
+          <p className="mb-4 font-mono text-3xs text-site-text-secondary uppercase tracking-widest">
             {label}
           </p>
         ) : null}
@@ -49,7 +49,7 @@ export function Narration({
     <p
       aria-live={live ? "polite" : "off"}
       // Room for three lines on phones, so the figure doesn't jump as it changes.
-      className="mt-4 min-h-16 text-[13px] text-site-text-secondary leading-relaxed sm:min-h-10"
+      className="mt-4 min-h-16 text-site-text-secondary text-sm leading-relaxed sm:min-h-10"
     >
       {children}
     </p>
