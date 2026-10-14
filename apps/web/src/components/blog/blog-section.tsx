@@ -2,7 +2,7 @@ import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { cacheLife } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
-import { cn, formatDate, formatMonthDay, getReadingTime } from "@/lib/utils";
+import { cn, formatDate, formatMonthDay } from "@/lib/utils";
 import { featuredLabel } from "./featured-label";
 import { type BlogPost, postHref, sortedPosts, tagLabel } from "./posts";
 
@@ -99,7 +99,7 @@ function FeaturedPost({
               {formatDate(post.publishedAt)}
             </time>
             <span aria-hidden> · </span>
-            {getReadingTime(post.html)}
+            {post.readingTime}
           </span>
         </div>
 
@@ -140,7 +140,7 @@ function ArchiveRow({ post }: { post: BlogPost }) {
             {formatMonthDay(post.publishedAt)}
           </time>
           <span aria-hidden> · </span>
-          {getReadingTime(post.html)}
+          {post.readingTime}
         </p>
         <h4 className="text-pretty font-display font-semibold text-site-text text-xl leading-snug">
           <Link

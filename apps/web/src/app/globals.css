@@ -187,10 +187,14 @@
  * @layer base regardless of selector specificity; unlayered rules outrank all layers.
  * Generated code exposes --shiki-light / --shiki-dark token vars (defaultColor: false).
  */
+.shiki,
+.code-block {
+  --code-px: 1.75rem;
+}
 .shiki {
   overflow-x: auto;
   border-radius: 0.75rem;
-  padding: 1.5rem 1.75rem;
+  padding: 1.5rem var(--code-px);
   font-size: 0.8125rem;
   line-height: 1.7;
   border: 1px solid var(--site-border);
@@ -199,11 +203,50 @@
   color: var(--shiki-light);
 }
 .shiki code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
   background: none;
   padding: 0;
   border-radius: 0;
   font-size: inherit;
   font-family: var(--font-mono);
+}
+/* Lines span the full block so highlights reach both edges. */
+.shiki .line {
+  display: inline-block;
+  min-width: calc(100% + 2 * var(--code-px));
+  margin-inline: calc(-1 * var(--code-px));
+  padding-inline: var(--code-px);
+  transition:
+    opacity 0.2s,
+    background-color 0.2s;
+}
+/* ```py {1,3-4}``` */
+.shiki .line.highlighted {
+  background: var(--site-accent-subtle);
+  box-shadow: inset 2px 0 var(--site-accent);
+}
+/* ```py title="unet.py"``` → a filename bar above the code. */
+.code-block {
+  margin-block: 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--site-border);
+  border-radius: 0.75rem;
+  background: var(--site-card-bg);
+}
+.code-block-title {
+  padding: 0.5rem var(--code-px);
+  border-bottom: 1px solid var(--site-border);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--site-text-tertiary);
+}
+.code-block > .shiki,
+[data-walkthrough] :is(.shiki, .code-block) {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
 }
 .shiki span {
   color: var(--shiki-light);
@@ -228,6 +271,11 @@
      code blocks, figures and tables are allowed to use. */
   --container-measure: 38rem;
   --container-wide: 46rem;
+
+  /* Small mono text in figures. T-shirt names so tailwind-merge in cn()
+     treats them as font sizes, not colours. */
+  --text-2xs: 0.6875rem;
+  --text-3xs: 0.625rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -269,7 +317,7 @@
   max-width: var(--container-measure);
   margin-inline: auto;
 }
-.article-prose > :is(pre, figure, .table-wrap) {
+.article-prose > :is(pre, figure, .table-wrap, .code-block) {
   max-width: none;
 }
 
@@ -405,7 +453,7 @@
   content: none;
 }
 
-.article-prose > pre.shiki {
+.article-prose > :is(pre.shiki, .code-block) {
   margin-block: 2rem;
 }
 
@@ -483,10 +531,22 @@
 
 /* Small screens: code runs edge to edge instead of scrolling in a thin box. */
 @media (max-width: 639px) {
-  .article-prose > pre.shiki {
+  .shiki,
+  .code-block {
+    --code-px: 1.25rem;
+  }
+  .article-prose > :is(pre.shiki, .code-block) {
     margin-inline: -1.25rem;
-    padding: 1.25rem;
     border-inline: 0;
     border-radius: 0;
+  }
+  .article-prose pre.shiki {
+    padding-block: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shiki .line {
+    transition: none;
   }
 }

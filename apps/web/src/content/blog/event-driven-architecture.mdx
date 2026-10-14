@@ -107,6 +107,12 @@ With only 3 services, things are already getting complicated. Imagine having hun
 
 Instead of having 20 services ping service A for data, what if whenever an event happens within service A, this event is broadcasted to a stream, and whichever service wants data from A can subscribe to that stream and pick out what it needs? What if there’s a stream all services can broadcast their events and subscribe to? This model is called pub/sub: publish & subscribe. This is what solutions like Kafka allow you to do. Since all data flows through a stream, you can set up a dashboard to monitor your data and its transformation across your system. Because it’s based on events broadcasted by services, this architecture is event-driven.
 
+Here is the three-service example from above, both ways, on the same clock:
+
+<Figure label="Request-driven vs event-driven" caption="A customer asks C for a ride price. Request-driven: C asks A, then B, and the customer waits for the whole chain. Event-driven: A and B publish changes to a stream on their own schedule and C keeps the latest, so it answers straight away. Time is counted in network hops, not measured latency.">
+  <RequestVsEvent />
+</Figure>
+
 Request-driven architecture works well for systems that rely more on logic than on data. Event-driven architecture works better for systems that are data-heavy.
 
 ## **Event-driven architecture and microservices**

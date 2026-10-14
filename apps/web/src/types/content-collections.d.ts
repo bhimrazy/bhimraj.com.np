@@ -12,7 +12,13 @@ declare module "content-collections" {
     tags: string[];
     image: string;
     featured: boolean;
-    html: string;
+    /** Compiled MDX body (rendered with `<MDXContent>`). */
+    mdx: string;
+    /** From `postMeta()` in `components/blog/post-meta.ts`. */
+    dek: string | null;
+    toc: { id: string; text: string; level: number }[];
+    readingTime: string;
+    coverInBody: boolean;
   }
 
   export interface Project {
