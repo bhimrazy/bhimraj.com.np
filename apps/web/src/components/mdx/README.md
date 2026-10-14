@@ -33,9 +33,8 @@ and rendered by `<MDXContent>` in `app/(web)/blog/[slug]/page.tsx`. Components i
 - `controls.tsx`: `ControlBar`, `PlayButton`, `Segmented` (on shadcn `Button` and
   `ToggleGroup`); sliders are a native `<input type="range">` with `accent-site-accent`.
 - `hooks.ts`: `usePlayback` (autoplay once in view unless reduced motion),
-  `useInterval` (ticks only while running and the tab is visible), `useTimeline`
-  (rAF clock that starts at the end so SSR shows the finished picture),
-  `useMediaQuery`, `usePrefersReducedMotion`.
+  `useTimeline` (rAF clock that starts at the end so SSR shows the finished
+  picture), `usePrefersReducedMotion`.
 - `code-walkthrough.tsx`: step through one code block, highlighting lines per step.
 
 ~~~mdx

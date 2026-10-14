@@ -18,26 +18,6 @@ export function ControlBar({ className, ...props }: ComponentProps<"div">) {
   );
 }
 
-/** Only pubsub-simulator uses this; delete it with that figure. */
-export function ControlButton({
-  active,
-  className,
-  ...props
-}: ComponentProps<typeof Button> & { active?: boolean }) {
-  return (
-    <Button
-      variant="figure"
-      size="sm"
-      className={cn(
-        "px-2.5 text-2xs",
-        active && "border-site-accent/60 text-site-accent",
-        className,
-      )}
-      {...props}
-    />
-  );
-}
-
 export function PlayButton({
   playing,
   onToggle,

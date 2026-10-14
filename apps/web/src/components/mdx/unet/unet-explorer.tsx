@@ -12,8 +12,8 @@ import {
 } from "./unet-shapes";
 import { UNetSvg } from "./unet-svg";
 
-/** Heading ids (rehype-slug) of the post's code sections. */
-const CODE_SECTIONS = {
+/** Heading ids of the post's code sections (checked against the post in tests). */
+export const CODE_SECTIONS = {
   doubleConv: {
     href: "#1-defining-the-double-convolution-block",
     label: "DoubleConvBlock",
