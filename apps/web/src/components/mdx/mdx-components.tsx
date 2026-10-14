@@ -1,5 +1,4 @@
 import { CodeWalkthrough, Step } from "./code-walkthrough";
-import { PubSubSimulator } from "./events/pubsub-simulator";
 import { RequestVsEvent } from "./events/request-vs-event";
 import { Figure } from "./figure";
 import { UNetExplorer } from "./unet/unet-explorer";
@@ -13,6 +12,5 @@ export const mdxComponents = {
   UNetExplorer,
   UNetTrace,
   Shape,
-  PubSubSimulator,
   RequestVsEvent,
 };
