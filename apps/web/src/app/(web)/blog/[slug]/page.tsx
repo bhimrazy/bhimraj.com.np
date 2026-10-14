@@ -3,7 +3,6 @@ import { allBlogPosts } from "content-collections";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import CodeCopyButtons from "@/components/blog/code-copy-buttons";
 import MobileToc from "@/components/blog/mobile-toc";
 import PostEnd from "@/components/blog/post-end";
 import { getPost } from "@/components/blog/posts";
@@ -100,7 +99,6 @@ export default async function BlogPostPage({
   return (
     <main id="top" className="pt-28 pb-24 sm:pt-32">
       <ReadingProgress targetId="post-body" />
-      <CodeCopyButtons />
 
       <Container className="px-5 sm:px-8">
         {/* Wide screens: TOC rail | article | share rail. The side rails are
