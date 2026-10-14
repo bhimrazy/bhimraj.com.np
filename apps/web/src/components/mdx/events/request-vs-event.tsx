@@ -75,7 +75,7 @@ function LaneSvg({ lane, t }: { lane: Lane; t: number }) {
               x={x(a)}
               y={30}
               textAnchor="middle"
-              className="fill-site-text-secondary font-mono text-[8.5px]"
+              className="fill-site-text-secondary font-mono text-3xs"
             >
               {ROLE[a]}
             </text>
@@ -154,7 +154,7 @@ function LaneSvg({ lane, t }: { lane: Lane; t: number }) {
                 y={y1 - 4}
                 textAnchor={dir > 0 ? "start" : "end"}
                 className={cn(
-                  "font-mono text-[9px]",
+                  "font-mono text-3xs",
                   m.background
                     ? "fill-site-text-tertiary"
                     : "fill-site-text-secondary",
