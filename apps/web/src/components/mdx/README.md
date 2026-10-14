@@ -31,11 +31,12 @@ and rendered by `<MDXContent>` in `app/(web)/blog/[slug]/page.tsx`. Components i
 - `figure.tsx`: `Figure` (frame, label, caption; captions are numbered "Fig. N" by
   the article CSS) and `Narration` (one live sentence under a figure).
 - `controls.tsx`: `ControlBar`, `PlayButton`, `Segmented` (on shadcn `Button` and
-  `ToggleGroup`); sliders are a native `<input type="range">` with `accent-site-accent`.
-- `hooks.ts`: `usePlayback` (autoplay once in view unless reduced motion),
-  `useTimeline` (rAF clock that starts at the end so SSR shows the finished
-  picture), `usePrefersReducedMotion`.
-- `code-walkthrough.tsx`: step through one code block, highlighting lines per step.
+  `ToggleGroup`); sliders use shadcn `Slider` (`components/ui/slider.tsx`).
+- `hooks.ts`: `usePlayback` (autoplay once in view unless reduced motion; runs
+  only on screen in a visible tab), `useTimeline` (rAF clock that starts at the
+  end so SSR shows the finished picture), `usePrefersReducedMotion`.
+- `code-walkthrough.tsx`: step through one code block, highlighting lines per
+  step. A step whose `lines` fall outside the code fails the build.
 
 ~~~mdx
 <CodeWalkthrough caption="…">
