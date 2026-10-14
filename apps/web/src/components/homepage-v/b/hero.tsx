@@ -49,17 +49,17 @@ export default function Hero() {
             </p>
 
             <h1 className="mb-6 text-balance font-bold font-display text-[34px] text-site-text leading-[1.08] tracking-tight sm:text-5xl sm:leading-[1.05] lg:text-[50px] xl:text-[54px]">
-              I build products, open&#8209;source tools,{" "}
+              I build products,{" "}
               <span className="text-site-text-secondary xl:block">
-                and the infrastructure they run on.
+                and the tools developers use to build them.
               </span>
             </h1>
 
             <p className="mb-8 max-w-2xl text-pretty text-base text-site-text-secondary leading-relaxed sm:mb-9 sm:text-[17px]">
-              I&apos;m a software engineer based in Kathmandu, Nepal. I work
-              full-time on client products, contribute to open source, and help
-              teams run their systems in production. Along the way I do research
-              and write about what I learn.
+              I&apos;m a software engineer based in Kathmandu, Nepal. Most days
+              I&apos;m shipping products, contributing to open source, or
+              experimenting with LLMs and agents, and I write about what I learn
+              along the way.
             </p>
 
             <div className="flex flex-wrap items-center gap-3">
