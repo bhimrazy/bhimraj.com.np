@@ -1,7 +1,8 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useState } from "react";
 import { ControlBar, Segmented } from "@/components/mdx/controls";
+import { Slider } from "@/components/ui/slider";
 import {
   computeUNetShapes,
   formatShape,
@@ -104,7 +105,6 @@ export function UNetExplorer() {
   const [inputSize, setInputSize] = useState<number>(POST_CONFIG.inputSize);
   const [padding, setPadding] = useState<Padding>(POST_CONFIG.padding);
   const [selected, setSelected] = useState<string | null>(null);
-  const sliderId = useId();
 
   const shapes = computeUNetShapes({ ...POST_CONFIG, inputSize, padding });
   const stage = selected
@@ -194,21 +194,21 @@ export function UNetExplorer() {
       </div>
 
       <ControlBar className="mt-3">
-        <label htmlFor={sliderId} className="shrink-0">
+        <span className="shrink-0" aria-hidden="true">
           input{" "}
           <span className="text-site-text-secondary tabular-nums">
             {inputSize}×{inputSize}
           </span>
-        </label>
-        <input
-          type="range"
-          id={sliderId}
+        </span>
+        <Slider
+          aria-label="Input size"
+          aria-valuetext={`${inputSize}×${inputSize}`}
           min={128}
           max={640}
           step={4}
-          value={inputSize}
-          onChange={(e) => setInputSize(Number(e.target.value))}
-          className="h-8 min-w-32 flex-1 cursor-pointer accent-site-accent"
+          value={[inputSize]}
+          onValueChange={([v]) => setInputSize(v)}
+          className="min-w-32 flex-1"
         />
         <Segmented<"0" | "1">
           label="Convolution padding"

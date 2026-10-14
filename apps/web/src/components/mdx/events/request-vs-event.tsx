@@ -1,9 +1,10 @@
 "use client";
 
-import { useId, useRef } from "react";
+import { useRef } from "react";
 import { ControlBar, PlayButton } from "@/components/mdx/controls";
 import { Narration } from "@/components/mdx/figure";
 import { usePlayback, useTimeline } from "@/components/mdx/hooks";
+import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import {
   DURATION,
@@ -176,7 +177,6 @@ export function RequestVsEvent() {
   const [t, setT] = useTimeline(DURATION, RATE, running, () =>
     setPlaying(false),
   );
-  const scrubId = useId();
 
   return (
     <div ref={ref}>
@@ -193,22 +193,18 @@ export function RequestVsEvent() {
       <Narration live={!playing}>{narrate(t)}</Narration>
       <ControlBar className="mt-3">
         <PlayButton playing={playing} onToggle={toggle} label="sequence" />
-        <label htmlFor={scrubId} className="sr-only">
-          Time
-        </label>
-        <input
-          type="range"
-          id={scrubId}
+        <Slider
+          aria-label="Time"
           aria-valuetext={`t = ${t.toFixed(1)} hops`}
           min={0}
           max={DURATION}
           step={0.05}
-          value={t}
-          onChange={(e) => {
+          value={[t]}
+          onValueChange={([v]) => {
             setPlaying(false);
-            setT(Number(e.target.value));
+            setT(v);
           }}
-          className="h-8 min-w-0 flex-1 cursor-pointer accent-site-accent"
+          className="min-w-0 flex-1"
         />
         <span className="w-14 text-right tabular-nums" aria-hidden="true">
           t = {t.toFixed(1)}
