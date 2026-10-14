@@ -56,10 +56,10 @@ export default function Hero() {
             </h1>
 
             <p className="mb-8 max-w-2xl text-pretty text-base text-site-text-secondary leading-relaxed sm:mb-9 sm:text-[17px]">
-              I&apos;m a software engineer based in Kathmandu, Nepal. I build
-              products for a living, contribute to open source, and help teams
-              run their systems in production. Along the way I do research and
-              write about what I learn.
+              I&apos;m a software engineer based in Kathmandu, Nepal. I work
+              full-time on client products, contribute to open source, and help
+              teams run their systems in production. Along the way I do research
+              and write about what I learn.
             </p>
 
             <div className="flex flex-wrap items-center gap-3">

@@ -159,7 +159,7 @@ export const PERSONAL = {
     ph("something you're into lately"),
   ],
   currently: {
-    building: "Interactive figures for this blog, and LitData releases",
+    building: "Interactive figures for this blog",
     learning: ph("what you're learning"),
     reading: ph("a book or paper"),
     elsewhere: ph("a non-work thing"),
