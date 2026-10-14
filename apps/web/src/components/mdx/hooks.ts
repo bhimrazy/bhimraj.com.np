@@ -48,10 +48,25 @@ function useInView<T extends Element>(ref: RefObject<T | null>) {
   return inView;
 }
 
-/** Play/pause: autoplays on first view (not with reduced motion); runs only while visible. */
+const subscribeVisibility = (onChange: () => void) => {
+  document.addEventListener("visibilitychange", onChange);
+  return () => document.removeEventListener("visibilitychange", onChange);
+};
+
+/** Whether the tab is in the foreground. */
+function usePageVisible() {
+  return useSyncExternalStore(
+    subscribeVisibility,
+    () => document.visibilityState === "visible",
+    () => true,
+  );
+}
+
+/** Play/pause: autoplays on first view (not with reduced motion); runs only on screen in a visible tab. */
 export function usePlayback<T extends Element>(ref: RefObject<T | null>) {
   const reducedMotion = usePrefersReducedMotion();
   const inView = useInView(ref);
+  const pageVisible = usePageVisible();
   const [playing, setPlaying] = useState(false);
   const autoplayed = useRef(false);
 
@@ -66,7 +81,7 @@ export function usePlayback<T extends Element>(ref: RefObject<T | null>) {
     playing,
     setPlaying,
     toggle: useCallback(() => setPlaying((p) => !p), []),
-    running: playing && inView,
+    running: playing && inView && pageVisible,
   };
 }
 
