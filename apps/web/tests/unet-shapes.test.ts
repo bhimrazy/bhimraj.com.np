@@ -5,6 +5,7 @@ import {
   POST_CONFIG,
   type UNetConfig,
 } from "@/components/mdx/unet/unet-shapes";
+import { Shape, UNetTrace } from "@/components/mdx/unet/unet-trace";
 
 function shapes(config: UNetConfig = POST_CONFIG) {
   const result = computeUNetShapes(config);
@@ -169,5 +170,14 @@ describe("computeUNetShapes with an input that's too small", () => {
     const { r } = sizes(0);
     expect(r.failedAt).toBe("input");
     expect(r.stages.every((s) => s.size === null)).toBe(true);
+  });
+});
+
+describe("<Shape> and <UNetTrace>", () => {
+  it("throw on an unknown stage id, naming the valid ones", () => {
+    expect(() => Shape({ of: "enc0" })).toThrow(
+      'Unknown UNet stage "enc0". Valid ids: input, enc-0,',
+    );
+    expect(() => UNetTrace({ at: "input typo" })).toThrow(/"typo"/);
   });
 });

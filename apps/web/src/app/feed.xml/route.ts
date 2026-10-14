@@ -13,7 +13,7 @@ async function getFeedXml() {
       slug: post._meta.path,
       publishedAt: post.publishedAt,
       updatedAt: post.updatedAt,
-      html: post.html,
+      html: post.feedHtml,
       tags: post.tags,
     })),
   );

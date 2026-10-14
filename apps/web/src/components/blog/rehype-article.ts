@@ -1,8 +1,6 @@
 /**
  * Rehype plugin that upgrades compiled blog markdown into editorial markup:
  *
- * - A leading `<h2>` (before any other content) becomes the article dek,
- *   so it no longer competes with the page title or shows up in the TOC.
  * - `<p><img></p>` becomes `<figure>`; a following "Figure: …" paragraph
  *   becomes its `<figcaption>` (the "Figure:" prefix is rendered by CSS).
  * - h2/h3 headings get a hover/focus permalink anchor.
@@ -120,14 +118,6 @@ function transformFigures(parent: Parent) {
   }
 }
 
-function transformDek(root: Parent) {
-  const firstIndex = root.children.findIndex((c) => !isBlank(c));
-  const first = root.children[firstIndex];
-  if (!isElement(first, "h2")) return;
-  first.tagName = "p";
-  first.properties = { className: ["article-dek"] };
-}
-
 function walk(node: Node, visit: (el: Element, parent: Parent) => void) {
   if (!hasChildren(node)) return;
   // Copy: visitors may replace children in place.
@@ -139,7 +129,6 @@ function walk(node: Node, visit: (el: Element, parent: Parent) => void) {
 
 export default function rehypeArticle() {
   return (tree: Parent) => {
-    transformDek(tree);
     transformFigures(tree);
 
     walk(tree, (el, parent) => {

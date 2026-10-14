@@ -12,10 +12,15 @@ declare module "content-collections" {
     tags: string[];
     image: string;
     featured: boolean;
-    /** Compiled markdown; feeds the dek, TOC and reading time. */
-    html: string;
     /** Compiled MDX body (rendered with `<MDXContent>`). */
     mdx: string;
+    /** From `postMeta()` in `components/blog/post-meta.ts`. */
+    dek: string | null;
+    toc: { id: string; text: string; level: number }[];
+    readingTime: string;
+    coverInBody: boolean;
+    /** Body as static HTML for the RSS feed; figures link to the post. */
+    feedHtml: string;
   }
 
   export interface Project {
