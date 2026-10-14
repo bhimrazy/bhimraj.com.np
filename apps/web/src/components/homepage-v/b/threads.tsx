@@ -80,8 +80,8 @@ export default function Threads() {
         <SectionHeading
           index="01"
           eyebrow="What I do"
-          title="Five threads, running in parallel"
-          description="A full-time product role, open-source maintenance, infrastructure consulting, research, and teaching. None of them is the whole picture on its own."
+          title="Where my time goes"
+          description="A full-time job, open source, consulting, research, and sharing what I learn."
         />
 
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6">

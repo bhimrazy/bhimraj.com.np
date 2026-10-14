@@ -5,8 +5,8 @@ import { PERSON, PERSONAL } from "../facts";
 import { Ph } from "../ph";
 
 /*
- * Identity first, no org in the headline. The lede names every thread once;
- * the cards in 01 carry the detail. No numbers up here: they live next to the
+ * Identity first: no org or project names in the headline or lede; the
+ * cards in 01 carry the detail. No numbers up here: they live next to the
  * work they describe.
  */
 export default function Hero() {
@@ -45,7 +45,7 @@ export default function Hero() {
             <p className="mb-5 hidden items-center gap-3 font-mono text-[12px] text-site-text-tertiary uppercase tracking-[1.5px] lg:flex">
               <span className="text-site-text-secondary">{PERSON.name}</span>
               <span aria-hidden className="h-px w-6 bg-site-border-hover" />
-              {PERSON.city}
+              {PERSON.handle}
             </p>
 
             <h1 className="mb-6 text-balance font-bold font-display text-[34px] text-site-text leading-[1.08] tracking-tight sm:text-5xl sm:leading-[1.05] lg:text-[50px] xl:text-[54px]">
@@ -56,13 +56,10 @@ export default function Hero() {
             </h1>
 
             <p className="mb-8 max-w-2xl text-pretty text-base text-site-text-secondary leading-relaxed sm:mb-9 sm:text-[17px]">
-              I&apos;m a software engineer in Kathmandu. I work full-time at{" "}
-              <span className="text-site-text">Fetchly Labs</span>, help
-              maintain <span className="text-site-text">LitData</span> and other
-              tools at <span className="text-site-text">Lightning AI</span>, and
-              consult on infrastructure at{" "}
-              <span className="text-site-text">StableCluster</span>. In between,
-              I do computer-vision research and write about what I learn.
+              I&apos;m a software engineer based in Kathmandu, Nepal. I build
+              products for a living, contribute to open source, and help teams
+              run their systems in production. Along the way I do research and
+              write about what I learn.
             </p>
 
             <div className="flex flex-wrap items-center gap-3">
