@@ -1,8 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { ControlBar, Scrubber, Segmented } from "@/components/mdx/controls";
-import { useMediaQuery } from "@/components/mdx/hooks";
+import { ControlBar, Segmented } from "@/components/mdx/controls";
 import {
   computeUNetShapes,
   formatShape,
@@ -66,7 +65,7 @@ function stageDetail(stage: Stage, shapes: UNetShapes, padding: Padding) {
       : "padding=1 keeps the size";
   switch (stage.kind) {
     case "input":
-      return `torch.randn${formatShape(stage).replace(/\[/g, "(").replace(/\]/g, ")")}`;
+      return `torch.randn(1, ${stage.channels}, ${stage.size}, ${stage.size})`;
     case "output":
       return `1×1 Conv2d maps ${shapes.stages.at(-2)?.channels} channels to ${stage.channels} per pixel`;
     case "encoder":
@@ -106,7 +105,6 @@ export function UNetExplorer() {
   const [padding, setPadding] = useState<Padding>(POST_CONFIG.padding);
   const [selected, setSelected] = useState<string | null>(null);
   const sliderId = useId();
-  const narrow = useMediaQuery("(max-width: 639px)");
 
   const shapes = computeUNetShapes({ ...POST_CONFIG, inputSize, padding });
   const stage = selected
@@ -126,18 +124,20 @@ export function UNetExplorer() {
     }
   }
 
+  const svg = {
+    shapes,
+    title: `UNet feature maps for a ${inputSize}×${inputSize} input with padding=${padding}: ${formatShape(shapes.input)} in, ${formatShape(shapes.output)} out`,
+    selected,
+    highlight,
+    onSelect: setSelected,
+    describe: (s: Stage) => ariaFor(s, shapes.depth),
+  };
+
   return (
     <div>
-      <UNetSvg
-        shapes={shapes}
-        narrow={narrow}
-        className="max-sm:aspect-660/398"
-        title={`UNet feature maps for a ${inputSize}×${inputSize} input with padding=${padding}: ${formatShape(shapes.input)} in, ${formatShape(shapes.output)} out`}
-        selected={selected}
-        highlight={highlight}
-        onSelect={setSelected}
-        describe={(s) => ariaFor(s, shapes.depth)}
-      />
+      {/* Both layouts render and CSS shows one, so nothing jumps on hydration. */}
+      <UNetSvg {...svg} className="max-sm:hidden" />
+      <UNetSvg {...svg} narrow className="sm:hidden" />
 
       <div
         className="mt-3 min-h-18 space-y-1 border-site-border border-t pt-3 text-[13px]"
@@ -200,14 +200,15 @@ export function UNetExplorer() {
             {inputSize}×{inputSize}
           </span>
         </label>
-        <Scrubber
+        <input
+          type="range"
           id={sliderId}
           min={128}
           max={640}
           step={4}
           value={inputSize}
           onChange={(e) => setInputSize(Number(e.target.value))}
-          className="min-w-32"
+          className="h-8 min-w-32 flex-1 cursor-pointer accent-site-accent"
         />
         <Segmented<"0" | "1">
           label="Convolution padding"
