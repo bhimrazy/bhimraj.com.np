@@ -9,25 +9,32 @@ export function CodeWalkthrough({
   children: ReactNode;
   caption?: ReactNode;
 }) {
-  const steps: WalkthroughStep[] = [];
+  const stepProps: StepProps[] = [];
   const code: ReactNode[] = [];
   Children.forEach(children, (child) => {
     if (isValidElement<StepProps>(child) && child.type === Step) {
-      steps.push({
-        lines: parseLineRanges(child.props.lines),
-        title: child.props.title,
-        content: child.props.children,
-        aside: child.props.aside,
-      });
+      stepProps.push(child.props);
     } else if (isValidElement(child)) {
       code.push(child);
     }
   });
-  if (steps.length === 0) {
+  if (stepProps.length === 0) {
     throw new Error(
       '<CodeWalkthrough> needs at least one <Step lines="…" title="…">.',
     );
   }
+
+  // Line numbers are hand-typed, so a step that drifts off the code fails the build.
+  const total = lineCount(code);
+  const steps: WalkthroughStep[] = stepProps.map((p) => {
+    const lines = parseLineRanges(p.lines);
+    if (lines.length === 0 || (lines.at(-1) ?? 0) > total) {
+      throw new Error(
+        `<Step title="${p.title}" lines="${p.lines}"> is outside the ${total}-line code block.`,
+      );
+    }
+    return { lines, title: p.title, content: p.children, aside: p.aside };
+  });
 
   return (
     <WalkthroughClient caption={caption} steps={steps}>
@@ -48,6 +55,18 @@ type StepProps = {
 /** Marker element read by `<CodeWalkthrough>`; never rendered on its own. */
 export function Step(_props: StepProps) {
   return null;
+}
+
+/** Highest Shiki `data-line` in the rendered code, i.e. its line count. */
+function lineCount(node: ReactNode): number {
+  let max = 0;
+  Children.forEach(node, (child) => {
+    if (!isValidElement<{ children?: ReactNode; "data-line"?: number }>(child))
+      return;
+    const own = Number(child.props["data-line"] ?? 0);
+    max = Math.max(max, own, lineCount(child.props.children));
+  });
+  return max;
 }
 
 /** `"1,4-6"` → `[1, 4, 5, 6]` (1-based line numbers). */

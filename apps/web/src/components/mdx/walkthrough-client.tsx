@@ -153,8 +153,8 @@ export function WalkthroughClient({
         <div
           ref={codeRef}
           data-walkthrough={scopeId}
-          // The code sits flush; `!` beats the unlayered .shiki/.code-block rules.
-          className="relative max-h-88 overflow-auto border-site-border border-t [&_.code-block-title]:hidden [&_.line]:opacity-40 [&_:is(.shiki,.code-block)]:m-0! [&_:is(.shiki,.code-block)]:rounded-none! [&_:is(.shiki,.code-block)]:border-0!"
+          // The code sits flush in the figure (see [data-walkthrough] in globals.css).
+          className="relative max-h-88 overflow-auto border-site-border border-t [&_.code-block-title]:hidden [&_.line]:opacity-40"
         >
           {children}
         </div>

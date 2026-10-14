@@ -242,7 +242,8 @@
   font-size: 0.75rem;
   color: var(--site-text-tertiary);
 }
-.code-block > .shiki {
+.code-block > .shiki,
+[data-walkthrough] :is(.shiki, .code-block) {
   margin: 0;
   border: 0;
   border-radius: 0;
