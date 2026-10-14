@@ -2,7 +2,7 @@ import { allBlogPosts } from "content-collections";
 import Link from "next/link";
 import { ArrowLink } from "@/components/section-heading";
 import { formatShortDate } from "@/lib/format";
-import { cn, getReadingTime } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { ColumnTitle } from "./column-title";
 import { surface } from "./surface";
 
@@ -53,7 +53,7 @@ export default function BlogPreview() {
                   <span aria-hidden className="sm:hidden">
                     ·
                   </span>
-                  <span>{getReadingTime(post.html)}</span>
+                  <span>{post.readingTime}</span>
                   {post.tags?.slice(0, 2).map((tag: string) => (
                     <span key={tag} className="text-site-accent/80">
                       #{tag.replace(/\s+/g, "-")}

@@ -1,10 +1,4 @@
-import {
-  transformerMetaHighlight,
-  transformerNotationDiff,
-  transformerNotationErrorLevel,
-  transformerNotationFocus,
-  transformerNotationHighlight,
-} from "@shikijs/transformers";
+import { transformerMetaHighlight } from "@shikijs/transformers";
 
 type ShikiTransformer = ReturnType<typeof transformerMetaHighlight>;
 
@@ -45,12 +39,8 @@ function transformerCodeFrame(): ShikiTransformer {
   };
 }
 
-/** Every code block: `{1,4-6}` line highlights, `[!code …]` notations, `title="…"` filename bar. */
+/** Every code block: `{1,4-6}` line highlights and a `title="…"` filename bar. */
 export const codeTransformers: ShikiTransformer[] = [
   transformerMetaHighlight(),
-  transformerNotationHighlight(),
-  transformerNotationFocus(),
-  transformerNotationDiff(),
-  transformerNotationErrorLevel(),
   transformerCodeFrame(),
 ];

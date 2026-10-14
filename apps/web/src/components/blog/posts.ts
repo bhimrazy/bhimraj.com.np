@@ -76,19 +76,3 @@ export function wasUpdated(post: BlogPost): post is BlogPost & {
   const day = (value: string) => new Date(value).toISOString().slice(0, 10);
   return day(post.updatedAt) !== day(post.publishedAt);
 }
-
-const DEK = /^\s*<p class="article-dek">([\s\S]*?)<\/p>\s*/;
-
-/**
- * Split off the dek that `rehype-article` makes from a leading `<h2>`, so the
- * page can show it under the title instead of repeating it in the body.
- */
-export function splitDek(html: string): { dek: string | null; body: string } {
-  const match = html.match(DEK);
-  if (!match) return { dek: null, body: html };
-  return { dek: match[1], body: html.slice(match[0].length) };
-}
-
-/** Whether the cover image already appears inside the article body. */
-export const coverInBody = (post: BlogPost) =>
-  post.html.includes(`src="${post.image}"`);

@@ -33,16 +33,9 @@ function toRfc822(dateString: string): string {
  * (`#…`) are meaningless outside the page, so they are dropped.
  */
 function absolutizeHtml(html: string, baseUrl: string): string {
-  return (
-    html
-      .replace(/<a class="heading-anchor"[^>]*><\/a>/g, "")
-      // Interactive figures are MDX-only; the markdown pass leaves their
-      // opening tags behind as escaped text (`&#x3C;Step …>`), which reads
-      // as garbage in a feed. The prose around them is kept.
-      .replace(/&#x3C;\/?[A-Z][A-Za-z]*(?:\s[^<>]*)?>\s*/g, "")
-      .replace(/<p>\s*<\/p>/g, "")
-      .replace(/\b(src|href)="\/(?!\/)/g, `$1="${baseUrl}/`)
-  );
+  return html
+    .replace(/<a class="heading-anchor"[^>]*><\/a>/g, "")
+    .replace(/\b(src|href)="\/(?!\/)/g, `$1="${baseUrl}/`);
 }
 
 /**

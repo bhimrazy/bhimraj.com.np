@@ -30,11 +30,11 @@ and rendered by `<MDXContent>` in `app/(web)/blog/[slug]/page.tsx`. Components i
 
 - `figure.tsx`: `Figure` (frame, label, caption; captions are numbered "Fig. N" by
   the article CSS) and `Narration` (one live sentence under a figure).
-- `controls.tsx`: `ControlBar`, `ControlButton`, `PlayButton`, `Segmented`, `Scrubber`.
+- `controls.tsx`: `ControlBar`, `PlayButton`, `Segmented` (on shadcn `Button` and
+  `ToggleGroup`); sliders are a native `<input type="range">` with `accent-site-accent`.
 - `hooks.ts`: `usePlayback` (autoplay once in view unless reduced motion),
-  `useInterval` (ticks only while running and the tab is visible), `useTimeline`
-  (rAF clock that starts at the end so SSR shows the finished picture),
-  `useMediaQuery`, `usePrefersReducedMotion`.
+  `useTimeline` (rAF clock that starts at the end so SSR shows the finished
+  picture), `usePrefersReducedMotion`.
 - `code-walkthrough.tsx`: step through one code block, highlighting lines per step.
 
 ~~~mdx
@@ -53,17 +53,16 @@ Prose for this step.
 
 ## Code blocks (every post and project)
 
-`shiki-transformers.ts` adds: ```` ```py title="unet.py" ```` (filename bar),
-```` ```py {1,4-6} ```` (highlight lines), and in-code comments
-`# [!code highlight]`, `[!code focus]`, `[!code ++]` / `[!code --]`,
-`[!code error]` / `[!code warning]`.
+`shiki-transformers.ts` adds ```` ```py title="unet.py" ```` (filename bar) and
+```` ```py {1,4-6} ```` (highlight lines). Add more `@shikijs/transformers`
+notations when a post needs them, not before.
 
 ## Post-specific figures
 
 - `unet/`: `UNetExplorer`, `UNetTrace`, `Shape` for the UNet post; shapes come from
   `unet-shapes.ts`, which mirrors the post's PyTorch code (tested).
-- `events/`: `PubSubSimulator` (reducer in `broker-sim.ts`) and `RequestVsEvent`
-  (timelines in `request-flow.ts`) for the event-driven architecture post.
+- `events/`: `RequestVsEvent` (timelines in `request-flow.ts`) for the
+  event-driven architecture post.
 
 After changing `content-collections.ts` or the Shiki transformers, delete
 `apps/web/.content-collections`: its cache is keyed by content, not config.

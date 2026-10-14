@@ -7,9 +7,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { ControlButton } from "@/components/mdx/controls";
 import { Figure } from "@/components/mdx/figure";
 import { usePrefersReducedMotion } from "@/components/mdx/hooks";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export type WalkthroughStep = {
@@ -62,20 +62,20 @@ export function WalkthroughClient({
     else if (e.key === "ArrowLeft") go(index - 1);
   };
 
-  // Scoped <style> dims inactive lines, so SSR already highlights step 1.
+  // A scoped <style> lifts the step's lines, so SSR already highlights step 1.
   const selector = step.lines
     .map((n) => `[data-walkthrough="${scopeId}"] .line[data-line="${n}"]`)
     .join(",");
 
   return (
-    <Figure caption={caption} className="p-0 sm:p-0">
+    <Figure caption={caption} flush>
       {selector ? (
         <style>{`${selector}{opacity:1;background:var(--site-accent-subtle);box-shadow:inset 2px 0 var(--site-accent)}`}</style>
       ) : null}
       {/* biome-ignore lint/a11y/noStaticElementInteractions: arrow-key shortcuts for the step buttons inside */}
       <div onKeyDown={onKeyDown}>
         <div className="flex items-center gap-3 border-site-border border-b px-4 py-3 sm:px-5">
-          <p className="min-w-0 flex-1 truncate font-mono text-[11px] text-site-text-tertiary">
+          <p className="min-w-0 flex-1 truncate font-mono text-2xs text-site-text-tertiary">
             <span className="text-site-accent tabular-nums">
               {index + 1}/{steps.length}
             </span>{" "}
@@ -85,7 +85,8 @@ export function WalkthroughClient({
             {steps.map((s, i) => (
               // A 24px hit area around an 8px dot (WCAG 2.5.8).
               <button
-                key={s.title}
+                // biome-ignore lint/suspicious/noArrayIndexKey: a fixed list whose titles can repeat
+                key={i}
                 type="button"
                 onClick={() => go(i)}
                 aria-label={`Step ${i + 1}: ${s.title}`}
@@ -103,34 +104,38 @@ export function WalkthroughClient({
               </button>
             ))}
             {/* aria-disabled rather than disabled, so focus never drops to <body>. */}
-            <ControlButton
-              className="ml-2 w-7 justify-center px-0"
+            <Button
+              variant="figure"
+              size="icon-sm"
+              className="ml-2"
               onClick={() => go(index - 1)}
               aria-disabled={index === 0}
               aria-label="Previous step"
             >
               ←
-            </ControlButton>
-            <ControlButton
-              className="w-7 justify-center px-0"
+            </Button>
+            <Button
+              variant="figure"
+              size="icon-sm"
               onClick={() => go(index + 1)}
               aria-disabled={index === steps.length - 1}
               aria-label="Next step"
             >
               →
-            </ControlButton>
+            </Button>
           </div>
         </div>
 
         <p aria-live="polite" className="sr-only">
           Step {index + 1} of {steps.length}: {step.title}
         </p>
-        <div className="grid px-4 py-4 text-[14px] text-site-text-secondary leading-relaxed sm:px-5 [&_code]:rounded [&_code]:bg-site-bg-tertiary [&_code]:px-1 [&_code]:py-px [&_code]:font-mono [&_code]:text-[12px] [&_code]:text-site-text [&_p+p]:mt-2">
+        <div className="grid px-4 py-4 text-site-text-secondary text-sm leading-relaxed sm:px-5 [&_code]:rounded [&_code]:bg-site-bg-tertiary [&_code]:px-1 [&_code]:py-px [&_code]:font-mono [&_code]:text-site-text [&_code]:text-xs [&_p+p]:mt-2">
           {/* Steps share one grid cell, so the panel is as tall as the
               tallest step and the code below never jumps. */}
           {steps.map((s, i) => (
             <div
-              key={s.title}
+              // biome-ignore lint/suspicious/noArrayIndexKey: a fixed list whose titles can repeat
+              key={i}
               aria-hidden={i !== index}
               className={cn(
                 "col-start-1 row-start-1",
@@ -148,7 +153,8 @@ export function WalkthroughClient({
         <div
           ref={codeRef}
           data-walkthrough={scopeId}
-          className="relative max-h-88 overflow-auto border-site-border border-t"
+          // The code sits flush; `!` beats the unlayered .shiki/.code-block rules.
+          className="relative max-h-88 overflow-auto border-site-border border-t [&_.code-block-title]:hidden [&_.line]:opacity-40 [&_:is(.shiki,.code-block)]:m-0! [&_:is(.shiki,.code-block)]:rounded-none! [&_:is(.shiki,.code-block)]:border-0!"
         >
           {children}
         </div>
