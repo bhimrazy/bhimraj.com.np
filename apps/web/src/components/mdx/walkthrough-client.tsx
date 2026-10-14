@@ -62,13 +62,13 @@ export function WalkthroughClient({
     else if (e.key === "ArrowLeft") go(index - 1);
   };
 
-  // Scoped <style> dims inactive lines, so SSR already highlights step 1.
+  // A scoped <style> lifts the step's lines, so SSR already highlights step 1.
   const selector = step.lines
     .map((n) => `[data-walkthrough="${scopeId}"] .line[data-line="${n}"]`)
     .join(",");
 
   return (
-    <Figure caption={caption} className="p-0 sm:p-0">
+    <Figure caption={caption} flush>
       {selector ? (
         <style>{`${selector}{opacity:1;background:var(--site-accent-subtle);box-shadow:inset 2px 0 var(--site-accent)}`}</style>
       ) : null}
@@ -85,7 +85,8 @@ export function WalkthroughClient({
             {steps.map((s, i) => (
               // A 24px hit area around an 8px dot (WCAG 2.5.8).
               <button
-                key={s.title}
+                // biome-ignore lint/suspicious/noArrayIndexKey: a fixed list whose titles can repeat
+                key={i}
                 type="button"
                 onClick={() => go(i)}
                 aria-label={`Step ${i + 1}: ${s.title}`}
@@ -133,7 +134,8 @@ export function WalkthroughClient({
               tallest step and the code below never jumps. */}
           {steps.map((s, i) => (
             <div
-              key={s.title}
+              // biome-ignore lint/suspicious/noArrayIndexKey: a fixed list whose titles can repeat
+              key={i}
               aria-hidden={i !== index}
               className={cn(
                 "col-start-1 row-start-1",
@@ -151,7 +153,8 @@ export function WalkthroughClient({
         <div
           ref={codeRef}
           data-walkthrough={scopeId}
-          className="relative max-h-88 overflow-auto border-site-border border-t"
+          // The code sits flush; `!` beats the unlayered .shiki/.code-block rules.
+          className="relative max-h-88 overflow-auto border-site-border border-t [&_.code-block-title]:hidden [&_.line]:opacity-40 [&_:is(.shiki,.code-block)]:m-0! [&_:is(.shiki,.code-block)]:rounded-none! [&_:is(.shiki,.code-block)]:border-0!"
         >
           {children}
         </div>

@@ -590,20 +590,6 @@
   margin-block: 2rem;
 }
 
-/* <CodeWalkthrough>: the code sits flush in the figure; the active step's
-   lines are lifted by a scoped <style> the component renders. */
-[data-walkthrough] .shiki,
-[data-walkthrough] .code-block {
-  margin: 0;
-  border: 0;
-  border-radius: 0;
-}
-[data-walkthrough] .code-block-title {
-  display: none;
-}
-[data-walkthrough] .line {
-  opacity: 0.38;
-}
 @media (prefers-reduced-motion: reduce) {
   .shiki .line {
     transition: none;

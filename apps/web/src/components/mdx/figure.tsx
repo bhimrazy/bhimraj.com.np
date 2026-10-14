@@ -6,20 +6,21 @@ export function Figure({
   label,
   caption,
   children,
-  className,
+  flush = false,
 }: {
   /** Short header title. */
   label?: string;
   caption?: ReactNode;
   children: ReactNode;
-  className?: string;
+  /** No padding, for content that runs edge to edge. */
+  flush?: boolean;
 }) {
   return (
     <figure className="not-prose my-10">
       <div
         className={cn(
-          "overflow-hidden rounded-xl border border-site-border bg-site-card p-4 sm:p-6",
-          className,
+          "overflow-hidden rounded-xl border border-site-border bg-site-card",
+          !flush && "p-4 sm:p-6",
         )}
       >
         {label ? (
