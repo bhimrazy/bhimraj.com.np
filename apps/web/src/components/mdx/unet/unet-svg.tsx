@@ -5,7 +5,7 @@ import type { SkipConnection, Stage, UNetShapes } from "./unet-shapes";
 /* Hook-free SVG of the UNet as a "U": squares sized by spatial size, skips as horizontal arrows. */
 
 const W = 660;
-/** Narrow layout: taller levels, bigger marks (viewBox 660×398, matched by UNetExplorer). */
+/** Narrow layout for phones: taller levels, bigger marks, channel labels only. */
 const NARROW = { dy: 74, top: 60, minSide: 9, unknownSide: 18 };
 const WIDE = { dy: 50, top: 48, minSide: 5, unknownSide: 12 };
 type Geometry = typeof WIDE;
@@ -116,7 +116,7 @@ export function UNetSvg({
   selected?: string | null;
   /** Hide all labels (small inline traces label things in HTML). */
   compact?: boolean;
-  /** Taller layout for narrow screens. */
+  /** Phone layout; UNetExplorer renders both and toggles them with CSS. */
   narrow?: boolean;
   /** Makes each feature map a focusable button. */
   onSelect?: (id: string | null) => void;
@@ -125,6 +125,7 @@ export function UNetSvg({
   className?: string;
 }) {
   const g = narrow ? NARROW : WIDE;
+  const details = !compact && !narrow;
   const { pos, height } = layout(shapes, g);
   const lit = (id: string) => highlight?.has(id) || selected === id;
   const at = (id: string) => pos.get(id) ?? { x: 0, y: 0 };
@@ -192,15 +193,12 @@ export function UNetSvg({
               vectorEffect="non-scaling-stroke"
               className={cn("transition-colors duration-300", stroke)}
             />
-            {!compact && (
+            {details && (
               <text
                 x={(x1 + x2) / 2}
                 y={p.y - 5}
                 textAnchor="middle"
-                className={cn(
-                  "font-mono text-[10px] max-sm:hidden",
-                  textFill(on, unknown),
-                )}
+                className={cn("font-mono text-[10px]", textFill(on, unknown))}
               >
                 {skipText(skip)}
               </text>
@@ -253,23 +251,26 @@ export function UNetSvg({
                   y={label.channel.y}
                   textAnchor={label.channel.anchor}
                   className={cn(
-                    "font-mono text-[11px] max-sm:text-[24px]",
+                    "font-mono",
+                    narrow ? "text-[24px]" : "text-[11px]",
                     textFill(on || failed, unknown),
                   )}
                 >
                   {stage.channels}
                 </text>
-                <text
-                  x={label.size.x}
-                  y={label.size.y}
-                  textAnchor={label.size.anchor}
-                  className={cn(
-                    "font-mono text-[10px] max-sm:hidden",
-                    textFill(failed, unknown),
-                  )}
-                >
-                  {sizeText(stage, failed)}
-                </text>
+                {details && (
+                  <text
+                    x={label.size.x}
+                    y={label.size.y}
+                    textAnchor={label.size.anchor}
+                    className={cn(
+                      "font-mono text-[10px]",
+                      textFill(failed, unknown),
+                    )}
+                  >
+                    {sizeText(stage, failed)}
+                  </text>
+                )}
               </>
             )}
           </>

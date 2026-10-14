@@ -2,7 +2,6 @@
 
 import { useId, useState } from "react";
 import { ControlBar, Scrubber, Segmented } from "@/components/mdx/controls";
-import { useMediaQuery } from "@/components/mdx/hooks";
 import {
   computeUNetShapes,
   formatShape,
@@ -106,7 +105,6 @@ export function UNetExplorer() {
   const [padding, setPadding] = useState<Padding>(POST_CONFIG.padding);
   const [selected, setSelected] = useState<string | null>(null);
   const sliderId = useId();
-  const narrow = useMediaQuery("(max-width: 639px)");
 
   const shapes = computeUNetShapes({ ...POST_CONFIG, inputSize, padding });
   const stage = selected
@@ -126,18 +124,20 @@ export function UNetExplorer() {
     }
   }
 
+  const svg = {
+    shapes,
+    title: `UNet feature maps for a ${inputSize}×${inputSize} input with padding=${padding}: ${formatShape(shapes.input)} in, ${formatShape(shapes.output)} out`,
+    selected,
+    highlight,
+    onSelect: setSelected,
+    describe: (s: Stage) => ariaFor(s, shapes.depth),
+  };
+
   return (
     <div>
-      <UNetSvg
-        shapes={shapes}
-        narrow={narrow}
-        className="max-sm:aspect-660/398"
-        title={`UNet feature maps for a ${inputSize}×${inputSize} input with padding=${padding}: ${formatShape(shapes.input)} in, ${formatShape(shapes.output)} out`}
-        selected={selected}
-        highlight={highlight}
-        onSelect={setSelected}
-        describe={(s) => ariaFor(s, shapes.depth)}
-      />
+      {/* Both layouts render and CSS shows one, so nothing jumps on hydration. */}
+      <UNetSvg {...svg} className="max-sm:hidden" />
+      <UNetSvg {...svg} narrow className="sm:hidden" />
 
       <div
         className="mt-3 min-h-18 space-y-1 border-site-border border-t pt-3 text-[13px]"
