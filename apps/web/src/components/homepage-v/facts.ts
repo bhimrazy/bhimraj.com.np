@@ -39,7 +39,7 @@ export const THREADS = [
     org: "Fetchly Labs",
     orgHref: undefined,
     role: "Software Engineer · full-time · since 2022",
-    line: "Full-stack work for US clients: Django and FastAPI backends, Next.js frontends, and LLM features like RAG pipelines and agents.",
+    line: "Building products end to end, from the first version to production, and the AI features inside them.",
     logo: "fetchly",
   },
   {
@@ -48,7 +48,7 @@ export const THREADS = [
     org: "Lightning AI",
     orgHref: "/oss",
     role: "Tier 2 OSS contributor · LitData core team · since 2024",
-    line: "Data loading, model serving and training tools: LitData, LitServe, PyTorch Lightning. I've cut releases of LitData, LitServe and PyTorch Lightning itself.",
+    line: "Helping maintain open-source tools teams use to train and serve models, and cutting their releases.",
     logo: "lightning",
   },
   {
