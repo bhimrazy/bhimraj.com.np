@@ -159,6 +159,8 @@ export const LATEST: NowItem = {
 
 export const PERSONAL = {
   interests: ["Travelling", "Exploring new things", "Working out", "Music"],
+  /** Things he's into at work, shown alongside the interests on B's card. */
+  curiosities: ["LLMs", "Agents", "Open source", "Rust"],
   currently: {
     building: [
       {

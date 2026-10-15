@@ -1,64 +1,7 @@
-import {
-  GlobeIcon,
-  LightningBoltIcon,
-  PaperPlaneIcon,
-  SpeakerLoudIcon,
-} from "@radix-ui/react-icons";
-import type { ComponentType } from "react";
 import { cn } from "@/lib/utils";
 import { surface } from "../../homepage/surface";
-import { PERSON, PERSONAL, type Placeholder, ph } from "../facts";
-import { Ph } from "../ph";
-
-const ICONS: Record<string, ComponentType<{ className?: string }>> = {
-  Travelling: PaperPlaneIcon,
-  "Exploring new things": GlobeIcon,
-  "Working out": LightningBoltIcon,
-  Music: SpeakerLoudIcon,
-};
-
-/** Open slots for more interests; Bhimraj fills these in. */
-const MORE: Placeholder[] = [
-  ph("another interest"),
-  ph("one more"),
-  ph("a favourite thing"),
-];
-
-/**
- * Where each pill rests on wide screens (percent of the card), how it leans,
- * and which wander path it loops on. Paths, speeds and delays all differ, so
- * the drift reads as random. On phones the pills wrap in a normal row.
- */
-const SLOTS = [
-  {
-    place: "sm:top-[3%] sm:left-[4%] sm:-rotate-3",
-    motion: "motion-safe:animate-wander-a",
-  },
-  {
-    place: "sm:top-[6%] sm:right-[5%] sm:rotate-2",
-    motion: "motion-safe:animate-wander-b [animation-delay:-6s]",
-  },
-  {
-    place: "sm:top-[30%] sm:left-[16%] sm:rotate-2",
-    motion: "motion-safe:animate-wander-c [animation-delay:-3s]",
-  },
-  {
-    place: "sm:top-[27%] sm:right-[28%] sm:-rotate-2",
-    motion: "motion-safe:animate-wander-a [animation-delay:-11s]",
-  },
-  {
-    place: "sm:top-[58%] sm:left-[5%] sm:rotate-1",
-    motion: "motion-safe:animate-wander-b [animation-delay:-14s]",
-  },
-  {
-    place: "sm:top-[50%] sm:left-[44%] sm:-rotate-1",
-    motion: "motion-safe:animate-wander-c [animation-delay:-18s]",
-  },
-  {
-    place: "sm:top-[74%] sm:right-[28%] sm:rotate-3",
-    motion: "motion-safe:animate-wander-a [animation-delay:-7s]",
-  },
-] as const;
+import { PERSON, PERSONAL } from "../facts";
+import { FloatingPills } from "./floating-pills";
 
 /** Layered ridgelines with a low sun: the hills around the Kathmandu valley. */
 function Ridges() {
@@ -98,8 +41,6 @@ function Ridges() {
 }
 
 export function OffTheClock() {
-  const pills: (string | Placeholder)[] = [...PERSONAL.interests, ...MORE];
-
   return (
     <div
       className={cn(
@@ -109,27 +50,7 @@ export function OffTheClock() {
     >
       <Ridges />
 
-      <ul className="relative flex flex-wrap gap-2 sm:block sm:flex-1">
-        {pills.map((pill, i) => {
-          const slot = SLOTS[i % SLOTS.length];
-          const Icon = typeof pill === "string" ? ICONS[pill] : undefined;
-          return (
-            <li
-              key={typeof pill === "string" ? pill : pill.hint}
-              className={cn(
-                "sm:absolute hover:[animation-play-state:paused]",
-                slot.place,
-                slot.motion,
-              )}
-            >
-              <span className="inline-flex items-center gap-2 rounded-full border border-site-border bg-site-card/90 py-1.5 pr-3.5 pl-3 text-site-text text-sm shadow-lg/5 backdrop-blur-sm dark:border-white/8 dark:bg-site-card/80">
-                {Icon && <Icon className="size-3.5 text-site-accent" />}
-                <Ph value={pill} />
-              </span>
-            </li>
-          );
-        })}
-      </ul>
+      <FloatingPills items={[...PERSONAL.interests, ...PERSONAL.curiosities]} />
 
       <p className="relative mt-auto flex items-baseline gap-2 pt-24 text-site-text-secondary text-sm sm:pt-0">
         <span className="font-mono text-[12px] text-site-text-tertiary">
