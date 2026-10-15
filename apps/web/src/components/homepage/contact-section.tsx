@@ -1,11 +1,9 @@
-import {
-  GitHubLogoIcon,
-  LinkedInLogoIcon,
-  TwitterLogoIcon,
-} from "@radix-ui/react-icons";
+import { GitHubLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
+import type { ComponentType } from "react";
 import { Container } from "@/components/container";
 import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
+import { XLogoIcon } from "@/components/x-logo-icon";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import NewsletterForm from "./news-letter";
@@ -19,7 +17,7 @@ import { surface } from "./surface";
 type Channel = {
   label: string;
   href: string;
-  icon: typeof GitHubLogoIcon;
+  icon: ComponentType<{ "aria-hidden"?: boolean }>;
   primary?: boolean;
 };
 
@@ -33,7 +31,7 @@ const CHANNELS: readonly Channel[] = [
   {
     label: `${siteConfig.author.handle} on X`,
     href: siteConfig.links.twitter,
-    icon: TwitterLogoIcon,
+    icon: XLogoIcon,
   },
   {
     label: "GitHub",
