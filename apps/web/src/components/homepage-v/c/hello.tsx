@@ -15,7 +15,7 @@ const CHANNELS = [
     icon: LinkedInLogoIcon,
   },
   {
-    label: "X",
+    label: "X / Twitter",
     note: siteConfig.author.handle,
     href: siteConfig.links.twitter,
     icon: XLogoIcon,
