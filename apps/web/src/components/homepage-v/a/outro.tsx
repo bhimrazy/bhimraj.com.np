@@ -9,7 +9,7 @@ export function OutsideWork() {
     <Section label="Outside work">
       <p className="text-[15px] text-site-text-secondary leading-[1.8]">
         I grew up in Nepal&apos;s Terai and now live in Kathmandu. Away from the
-        keyboard I love travelling, exploring new things, and music.
+        keyboard I love the gym, travelling, exploring new things, and music.
       </p>
     </Section>
   );
