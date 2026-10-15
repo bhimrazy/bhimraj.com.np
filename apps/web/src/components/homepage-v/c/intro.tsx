@@ -1,10 +1,10 @@
 import {
   GitHubLogoIcon,
   LinkedInLogoIcon,
-  TwitterLogoIcon,
   VideoIcon,
 } from "@radix-ui/react-icons";
 import Image from "next/image";
+import { XLogoIcon } from "@/components/x-logo-icon";
 import { siteConfig } from "@/config/site";
 import { PERSON, PERSONAL } from "../facts";
 import { Ph } from "../ph";
@@ -21,7 +21,7 @@ const SOCIALS = [
   {
     label: "X / Twitter",
     href: siteConfig.links.twitter,
-    icon: TwitterLogoIcon,
+    icon: XLogoIcon,
   },
   { label: "YouTube", href: PERSON.youtube, icon: VideoIcon },
 ] as const;

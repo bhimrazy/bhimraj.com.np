@@ -1,11 +1,8 @@
-import {
-  GitHubLogoIcon,
-  LinkedInLogoIcon,
-  TwitterLogoIcon,
-} from "@radix-ui/react-icons";
+import { GitHubLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
 import { Container } from "@/components/container";
 import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
+import { XLogoIcon } from "@/components/x-logo-icon";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import NewsletterForm from "../../homepage/news-letter";
@@ -21,7 +18,7 @@ const CHANNELS = [
   {
     label: `${siteConfig.author.handle} on X`,
     href: siteConfig.links.twitter,
-    icon: TwitterLogoIcon,
+    icon: XLogoIcon,
     primary: false,
   },
   {
