@@ -85,11 +85,9 @@ export function Intro() {
 
       <div className="mt-6 max-w-md space-y-4 text-pretty text-[15px] text-site-text-secondary leading-relaxed sm:text-base">
         <p>
-          I live in Kathmandu and come from Lahan, in Siraha district, down in
-          the Terai. By day I build products at{" "}
-          <span className="text-site-text">Fetchly Labs</span>; around that I
-          keep a few other threads going: open source, infrastructure, research,
-          and writing things down.
+          I&apos;m a software engineer from Nepal, based in Kathmandu. I spend
+          my days building products, and the rest of my time on open source,
+          infrastructure, research, and writing things down.
         </p>
         <p className="border-site-accent/50 border-l-2 pl-4 text-site-text">
           <Ph value={PERSONAL.voiceLine} />
