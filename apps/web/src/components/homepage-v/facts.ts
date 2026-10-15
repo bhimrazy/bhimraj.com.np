@@ -171,7 +171,11 @@ export const PERSONAL = {
         note: "make a fresh VPS ready and secure",
         href: "https://github.com/bhimrazy/vps-ready",
       },
-      { text: "Interactive figures for this blog", href: "/blog" },
+      {
+        text: "Receipt OCR",
+        note: "structured data from receipts with OCR and LLMs",
+        href: "https://github.com/bhimrazy/receipt-ocr",
+      },
     ],
     learning: [
       {
