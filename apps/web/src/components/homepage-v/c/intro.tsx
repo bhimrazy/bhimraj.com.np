@@ -71,7 +71,7 @@ export function Intro() {
 
   return (
     <header>
-      <div className="flex max-w-md items-end justify-between gap-6">
+      <div className="flex max-w-2xl items-end justify-between gap-6 lg:max-w-md">
         <Portrait />
         {socials}
       </div>
@@ -83,7 +83,7 @@ export function Intro() {
         {PERSON.role} · {PERSON.city}
       </p>
 
-      <div className="mt-6 max-w-md space-y-4 text-pretty text-[15px] text-site-text-secondary leading-relaxed sm:text-base">
+      <div className="mt-6 max-w-2xl space-y-4 text-pretty text-[15px] text-site-text-secondary leading-relaxed sm:text-base lg:max-w-md">
         <p>
           I&apos;m a software engineer from Nepal, based in Kathmandu. I spend
           my days building products, and the rest of my time on open source,
