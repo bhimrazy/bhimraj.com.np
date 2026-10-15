@@ -80,7 +80,7 @@ export default function Threads() {
         <SectionHeading
           index="01"
           eyebrow="Work"
-          title="What I work on"
+          title="Experience"
           description="Products, open source, infrastructure, and some research and writing on the side."
         />
 
