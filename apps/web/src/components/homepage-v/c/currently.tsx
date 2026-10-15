@@ -113,6 +113,7 @@ export function Currently() {
               </p>
               <p className="mt-2 font-mono text-[11px] text-site-text-tertiary">
                 {t.role}
+                {t.since && ` · since ${t.since}`}
               </p>
             </div>
           </li>

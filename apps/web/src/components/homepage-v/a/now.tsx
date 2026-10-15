@@ -36,6 +36,7 @@ export function Now() {
               )}
               <p className="mt-0.5 font-mono text-[11.5px] text-site-text-tertiary leading-relaxed">
                 {t.role}
+                {t.since && ` · since ${t.since}`}
               </p>
             </dd>
           </div>

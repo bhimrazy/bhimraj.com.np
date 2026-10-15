@@ -4,13 +4,13 @@ import { cn } from "@/lib/utils";
 import { CompanyLogo, LOGOS } from "../../homepage/company-logo";
 import { surface } from "../../homepage/surface";
 import { THREADS } from "../facts";
+import { OssBreakdown } from "./oss-breakdown";
 
 type Thread = (typeof THREADS)[number];
 type ThreadLink = { href: string; label: string; external?: boolean };
 
 /** Link labels per thread; the hrefs come from facts. */
 const LINKS: Partial<Record<Thread["key"], ThreadLink[]>> = {
-  oss: [{ href: "/oss", label: "Open-source work" }],
   infra: [
     {
       href: "https://stablecluster.com",
@@ -65,15 +65,15 @@ export default function Threads() {
                 <div className="flex h-8 items-center">
                   <Mark role={thread} />
                 </div>
-                <div className="mt-6">
+                <p className="mt-6 font-bold font-display text-[26px] text-site-text tracking-tight sm:text-[28px]">
+                  Since {thread.since}
+                </p>
+                <div className="mt-4">
                   <h3 className="font-display font-semibold text-site-text text-xl leading-snug tracking-tight">
                     {thread.verb}
                   </h3>
-                  <p className="mt-1 text-site-text-secondary text-sm">
-                    {thread.org}
-                  </p>
-                  <p className="mt-0.5 text-pretty font-mono text-[11px] text-site-text-tertiary leading-relaxed">
-                    {thread.role}
+                  <p className="mt-1 text-pretty text-site-text-secondary text-sm">
+                    {thread.role} at {thread.org}
                   </p>
                 </div>
 
@@ -99,6 +99,8 @@ export default function Threads() {
             );
           })}
         </ul>
+
+        <OssBreakdown />
       </Container>
     </section>
   );
