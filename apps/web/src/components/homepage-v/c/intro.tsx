@@ -85,8 +85,8 @@ export function Intro() {
 
       <div className="mt-6 max-w-md space-y-4 text-pretty text-[15px] text-site-text-secondary leading-relaxed sm:text-base">
         <p>
-          I&apos;m a software engineer from Nepal, based in Kathmandu. I spend
-          my days building products, and the rest of my time on open source,
+          I grew up in the Terai and now live in Kathmandu, Nepal. I spend my
+          days building products, and the rest of my time on open source,
           infrastructure, research, and writing things down.
         </p>
         <p className="border-site-accent/50 border-l-2 pl-4 text-site-text">
