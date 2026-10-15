@@ -104,9 +104,10 @@ export const SELECTED_WORK = [
     meta: "2022 – 2026",
   },
   {
-    title: "Deep learning for pore segmentation in microscope images",
+    title:
+      "A Comparative Study of State-of-the-Art Deep Learning Models for Semantic Segmentation of Pores in Scanning Electron Microscope Images of Activated Carbon",
     kind: "Research · IEEE Access",
-    line: "A peer-reviewed comparison of state-of-the-art segmentation models on SEM images of activated carbon.",
+    line: "Peer-reviewed journal paper, co-authored with B. Pokharel et al. Vol. 12, pp. 50217–50243.",
     href: "https://ieeexplore.ieee.org/document/10478488",
     meta: "2024",
   },
