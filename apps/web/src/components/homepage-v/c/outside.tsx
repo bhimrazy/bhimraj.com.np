@@ -1,5 +1,4 @@
 import { PERSONAL } from "../facts";
-import { Ph } from "../ph";
 import { Chapter } from "./chapter";
 
 /** The non-code parts. Every slot here is Bhimraj's to fill. */
@@ -9,10 +8,10 @@ export function Outside() {
       <ul className="flex flex-wrap gap-2.5 text-[15px]">
         {PERSONAL.interests.map((interest) => (
           <li
-            key={interest.hint}
+            key={interest}
             className="rounded-full border border-site-border bg-site-card px-3.5 py-1.5 dark:border-white/6"
           >
-            <Ph value={interest} />
+            {interest}
           </li>
         ))}
       </ul>

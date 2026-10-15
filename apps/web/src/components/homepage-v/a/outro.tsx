@@ -1,19 +1,15 @@
 import NewsletterForm from "@/components/homepage/news-letter";
 import { siteConfig } from "@/config/site";
-import { PERSON, PERSONAL } from "../facts";
-import { Ph } from "../ph";
+import { PERSON } from "../facts";
 import { Section, TextLink } from "./primitives";
-
-const [town, district] = PERSON.hometown.split(" (")[0].split(", ");
 
 /** One line of life outside work. */
 export function OutsideWork() {
-  const [a, b, c] = PERSONAL.interests;
   return (
     <Section label="Outside work">
       <p className="text-[15px] text-site-text-secondary leading-[1.8]">
-        I'm from {town}, {district}, in Nepal's Terai. Away from the keyboard
-        you'll find me <Ph value={a} />, <Ph value={b} /> or <Ph value={c} />.
+        I grew up in Nepal&apos;s Terai and now live in Kathmandu. Away from the
+        keyboard I love travelling, getting to know new cultures, and music.
       </p>
     </Section>
   );

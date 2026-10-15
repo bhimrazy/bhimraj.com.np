@@ -59,10 +59,10 @@ export default function Beyond() {
               <ul className="flex flex-wrap gap-2">
                 {PERSONAL.interests.map((interest) => (
                   <li
-                    key={interest.hint}
+                    key={interest}
                     className="rounded-full border border-site-border bg-site-bg-secondary px-3 py-1.5 text-sm dark:border-white/6 dark:bg-white/3"
                   >
-                    <Ph value={interest} />
+                    {interest}
                   </li>
                 ))}
               </ul>
