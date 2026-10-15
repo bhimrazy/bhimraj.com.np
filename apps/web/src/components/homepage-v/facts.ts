@@ -153,7 +153,7 @@ export const PATH = [
  * with <Ph> so the gap is visible, not invent anything.
  */
 export const PERSONAL = {
-  interests: ["Travelling", "Exploring cultures", "Music"],
+  interests: ["Travelling", "Exploring new things", "Music"],
   currently: {
     building: "Interactive figures for this blog",
     learning: ph("what you're learning"),
@@ -161,5 +161,5 @@ export const PERSONAL = {
     elsewhere: ph("a non-work thing"),
   },
   voiceLine:
-    "Away from the keyboard, you'll find me travelling, getting to know new cultures, or lost in a good playlist.",
+    "Away from the keyboard, you'll find me travelling, exploring new things, or lost in a good playlist.",
 } as const;
