@@ -19,6 +19,8 @@ declare module "content-collections" {
     toc: { id: string; text: string; level: number }[];
     readingTime: string;
     coverInBody: boolean;
+    /** Body as static HTML for the RSS feed; figures link to the post. */
+    feedHtml: string;
   }
 
   export interface Project {

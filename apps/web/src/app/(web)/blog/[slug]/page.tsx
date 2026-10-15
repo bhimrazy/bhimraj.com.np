@@ -12,9 +12,14 @@ import SponsorCard from "@/components/blog/sponsor-card";
 import TitleSection from "@/components/blog/title-section";
 import Toc from "@/components/blog/toc";
 import { Container } from "@/components/container";
+import { JsonLd } from "@/components/json-ld";
 import { mdxComponents } from "@/components/mdx/mdx-components";
 import { ads } from "@/config/ads";
 import { siteConfig } from "@/config/site";
+import {
+  buildBlogPostingJsonLd,
+  buildBreadcrumbJsonLd,
+} from "@/lib/structured-data";
 
 export async function generateMetadata({
   params,
@@ -26,18 +31,12 @@ export async function generateMetadata({
   if (!post) notFound();
 
   const blogURL = `/blog/${post?._meta.path}`;
-  const images = post?.image
-    ? [
-        {
-          url: post.image,
-          width: 1920,
-          height: 1080,
-          alt: post.title,
-          type: "image/png",
-        },
-      ]
-    : [];
 
+  // OG/Twitter images are supplied by the `opengraph-image.tsx` /
+  // `twitter-image.tsx` file conventions in this route segment (a branded
+  // card with title, reading time, and tags), which takes priority over
+  // the static `post.image` here — that field remains the hero image used
+  // on the blog listing card.
   return {
     title: post?.title,
     description: post?.description,
@@ -49,7 +48,6 @@ export async function generateMetadata({
       url: blogURL,
       siteName: siteConfig.name,
       authors: siteConfig.author.name,
-      images,
       publishedTime: post?.publishedAt,
       modifiedTime: post?.updatedAt,
       type: "article",
@@ -60,7 +58,6 @@ export async function generateMetadata({
       title: post?.title,
       description: post?.description,
       creator: siteConfig.author.handle,
-      images,
       site: siteConfig.author.handle,
     },
     robots: {
@@ -98,6 +95,23 @@ export default async function BlogPostPage({
 
   return (
     <main id="top" className="pt-28 pb-24 sm:pt-32">
+      <JsonLd
+        data={[
+          buildBlogPostingJsonLd({
+            title: post.title,
+            description: post.description,
+            slug: post._meta.path,
+            publishedAt: post.publishedAt,
+            updatedAt: post.updatedAt,
+            tags: post.tags,
+            image: post.image,
+          }),
+          buildBreadcrumbJsonLd([
+            { name: "Blog", path: "/blog" },
+            { name: post.title, path: `/blog/${post._meta.path}` },
+          ]),
+        ]}
+      />
       <ReadingProgress targetId="post-body" />
 
       <Container className="px-5 sm:px-8">
