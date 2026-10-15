@@ -64,7 +64,7 @@ export function OssBreakdown() {
             {atLeast(totalPrs)}
           </span>
           <span className="text-site-text-secondary text-sm">
-            merged pull requests across Lightning AI repositories
+            merged pull requests across the Lightning AI ecosystem
           </span>
         </p>
         <ArrowLink href="/oss">Full open-source journey</ArrowLink>
