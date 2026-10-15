@@ -57,7 +57,7 @@ export const THREADS = [
     org: "StableCluster",
     orgHref: "https://stablecluster.com",
     role: "Consultant · since 2024",
-    line: "Helping teams plan, build and run their infrastructure, as an advisor or hands-on, whatever the work needs.",
+    line: "Guiding AI and software teams on cloud infrastructure, deployment workflows and production-ready systems, and getting hands-on when the work needs it.",
     logo: "stablecluster",
   },
   {
