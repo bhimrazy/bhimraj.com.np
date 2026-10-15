@@ -152,13 +152,53 @@ export const PATH = [
  * Personality slots: Bhimraj has to fill these. Versions should show them
  * with <Ph> so the gap is visible, not invent anything.
  */
+/** One entry in a "Currently" row: a short name, an optional note, a link. */
+export type NowItem = { text: string; note?: string; href?: string };
+
+/** The newest thing worth a one-line mention near the top of the page. */
+export const LATEST: NowItem = {
+  text: "vps-ready",
+  note: "make a fresh VPS ready and secure, without locking yourself out",
+  href: "https://github.com/bhimrazy/vps-ready",
+};
+
 export const PERSONAL = {
   interests: ["Travelling", "Exploring new things", "Working out", "Music"],
   currently: {
-    building: "Interactive figures for this blog",
-    learning: ph("what you're learning"),
-    reading: ph("a book or paper"),
-    elsewhere: ph("a non-work thing"),
+    building: [
+      {
+        text: "vps-ready",
+        note: "make a fresh VPS ready and secure",
+        href: "https://github.com/bhimrazy/vps-ready",
+      },
+      { text: "Interactive figures for this blog", href: "/blog" },
+    ],
+    learning: [
+      {
+        text: "CME 295: Transformers & LLMs",
+        note: "Stanford",
+        href: "https://cme295.stanford.edu/",
+      },
+      {
+        text: "6.5940: TinyML and Efficient AI Computing",
+        note: "MIT",
+        href: "https://hanlab.mit.edu/courses/2026-fall-65940",
+      },
+    ],
+    reading: [
+      {
+        text: "Building Secure & Reliable Systems",
+        note: "Google",
+        href: "https://google.github.io/building-secure-and-reliable-systems/raw/toc.html",
+      },
+      {
+        text: "Site Reliability Engineering",
+        note: "Google",
+        href: "https://sre.google/sre-book/table-of-contents/",
+      },
+    ],
+    // Seasonal: update after Tihar.
+    elsewhere: [{ text: "Enjoying the Dashain holidays" }],
   },
   voiceLine:
     "Away from the keyboard, you'll find me travelling, exploring new things, working out, or lost in a good playlist.",

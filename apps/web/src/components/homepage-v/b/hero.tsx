@@ -1,8 +1,7 @@
 import Image from "next/image";
 import { Container } from "@/components/container";
 import { Button } from "@/components/ui/button";
-import { PERSON, PERSONAL } from "../facts";
-import { Ph } from "../ph";
+import { LATEST, PERSON } from "../facts";
 
 /*
  * Identity first: no org or project names in the headline or lede; the
@@ -81,12 +80,20 @@ export default function Hero() {
               </Button>
             </div>
 
-            {/* The one quiet line: what's on the bench right now. */}
+            {/* The one quiet line: the newest thing on the bench. */}
             <p className="mt-10 flex max-w-xl items-start gap-2.5 text-pretty font-mono text-[12px] text-site-text-tertiary leading-relaxed">
               <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-site-success motion-safe:animate-pulse-dot" />
               <span>
-                <span className="text-site-text-secondary">Now:</span>{" "}
-                <Ph value={PERSONAL.currently.building} />
+                <span className="text-site-text-secondary">New:</span>{" "}
+                <a
+                  href={LATEST.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-sm text-site-text underline decoration-site-accent/40 underline-offset-4 transition-colors hover:text-site-accent hover:decoration-site-accent focus-visible:outline-2 focus-visible:outline-site-accent"
+                >
+                  {LATEST.text}
+                </a>
+                , {LATEST.note} ↗
               </span>
             </p>
           </div>

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { surface } from "@/components/homepage/surface";
 import { cn } from "@/lib/utils";
 import { PERSONAL, THREADS } from "../facts";
-import { Ph } from "../ph";
+import { NowItems } from "../now-items";
 import { Chapter } from "./chapter";
 
 const NOW = [
@@ -87,7 +87,7 @@ export function Currently() {
                 {label}
               </dt>
               <dd className="text-pretty text-site-text leading-6">
-                <Ph value={value} />
+                <NowItems items={value} />
               </dd>
             </div>
           ))}

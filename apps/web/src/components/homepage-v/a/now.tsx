@@ -1,5 +1,4 @@
 import { PERSONAL, THREADS } from "../facts";
-import { Ph } from "../ph";
 import { Section, SmartLink } from "./primitives";
 
 /** The parallel threads, as a definition list. Equal weight, one row each. */
@@ -44,8 +43,24 @@ export function Now() {
       </dl>
       <p className="mt-5 text-site-text-secondary text-sm leading-relaxed">
         <span className="text-site-text-tertiary">Lately:</span> building{" "}
-        {building.charAt(0).toLowerCase() + building.slice(1)}; reading{" "}
-        <Ph value={reading} />.
+        <a
+          href={building[0].href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-site-text underline decoration-site-accent/40 underline-offset-4 hover:text-site-accent"
+        >
+          {building[0].text}
+        </a>
+        ; reading{" "}
+        <a
+          href={reading[0].href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-site-text underline decoration-site-accent/40 underline-offset-4 hover:text-site-accent"
+        >
+          {reading[0].text}
+        </a>
+        .
       </p>
     </Section>
   );

@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { ColumnTitle } from "../../homepage/column-title";
 import { surface } from "../../homepage/surface";
 import { PERSON, PERSONAL } from "../facts";
+import { NowItems } from "../now-items";
 import { Ph } from "../ph";
 
 const CURRENTLY = [
@@ -46,7 +47,7 @@ export default function Beyond() {
                     {label}
                   </dt>
                   <dd className="text-pretty text-site-text text-sm leading-relaxed">
-                    <Ph value={value} />
+                    <NowItems items={value} />
                   </dd>
                 </div>
               ))}
