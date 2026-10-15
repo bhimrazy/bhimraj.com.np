@@ -109,9 +109,9 @@ export default function Writing() {
       <Container className="px-4 sm:px-8">
         <SectionHeading
           index="03"
-          eyebrow="Writing & research"
-          title="Notes, videos, and a paper"
-          description="Long-form posts with interactive figures, Lightning Studios templates, and peer-reviewed computer-vision work."
+          eyebrow="Blog"
+          title="Writing"
+          description="Long-form posts on what I build and learn, and where else to find me."
         />
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-5">
           <BlogPreview />
