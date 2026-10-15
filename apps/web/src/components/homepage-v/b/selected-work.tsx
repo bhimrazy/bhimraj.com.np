@@ -220,8 +220,8 @@ export default function SelectedWork() {
       <Container className="px-4 sm:px-8">
         <SectionHeading
           index="02"
-          eyebrow="Selected work"
-          title="Things I've made and shipped"
+          eyebrow="Projects"
+          title="Selected work"
           description="My own projects, model APIs, and research."
           action={{ href: "/projects", label: "All projects" }}
         />
