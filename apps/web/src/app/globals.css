@@ -69,6 +69,11 @@
 
   /* Animations */
   --animate-pulse-dot: pulse-dot 2s ease infinite;
+  --animate-flow: flow 26s linear infinite;
+  --animate-flow-slow: flow 40s linear infinite;
+  --animate-wander-a: wander-a 17s ease-in-out infinite;
+  --animate-wander-b: wander-b 21s ease-in-out infinite;
+  --animate-wander-c: wander-c 25s ease-in-out infinite;
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
@@ -86,6 +91,58 @@
     }
     to {
       height: 0;
+    }
+  }
+  /* Shifts a wave drawn with a 300-unit period by two periods, so it loops seamlessly. */
+  @keyframes flow {
+    to {
+      translate: -600px 0;
+    }
+  }
+  /* Slow, uneven loops for floating pills; three paths so neighbours never move in step. */
+  @keyframes wander-a {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    25% {
+      translate: 12px -8px;
+    }
+    50% {
+      translate: -4px -16px;
+    }
+    75% {
+      translate: -14px 2px;
+    }
+  }
+  @keyframes wander-b {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    30% {
+      translate: -12px 8px;
+    }
+    60% {
+      translate: 8px 14px;
+    }
+    80% {
+      translate: 14px -4px;
+    }
+  }
+  @keyframes wander-c {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    20% {
+      translate: 6px 12px;
+    }
+    55% {
+      translate: -14px -6px;
+    }
+    85% {
+      translate: 10px -12px;
     }
   }
   @keyframes pulse-dot {

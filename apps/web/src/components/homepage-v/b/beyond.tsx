@@ -3,15 +3,16 @@ import { SectionHeading } from "@/components/section-heading";
 import { cn } from "@/lib/utils";
 import { ColumnTitle } from "../../homepage/column-title";
 import { surface } from "../../homepage/surface";
-import { PERSON, PERSONAL } from "../facts";
+import { PERSONAL } from "../facts";
 import { NowItems } from "../now-items";
 import { Ph } from "../ph";
+import { OffTheClock } from "./off-the-clock";
 
 const CURRENTLY = [
   { label: "Building", value: PERSONAL.currently.building },
   { label: "Learning", value: PERSONAL.currently.learning },
   { label: "Reading", value: PERSONAL.currently.reading },
-  { label: "Elsewhere", value: PERSONAL.currently.elsewhere },
+  { label: "Off-screen", value: PERSONAL.currently.elsewhere },
 ] as const;
 
 /*
@@ -56,25 +57,7 @@ export default function Beyond() {
 
           <div className="flex flex-col">
             <ColumnTitle title="Off the clock" />
-            <div className={cn(surface, "flex flex-1 flex-col p-6 sm:p-7")}>
-              <ul className="flex flex-wrap gap-2">
-                {PERSONAL.interests.map((interest) => (
-                  <li
-                    key={interest}
-                    className="rounded-full border border-site-border bg-site-bg-secondary px-3 py-1.5 text-sm dark:border-white/6 dark:bg-white/3"
-                  >
-                    {interest}
-                  </li>
-                ))}
-              </ul>
-
-              <p className="mt-auto flex flex-wrap items-baseline gap-x-2 border-site-border/60 border-t pt-5 text-site-text-secondary text-sm leading-relaxed max-lg:mt-6 dark:border-white/5">
-                <span className="font-mono text-[12px] text-site-text-tertiary">
-                  Based in
-                </span>
-                {PERSON.city}
-              </p>
-            </div>
+            <OffTheClock />
           </div>
         </div>
       </Container>

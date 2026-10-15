@@ -11,13 +11,8 @@ type ThreadLink = { href: string; label: string; external?: boolean };
 
 /** Link labels per thread; the hrefs come from facts. */
 const LINKS: Partial<Record<Thread["key"], ThreadLink[]>> = {
-  // fetchlylabs.com was returning 503 on 2026-10-15; the LinkedIn page is live.
   product: [
-    {
-      href: "https://www.linkedin.com/company/fetchly-labs/",
-      label: "Fetchly Labs on LinkedIn",
-      external: true,
-    },
+    { href: "https://www.fetch.ly/", label: "fetch.ly", external: true },
   ],
   oss: [
     { href: "https://lightning.ai", label: "lightning.ai", external: true },

@@ -37,7 +37,7 @@ export const THREADS = [
     key: "product",
     verb: "Ship products",
     org: "Fetchly Labs",
-    orgHref: undefined,
+    orgHref: "https://www.fetch.ly/",
     role: "Software Engineer · full-time",
     since: "2022",
     line: "Taking products from the first version to production, and building the AI features inside them.",
@@ -48,7 +48,7 @@ export const THREADS = [
     verb: "Maintain open source",
     org: "Lightning AI",
     orgHref: "/oss",
-    role: "Tier 2 OSS contributor · LitData core team",
+    role: "Tier 2 open-source contributor",
     since: "2024",
     line: "Helping maintain open-source tools teams use to train and serve models, and cutting their releases.",
     logo: "lightning",
@@ -197,7 +197,7 @@ export const PERSONAL = {
       },
     ],
     // Seasonal: update after Tihar.
-    elsewhere: [{ text: "Enjoying the Dashain holidays" }],
+    elsewhere: [{ text: "Celebrating Dashain, Nepal’s biggest festival" }],
   },
   voiceLine:
     "Away from the keyboard, you'll find me travelling, exploring new things, working out, or lost in a good playlist.",

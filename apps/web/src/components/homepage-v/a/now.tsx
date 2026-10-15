@@ -16,24 +16,18 @@ export function Now() {
               {t.verb}
             </dt>
             <dd className="min-w-0">
-              {t.orgHref ? (
-                <SmartLink
-                  href={t.orgHref}
-                  className="group/org rounded-sm font-medium text-[15px] text-site-text transition-colors hover:text-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
+              <SmartLink
+                href={t.orgHref}
+                className="group/org rounded-sm font-medium text-[15px] text-site-text transition-colors hover:text-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
+              >
+                {t.org}
+                <span
+                  aria-hidden
+                  className="ml-1 inline-block text-site-text-tertiary opacity-0 transition-[opacity,translate] group-hover/org:translate-x-0.5 group-hover/org:text-site-accent group-hover/org:opacity-100 group-focus-visible/org:opacity-100 motion-reduce:transition-none"
                 >
-                  {t.org}
-                  <span
-                    aria-hidden
-                    className="ml-1 inline-block text-site-text-tertiary opacity-0 transition-[opacity,translate] group-hover/org:translate-x-0.5 group-hover/org:text-site-accent group-hover/org:opacity-100 group-focus-visible/org:opacity-100 motion-reduce:transition-none"
-                  >
-                    {t.orgHref.startsWith("http") ? "↗" : "→"}
-                  </span>
-                </SmartLink>
-              ) : (
-                <span className="font-medium text-[15px] text-site-text">
-                  {t.org}
+                  {t.orgHref.startsWith("http") ? "↗" : "→"}
                 </span>
-              )}
+              </SmartLink>
               <p className="mt-0.5 font-mono text-[11.5px] text-site-text-tertiary leading-relaxed">
                 {t.role}
                 {t.since && ` · since ${t.since}`}
