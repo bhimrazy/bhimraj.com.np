@@ -70,9 +70,9 @@ export default function Beyond() {
 
               <p className="mt-auto flex flex-wrap items-baseline gap-x-2 border-site-border/60 border-t pt-5 text-site-text-secondary text-sm leading-relaxed max-lg:mt-6 dark:border-white/5">
                 <span className="font-mono text-[12px] text-site-text-tertiary">
-                  Roots
+                  Based in
                 </span>
-                From {PERSON.hometown}. Based in {PERSON.city}.
+                {PERSON.city}
               </p>
             </div>
           </div>

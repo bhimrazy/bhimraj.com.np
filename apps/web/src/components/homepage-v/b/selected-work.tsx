@@ -1,8 +1,4 @@
-import {
-  type FeaturedRepoStats,
-  getFeaturedRepoStats,
-  getLightningAIEcosystemStats,
-} from "@bhimrazy/github";
+import { type FeaturedRepoStats, getFeaturedRepoStats } from "@bhimrazy/github";
 import { GitHubLogoIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -213,32 +209,10 @@ function WorkCard({
 }
 
 /*
- * Grid: Receipt OCR takes a 2×2 block (it has a chart to show), the two
- * open-source items stack beside it, and the remaining three fill a row.
- * 4 + 1 + 1 + 3 = 9 cells, so nothing is left orphaned at lg.
+ * Grid: Receipt OCR takes a 2×2 block (it has a chart to show), two cards
+ * stack beside it, and the paper runs full width underneath.
  */
 export default function SelectedWork() {
-  const { totalPrs, repos } = getLightningAIEcosystemStats();
-  const prsIn = (name: string) => repos.find((r) => r.name === name)?.prs;
-  const ptlPrs = prsIn("PyTorch Lightning");
-  const litdataPrs = prsIn("LitData");
-
-  // Context numbers, each attached to the item it describes.
-  const stats: Partial<Record<Work["title"], Stat>> = {
-    "PyTorch Lightning 2.6.1": ptlPrs
-      ? { value: String(ptlPrs), label: "merged PRs in PyTorch Lightning" }
-      : undefined,
-    "LitData core team": {
-      value: String(totalPrs),
-      label: "merged PRs across all Lightning AI repos",
-    },
-  };
-  // Keep the LitData count live instead of the hard-coded one in facts.
-  const lineFor = (w: Work): string =>
-    w.title === "LitData core team" && litdataPrs
-      ? w.line.replace(/^\d+ merged PRs/, `${litdataPrs} merged PRs`)
-      : w.line;
-
   const [featured, ...rest] = SELECTED_WORK;
 
   return (
@@ -248,7 +222,7 @@ export default function SelectedWork() {
           index="02"
           eyebrow="Selected work"
           title="Things I've made and shipped"
-          description="My own projects, open-source releases, model APIs, and a paper. GitHub numbers sync daily."
+          description="My own projects, model APIs, and research."
           action={{ href: "/projects", label: "All projects" }}
         />
 
@@ -260,14 +234,10 @@ export default function SelectedWork() {
             <li
               key={work.title}
               className={cn(
-                i === rest.length - 1 && "md:col-span-2 lg:col-span-1",
+                i === rest.length - 1 && "md:col-span-2 lg:col-span-3",
               )}
             >
-              <WorkCard
-                work={work}
-                line={lineFor(work)}
-                stat={stats[work.title]}
-              />
+              <WorkCard work={work} />
             </li>
           ))}
         </ul>

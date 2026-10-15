@@ -32,15 +32,13 @@ export function Intro() {
       <div className="mt-10 space-y-5 text-[17px] text-site-text-secondary leading-[1.7] sm:text-lg sm:leading-[1.75]">
         <p>
           I build products full-time at{" "}
-          <span className="font-medium text-site-text">Fetchly Labs</span>:
-          Django and FastAPI backends, Next.js frontends, and LLM features like
-          RAG pipelines and agents.
+          <span className="font-medium text-site-text">Fetchly Labs</span>, from
+          the first version to production.
         </p>
         <p>
           I also maintain{" "}
-          <TextLink href="/oss">open source at Lightning AI</TextLink>, on
-          LitData, LitServe and PyTorch Lightning, and consult on cloud
-          infrastructure at{" "}
+          <TextLink href="/oss">open source at Lightning AI</TextLink>, and
+          consult on cloud infrastructure at{" "}
           <TextLink href="https://stablecluster.com">StableCluster</TextLink>.
         </p>
         <p>

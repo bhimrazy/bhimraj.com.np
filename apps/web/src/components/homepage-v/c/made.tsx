@@ -48,7 +48,7 @@ function ShelfLink({
   );
 }
 
-/** A mixed shelf: my own project, releases, a paper. Not one org's portfolio. */
+/** A mixed shelf: my own projects, model APIs, a paper. */
 export function Made() {
   return (
     <Chapter id="made" aside="a mixed shelf">
@@ -56,7 +56,8 @@ export function Made() {
         {SELECTED_WORK.map((work) => {
           const external = work.href.startsWith("http");
           return (
-            <li key={work.title} className="flex">
+            // An odd last card spans both columns, so it never sits alone.
+            <li key={work.title} className="flex sm:odd:last:col-span-2">
               <ShelfLink
                 href={work.href}
                 className={cn(

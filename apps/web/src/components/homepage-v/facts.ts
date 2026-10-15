@@ -90,39 +90,25 @@ export const SELECTED_WORK = [
     meta: "stars", // filled from getFeaturedRepoStats()
   },
   {
-    title: "PyTorch Lightning 2.6.1",
-    kind: "Release",
-    line: "My first release of the core framework, owned end to end.",
-    href: "https://github.com/Lightning-AI/pytorch-lightning/releases/tag/2.6.1",
-    meta: "Jan 2026",
+    title: "vps-ready",
+    kind: "My project",
+    line: "A Rust CLI that makes a fresh VPS ready and secure: audit, plan, apply and roll back, without locking yourself out.",
+    href: "https://github.com/bhimrazy/vps-ready",
+    meta: "Oct 2026",
   },
   {
-    title: "LitData core team",
-    kind: "Open source",
-    line: "100 merged PRs and nine releases of the data-loading library for training at scale.",
-    href: "/oss",
-    meta: "since Aug 2024",
-  },
-  {
-    title: "RF-DETR & Chatterbox TTS APIs",
-    kind: "Lightning Studios",
-    line: "Production-ready model APIs on LitServe, published as one-click Studios.",
+    title: "Model APIs, demos and experiments",
+    kind: "Projects",
+    line: "Object detection and text-to-speech APIs, chat apps for vision-language models like Qwen2-VL and Llama 3.2 Vision, and 3D lung tumour segmentation.",
     href: "/projects",
-    meta: "Mar 2026",
+    meta: "2022 – 2026",
   },
   {
-    title: "Pore segmentation in SEM images",
-    kind: "Paper · IEEE Access",
-    line: "A comparative study of state-of-the-art deep-learning models for semantic segmentation.",
+    title: "Deep learning for pore segmentation in microscope images",
+    kind: "Research · IEEE Access",
+    line: "A peer-reviewed comparison of state-of-the-art segmentation models on SEM images of activated carbon.",
     href: "https://ieeexplore.ieee.org/document/10478488",
     meta: "2024",
-  },
-  {
-    title: "3D lung tumour segmentation",
-    kind: "Project",
-    line: "Segmenting lung tumours from CT scans with MONAI and PyTorch Lightning.",
-    href: "/projects/lung-tumours-segmentation",
-    meta: "2022",
   },
 ] as const;
 
@@ -142,10 +128,13 @@ export const PATH = [
   },
   {
     year: "2024",
-    text: "IEEE Access paper; first LitServe PR; joined the LitData core team; started consulting.",
+    text: "IEEE Access paper; first open-source PRs at Lightning AI; started consulting.",
   },
   { year: "2025", text: "Became a Tier 2 contributor at Lightning AI." },
-  { year: "2026", text: "Cut my first PyTorch Lightning releases." },
+  {
+    year: "2026",
+    text: "Started cutting releases of core open-source frameworks.",
+  },
 ] as const;
 
 /**

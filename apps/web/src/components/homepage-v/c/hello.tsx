@@ -41,8 +41,8 @@ export function Hello() {
         />
         <div className="relative">
           <p className="max-w-lg text-pretty font-display font-medium text-site-text text-xl leading-snug sm:text-2xl">
-            Something you&rsquo;re building, a bug in LitData, a research idea,
-            or just a hello from wherever you are: my messages are open.
+            Something you&rsquo;re building, a research idea, or just a hello
+            from wherever you are: my messages are open.
           </p>
 
           <ul className="mt-6 grid grid-cols-3 gap-2">
