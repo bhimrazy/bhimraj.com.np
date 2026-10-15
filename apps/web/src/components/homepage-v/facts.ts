@@ -35,12 +35,12 @@ export const PERSON = {
 export const THREADS = [
   {
     key: "product",
-    verb: "Build products",
+    verb: "Ship products",
     org: "Fetchly Labs",
     orgHref: undefined,
     role: "Software Engineer · full-time",
     since: "2022",
-    line: "Building products end to end, from the first version to production, and the AI features inside them.",
+    line: "Taking products from the first version to production, and building the AI features inside them.",
     logo: "fetchly",
   },
   {

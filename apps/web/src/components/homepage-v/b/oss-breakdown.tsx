@@ -14,6 +14,12 @@ const TONES = [
 ] as const;
 const REST_TONE = "bg-site-text-tertiary/35";
 
+/** Snapshot counts only grow, so show a floor: 54 → "50+", 300 → "300+". */
+function atLeast(n: number): string {
+  const step = n >= 100 ? 10 : 5;
+  return `${Math.floor(n / step) * step}+`;
+}
+
 type Segment = {
   key: string;
   name: string;
@@ -55,7 +61,7 @@ export function OssBreakdown() {
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
         <p className="flex items-baseline gap-3">
           <span className="font-bold font-display text-[26px] text-site-text tabular-nums tracking-tight sm:text-[28px]">
-            {totalPrs}
+            {atLeast(totalPrs)}
           </span>
           <span className="text-site-text-secondary text-sm">
             merged pull requests across Lightning AI repositories
