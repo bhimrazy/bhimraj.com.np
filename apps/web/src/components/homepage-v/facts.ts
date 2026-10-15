@@ -53,11 +53,11 @@ export const THREADS = [
   },
   {
     key: "infra",
-    verb: "Ship infrastructure",
+    verb: "Consult on infrastructure",
     org: "StableCluster",
     orgHref: "https://stablecluster.com",
     role: "Consultant · since 2024",
-    line: "Cloud infrastructure, deployment workflows and production-ready systems for AI and software teams.",
+    line: "Helping teams plan, build and run their infrastructure, as an advisor or hands-on, whatever the work needs.",
     logo: "stablecluster",
   },
   {

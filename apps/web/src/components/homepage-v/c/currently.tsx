@@ -23,7 +23,7 @@ const THREAD_VOICE: Record<
   { when: string; lead: string; name?: string }
 > = {
   product: { when: "By day", lead: "I build products at" },
-  infra: { when: "On the side", lead: "I ship infrastructure with" },
+  infra: { when: "On the side", lead: "I consult on infrastructure with" },
   oss: { when: "In open source", lead: "I help maintain tools at" },
   research: {
     when: "In research",
