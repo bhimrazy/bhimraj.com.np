@@ -2,11 +2,11 @@ import {
   GitHubLogoIcon,
   LightningBoltIcon,
   LinkedInLogoIcon,
-  TwitterLogoIcon,
   VideoIcon,
 } from "@radix-ui/react-icons";
 import type { ComponentType } from "react";
 import { Container } from "@/components/container";
+import { XLogoIcon } from "@/components/x-logo-icon";
 import { SOCIAL_LINKS } from "./data";
 import { KathmanduTimePill } from "./local-time";
 import { SectionHeading } from "./section-heading";
@@ -17,7 +17,7 @@ const ICONS: Record<
 > = {
   GitHub: GitHubLogoIcon,
   LinkedIn: LinkedInLogoIcon,
-  X: TwitterLogoIcon,
+  X: XLogoIcon,
   YouTube: VideoIcon,
   "Lightning Studios": LightningBoltIcon,
 };
