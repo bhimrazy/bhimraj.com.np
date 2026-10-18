@@ -122,7 +122,13 @@ function FeaturedCard({ work }: { work: Work }) {
             aria-label={`Star history for ${repo.fullName}, now at ${repo.stars} stars`}
           >
             <defs>
-              <linearGradient id="v-b-spark" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient
+                id="receipt-ocr-spark"
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
                 <stop
                   offset="0%"
                   stopColor="var(--site-accent)"
@@ -135,7 +141,7 @@ function FeaturedCard({ work }: { work: Work }) {
                 />
               </linearGradient>
             </defs>
-            <path d={spark.area} fill="url(#v-b-spark)" />
+            <path d={spark.area} fill="url(#receipt-ocr-spark)" />
             <path
               d={spark.line}
               fill="none"
