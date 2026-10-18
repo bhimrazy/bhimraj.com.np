@@ -3,6 +3,7 @@ title: "Receipt OCR Engine"
 description: "An efficient open-source OCR engine for receipt image processing. Combines Tesseract OCR for raw text extraction with LLM-powered structured data parsing — available as a CLI tool and FastAPI service."
 publishedAt: "2023-12-01"
 tags: [Python, OCR, LLM, FastAPI]
+category: "Computer Vision & Medical AI"
 image: "https://opengraph.githubassets.com/1/bhimrazy/receipt-ocr"
 githubLink: "https://github.com/bhimrazy/receipt-ocr"
 featured: true
