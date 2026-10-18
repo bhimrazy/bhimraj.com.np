@@ -1,114 +1,112 @@
 import { Container } from "@/components/container";
 import { ArrowLink, SectionHeading } from "@/components/section-heading";
 import { cn } from "@/lib/utils";
-import { CompanyLogo, LOGOS, type Logo } from "./company-logo";
-import { chip, surface } from "./surface";
+import { CompanyLogo, LOGOS } from "./company-logo";
+import { THREADS } from "./data";
+import { OssBreakdown } from "./oss-breakdown";
+import { surface } from "./surface";
 
-type Experience = {
-  role: string;
-  company: string;
-  type: string;
-  location: string;
-  period: string;
-  description: string;
-  tech: readonly string[];
-  logo: Logo;
-  /** Points at the homepage section that carries this role's numbers. */
-  more?: { href: string; label: string };
+type Thread = (typeof THREADS)[number];
+type ThreadLink = { href: string; label: string; external?: boolean };
+
+/** Link labels per thread; the hrefs come from data.ts. */
+const LINKS: Partial<Record<Thread["key"], ThreadLink[]>> = {
+  product: [
+    { href: "https://www.fetch.ly/", label: "fetch.ly", external: true },
+  ],
+  oss: [
+    { href: "https://lightning.ai", label: "lightning.ai", external: true },
+  ],
+  infra: [
+    {
+      href: "https://stablecluster.com",
+      label: "stablecluster.com",
+      external: true,
+    },
+  ],
 };
 
-const EXPERIENCES: readonly Experience[] = [
-  {
-    role: "Software Engineer",
-    company: "Fetchly Labs",
-    type: "Full-time",
-    location: "Remote",
-    period: "2022 — Present",
-    description:
-      "Building production software and scalable systems at a custom software consultancy serving clients across the US.",
-    tech: ["Python", "React", "Next.js", "AWS"],
-    logo: LOGOS.fetchly,
-  },
-  {
-    role: "Tier 2 OSS Contributor",
-    company: "Lightning AI",
-    type: "Part-time",
-    location: "Open Source",
-    period: "2024 — Present",
-    description:
-      "Active contributor across the Lightning AI ecosystem — spanning data pipelines, model serving, training frameworks, and LLM tooling.",
-    tech: ["PyTorch Lightning", "LitData", "LitServe", "LitGPT"],
-    logo: LOGOS.lightning,
-    more: { href: "#open-source", label: "See the merged work" },
-  },
-  {
-    role: "Consultant",
-    company: "StableCluster",
-    type: "Part-time",
-    location: "Remote / Onsite",
-    period: "2024 — Present",
-    description:
-      "Consulting on cloud infrastructure, deployment workflows, and production-ready systems for AI and software teams.",
-    tech: ["Cloud", "DevOps", "AI Infrastructure"],
-    logo: LOGOS.stablecluster,
-  },
-];
+/** Optical sizing: the Lightning mark carries a tagline, so it needs more height. */
+const LOGO_SIZE = {
+  fetchly: "h-6",
+  lightning: "h-8",
+  stablecluster: "h-5.5",
+} as const;
+
+/** Experience lists the three roles held at organisations, each with a logo. */
+const EXPERIENCE = THREADS.flatMap((t) =>
+  t.logo ? [{ ...t, logo: t.logo }] : [],
+);
+type Role = (typeof EXPERIENCE)[number];
+
+function Mark({ role }: { role: Role }) {
+  return (
+    <CompanyLogo
+      logo={LOGOS[role.logo]}
+      company={role.org}
+      className={LOGO_SIZE[role.logo]}
+    />
+  );
+}
 
 export default function ExperienceSection() {
   return (
-    <section id="experience" className="scroll-mt-20 py-24 sm:py-28">
-      <Container>
+    <section id="experience" className="scroll-mt-20 py-20 sm:py-24">
+      <Container className="px-4 sm:px-8">
         <SectionHeading
-          index="02"
-          eyebrow="Experience"
-          title="Three roles, running in parallel"
-          description="Product engineering, open-source contribution, and infrastructure consulting for AI and software teams."
+          index="01"
+          eyebrow="Work"
+          title="Experience"
+          description="Products, open source, and infrastructure."
         />
 
-        <ol className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {EXPERIENCES.map((exp) => (
-            <li
-              key={exp.company}
-              className={cn(surface, "flex flex-col p-6 sm:p-7")}
-            >
-              <div className="flex h-7 items-center justify-between gap-4">
-                <CompanyLogo
-                  logo={exp.logo}
-                  company={exp.company}
-                  className="h-6"
-                />
-                <span className="shrink-0 font-mono text-[11px] text-site-text-tertiary">
-                  {exp.period}
-                </span>
-              </div>
+        <ul className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {EXPERIENCE.map((thread) => {
+            const links = LINKS[thread.key] ?? [];
+            return (
+              <li
+                key={thread.key}
+                className={cn(surface, "flex flex-col p-5 sm:p-7")}
+              >
+                <div className="flex h-8 items-center">
+                  <Mark role={thread} />
+                </div>
+                <p className="mt-6 font-bold font-display text-[26px] text-site-text tracking-tight sm:text-[28px]">
+                  Since {thread.since}
+                </p>
+                <div className="mt-4">
+                  <h3 className="font-display font-semibold text-site-text text-xl leading-snug tracking-tight">
+                    {thread.verb}
+                  </h3>
+                  <p className="mt-1 text-pretty text-site-text-secondary text-sm">
+                    {thread.role} at {thread.org}
+                  </p>
+                </div>
 
-              <h3 className="mt-6 font-display font-semibold text-lg text-site-text leading-snug">
-                {exp.role}
-              </h3>
-              <p className="mt-0.5 text-site-text-tertiary text-sm">
-                {exp.company} · {exp.type} · {exp.location}
-              </p>
+                <div className="mt-4 flex flex-1 flex-col">
+                  <p className="flex-1 text-pretty text-site-text-secondary text-sm leading-relaxed">
+                    {thread.line}
+                  </p>
+                  {links.length > 0 && (
+                    <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
+                      {links.map((link) => (
+                        <ArrowLink
+                          key={link.href}
+                          href={link.href}
+                          external={link.external}
+                        >
+                          {link.label}
+                        </ArrowLink>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
 
-              <p className="mt-4 flex-1 text-pretty text-site-text-secondary text-sm leading-relaxed">
-                {exp.description}
-              </p>
-
-              <ul className="mt-5 flex flex-wrap gap-1.5">
-                {exp.tech.map((t) => (
-                  <li key={t} className={chip}>
-                    {t}
-                  </li>
-                ))}
-              </ul>
-
-              {exp.more && (
-                <ArrowLink href={exp.more.href} className="mt-5 self-start">
-                  {exp.more.label}
-                </ArrowLink>
-              )}
-            </li>
-          ))}
-        </ol>
+        <OssBreakdown />
       </Container>
     </section>
   );
