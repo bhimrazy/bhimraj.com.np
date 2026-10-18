@@ -69,6 +69,8 @@
 
   /* Animations */
   --animate-pulse-dot: pulse-dot 2s ease infinite;
+  --animate-flow: flow 26s linear infinite;
+  --animate-flow-slow: flow 40s linear infinite;
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
@@ -86,6 +88,12 @@
     }
     to {
       height: 0;
+    }
+  }
+  /* Shifts a wave drawn with a 300-unit period by two periods, so it loops seamlessly. */
+  @keyframes flow {
+    to {
+      translate: -600px 0;
     }
   }
   @keyframes pulse-dot {

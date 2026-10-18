@@ -44,8 +44,8 @@ export default async function Footer() {
               Bhimraj Yadav
             </p>
             <p className="mt-2 text-pretty text-site-text-secondary text-sm leading-relaxed">
-              Software Engineer at Fetchly Labs and Tier 2 OSS contributor at
-              Lightning AI. Based in Kathmandu, Nepal.
+              Software engineer based in Kathmandu, Nepal. Products, open
+              source, infrastructure, and research.
             </p>
             <Link
               href="/#contact"

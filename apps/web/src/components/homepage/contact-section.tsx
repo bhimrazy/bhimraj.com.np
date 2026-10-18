@@ -1,5 +1,4 @@
 import { GitHubLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
-import type { ComponentType } from "react";
 import { Container } from "@/components/container";
 import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
@@ -9,19 +8,7 @@ import { cn } from "@/lib/utils";
 import NewsletterForm from "./news-letter";
 import { surface } from "./surface";
 
-/*
- * There's no public contact email in the repo, so the direct channels are the
- * social profiles in siteConfig. Swap the primary CTA for a mailto: once one
- * is chosen.
- */
-type Channel = {
-  label: string;
-  href: string;
-  icon: ComponentType<{ "aria-hidden"?: boolean }>;
-  primary?: boolean;
-};
-
-const CHANNELS: readonly Channel[] = [
+const CHANNELS = [
   {
     label: "Message on LinkedIn",
     href: siteConfig.links.linkedin,
@@ -32,22 +19,23 @@ const CHANNELS: readonly Channel[] = [
     label: `${siteConfig.author.handle} on X`,
     href: siteConfig.links.twitter,
     icon: XLogoIcon,
+    primary: false,
   },
   {
     label: "GitHub",
     href: siteConfig.links.github,
     icon: GitHubLogoIcon,
+    primary: false,
   },
-];
+] as const;
 
 export default function ContactSection() {
   return (
     <section id="contact" className="scroll-mt-20 pb-24 sm:pb-28">
-      <Container>
+      <Container className="px-4 sm:px-8">
         <div
           className={cn(surface, "grid grid-cols-1 lg:grid-cols-[1.4fr_1fr]")}
         >
-          {/* Warm glow anchoring the page's final call to action */}
           <div
             aria-hidden
             className="pointer-events-none absolute -top-32 -left-24 size-96 rounded-full bg-site-accent-subtle blur-3xl"
@@ -55,10 +43,10 @@ export default function ContactSection() {
 
           <div className="relative p-7 sm:p-10 lg:p-12">
             <SectionHeading
-              index="04"
+              index="05"
               eyebrow="Contact"
-              title="Let's work together."
-              description="Open to collaboration on open-source ML tooling, AI infrastructure, and production systems. The fastest way to reach me is a direct message."
+              title="Say hello."
+              description="Products, open-source tools, infrastructure, or a research idea: I'm open to talking about any of them. A direct message is the fastest way to reach me."
               className="mb-0 sm:mb-0"
             />
 
@@ -90,8 +78,8 @@ export default function ContactSection() {
               Not ready to talk? Stay in the loop.
             </h3>
             <p className="mt-2 mb-6 text-pretty text-site-text-secondary text-sm leading-relaxed">
-              Notes on software engineering, OSS, and AI research — sent only
-              when I ship or learn something worth sharing. No filler.
+              New posts, releases, and the occasional research note, sent only
+              when there&apos;s something worth sharing.
             </p>
             <NewsletterForm />
           </div>
