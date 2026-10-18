@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Container } from "@/components/container";
 import { Button } from "@/components/ui/button";
+import AuroraBg from "./aurora-bg";
 import { LATEST, PERSON } from "./data";
 
 /*
@@ -11,10 +12,12 @@ import { LATEST, PERSON } from "./data";
 export default function HeroSection() {
   return (
     <section className="relative overflow-hidden pt-24 pb-20 sm:pt-36 sm:pb-24 lg:pt-40 lg:pb-28">
-      {/* Static backdrop: a warm glow plus a dot grid that fades out. */}
+      {/* Backdrop: a warm glow, and the slow aurora waves fading out at the bottom. */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-radial-[ellipse_at_80%_0%] from-site-accent-subtle via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(var(--site-border-hover)_1px,transparent_1px)] bg-size-[22px_22px] opacity-60 [mask-image:radial-gradient(ellipse_70%_60%_at_75%_10%,black,transparent)]" />
+        <div className="mask-b-from-60% absolute inset-0">
+          <AuroraBg />
+        </div>
       </div>
 
       <Container className="relative px-4 sm:px-8">
