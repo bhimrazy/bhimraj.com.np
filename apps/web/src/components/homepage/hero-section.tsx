@@ -12,12 +12,10 @@ import { LATEST, PERSON } from "./data";
 export default function HeroSection() {
   return (
     <section className="relative overflow-hidden pt-24 pb-20 sm:pt-36 sm:pb-24 lg:pt-40 lg:pb-28">
-      {/* Backdrop: a warm glow, and the slow aurora waves fading out at the bottom. */}
+      {/* Backdrop: a warm glow, and the slow aurora waves (they fade out at the bottom). */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-radial-[ellipse_at_80%_0%] from-site-accent-subtle via-transparent to-transparent" />
-        <div className="mask-b-from-60% absolute inset-0">
-          <AuroraBg />
-        </div>
+        <AuroraBg />
       </div>
 
       <Container className="relative px-4 sm:px-8">
