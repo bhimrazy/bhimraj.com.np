@@ -26,17 +26,45 @@ function Ridges() {
         d="M0 156 L70 128 L136 148 L208 112 L276 142 L338 118 L414 148 L486 122 L600 142 V200 H0 Z"
         className="fill-site-border/80 dark:fill-white/4"
       />
-      {/* Foreground waves: drawn 1200 wide and slid left by 600, at two
-          speeds for a little parallax. Still under reduced motion. */}
-      <path
-        d="M0 172 Q75 158 150 172 T300 172 T450 172 T600 172 T750 172 T900 172 T1050 172 T1200 172 V200 H0 Z"
-        className="fill-site-border/50 motion-safe:animate-flow-slow dark:fill-white/3"
-      />
-      <path
-        d="M0 182 Q75 172 150 182 T300 182 T450 182 T600 182 T750 182 T900 182 T1050 182 T1200 182 V200 H0 Z"
-        className="fill-site-bg-secondary motion-safe:animate-flow dark:fill-site-bg"
-      />
     </svg>
+  );
+}
+
+/**
+ * Foreground waves, drawn twice as wide as the card and slid left by half,
+ * at two speeds for a little parallax. Each is its own element, so the slide
+ * runs on the compositor instead of repainting the ridges every frame. Still
+ * under reduced motion.
+ */
+function Waves() {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden"
+    >
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 1200 42"
+        preserveAspectRatio="none"
+        className="block w-[200%] motion-safe:animate-flow-slow"
+      >
+        <path
+          d="M0 14 Q75 0 150 14 T300 14 T450 14 T600 14 T750 14 T900 14 T1050 14 T1200 14 V42 H0 Z"
+          className="fill-site-border/50 dark:fill-white/3"
+        />
+      </svg>
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 1200 28"
+        preserveAspectRatio="none"
+        className="absolute bottom-0 left-0 block w-[200%] motion-safe:animate-flow"
+      >
+        <path
+          d="M0 10 Q75 0 150 10 T300 10 T450 10 T600 10 T750 10 T900 10 T1050 10 T1200 10 V28 H0 Z"
+          className="fill-site-bg-secondary dark:fill-site-bg"
+        />
+      </svg>
+    </div>
   );
 }
 
@@ -49,6 +77,7 @@ export function OffTheClock() {
       )}
     >
       <Ridges />
+      <Waves />
 
       <FloatingPills items={[...PERSONAL.interests, ...PERSONAL.curiosities]} />
 
