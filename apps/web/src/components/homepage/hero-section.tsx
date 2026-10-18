@@ -42,10 +42,8 @@ export default function HeroSection() {
               </div>
             </div>
 
-            <p className="mb-5 hidden items-center gap-3 font-mono text-[12px] text-site-text-tertiary uppercase tracking-[1.5px] lg:flex">
-              <span className="text-site-text-secondary">{PERSON.name}</span>
-              <span aria-hidden className="h-px w-6 bg-site-border-hover" />
-              {PERSON.handle}
+            <p className="mb-5 hidden font-mono text-[12px] text-site-text-secondary uppercase tracking-[1.5px] lg:block">
+              {PERSON.name}
             </p>
 
             <h1 className="mb-6 text-balance font-bold font-display text-[34px] text-site-text leading-[1.08] tracking-tight sm:text-5xl sm:leading-[1.05] lg:text-[50px] xl:text-[54px]">
