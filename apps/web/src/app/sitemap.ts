@@ -11,6 +11,7 @@ import { siteConfig } from "@/config/site";
  */
 const STATIC_PAGES: { path: string; lastModified?: Date }[] = [
   { path: "" },
+  { path: "about" },
   { path: "blog" },
   { path: "projects" },
   { path: "oss" },
