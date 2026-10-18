@@ -12,8 +12,7 @@ const SOCIAL_LINKS = [
   { label: "GitHub", href: siteConfig.links.github },
   { label: "LinkedIn", href: siteConfig.links.linkedin },
   { label: "X / Twitter", href: siteConfig.links.twitter },
-  // Not in siteConfig.links yet — kept from the previous footer.
-  { label: "YouTube", href: "https://youtube.com/@bhimrajyadav" },
+  { label: "YouTube", href: siteConfig.links.youtube },
 ];
 
 const linkClass =

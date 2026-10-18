@@ -34,7 +34,7 @@ function Ridges() {
  * Foreground waves, drawn twice as wide as the card and slid left by half,
  * at two speeds for a little parallax. Each is its own element, so the slide
  * runs on the compositor instead of repainting the ridges every frame. Still
- * under reduced motion.
+ * under reduced motion; the pills' Pause button holds them via `data-paused`.
  */
 function Waves() {
   return (
@@ -46,7 +46,7 @@ function Waves() {
         aria-hidden="true"
         viewBox="0 0 1200 42"
         preserveAspectRatio="none"
-        className="block w-[200%] motion-safe:animate-flow-slow"
+        className="block w-[200%] motion-safe:animate-flow-slow group-data-[paused]/clock:[animation-play-state:paused]"
       >
         <path
           d="M0 14 Q75 0 150 14 T300 14 T450 14 T600 14 T750 14 T900 14 T1050 14 T1200 14 V42 H0 Z"
@@ -57,7 +57,7 @@ function Waves() {
         aria-hidden="true"
         viewBox="0 0 1200 28"
         preserveAspectRatio="none"
-        className="absolute bottom-0 left-0 block w-[200%] motion-safe:animate-flow"
+        className="absolute bottom-0 left-0 block w-[200%] motion-safe:animate-flow group-data-[paused]/clock:[animation-play-state:paused]"
       >
         <path
           d="M0 10 Q75 0 150 10 T300 10 T450 10 T600 10 T750 10 T900 10 T1050 10 T1200 10 V28 H0 Z"
@@ -71,9 +71,10 @@ function Waves() {
 export function OffTheClock() {
   return (
     <div
+      data-motion-root
       className={cn(
         surface,
-        "flex min-h-72 flex-1 flex-col p-6 sm:min-h-80 sm:p-7",
+        "group/clock flex min-h-72 flex-1 flex-col p-6 sm:min-h-80 sm:p-7",
       )}
     >
       <Ridges />
