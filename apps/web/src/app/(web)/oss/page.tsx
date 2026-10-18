@@ -12,6 +12,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { ActivityBreakdown } from "@/components/oss/activity-breakdown";
 import { ContributionGraph } from "@/components/oss/contribution-graph";
+import { CountUp } from "@/components/oss/count-up";
 import { Timeline } from "@/components/oss/timeline";
 import { siteConfig } from "@/config/site";
 import { formatCompact } from "@/lib/format";
@@ -72,17 +73,18 @@ export default async function OSSPage() {
 
   const maxRepoCommits = Math.max(...contributions.map((c) => c.commits), 1);
 
+  // Numbers count up on first view; the span is text and stays put.
   const stats = [
     {
-      value: `${formatCompact(oss.totalCommits)}+`,
+      value: <CountUp value={oss.totalCommits} suffix="+" compact />,
       label: "Contributions",
     },
     {
-      value: `${oss.totalPrs}`,
+      value: <CountUp value={oss.totalPrs} />,
       label: "PRs Merged",
     },
     {
-      value: `${formatCompact(ownStars)}+`,
+      value: <CountUp value={ownStars} suffix="+" compact />,
       label: "Stars Earned",
     },
     { value: activeSpan, label: "Active Since Mar 2024" },
