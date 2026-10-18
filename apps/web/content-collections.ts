@@ -5,6 +5,7 @@ import rehypeShiki from "@shikijs/rehype";
 import rehypeSlug from "rehype-slug";
 import type { Pluggable } from "unified";
 import { z } from "zod";
+import { feedHtml } from "./src/components/blog/feed-html";
 import { postMeta, remarkDropDek } from "./src/components/blog/post-meta";
 import rehypeArticle from "./src/components/blog/rehype-article";
 import { codeTransformers } from "./src/components/mdx/shiki-transformers";
@@ -47,7 +48,12 @@ const BlogPost = defineCollection({
   }),
   transform: async (document, context) => {
     const mdx = await compileMDX(context, document, blogMdxOptions);
-    return { ...document, ...postMeta(document.content, document.image), mdx };
+    return {
+      ...document,
+      ...postMeta(document.content, document.image),
+      mdx,
+      feedHtml: feedHtml(mdx, `/blog/${document._meta.path}`),
+    };
   },
 });
 

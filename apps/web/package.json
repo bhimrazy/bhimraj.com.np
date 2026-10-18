@@ -52,6 +52,7 @@
     "@types/mdast": "4.0.4",
     "@types/node": "26.1.2",
     "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
     "knip": "6.31.0",
     "postcss": "8.5.25",
     "tailwindcss": "4.3.3",
