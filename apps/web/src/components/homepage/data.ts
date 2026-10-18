@@ -10,7 +10,6 @@ export const PERSON = {
   role: "Software engineer",
   city: "Kathmandu, Nepal",
   avatar: "/bhimraj-yadav.jpg",
-  youtube: "https://www.youtube.com/@bhimrajyadav",
   studios: "https://lightning.ai/bhimrajyadav",
 } as const;
 
@@ -33,7 +32,7 @@ export const THREADS = [
     key: "oss",
     verb: "Maintain open source",
     org: "Lightning AI",
-    orgHref: "/oss",
+    orgHref: "https://lightning.ai",
     role: "Tier 2 open-source contributor",
     since: "2024",
     line: "Helping maintain open-source tools teams use to train and serve models, and cutting their releases.",
@@ -53,7 +52,6 @@ export const THREADS = [
     key: "research",
     verb: "Do research",
     org: "Computer vision & healthcare AI",
-    orgHref: "/research",
     role: "IEEE Access 2024 · MS in Applied AI (in progress)",
     since: null,
     line: "Co-authored a peer-reviewed study of segmentation models. Now interested in small, efficient vision-language models that can run where doctors are scarce.",
@@ -106,7 +104,7 @@ export const LATEST: NowItem = {
 
 export const PERSONAL = {
   interests: ["Travelling", "Exploring new things", "Working out", "Music"],
-  /** Things he's into at work, shown alongside the interests on B's card. */
+  /** Things he's into at work, shown with the interests in Off the clock. */
   curiosities: ["LLMs", "Agents", "Open source", "Rust"],
   currently: {
     building: [
