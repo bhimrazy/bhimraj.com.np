@@ -50,6 +50,9 @@ type Particle = {
   freq: number;
   phase: number;
   paused: boolean;
+  /** Pill size, cached so the frame loop never reads layout. */
+  w: number;
+  h: number;
 };
 
 /**
@@ -86,6 +89,8 @@ export function FloatingPills({ items }: { items: readonly string[] }) {
         freq: 0.15 + ((i * 0.11) % 0.25),
         phase: i * 1.7,
         paused: false,
+        w: el.offsetWidth,
+        h: el.offsetHeight,
       };
     });
 
@@ -106,9 +111,15 @@ export function FloatingPills({ items }: { items: readonly string[] }) {
 
     let width = area.clientWidth;
     let height = area.clientHeight;
+    // Measure here, never inside the frame loop: reading sizes there would
+    // force a layout on every frame.
     const resize = new ResizeObserver(() => {
       width = area.clientWidth;
       height = area.clientHeight;
+      for (const p of particles) {
+        p.w = p.el.offsetWidth;
+        p.h = p.el.offsetHeight;
+      }
     });
     resize.observe(area);
 
@@ -127,8 +138,8 @@ export function FloatingPills({ items }: { items: readonly string[] }) {
         p.heading += Math.sin(time * p.freq + p.phase) * 0.6 * dt;
         p.x += Math.cos(p.heading) * p.speed * dt;
         p.y += Math.sin(p.heading) * p.speed * dt;
-        const maxX = width - p.el.offsetWidth;
-        const maxY = height - p.el.offsetHeight;
+        const maxX = width - p.w;
+        const maxY = height - p.h;
         if (p.x < 0 || p.x > maxX) {
           p.heading = Math.PI - p.heading;
           p.x = Math.min(Math.max(p.x, 0), Math.max(0, maxX));
@@ -180,9 +191,12 @@ export function FloatingPills({ items }: { items: readonly string[] }) {
           <li
             key={label}
             data-pill
-            className={cn("sm:absolute", SLOTS[i % SLOTS.length])}
+            className={cn(
+              "sm:absolute sm:will-change-[translate]",
+              SLOTS[i % SLOTS.length],
+            )}
           >
-            <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-site-border bg-site-card/90 py-1.5 pr-3.5 pl-3 text-site-text text-sm shadow-lg/5 backdrop-blur-sm dark:border-white/8 dark:bg-site-card/80">
+            <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-site-border bg-site-card/90 py-1.5 pr-3.5 pl-3 text-site-text text-sm shadow-lg/5 dark:border-white/8 dark:bg-site-card/80">
               {Icon && <Icon className="size-3.5 text-site-accent" />}
               {label}
             </span>

@@ -45,6 +45,16 @@ const WAVES = [
 ] as const;
 
 /**
+ * The waves are soft gradients, so the canvas renders at quarter resolution
+ * and the browser scales it up: 1/16 of the pixels to fill, no visible change.
+ */
+const SCALE = 0.25;
+/** The motion is slow; 30 fps looks the same as 60 at half the work. */
+const FRAME_MS = 1000 / 30;
+/** Where the fade to transparent starts, as a fraction of the height. */
+const FADE_FROM = 0.6;
+
+/**
  * Resolves a CSS custom property to RGB by letting the canvas normalise it:
  * `fillStyle` reads back as `#rrggbb` or `rgba(r, g, b, a)` whatever the
  * token's original syntax.
@@ -79,6 +89,9 @@ export default function AuroraBg() {
     let lastFrame: number | null = null;
     let rafId: number | null = null;
 
+    // Draw one still frame now; start moving once the page has loaded and
+    // the browser is idle, so the waves never compete with the first paint.
+    let started = false;
     let onScreen = true;
     let pageVisible = !document.hidden;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -88,13 +101,15 @@ export default function AuroraBg() {
     };
 
     const draw = (t: number) => {
+      ctx.setTransform(SCALE, 0, 0, SCALE, 0, 0);
+      ctx.globalCompositeOperation = "source-over";
       ctx.clearRect(0, 0, w, h);
       WAVES.forEach((wave, i) => {
         const [r, g, b] = colors[i] ?? [0, 0, 0];
         const baseY = wave.y * h;
         ctx.beginPath();
         ctx.moveTo(0, baseY);
-        for (let x = 0; x <= w; x += 4) {
+        for (let x = 0; x <= w; x += 8) {
           const y =
             baseY +
             Math.sin(x * wave.freq + t * wave.speed) * wave.amp +
@@ -120,18 +135,30 @@ export default function AuroraBg() {
         ctx.fillStyle = grad;
         ctx.fill();
       });
+
+      // Fade out towards the bottom, so the hero has no hard lower edge.
+      const fade = ctx.createLinearGradient(0, h * FADE_FROM, 0, h);
+      fade.addColorStop(0, "#000");
+      fade.addColorStop(1, "transparent");
+      ctx.globalCompositeOperation = "destination-in";
+      ctx.fillStyle = fade;
+      ctx.fillRect(0, 0, w, h);
     };
 
     const frame = (now: number) => {
-      if (lastFrame !== null) elapsed += now - lastFrame;
+      rafId = requestAnimationFrame(frame);
+      if (lastFrame === null) lastFrame = now;
+      const delta = now - lastFrame;
+      if (delta < FRAME_MS) return;
+      elapsed += delta;
       lastFrame = now;
       draw(elapsed);
-      rafId = requestAnimationFrame(frame);
     };
 
     /** Animate only while on screen, in a visible tab, and motion is allowed. */
     const sync = () => {
-      const shouldRun = onScreen && pageVisible && !reducedMotion.matches;
+      const shouldRun =
+        started && onScreen && pageVisible && !reducedMotion.matches;
       if (shouldRun && rafId === null) {
         lastFrame = null;
         rafId = requestAnimationFrame(frame);
@@ -144,8 +171,10 @@ export default function AuroraBg() {
     };
 
     const resize = () => {
-      w = canvas.width = canvas.offsetWidth;
-      h = canvas.height = canvas.offsetHeight;
+      w = canvas.offsetWidth;
+      h = canvas.offsetHeight;
+      canvas.width = Math.ceil(w * SCALE);
+      canvas.height = Math.ceil(h * SCALE);
       draw(elapsed);
     };
 
@@ -181,8 +210,29 @@ export default function AuroraBg() {
 
     sync();
 
+    // Safari has no requestIdleCallback; a short timeout does the same job.
+    const hasIdle = typeof window.requestIdleCallback === "function";
+    let startId: number | null = null;
+    const begin = () => {
+      startId = null;
+      started = true;
+      sync();
+    };
+    const start = () => {
+      startId = hasIdle
+        ? window.requestIdleCallback(begin, { timeout: 2000 })
+        : window.setTimeout(begin, 300);
+    };
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+
     return () => {
       if (rafId !== null) cancelAnimationFrame(rafId);
+      window.removeEventListener("load", start);
+      if (startId !== null) {
+        if (hasIdle) window.cancelIdleCallback(startId);
+        else window.clearTimeout(startId);
+      }
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       themeObserver.disconnect();

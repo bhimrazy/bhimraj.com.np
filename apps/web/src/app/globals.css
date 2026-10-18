@@ -93,7 +93,7 @@
   /* Shifts a wave drawn with a 300-unit period by two periods, so it loops seamlessly. */
   @keyframes flow {
     to {
-      translate: -600px 0;
+      translate: -50% 0;
     }
   }
   @keyframes pulse-dot {
