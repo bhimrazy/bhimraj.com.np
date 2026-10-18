@@ -43,7 +43,7 @@ function places(): Place[] {
       icon: <VideoIcon aria-hidden />,
       title: "YouTube",
       note: "youtube.com/@bhimrajyadav",
-      href: PERSON.youtube,
+      href: siteConfig.links.youtube,
       external: true,
     },
     {

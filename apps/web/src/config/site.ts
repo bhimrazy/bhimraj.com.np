@@ -14,6 +14,7 @@ export const siteConfig = {
     twitter: "https://twitter.com/bhimrazy",
     github: "https://github.com/bhimrazy",
     linkedin: "https://www.linkedin.com/in/bhimrazy",
+    youtube: "https://www.youtube.com/@bhimrajyadav",
   },
   utmParams: "utm_source=bhimraj.com.np&utm_medium=referral",
 };
