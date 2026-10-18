@@ -6,25 +6,8 @@ import { THREADS } from "./data";
 import { OssBreakdown } from "./oss-breakdown";
 import { surface } from "./surface";
 
-type Thread = (typeof THREADS)[number];
-type ThreadLink = { href: string; label: string; external?: boolean };
-
-/** Link labels per thread; the hrefs come from data.ts. */
-const LINKS: Partial<Record<Thread["key"], ThreadLink[]>> = {
-  product: [
-    { href: "https://www.fetch.ly/", label: "fetch.ly", external: true },
-  ],
-  oss: [
-    { href: "https://lightning.ai", label: "lightning.ai", external: true },
-  ],
-  infra: [
-    {
-      href: "https://stablecluster.com",
-      label: "stablecluster.com",
-      external: true,
-    },
-  ],
-};
+/** "https://www.fetch.ly/" → "fetch.ly", for the link under each card. */
+const hostOf = (href: string) => new URL(href).host.replace(/^www\./, "");
 
 /** Optical sizing: the Lightning mark carries a tagline, so it needs more height. */
 const LOGO_SIZE = {
@@ -62,7 +45,6 @@ export default function ExperienceSection() {
 
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {EXPERIENCE.map((thread) => {
-            const links = LINKS[thread.key] ?? [];
             return (
               <li
                 key={thread.key}
@@ -87,19 +69,11 @@ export default function ExperienceSection() {
                   <p className="flex-1 text-pretty text-site-text-secondary text-sm leading-relaxed">
                     {thread.line}
                   </p>
-                  {links.length > 0 && (
-                    <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
-                      {links.map((link) => (
-                        <ArrowLink
-                          key={link.href}
-                          href={link.href}
-                          external={link.external}
-                        >
-                          {link.label}
-                        </ArrowLink>
-                      ))}
-                    </div>
-                  )}
+                  <div className="mt-5">
+                    <ArrowLink href={thread.orgHref} external>
+                      {hostOf(thread.orgHref)}
+                    </ArrowLink>
+                  </div>
                 </div>
               </li>
             );
