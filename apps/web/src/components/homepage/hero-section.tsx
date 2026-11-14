@@ -75,7 +75,9 @@ export default function HeroSection() {
                 variant="outline"
                 className="h-10 rounded-lg px-4 font-semibold text-site-text focus-visible:ring-2 focus-visible:ring-site-accent sm:px-6"
               >
-                <a href="#contact">Get in touch</a>
+                <a href="#contact" data-open-chat="Hiring / collab">
+                  Get in touch
+                </a>
               </Button>
             </div>
 

@@ -69,6 +69,14 @@ export default function ExperienceSection() {
                   <p className="flex-1 text-pretty text-site-text-secondary text-sm leading-relaxed">
                     {thread.line}
                   </p>
+                  {"highlight" in thread && (
+                    <p className="mt-4 flex items-start gap-2 rounded-lg bg-site-accent-subtle px-3 py-2 text-site-text text-xs leading-snug">
+                      <span aria-hidden className="text-site-accent">
+                        ✦
+                      </span>
+                      {thread.highlight}
+                    </p>
+                  )}
                   <div className="mt-5">
                     <ArrowLink href={thread.orgHref} external>
                       {hostOf(thread.orgHref)}

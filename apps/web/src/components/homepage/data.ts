@@ -20,12 +20,13 @@ export const PERSON = {
 export const THREADS = [
   {
     key: "product",
-    verb: "Ship products",
+    verb: "Lead and build products",
     org: "Fetchly Labs",
     orgHref: "https://www.fetch.ly/",
     role: "Software Engineer · full-time",
     since: "2022",
-    line: "Taking products from the first version to production, and building the AI features inside them.",
+    line: "Leading the team that takes new products and features from idea to launch, and building right alongside them.",
+    highlight: "Trusted to step in when a project needs direction.",
     logo: "fetchly",
   },
   {
@@ -40,7 +41,7 @@ export const THREADS = [
   },
   {
     key: "infra",
-    verb: "Consult on infrastructure",
+    verb: "Advise on software & infra",
     org: "StableCluster",
     orgHref: "https://stablecluster.com",
     role: "Consultant",
@@ -63,17 +64,27 @@ export const THREADS = [
 export const SELECTED_WORK = [
   {
     title: "Receipt OCR",
-    kind: "My project",
-    line: "Tesseract for raw text, an LLM for structured fields, as a CLI and a FastAPI service.",
+    kind: "Product · Open source",
+    line: "Receipts to structured data: an open-source Python package, and a web app to scan, check and export them.",
     href: "/projects/receipt-ocr",
     meta: "stars", // filled from getFeaturedRepoStats()
+    app: "https://receipt-ocr.bhimraj.com.np",
   },
   {
     title: "vps-ready",
     kind: "My project",
     line: "A Rust CLI that makes a fresh VPS ready and secure: audit, plan, apply and roll back, without locking yourself out.",
-    href: "https://github.com/bhimrazy/vps-ready",
+    href: "https://vps-ready.bhimraj.com.np",
     meta: "Oct 2026",
+    stack: "Rust",
+    // From the demo session in the vps-ready README.
+    terminal: [
+      { cmd: "sudo vps-ready audit", out: "21 passed · 5 failed · 1 unknown" },
+      {
+        cmd: "sudo vps-ready apply",
+        out: "Confirm from a new SSH login, or it rolls back",
+      },
+    ],
   },
   {
     title: "Model APIs, demos and experiments",
@@ -99,7 +110,7 @@ export type NowItem = { text: string; note?: string; href?: string };
 export const LATEST: NowItem = {
   text: "vps-ready",
   note: "make a fresh VPS ready and secure, without locking yourself out",
-  href: "https://github.com/bhimrazy/vps-ready",
+  href: "https://vps-ready.bhimraj.com.np",
 };
 
 export const PERSONAL = {
@@ -111,12 +122,12 @@ export const PERSONAL = {
       {
         text: "vps-ready",
         note: "make a fresh VPS ready and secure",
-        href: "https://github.com/bhimrazy/vps-ready",
+        href: "https://vps-ready.bhimraj.com.np",
       },
       {
         text: "Receipt OCR",
         note: "structured data from receipts with OCR and LLMs",
-        href: "https://github.com/bhimrazy/receipt-ocr",
+        href: "https://receipt-ocr.bhimraj.com.np",
       },
     ],
     learning: [
