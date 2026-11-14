@@ -4,7 +4,7 @@ import { GitHubLogoIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { type ReactNode, useMemo, useState } from "react";
 import { Chip } from "@/components/chip";
-import { surfaceInteractive } from "@/components/surface";
+import { focusRing, surfaceInteractive } from "@/components/surface";
 import { formatCompact, formatShortDate } from "@/lib/format";
 import type { Project } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -28,9 +28,6 @@ export type ProjectCardData = {
 };
 
 const ALL = "All";
-
-const focusRing =
-  "focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2";
 
 export function ProjectGrid({ projects }: { projects: ProjectCardData[] }) {
   const categories = useMemo(
@@ -112,7 +109,7 @@ function ProjectCard({
         </p>
 
         <div className="mt-4 flex items-start justify-between gap-4">
-          <h3
+          <h2
             className={cn(
               "text-pretty font-display font-semibold text-site-text leading-snug tracking-tight",
               lead ? "text-2xl sm:text-[28px]" : "text-lg",
@@ -120,11 +117,11 @@ function ProjectCard({
           >
             <Link
               href={`/projects/${project.slug}`}
-              className="rounded-sm after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-site-accent focus-visible:after:outline-offset-2"
+              className="rounded-sm after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-site-accent focus-visible:after:-outline-offset-2"
             >
               {project.title}
             </Link>
-          </h3>
+          </h2>
           <span
             aria-hidden
             className="text-site-accent text-sm transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none"

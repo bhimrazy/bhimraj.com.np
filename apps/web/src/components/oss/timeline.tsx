@@ -22,7 +22,7 @@ type TimelineItem = {
 
 const TIMELINE: TimelineItem[] = [
   {
-    // Anchors the page's "Active since" stat.
+    // Same source as the "Active since" stat.
     date: OSS_START_LABEL,
     title: "Joined the Lightning AI Studios Publisher Program",
     body: "Invited into the Publisher Program to collaborate with the team and build Studios — my first foothold in the Lightning AI ecosystem.",

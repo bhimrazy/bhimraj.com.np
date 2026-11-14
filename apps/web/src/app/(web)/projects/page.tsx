@@ -29,7 +29,7 @@ export default function Projects() {
           <ProjectSection />
         </Container>
       </section>
-      <ContactSection index="01" />
+      <ContactSection />
     </main>
   );
 }

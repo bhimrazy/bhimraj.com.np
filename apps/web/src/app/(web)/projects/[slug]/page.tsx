@@ -18,13 +18,10 @@ import {
   liveLabel,
 } from "@/components/projects/projects";
 import { ArrowLink, PageHeader } from "@/components/section-heading";
-import { surfaceInteractive } from "@/components/surface";
+import { focusRing, surfaceInteractive } from "@/components/surface";
 import { siteConfig } from "@/config/site";
 import { formatCompact, formatShortDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
-
-const focusRing =
-  "focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2";
 
 export async function generateMetadata({
   params,
@@ -50,7 +47,7 @@ export async function generateMetadata({
       description: project.description,
       url: projectURL,
       siteName: siteConfig.name,
-      images: project.image ? [{ url: project.image }] : [],
+      images: [{ url: project.image }],
       type: "article",
       locale: "en_US",
     },
@@ -59,7 +56,7 @@ export async function generateMetadata({
       title: project.title,
       description: project.description,
       creator: siteConfig.author.handle,
-      images: project.image ? [project.image] : [],
+      images: [project.image],
     },
     robots: {
       index: true,
@@ -218,7 +215,7 @@ export default async function ProjectDetail({
           )}
         </div>
       </Container>
-      <ContactSection index="01" />
+      <ContactSection />
     </main>
   );
 }

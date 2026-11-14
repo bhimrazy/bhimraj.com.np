@@ -29,7 +29,7 @@ const CHANNELS = [
   },
 ] as const;
 
-export default function ContactSection({ index = "05" }: { index?: string }) {
+export default function ContactSection({ index }: { index?: string }) {
   return (
     <section id="contact" className="scroll-mt-20 pb-24 sm:pb-28">
       <Container className="px-4 sm:px-8">

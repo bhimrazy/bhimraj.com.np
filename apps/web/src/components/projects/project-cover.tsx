@@ -51,7 +51,7 @@ function pickCells(rand: () => number): Cell[] {
 
 /**
  * Orders cells by angle around their centroid, so the outline is a simple
- * closed shape. Integer maths (coordinates scaled by STARS) keeps it exact.
+ * closed shape. Integer maths on grid coordinates keeps it exact.
  */
 function byAngle(cells: Cell[]): Cell[] {
   const sx = cells.reduce((s, c) => s + c.col, 0);
@@ -96,7 +96,6 @@ export function ProjectCover({
 
   return (
     <div
-      aria-hidden
       className={cn(
         "relative h-16 overflow-hidden bg-site-bg-secondary",
         className,

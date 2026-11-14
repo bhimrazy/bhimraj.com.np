@@ -17,8 +17,8 @@
   --site-accent: #d97706;
   --site-accent-hover: #f59e0b;
   --site-accent-subtle: rgba(217, 119, 6, 0.08);
-  /* Amber for small text on light: #d97706 is only ~3:1 there. */
-  --site-accent-text: #b45309;
+  /* Amber for small text on light: #d97706 is only ~3:1, and chips sit on a tint. */
+  --site-accent-text: #92400e;
   --site-success: #16a34a;
   --site-on-accent: #1c1917;
   --site-border: #e7e5e4;

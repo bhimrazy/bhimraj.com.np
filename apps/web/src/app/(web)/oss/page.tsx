@@ -78,7 +78,7 @@ export default async function OSSPage() {
   const maxRepoCommits = Math.max(...contributions.map((c) => c.commits), 1);
 
   const stats = [
-    { value: atLeast(oss.totalCommits), label: "Commits" },
+    { value: atLeast(oss.totalCommits), label: "Contributions" },
     { value: atLeast(oss.totalPrs), label: "PRs merged" },
     {
       value: atLeast(getGitHubStars()),
@@ -173,7 +173,7 @@ export default async function OSSPage() {
         <div
           className={cn(
             surface,
-            "divide-y divide-site-border dark:divide-white/4",
+            "divide-y divide-site-border dark:divide-white/5",
           )}
         >
           {contributions.map((c) => (

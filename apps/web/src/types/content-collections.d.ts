@@ -28,7 +28,7 @@ declare module "content-collections" {
     publishedAt: string;
     updatedAt?: string;
     tags: string[];
-    image?: string;
+    image: string;
     githubLink?: string;
     liveLink?: string;
     liveLabel?: string;
