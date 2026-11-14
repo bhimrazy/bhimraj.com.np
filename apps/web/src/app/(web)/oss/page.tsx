@@ -77,7 +77,6 @@ export default async function OSSPage() {
 
   const maxRepoCommits = Math.max(...contributions.map((c) => c.commits), 1);
 
-  // Exact, unlike the homepage's floors: this page is where those link to verify.
   const stats = [
     { value: atLeast(oss.totalCommits), label: "Commits" },
     { value: atLeast(oss.totalPrs), label: "PRs merged" },
@@ -110,23 +109,31 @@ export default async function OSSPage() {
             description="Contributing to open source has shaped how I write software, think about APIs, and collaborate at scale. Here's the story — with numbers synced daily from GitHub."
           />
 
-          <div className={cn(surface, "mt-12 p-6 sm:p-7")}>
-            <dl className="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4">
-              {stats.map((stat) => (
-                <div key={stat.label} className="flex flex-col-reverse">
-                  <dt className="mt-1 text-site-text-secondary text-sm">
-                    {stat.label}
-                  </dt>
-                  <dd className="whitespace-nowrap font-bold font-display text-[26px] text-site-text tabular-nums tracking-tight sm:text-[28px]">
-                    {stat.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            <p className="mt-6 border-site-border/60 border-t pt-4 font-mono text-[11px] text-site-text-tertiary dark:border-white/5">
-              Synced from GitHub {formatShortDate(generatedAt)}
-            </p>
-          </div>
+          <dl className={cn(surface, "mt-12 grid grid-cols-2 sm:grid-cols-4")}>
+            {stats.map((stat, i) => (
+              <div
+                key={stat.label}
+                className={cn(
+                  "flex flex-col-reverse items-center px-3 py-7 text-center sm:py-9",
+                  "border-site-border dark:border-white/5",
+                  // 2×2 on phones, one row from sm: hairlines between cells.
+                  i % 2 === 1 && "border-l",
+                  i >= 2 && "border-t sm:border-t-0",
+                  i === 2 && "sm:border-l",
+                )}
+              >
+                <dt className="mt-1.5 text-site-text-secondary text-sm">
+                  {stat.label}
+                </dt>
+                <dd className="whitespace-nowrap font-bold font-display text-[28px] text-site-text tabular-nums tracking-tight sm:text-[34px]">
+                  {stat.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-3 text-right font-mono text-[11px] text-site-text-tertiary">
+            Synced from GitHub {formatShortDate(generatedAt)}
+          </p>
         </Container>
       </section>
 
