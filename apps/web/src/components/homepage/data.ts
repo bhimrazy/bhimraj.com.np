@@ -37,6 +37,7 @@ export const THREADS = [
     role: "Tier 2 open-source contributor",
     since: "2024",
     line: "Helping maintain open-source tools teams use to train and serve models, and cutting their releases.",
+    highlight: "From a first pull request to helping maintain the ecosystem.",
     logo: "lightning",
   },
   {
@@ -106,12 +107,19 @@ export const SELECTED_WORK = [
 /** One entry in a "Currently" row: a short name, an optional note, a link. */
 export type NowItem = { text: string; note?: string; href?: string };
 
-/** The newest thing worth a one-line mention near the top of the page. */
-export const LATEST: NowItem = {
-  text: "vps-ready",
-  note: "make a fresh VPS ready and secure, without locking yourself out",
-  href: "https://vps-ready.bhimraj.com.np",
-};
+/** Recent launches, shown as chips under the hero buttons. Keep notes to ~5 words. */
+export const LATEST = [
+  {
+    text: "vps-ready",
+    note: "Harden a fresh VPS, safely",
+    href: "https://vps-ready.bhimraj.com.np",
+  },
+  {
+    text: "Receipt OCR",
+    note: "Receipts to structured data",
+    href: "https://receipt-ocr.bhimraj.com.np",
+  },
+] as const satisfies readonly Required<NowItem>[];
 
 export const PERSONAL = {
   interests: ["Travelling", "Exploring new things", "Working out", "Music"],

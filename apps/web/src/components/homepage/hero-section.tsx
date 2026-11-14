@@ -81,22 +81,43 @@ export default function HeroSection() {
               </Button>
             </div>
 
-            {/* The one quiet line: the newest thing on the bench. */}
-            <p className="mt-10 flex max-w-xl items-start gap-2.5 text-pretty font-mono text-[12px] text-site-text-tertiary leading-relaxed">
-              <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-site-success motion-safe:animate-pulse-dot" />
-              <span>
-                <span className="text-site-text-secondary">New:</span>{" "}
-                <a
-                  href={LATEST.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-sm text-site-text underline decoration-site-accent/40 underline-offset-4 transition-colors hover:text-site-accent hover:decoration-site-accent focus-visible:outline-2 focus-visible:outline-site-accent"
-                >
-                  {LATEST.text}
-                </a>
-                , {LATEST.note} ↗
+            <div className="mt-10 flex flex-wrap items-center gap-2.5">
+              <span className="flex items-center gap-2 font-mono text-[11px] text-site-text-tertiary uppercase tracking-[1.2px]">
+                <span
+                  aria-hidden
+                  className="size-1.5 rounded-full bg-site-success motion-safe:animate-pulse-dot"
+                />
+                New
               </span>
-            </p>
+              <ul className="flex flex-wrap gap-2">
+                {LATEST.map((item) => (
+                  <li key={item.href}>
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-2 rounded-full border border-site-border bg-site-card/70 py-1.5 pr-3 pl-3.5 text-[13px] backdrop-blur-sm transition-colors hover:border-site-accent/40 focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2 dark:border-white/8"
+                    >
+                      <span className="font-medium text-site-text">
+                        {item.text}
+                      </span>
+                      <span aria-hidden className="text-site-text-tertiary">
+                        ·
+                      </span>
+                      <span className="text-site-text-secondary">
+                        {item.note}
+                      </span>
+                      <span
+                        aria-hidden
+                        className="text-site-accent transition-transform group-hover:translate-x-0.5"
+                      >
+                        ↗
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           {/* Desktop portrait */}
