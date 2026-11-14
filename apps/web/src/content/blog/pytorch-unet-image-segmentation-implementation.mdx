@@ -94,7 +94,7 @@ class DoubleConvBlock(nn.Module):
     """ A convolutional block in the UNet architecture.
 
     This block consists of two convolutional layers with batch
-		normalization followed by a ReLU activation function.
+    normalization followed by a ReLU activation function.
     """
 
     def __init__(
@@ -105,17 +105,17 @@ class DoubleConvBlock(nn.Module):
         padding: int = 0, # set padding to 1 to preserve the original dimension
     ) -> None:
         """ Initializes DoubleConvBlock with specified input and output channels,
-				kernel size, and padding.
+        kernel size, and padding.
         """
         super(DoubleConvBlock, self).__init__()
-				self.conv = nn.Sequential(
-				            nn.Conv2d(in_channels, out_channels, kernel_size, padding),
-										nn.BatchNorm2d(out_channels)
-				            nn.ReLU(inplace=True),
-				            nn.Conv2d(out_channels, out_channels, kernel_size, padding),
-										nn.BatchNorm2d(out_channels)
-				            nn.ReLU(inplace=True)
-					        )
+        self.conv = nn.Sequential(
+            nn.Conv2d(in_channels, out_channels, kernel_size=kernel_size, padding=padding),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(out_channels, out_channels, kernel_size=kernel_size, padding=padding),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True),
+        )
 
     def forward(self, x) -> torch.Tensor:
         x = self.conv(x)
@@ -131,11 +131,11 @@ class Encoder(nn.Module):
     """The encoder part of the UNet architecture.
 
     This consists of a series of convolutional blocks followed by
-		maxpooling operations..
+    maxpooling operations.
 
     Args:
         channels (List[int]): A list of channels for convolutionals block.
-				>>>channels = [3, 64, 128, 256, 512, 1024]
+            >>> channels = [3, 64, 128, 256, 512, 1024]
 
     """
 
@@ -176,7 +176,7 @@ class Decoder(nn.Module):
 
     Args:
         channels (List[int]): A list of channels for convolutionals block.
-				>>>channels = [1024, 512, 256, 128, 64]
+            >>> channels = [1024, 512, 256, 128, 64]
 
     """
 
