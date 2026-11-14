@@ -41,10 +41,6 @@ export default function HeroSection() {
               </div>
             </div>
 
-            <p className="mb-5 hidden font-mono text-[12px] text-site-text-secondary uppercase tracking-[1.5px] lg:block">
-              {PERSON.name}
-            </p>
-
             <h1 className="mb-6 text-balance font-bold font-display text-[34px] text-site-text leading-[1.08] tracking-tight sm:text-5xl sm:leading-[1.05] lg:text-[50px] xl:text-[54px]">
               I build products,{" "}
               <span className="text-site-text-secondary xl:block">
@@ -140,10 +136,11 @@ export default function HeroSection() {
               />
             </div>
             <div className="absolute -right-4 -bottom-4 rounded-xl border border-site-border bg-site-card/90 px-4 py-3 backdrop-blur-md">
-              <p className="mb-0.5 font-mono text-[11px] text-site-text-tertiary">
-                From Lahan · based in
+              <p className="font-display font-semibold text-[15px] text-site-text leading-tight">
+                {PERSON.name}
               </p>
-              <p className="font-mono text-[12px] text-site-text-secondary">
+              <p className="mt-1 font-mono text-[11px] text-site-text-tertiary">
+                From Lahan · based in{" "}
                 <span className="font-semibold text-site-accent">
                   Kathmandu
                 </span>
