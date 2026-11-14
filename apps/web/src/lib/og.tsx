@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { cacheLife } from "next/cache";
 import { ImageResponse } from "next/og";
 import { BRAND_COLORS as C, MARK_CUT, RIDGE_PATH, SUN } from "@/lib/brand";
 
@@ -46,7 +47,7 @@ type OgCard = {
  * The 1200×630 card for every page: lockup top left, one bold title, the URL
  * bottom left, an amber glow for the sun and the site's ridgeline below.
  */
-export async function ogImage({
+async function renderCard({
   kicker,
   title,
   footLeft,
@@ -202,4 +203,24 @@ export async function ogImage({
       ],
     },
   );
+}
+
+/** Rendered once per card and kept until the next deploy. */
+async function cardPng(card: OgCard): Promise<Uint8Array> {
+  "use cache";
+  cacheLife("max");
+  const image = await renderCard(card);
+  return new Uint8Array(await image.arrayBuffer());
+}
+
+export async function ogImage(card: OgCard): Promise<Response> {
+  const png = await cardPng(card);
+  return new Response(new Blob([png as Uint8Array<ArrayBuffer>]), {
+    headers: {
+      "Content-Type": OG_CONTENT_TYPE,
+      // Card URLs carry a route hash, not a content hash, so stay revalidatable.
+      "Cache-Control":
+        "public, max-age=86400, s-maxage=31536000, stale-while-revalidate=86400",
+    },
+  });
 }
