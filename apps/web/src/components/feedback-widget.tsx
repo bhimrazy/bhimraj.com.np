@@ -6,7 +6,7 @@ import {
   PaperPlaneIcon,
 } from "@radix-ui/react-icons";
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,8 +39,32 @@ type Reason = (typeof REASONS)[number];
 const isReason = (value: string | undefined): value is Reason =>
   REASONS.includes(value as Reason);
 
-const fieldClass =
-  "h-9 bg-site-bg text-sm placeholder:text-site-text-tertiary dark:bg-site-bg-secondary";
+const fieldClass = "h-9 bg-site-bg text-sm dark:bg-site-bg-secondary";
+
+function FieldLabel({
+  children,
+  htmlFor,
+  optional,
+}: {
+  children: string;
+  htmlFor?: string;
+  optional?: boolean;
+}) {
+  const Tag = htmlFor ? "label" : "span";
+  return (
+    <Tag
+      htmlFor={htmlFor}
+      className="flex items-baseline gap-1.5 font-medium font-mono text-[11px] text-site-text-tertiary uppercase tracking-[0.8px]"
+    >
+      {children}
+      {optional && (
+        <span className="text-site-text-tertiary/70 normal-case tracking-normal">
+          optional
+        </span>
+      )}
+    </Tag>
+  );
+}
 
 /**
  * Chat-style feedback box. Besides the launcher and the auto-open, any element
@@ -55,6 +79,8 @@ export default function FeedbackWidget() {
   const [email, setEmail] = useState("");
   const [website, setWebsite] = useState(""); // honeypot
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const fieldId = useId();
   const openRef = useRef(open);
   openRef.current = open;
 
@@ -96,7 +122,10 @@ export default function FeedbackWidget() {
   }, []);
 
   useEffect(() => {
-    if (open) textareaRef.current?.focus();
+    // Start at the top field, unless a restored draft means they've begun writing.
+    if (!open) return;
+    const draft = textareaRef.current?.value;
+    (draft ? textareaRef.current : nameRef.current)?.focus();
   }, [open]);
 
   const openManually = useCallback((preset?: Reason) => {
@@ -194,13 +223,13 @@ export default function FeedbackWidget() {
         <div
           role="dialog"
           aria-label="Message Bhimraj"
-          className="fade-in zoom-in-95 slide-in-from-bottom-2 w-[min(calc(100vw-2rem),23rem)] origin-bottom-right animate-in overflow-hidden rounded-2xl border border-site-border/60 bg-site-card shadow-2xl shadow-black/10 duration-200 dark:border-white/8 dark:shadow-black/40"
+          className="fade-in zoom-in-95 slide-in-from-bottom-2 relative isolate w-[min(calc(100vw-2rem),23rem)] origin-bottom-right animate-in overflow-hidden rounded-2xl border border-site-border/60 bg-site-card shadow-2xl shadow-black/10 duration-200 dark:border-white/8 dark:shadow-black/40"
         >
-          <div className="relative flex items-center gap-3 overflow-hidden px-4 pt-4 pb-3">
-            <span
-              aria-hidden
-              className="pointer-events-none absolute -top-16 -right-10 size-40 rounded-full bg-site-accent-subtle blur-2xl"
-            />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -top-20 -right-16 -z-10 size-56 rounded-full bg-site-accent-subtle blur-3xl"
+          />
+          <div className="flex items-center gap-3 px-4 pt-4 pb-3">
             <Image
               src="/bhimraj-yadav.jpg"
               alt=""
@@ -208,7 +237,7 @@ export default function FeedbackWidget() {
               height={40}
               className="relative size-10 shrink-0 rounded-full border border-site-border/60 object-cover dark:border-white/10"
             />
-            <div className="relative min-w-0 flex-1">
+            <div className="min-w-0 flex-1">
               <p className="font-display font-semibold text-site-text text-sm">
                 Bhimraj Yadav
               </p>
@@ -220,20 +249,57 @@ export default function FeedbackWidget() {
               type="button"
               onClick={dismiss}
               aria-label="Close"
-              className="relative -mr-1 rounded-md p-1.5 text-site-text-tertiary transition-colors hover:bg-site-bg-secondary hover:text-site-text focus-visible:outline-2 focus-visible:outline-site-accent"
+              className="-mr-1 rounded-md p-1.5 text-site-text-tertiary transition-colors hover:bg-site-bg-secondary hover:text-site-text focus-visible:outline-2 focus-visible:outline-site-accent"
             >
               <Cross2Icon className="size-4" />
             </button>
           </div>
 
-          <form onSubmit={submit} className="space-y-3 px-4 pb-4">
+          <form onSubmit={submit} className="space-y-4 px-4 pb-4">
             <p className="w-fit max-w-[90%] rounded-2xl rounded-tl-sm bg-site-bg-secondary px-3.5 py-2.5 text-site-text text-sm leading-relaxed dark:bg-white/4">
               Hey 👋 What brought you by? A project, a question, or just saying
               hi, all welcome.
             </p>
 
-            <fieldset>
-              <legend className="sr-only">What&apos;s it about?</legend>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-1.5">
+                <FieldLabel htmlFor={`${fieldId}-name`} optional>
+                  Name
+                </FieldLabel>
+                <Input
+                  id={`${fieldId}-name`}
+                  ref={nameRef}
+                  type="text"
+                  name="name"
+                  autoComplete="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  maxLength={100}
+                  className={fieldClass}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <FieldLabel htmlFor={`${fieldId}-email`} optional>
+                  Email
+                </FieldLabel>
+                <Input
+                  id={`${fieldId}-email`}
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  maxLength={254}
+                  aria-describedby={`${fieldId}-hint`}
+                  className={fieldClass}
+                />
+              </div>
+            </div>
+
+            <fieldset className="space-y-1.5">
+              <legend>
+                <FieldLabel>About</FieldLabel>
+              </legend>
               <div className="flex flex-wrap gap-1.5">
                 {REASONS.map((r) => (
                   <button
@@ -254,43 +320,20 @@ export default function FeedbackWidget() {
               </div>
             </fieldset>
 
-            <Textarea
-              ref={textareaRef}
-              value={message}
-              onChange={(e) => {
-                setMessage(e.target.value);
-                writeDraft(e.target.value);
-              }}
-              maxLength={2000}
-              rows={3}
-              required
-              aria-label="Message"
-              placeholder="Write a message…"
-              className="min-h-20 resize-none bg-site-bg text-sm placeholder:text-site-text-tertiary dark:bg-site-bg-secondary"
-            />
-
-            <div className="grid grid-cols-2 gap-2">
-              <Input
-                type="text"
-                name="name"
-                autoComplete="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                maxLength={100}
-                aria-label="Your name (optional)"
-                placeholder="Name"
-                className={fieldClass}
-              />
-              <Input
-                type="email"
-                name="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                maxLength={254}
-                aria-label="Email for a reply (optional)"
-                placeholder="Email for a reply"
-                className={fieldClass}
+            <div className="space-y-1.5">
+              <FieldLabel htmlFor={`${fieldId}-message`}>Message</FieldLabel>
+              <Textarea
+                id={`${fieldId}-message`}
+                ref={textareaRef}
+                value={message}
+                onChange={(e) => {
+                  setMessage(e.target.value);
+                  writeDraft(e.target.value);
+                }}
+                maxLength={2000}
+                rows={3}
+                required
+                className="min-h-20 resize-none bg-site-bg text-sm dark:bg-site-bg-secondary"
               />
             </div>
 
@@ -306,15 +349,16 @@ export default function FeedbackWidget() {
             />
 
             <div className="flex items-center justify-between gap-3">
-              <p className="text-[11px] text-site-text-tertiary leading-snug">
-                Both optional. Leave an email
-                <br />
-                if you&apos;d like a reply.
+              <p
+                id={`${fieldId}-hint`}
+                className="text-[11px] text-site-text-tertiary leading-snug"
+              >
+                Add an email if you&apos;d like a reply.
               </p>
               <Button
                 type="submit"
                 disabled={loading || !message.trim()}
-                className="h-9 shrink-0 cursor-pointer gap-1.5 rounded-lg border-0 bg-site-accent px-4 font-semibold text-site-on-accent hover:bg-site-accent/85"
+                className="h-9 shrink-0 cursor-pointer gap-1.5 rounded-lg border-0 bg-site-accent px-4 font-semibold text-site-on-accent hover:bg-site-accent/85 disabled:bg-site-bg-secondary disabled:text-site-text-tertiary disabled:opacity-100 dark:disabled:bg-white/5"
               >
                 {loading ? "Sending…" : "Send"}
                 <PaperPlaneIcon aria-hidden className="size-3.5" />

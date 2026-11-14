@@ -37,7 +37,7 @@ export const THREADS = [
     role: "Tier 2 open-source contributor",
     since: "2024",
     line: "Helping maintain open-source tools teams use to train and serve models, and cutting their releases.",
-    highlight: "From a first pull request to helping maintain the ecosystem.",
+    highlight: "From first PR to helping maintain the ecosystem.",
     logo: "lightning",
   },
   {
