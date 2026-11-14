@@ -5,32 +5,37 @@ import {
   getOSSActivity,
   getOSSStats,
   getSnapshotMeta,
+  ossStartDate,
   username,
 } from "@bhimrazy/github";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import { Chip } from "@/components/chip";
 import { Container } from "@/components/container";
+import ContactSection from "@/components/homepage/contact-section";
 import { ActivityBreakdown } from "@/components/oss/activity-breakdown";
 import { ContributionGraph } from "@/components/oss/contribution-graph";
+import { OSS_START_LABEL } from "@/components/oss/start-date";
 import { Timeline } from "@/components/oss/timeline";
+import { PageHeader, SectionHeading } from "@/components/section-heading";
+import { SectionSeparator } from "@/components/section-separator";
+import { surface } from "@/components/surface";
 import { siteConfig } from "@/config/site";
-import { formatCompact } from "@/lib/format";
-import { formatDate } from "@/lib/utils";
+import { formatCompact, formatShortDate } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
-const ROUNDED_COMMITS = Math.floor(getOSSStats().totalCommits / 100) * 100;
+// Search snippets outlive the daily sync, so the description uses a floor.
+const COMMITS_FLOOR = Math.floor(getOSSStats().totalCommits / 100) * 100;
 
 export const metadata: Metadata = {
   title: "Open Source Journey — Bhimraj Yadav",
-  description: `${ROUNDED_COMMITS}+ contributions across PyTorch Lightning, LitServe, LitData, and LitGPT. My open source story.`,
+  description: `${COMMITS_FLOOR}+ commits across PyTorch Lightning, LitServe, LitData, and LitGPT. My open source story.`,
   alternates: { canonical: "/oss" },
 };
 
 const USERNAME = username;
 const UTM = siteConfig.utmParams;
-
-// First OSS milestone — joining the Lightning AI Studios Publisher Program —
-// matches the Timeline component's first entry ("Mar 2024") below.
-const OSS_START_DATE = "2024-03-01";
 
 function repoUrl(fullName: string, org: string): string {
   if (org.toLowerCase() === USERNAME.toLowerCase()) {
@@ -57,117 +62,126 @@ function formatActiveSpan(totalMonths: number): string {
   return `${years}yr ${months}mo`;
 }
 
+function Section({ id, children }: { id: string; children: ReactNode }) {
+  return (
+    <section id={id} className="scroll-mt-20 py-20 sm:py-24">
+      <Container className="px-4 sm:px-8">{children}</Container>
+    </section>
+  );
+}
+
 export default async function OSSPage() {
   const contributions = getContributedRepos();
   const oss = getOSSStats();
   const monthly = getMonthlyContributions();
   // Hidden while the committed snapshot predates the activity metrics.
   const hasActivity = getOSSActivity().prsReviewed > 0;
-  const ownStars = getGitHubStars();
   const { generatedAt } = getSnapshotMeta();
-
-  const monthsActive = monthsBetween(OSS_START_DATE, generatedAt);
-  const activeSpan = formatActiveSpan(monthsActive);
 
   const maxRepoCommits = Math.max(...contributions.map((c) => c.commits), 1);
 
+  // Exact, unlike the homepage's floors: this page is where those link to verify.
   const stats = [
+    { value: oss.totalCommits.toLocaleString("en-US"), label: "Commits" },
+    { value: oss.totalPrs.toLocaleString("en-US"), label: "PRs merged" },
     {
-      value: `${formatCompact(oss.totalCommits)}+`,
-      label: "Contributions",
+      value: getGitHubStars().toLocaleString("en-US"),
+      label: "Stars on my repos",
     },
     {
-      value: `${oss.totalPrs}`,
-      label: "PRs Merged",
+      value: formatActiveSpan(monthsBetween(ossStartDate, generatedAt)),
+      label: `Active since ${OSS_START_LABEL}`,
     },
-    {
-      value: `${formatCompact(ownStars)}+`,
-      label: "Stars Earned",
-    },
-    { value: activeSpan, label: "Active Since Mar 2024" },
   ];
 
+  const sections = [
+    hasActivity && "beyond",
+    "activity",
+    "contributions",
+    "journey",
+  ].filter(Boolean);
+  const index = (key: string) =>
+    String(sections.indexOf(key) + 1).padStart(2, "0");
+
   return (
-    <main className="pt-28 pb-20">
-      <Container>
-        {/* Hero */}
-        <div className="mb-12">
-          <span className="mb-3 inline-block font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">
-            Open Source
-          </span>
-          <h1 className="mb-4 font-bold font-display text-4xl text-site-text leading-tight sm:text-5xl">
-            My OSS Journey
-          </h1>
-          <p className="max-w-2xl text-lg text-site-text-secondary leading-relaxed">
-            Contributing to open source has shaped how I write software, think
-            about APIs, and collaborate at scale. Here&apos;s the story — with
-            numbers synced daily from GitHub.
-          </p>
-        </div>
+    <main>
+      <section className="pt-28 pb-20 sm:pb-24">
+        <Container className="px-4 sm:px-8">
+          <PageHeader
+            eyebrow="Open source"
+            title="My open-source journey"
+            description="Contributing to open source has shaped how I write software, think about APIs, and collaborate at scale. Here's the story — with numbers synced daily from GitHub."
+          />
 
-        {/* Stats */}
-        <div className="mb-3 grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-site-border shadow-lg/2 transition-shadow duration-200 hover:shadow-xl/5 sm:grid-cols-4">
-          {stats.map((stat) => (
-            <div
-              key={stat.label}
-              className="flex flex-col items-center justify-center bg-site-card px-6 py-8 text-center"
-            >
-              <span className="font-bold font-display text-3xl text-site-text">
-                {stat.value}
-              </span>
-              <span className="mt-1 text-site-text-tertiary text-xs">
-                {stat.label}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* Synced-from-GitHub trust caption */}
-        <p className="mb-12 text-right font-mono text-[11px] text-site-text-tertiary">
-          Synced from GitHub {formatDate(generatedAt)}
-        </p>
-
-        {/* Maintainer work beyond merged PRs — hidden while the snapshot predates it */}
-        {hasActivity && (
-          <section className="mb-12">
-            <h2 className="mb-2 font-bold font-display text-2xl text-site-text">
-              Beyond the merge button
-            </h2>
-            <p className="mb-6 text-site-text-secondary text-sm">
-              Reviews, resolved issues, and support threads across the same
-              repos — each number links to the GitHub search behind it.
+          <div className={cn(surface, "mt-12 p-6 sm:p-7")}>
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4">
+              {stats.map((stat) => (
+                <div key={stat.label} className="flex flex-col-reverse">
+                  <dt className="mt-1 text-site-text-secondary text-sm">
+                    {stat.label}
+                  </dt>
+                  <dd className="whitespace-nowrap font-bold font-display text-[26px] text-site-text tabular-nums tracking-tight sm:text-[28px]">
+                    {stat.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-6 border-site-border/60 border-t pt-4 font-mono text-[11px] text-site-text-tertiary dark:border-white/5">
+              Synced from GitHub {formatShortDate(generatedAt)}
             </p>
+          </div>
+        </Container>
+      </section>
+
+      {hasActivity && (
+        <>
+          <SectionSeparator />
+          <Section id="beyond">
+            <SectionHeading
+              index={index("beyond")}
+              eyebrow="Maintainer work"
+              title="Beyond the merge button"
+              description="Reviews, resolved issues, and support threads across the same repos — each number links to the GitHub search behind it."
+            />
             <ActivityBreakdown />
-          </section>
-        )}
+          </Section>
+        </>
+      )}
 
-        {/* Contribution graph */}
-        <h2 className="mb-6 font-bold font-display text-2xl text-site-text">
-          Activity
-        </h2>
-        <div className="mb-12">
-          <ContributionGraph data={monthly} />
-        </div>
+      <SectionSeparator />
+      <Section id="activity">
+        <SectionHeading
+          index={index("activity")}
+          eyebrow="Activity"
+          title="Month by month"
+        />
+        <ContributionGraph data={monthly} />
+      </Section>
 
-        {/* Contributions */}
-        <h2 className="mb-2 font-bold font-display text-2xl text-site-text">
-          Key Contributions
-        </h2>
-        <p className="mb-6 text-site-text-secondary text-sm">
-          Every repo where I have more than one contribution — synced daily from
-          GitHub.
-        </p>
-        <div className="mb-12 divide-y divide-site-border overflow-hidden rounded-xl border border-site-border bg-site-card dark:divide-white/4 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary">
+      <SectionSeparator />
+      <Section id="contributions">
+        <SectionHeading
+          index={index("contributions")}
+          eyebrow="Repositories"
+          title="Key contributions"
+          description="Every repo where I have more than one commit — synced daily from GitHub."
+        />
+        <div
+          className={cn(
+            surface,
+            "divide-y divide-site-border dark:divide-white/4",
+          )}
+        >
           {contributions.map((c) => (
             <a
               key={c.fullName}
               href={repoUrl(c.fullName, c.org)}
               target="_blank"
               rel="nofollow noopener noreferrer"
-              className="group relative isolate flex flex-col gap-1.5 overflow-hidden px-4 py-3 sm:flex-row sm:items-center sm:gap-4 sm:px-5"
+              className="group relative isolate flex flex-col gap-1.5 overflow-hidden px-4 py-3 focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:-outline-offset-2 sm:flex-row sm:items-center sm:gap-4 sm:px-5"
               title={c.fullName}
             >
-              {/* Commit-volume bar — ranks repos at a glance */}
+              {/* Bar width ranks repos by commit volume at a glance. */}
               <span
                 aria-hidden
                 className="absolute inset-y-0 left-0 -z-10 bg-site-accent-subtle transition-all duration-300 group-hover:bg-site-accent/15"
@@ -176,18 +190,16 @@ export default async function OSSPage() {
                 }}
               />
 
-              {/* Repo + org */}
               <div className="flex min-w-0 items-center gap-2 sm:w-72 sm:shrink-0 lg:w-80">
                 <GitHubLogoIcon className="h-3.5 w-3.5 shrink-0 text-site-text-tertiary transition-colors group-hover:text-site-accent" />
                 <h3 className="min-w-0 truncate font-display font-semibold text-[15px] text-site-text">
                   {c.name}
                 </h3>
-                <span className="ml-auto shrink-0 rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[10px] text-site-accent sm:ml-0">
+                <Chip className="ml-auto shrink-0 font-mono text-[10px] sm:ml-0">
                   {c.org}
-                </span>
+                </Chip>
               </div>
 
-              {/* Description (wide screens only) — capped width, full text on hover */}
               {c.description && (
                 <p
                   title={c.description}
@@ -197,25 +209,31 @@ export default async function OSSPage() {
                 </p>
               )}
 
-              {/* Stats */}
               <div className="grid shrink-0 grid-cols-2 gap-x-3 gap-y-0.5 font-mono text-[11px] text-site-text-tertiary sm:ml-auto sm:flex sm:items-center">
-                <span className="text-site-accent">{c.commits} commits</span>
+                <span className="text-site-accent-text">
+                  {c.commits} commits
+                </span>
                 {c.prs > 0 && <span>{c.prs} PRs</span>}
+                {/* Others' repos: popularity context, so compact is enough. */}
                 <span>★ {formatCompact(c.stars)}</span>
                 <span>⑂ {formatCompact(c.forks)}</span>
               </div>
             </a>
           ))}
         </div>
+      </Section>
 
-        {/* Timeline */}
-        <h2 className="mb-6 font-bold font-display text-2xl text-site-text">
-          Journey
-        </h2>
-        <div>
-          <Timeline />
-        </div>
-      </Container>
+      <SectionSeparator />
+      <Section id="journey">
+        <SectionHeading
+          index={index("journey")}
+          eyebrow="Journey"
+          title="How I got here"
+        />
+        <Timeline />
+      </Section>
+
+      <ContactSection index={String(sections.length + 1).padStart(2, "0")} />
     </main>
   );
 }

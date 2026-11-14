@@ -28,11 +28,13 @@ declare module "content-collections" {
     publishedAt: string;
     updatedAt?: string;
     tags: string[];
-    image: string;
-    githubLink: string;
+    image?: string;
+    githubLink?: string;
     liveLink?: string;
+    liveLabel?: string;
     featured: boolean;
     category:
+      | "Developer Tools"
       | "Multimodal LLMs"
       | "Model Serving"
       | "Computer Vision & Medical AI";

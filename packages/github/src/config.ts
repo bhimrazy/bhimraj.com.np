@@ -26,8 +26,8 @@ export const githubConfig = {
   ossRepos: [...lightningRepos, ...otherRepos],
   /** Self-authored repo spotlighted on the homepage with its star-growth curve. */
   featuredRepo: "bhimrazy/receipt-ocr",
-  /** First year of OSS activity, used to derive "years active". */
-  ossStartYear: 2024,
+  /** First OSS milestone (the /oss timeline's first entry); "Active since" derives from it. */
+  ossStartDate: "2024-03-01",
 } as const;
 
-export const { username, ossRepos, featuredRepo, ossStartYear } = githubConfig;
+export const { username, ossRepos, featuredRepo, ossStartDate } = githubConfig;

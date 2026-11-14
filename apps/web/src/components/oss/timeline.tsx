@@ -1,3 +1,6 @@
+import { ArrowLink } from "@/components/section-heading";
+import { OSS_START_LABEL } from "./start-date";
+
 type TimelineQuote = {
   text: string;
   author: string;
@@ -19,7 +22,8 @@ type TimelineItem = {
 
 const TIMELINE: TimelineItem[] = [
   {
-    date: "Mar 2024",
+    // Anchors the page's "Active since" stat.
+    date: OSS_START_LABEL,
     title: "Joined the Lightning AI Studios Publisher Program",
     body: "Invited into the Publisher Program to collaborate with the team and build Studios — my first foothold in the Lightning AI ecosystem.",
     quotes: [
@@ -139,7 +143,7 @@ export function Timeline() {
             {yearItems.map((item) => (
               <li key={item.title} className="relative pb-10 pl-8 last:pb-0">
                 <span className="absolute top-1.5 -left-1.25 h-2.5 w-2.5 rounded-full border-2 border-site-bg bg-site-accent" />
-                <span className="font-medium font-mono text-[11px] text-site-accent uppercase tracking-[1px]">
+                <span className="font-medium font-mono text-[11px] text-site-accent-text uppercase tracking-[1px]">
                   {item.date}
                 </span>
                 <h3 className="mt-1 font-display font-semibold text-base text-site-text">
@@ -150,7 +154,7 @@ export function Timeline() {
                 </p>
 
                 {item.quotes && item.quotes.length > 0 && (
-                  <div className="mt-3 flex flex-col gap-2.5">
+                  <div className="mt-3 flex max-w-2xl flex-col gap-2.5">
                     {item.quotes.map((q) => (
                       <blockquote
                         key={q.author}
@@ -174,15 +178,11 @@ export function Timeline() {
                 )}
 
                 {item.link && (
-                  <a
-                    href={item.link.href}
-                    target="_blank"
-                    rel="nofollow noopener noreferrer"
-                    className="mt-3 inline-flex items-center gap-1 font-mono text-[12px] text-site-accent transition-colors hover:text-site-accent-hover"
-                  >
-                    {item.link.label}
-                    <span aria-hidden>→</span>
-                  </a>
+                  <div className="mt-3">
+                    <ArrowLink href={item.link.href} external>
+                      {item.link.label}
+                    </ArrowLink>
+                  </div>
                 )}
               </li>
             ))}

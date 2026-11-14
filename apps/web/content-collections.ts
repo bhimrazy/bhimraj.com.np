@@ -62,26 +62,22 @@ const Project = defineCollection({
     publishedAt: z.string(),
     updatedAt: z.string().optional(),
     tags: z.array(z.string()),
-    image: z.string(),
-    githubLink: z.string(),
+    image: z.string().optional(),
+    githubLink: z.string().optional(),
     liveLink: z.string().optional(),
+    /** CTA text for `liveLink`; defaults to "Try the app". */
+    liveLabel: z.string().optional(),
     featured: z.boolean().default(false),
-    category: z
-      .enum([
-        "Multimodal LLMs",
-        "Model Serving",
-        "Computer Vision & Medical AI",
-      ])
-      .default("Model Serving"),
+    category: z.enum([
+      "Developer Tools",
+      "Multimodal LLMs",
+      "Model Serving",
+      "Computer Vision & Medical AI",
+    ]),
   }),
   transform: async (document, context) => {
     const html = await compileMarkdown(context, document, { rehypePlugins });
-    return {
-      ...document,
-      html,
-      liveLink: document.liveLink,
-      updatedAt: document.updatedAt,
-    };
+    return { ...document, html };
   },
 });
 

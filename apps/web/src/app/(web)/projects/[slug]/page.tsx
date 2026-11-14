@@ -1,28 +1,30 @@
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
-  GitHubLogoIcon,
+  StarFilledIcon,
 } from "@radix-ui/react-icons";
 import { allProjects } from "content-collections";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Chip } from "@/components/chip";
 import { Container } from "@/components/container";
-import { ExternalLinkIcon, withUtm } from "@/components/projects/link-utils";
+import ContactSection from "@/components/homepage/contact-section";
+import { withUtm } from "@/components/projects/link-utils";
 import { ProjectCover } from "@/components/projects/project-cover";
-import { Badge } from "@/components/ui/badge";
+import {
+  getRepoStats,
+  getSortedProjects,
+  liveLabel,
+} from "@/components/projects/projects";
+import { ArrowLink, PageHeader } from "@/components/section-heading";
+import { surfaceInteractive } from "@/components/surface";
 import { siteConfig } from "@/config/site";
-import type { Project } from "@/lib/types";
-import { formatDate } from "@/lib/utils";
+import { formatCompact, formatShortDate } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
-/** Projects sorted newest-first — the same order the list page uses, so
- * prev/next navigation here matches what visitors browsed through. */
-function sortedProjects(): Project[] {
-  return [...(allProjects as Project[])].sort(
-    (a, b) =>
-      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-  );
-}
+const focusRing =
+  "focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2";
 
 export async function generateMetadata({
   params,
@@ -79,7 +81,7 @@ export default async function ProjectDetail({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const projects = sortedProjects();
+  const projects = getSortedProjects();
   const index = projects.findIndex((p) => p._meta.path === slug);
 
   if (index === -1) {
@@ -89,152 +91,134 @@ export default async function ProjectDetail({
   const project = projects[index];
   const prev = projects[index - 1];
   const next = projects[index + 1];
+  const stats = getRepoStats(project.githubLink);
 
   return (
-    <main className="pt-24 pb-20">
-      <Container>
+    <main>
+      <Container className="px-4 pt-28 pb-20 sm:px-8 sm:pt-32 sm:pb-24">
         <div className="mx-auto max-w-3xl">
-          {/* Back */}
           <Link
             href="/projects"
-            className="mb-10 inline-flex items-center gap-1.5 text-site-text-secondary text-sm transition-colors hover:text-site-text"
+            className={cn(
+              "mb-10 inline-flex items-center gap-1.5 rounded-sm text-site-text-secondary text-sm transition-colors hover:text-site-text",
+              focusRing,
+            )}
           >
-            <ChevronLeftIcon className="h-4 w-4" />
+            <ChevronLeftIcon className="size-4" aria-hidden />
             All projects
           </Link>
 
-          {/* Tags */}
-          {project.tags.length > 0 && (
-            <div className="mb-4 flex flex-wrap gap-2">
-              {project.tags.map((tag) => (
-                <Badge
-                  key={tag}
-                  variant="secondary"
-                  className="rounded-md border-transparent bg-site-accent-subtle font-mono text-[10px] text-site-accent"
-                >
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          )}
-
-          {/* Title */}
-          <h1 className="mb-4 font-bold font-display text-3xl text-site-text leading-tight sm:text-4xl">
-            {project.title}
-          </h1>
-
-          {/* Meta sidebar/header */}
-          <div className="mb-8 flex flex-col gap-4 rounded-xl border border-site-border bg-site-card p-5 text-sm sm:flex-row sm:items-start sm:justify-between dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary">
-            <div className="flex flex-col gap-3">
-              <div>
-                <span className="block font-mono text-[10px] text-site-text-tertiary uppercase tracking-[1px]">
-                  Published
-                </span>
-                <time
-                  dateTime={project.publishedAt}
-                  className="font-mono text-site-text text-xs"
-                >
-                  {formatDate(project.publishedAt)}
-                </time>
-              </div>
-              <div>
-                <span className="block font-mono text-[10px] text-site-text-tertiary uppercase tracking-[1px]">
-                  Category
-                </span>
-                <span className="font-mono text-site-text text-xs">
-                  {project.category}
-                </span>
-              </div>
-              <div>
-                <span className="block font-mono text-[10px] text-site-text-tertiary uppercase tracking-[1px]">
-                  Stack
-                </span>
-                <span className="font-mono text-site-text text-xs">
-                  {project.tags.join(" · ")}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 sm:flex-col sm:items-end sm:gap-2">
-              <a
-                href={withUtm(project.githubLink)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 font-mono text-site-text-secondary text-xs transition-colors hover:text-site-text"
-              >
-                <GitHubLogoIcon className="h-3.5 w-3.5" />
-                GitHub
-              </a>
-              {project.liveLink && (
-                <a
-                  href={withUtm(project.liveLink)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 font-mono text-site-accent text-xs transition-colors hover:opacity-80"
-                >
-                  <ExternalLinkIcon className="h-3.5 w-3.5" />
-                  Open in Lightning Studio
-                </a>
+          <PageHeader
+            eyebrow={project.category}
+            title={project.title}
+            description={project.description}
+          >
+            <p className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-site-text-tertiary text-xs">
+              <time dateTime={project.publishedAt}>
+                {formatShortDate(project.publishedAt)}
+              </time>
+              {stats && (
+                <>
+                  <span className="flex items-center gap-1.5 font-semibold text-site-accent-text">
+                    <StarFilledIcon className="size-3.5" aria-hidden />
+                    {formatCompact(stats.stars)} stars
+                  </span>
+                  <span>{formatCompact(stats.forks)} forks</span>
+                </>
               )}
-            </div>
-          </div>
+            </p>
 
-          {/* Same generated cover as the list card, so projects that share a
-              GitHub repo (and its OpenGraph card) still look distinct here. */}
-          <div className="group relative mb-10 aspect-2/1 w-full overflow-hidden rounded-xl border border-site-border bg-site-bg-secondary">
-            <ProjectCover
-              slug={project._meta.path}
-              githubLink={project.githubLink}
-              category={project.category}
-            />
-          </div>
+            {(project.liveLink || project.githubLink) && (
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+                {project.liveLink && (
+                  <a
+                    href={withUtm(project.liveLink)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                      "inline-flex h-10 items-center gap-1.5 rounded-lg bg-site-accent px-4 font-semibold text-site-on-accent text-sm transition-colors hover:bg-site-accent/85",
+                      focusRing,
+                    )}
+                  >
+                    {liveLabel(project)} <span aria-hidden>↗</span>
+                  </a>
+                )}
+                {project.githubLink && (
+                  <ArrowLink href={withUtm(project.githubLink)} external>
+                    View on GitHub
+                  </ArrowLink>
+                )}
+              </div>
+            )}
 
-          {/* Content */}
+            {project.tags.length > 0 && (
+              <ul className="mt-6 flex flex-wrap gap-1.5">
+                {project.tags.map((tag) => (
+                  <li key={tag}>
+                    <Chip tone="neutral">{tag}</Chip>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </PageHeader>
+
+          <ProjectCover
+            slug={project._meta.path}
+            className="mt-10 mb-10 rounded-xl border border-site-border dark:border-white/5"
+          />
+
           <div
             className="prose dark:prose-invert wrap-break-word max-w-none prose-headings:scroll-mt-24 overflow-hidden whitespace-normal prose-code:rounded prose-img:rounded-xl prose-pre:rounded-xl prose-img:border prose-pre:border prose-blockquote:border-l-site-accent prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-headings:font-bold prose-headings:font-display prose-a:text-site-accent prose-code:text-[13px] prose-h2:text-2xl prose-h3:text-xl prose-li:text-site-text-secondary prose-p:text-site-text-secondary prose-pre:text-[13px] prose-blockquote:not-italic prose-p:leading-relaxed prose-headings:tracking-tight prose-a:no-underline prose-code:before:content-none prose-code:after:content-none hover:prose-a:underline dark:prose-img:border-site-border dark:prose-pre:border-site-border dark:prose-code:text-site-text dark:prose-headings:text-site-text dark:prose-li:text-site-text-secondary dark:prose-p:text-site-text-secondary dark:prose-strong:text-site-text"
             // biome-ignore lint/security/noDangerouslySetInnerHtml: MDX content is trusted
             dangerouslySetInnerHTML={{ __html: project.html }}
           />
 
-          {/* Prev / next navigation */}
           {(prev || next) && (
-            <nav className="mt-14 grid grid-cols-1 gap-3 border-site-border border-t pt-8 sm:grid-cols-2">
-              {prev ? (
+            <nav
+              aria-label="More projects"
+              className="mt-14 grid grid-cols-1 gap-3 border-site-border border-t pt-8 sm:grid-cols-2"
+            >
+              {prev && (
                 <Link
                   href={`/projects/${prev._meta.path}`}
-                  className="group flex flex-col rounded-xl border border-site-border bg-site-card px-4 py-3 transition-colors hover:border-site-border-hover"
+                  className={cn(
+                    surfaceInteractive,
+                    "group flex flex-col rounded-xl px-5 py-4",
+                    focusRing,
+                  )}
                 >
                   <span className="mb-1 inline-flex items-center gap-1 font-mono text-[11px] text-site-text-tertiary uppercase tracking-[0.5px]">
-                    <ChevronLeftIcon className="h-3 w-3" />
-                    Newer
+                    <ChevronLeftIcon className="size-3" aria-hidden />
+                    Previous
                   </span>
                   <span className="font-display font-semibold text-site-text text-sm transition-colors group-hover:text-site-accent">
                     {prev.title}
                   </span>
                 </Link>
-              ) : (
-                <div />
               )}
-              {next ? (
+              {next && (
                 <Link
                   href={`/projects/${next._meta.path}`}
-                  className="group flex flex-col rounded-xl border border-site-border bg-site-card px-4 py-3 text-right transition-colors hover:border-site-border-hover sm:items-end"
+                  className={cn(
+                    surfaceInteractive,
+                    "group flex flex-col rounded-xl px-5 py-4 text-right sm:col-start-2 sm:items-end",
+                    focusRing,
+                  )}
                 >
                   <span className="mb-1 inline-flex items-center gap-1 font-mono text-[11px] text-site-text-tertiary uppercase tracking-[0.5px]">
-                    Older
-                    <ChevronRightIcon className="h-3 w-3" />
+                    Next
+                    <ChevronRightIcon className="size-3" aria-hidden />
                   </span>
                   <span className="font-display font-semibold text-site-text text-sm transition-colors group-hover:text-site-accent">
                     {next.title}
                   </span>
                 </Link>
-              ) : (
-                <div />
               )}
             </nav>
           )}
         </div>
       </Container>
+      <ContactSection index="01" />
     </main>
   );
 }
