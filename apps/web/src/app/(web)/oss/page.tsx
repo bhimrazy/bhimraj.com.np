@@ -16,7 +16,6 @@ import { Container } from "@/components/container";
 import ContactSection from "@/components/homepage/contact-section";
 import { ActivityBreakdown } from "@/components/oss/activity-breakdown";
 import { ContributionGraph } from "@/components/oss/contribution-graph";
-import { CountUp } from "@/components/oss/count-up";
 import { OSS_START_LABEL } from "@/components/oss/start-date";
 import { Timeline } from "@/components/oss/timeline";
 import { PageHeader, SectionHeading } from "@/components/section-heading";
@@ -89,13 +88,10 @@ export default async function OSSPage() {
   const maxRepoCommits = Math.max(...contributions.map((c) => c.commits), 1);
 
   const stats = [
+    { value: atLeast(oss.totalCommits), label: "Contributions" },
+    { value: atLeast(oss.totalPrs), label: "PRs merged" },
     {
-      value: <CountUp>{atLeast(oss.totalCommits)}</CountUp>,
-      label: "Contributions",
-    },
-    { value: <CountUp>{atLeast(oss.totalPrs)}</CountUp>, label: "PRs merged" },
-    {
-      value: <CountUp>{atLeast(getGitHubStars())}</CountUp>,
+      value: atLeast(getGitHubStars()),
       label: "Stars on my repos",
     },
     {
