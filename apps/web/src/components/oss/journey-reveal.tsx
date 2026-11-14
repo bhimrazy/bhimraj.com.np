@@ -73,9 +73,8 @@ export function JourneyReveal({
             : "invisible grid-rows-[0fr] transition-[grid-template-rows,visibility]",
         )}
       >
-        {/* No opacity fade here: the text must be visible while the region
-            grows, or it reads as a blank block filling in. */}
-        {/* Clip vertically only, so milestone rings at the rail aren't cut. */}
+        {/* No opacity fade, or the growing region reads as a blank block.
+            Clip vertically only, so milestone rings at the rail aren't cut. */}
         <div
           ref={region}
           inert={!open}
