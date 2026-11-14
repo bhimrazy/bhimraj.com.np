@@ -15,7 +15,6 @@ export const metadata: Metadata = {
     title: blog.title,
     description: blog.description,
     siteName: siteConfig.name,
-    images: blog.images,
   },
   twitter: {
     card: "summary_large_image",
@@ -23,7 +22,6 @@ export const metadata: Metadata = {
     creator: siteConfig.author.handle,
     title: blog.title,
     description: blog.description,
-    images: blog.images,
   },
 };
 

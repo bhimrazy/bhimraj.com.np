@@ -26,17 +26,6 @@ export async function generateMetadata({
   if (!post) notFound();
 
   const blogURL = `/blog/${post?._meta.path}`;
-  const images = post?.image
-    ? [
-        {
-          url: post.image,
-          width: 1920,
-          height: 1080,
-          alt: post.title,
-          type: "image/png",
-        },
-      ]
-    : [];
 
   return {
     title: post?.title,
@@ -49,7 +38,6 @@ export async function generateMetadata({
       url: blogURL,
       siteName: siteConfig.name,
       authors: siteConfig.author.name,
-      images,
       publishedTime: post?.publishedAt,
       modifiedTime: post?.updatedAt,
       type: "article",
@@ -60,7 +48,6 @@ export async function generateMetadata({
       title: post?.title,
       description: post?.description,
       creator: siteConfig.author.handle,
-      images,
       site: siteConfig.author.handle,
     },
     robots: {
