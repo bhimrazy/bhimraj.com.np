@@ -22,7 +22,12 @@ import { PageHeader, SectionHeading } from "@/components/section-heading";
 import { SectionSeparator } from "@/components/section-separator";
 import { surface } from "@/components/surface";
 import { siteConfig } from "@/config/site";
-import { formatCompact, formatShortDate } from "@/lib/format";
+import {
+  atLeast,
+  formatCompact,
+  formatShortDate,
+  yearsAtLeast,
+} from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 // Search snippets outlive the daily sync, so the description uses a floor.
@@ -54,14 +59,6 @@ function monthsBetween(fromISO: string, toISO: string): number {
   );
 }
 
-function formatActiveSpan(totalMonths: number): string {
-  const years = Math.floor(totalMonths / 12);
-  const months = totalMonths % 12;
-  if (years === 0) return `${months}mo`;
-  if (months === 0) return `${years}yr`;
-  return `${years}yr ${months}mo`;
-}
-
 function Section({ id, children }: { id: string; children: ReactNode }) {
   return (
     <section id={id} className="scroll-mt-20 py-20 sm:py-24">
@@ -82,14 +79,14 @@ export default async function OSSPage() {
 
   // Exact, unlike the homepage's floors: this page is where those link to verify.
   const stats = [
-    { value: oss.totalCommits.toLocaleString("en-US"), label: "Commits" },
-    { value: oss.totalPrs.toLocaleString("en-US"), label: "PRs merged" },
+    { value: atLeast(oss.totalCommits), label: "Commits" },
+    { value: atLeast(oss.totalPrs), label: "PRs merged" },
     {
-      value: getGitHubStars().toLocaleString("en-US"),
+      value: atLeast(getGitHubStars()),
       label: "Stars on my repos",
     },
     {
-      value: formatActiveSpan(monthsBetween(ossStartDate, generatedAt)),
+      value: yearsAtLeast(monthsBetween(ossStartDate, generatedAt)),
       label: `Active since ${OSS_START_LABEL}`,
     },
   ];
@@ -211,9 +208,9 @@ export default async function OSSPage() {
 
               <div className="grid shrink-0 grid-cols-2 gap-x-3 gap-y-0.5 font-mono text-[11px] text-site-text-tertiary sm:ml-auto sm:flex sm:items-center">
                 <span className="text-site-accent-text">
-                  {c.commits} commits
+                  {atLeast(c.commits, 5)} commits
                 </span>
-                {c.prs > 0 && <span>{c.prs} PRs</span>}
+                {c.prs > 0 && <span>{atLeast(c.prs, 5)} PRs</span>}
                 {/* Others' repos: popularity context, so compact is enough. */}
                 <span>★ {formatCompact(c.stars)}</span>
                 <span>⑂ {formatCompact(c.forks)}</span>

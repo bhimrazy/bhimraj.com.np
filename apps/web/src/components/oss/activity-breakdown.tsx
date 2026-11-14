@@ -5,6 +5,7 @@ import {
   type OSSActivityMetric,
 } from "@bhimrazy/github";
 import { surfaceInteractive } from "@/components/surface";
+import { atLeast } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 type Tile = {
@@ -82,7 +83,7 @@ function ReviewedVsMerged({
             {row.label}
           </dt>
           <dd className="font-mono text-[11px] text-site-text-secondary tabular-nums">
-            {row.value}
+            {atLeast(row.value)}
           </dd>
           <dd className="col-span-2 h-1.5 overflow-hidden rounded-full bg-site-bg-tertiary">
             <span
@@ -120,7 +121,7 @@ export function ActivityBreakdown() {
           Code review
         </span>
         <span className="relative mt-4 font-bold font-display text-5xl text-site-text tracking-tight sm:text-6xl">
-          {activity.prsReviewed}
+          {atLeast(activity.prsReviewed)}
         </span>
         <span className="relative mt-1 font-display font-semibold text-lg text-site-text">
           PRs reviewed for other contributors
@@ -132,7 +133,7 @@ export function ActivityBreakdown() {
               <strong className="font-semibold text-site-accent-text">
                 {reviewRatio.toFixed(1)}×
               </strong>{" "}
-              the {totalPrs} pull requests of my own that have merged.
+              the {atLeast(totalPrs)} pull requests of my own that have merged.
             </p>
             <ReviewedVsMerged
               reviewed={activity.prsReviewed}
@@ -154,7 +155,10 @@ export function ActivityBreakdown() {
           className={tileClass}
         >
           <span className="flex items-center gap-2 font-bold font-display text-[26px] text-site-text tabular-nums tracking-tight sm:text-[28px]">
-            {activity[tile.metric]}
+            {/* Open PRs go up and down, so no floor. */}
+            {tile.metric === "prsOpen"
+              ? activity[tile.metric]
+              : atLeast(activity[tile.metric])}
             {tile.metric === "prsOpen" && (
               <span
                 role="img"
