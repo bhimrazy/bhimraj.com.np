@@ -127,7 +127,8 @@ export default function HeroSection() {
                 alt={PERSON.name}
                 fill
                 className="object-cover"
-                // No preload: it's hidden below lg, where a preload would waste the fetch.
+                // Eager, not preloaded: a preload ignores that it's hidden below lg.
+                loading="eager"
                 fetchPriority="high"
                 sizes="268px"
               />
