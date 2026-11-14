@@ -2,27 +2,14 @@ import { allBlogPosts, allProjects } from "content-collections";
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 
-/**
- * Static, non-content routes. `lastModified` is omitted for pages whose
- * content doesn't change on a knowable cadence — using `new Date()` here
- * would mark every page "modified" on every build/crawl, which is
- * misleading to search engines. Add a new page by appending an entry;
- * give it a `lastModified` only if you have a real date for it.
- */
-const STATIC_PAGES: { path: string; lastModified?: Date }[] = [
-  { path: "" },
-  { path: "blog" },
-  { path: "projects" },
-  { path: "oss" },
-  { path: "research" },
-];
+// No lastModified: `new Date()` would mark every page changed on each build.
+const STATIC_PAGES = ["", "blog", "projects", "oss", "research"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.url.replace(/\/$/, "");
 
-  const staticUrls = STATIC_PAGES.map(({ path, lastModified }) => ({
+  const staticUrls = STATIC_PAGES.map((path) => ({
     url: `${baseUrl}/${path}`,
-    ...(lastModified ? { lastModified } : {}),
   }));
 
   const postUrls = allBlogPosts.map((post) => ({

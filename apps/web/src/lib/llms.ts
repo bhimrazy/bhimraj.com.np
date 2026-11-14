@@ -4,9 +4,8 @@ export type LlmsPost = { title: string; description: string; slug: string };
 export type LlmsProject = { title: string; description: string; slug: string };
 
 /**
- * Builds a concise, plain-text index of who Bhimraj is and where to find
- * key pages/posts/projects — the `llms.txt` convention for LLM crawlers.
- * Pure and testable.
+ * Plain-text index of who Bhimraj is and where to find key pages, posts
+ * and projects (the `llms.txt` convention).
  */
 export function buildLlmsTxt(input: {
   posts: LlmsPost[];
@@ -27,7 +26,7 @@ export function buildLlmsTxt(input: {
     `- [Open Source](${baseUrl}/oss): OSS contribution history and stats across Lightning AI projects.`,
     `- [Projects](${baseUrl}/projects): Open-source AI projects — multimodal LLMs, model serving, computer vision, dev tools.`,
     `- [Blog](${baseUrl}/blog): Writing on engineering, open source, and AI.`,
-    `- [Research](${baseUrl}/research): Academic publications and reading notes.`,
+    `- [Research](${baseUrl}/research): An IEEE Access paper and a reading list.`,
     `- [RSS Feed](${baseUrl}/feed.xml)`,
   ];
 

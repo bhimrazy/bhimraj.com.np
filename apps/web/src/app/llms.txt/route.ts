@@ -1,24 +1,19 @@
-import { allBlogPosts, allProjects } from "content-collections";
 import { cacheLife } from "next/cache";
+import { sortedPosts } from "@/components/blog/posts";
+import { getSortedProjects } from "@/components/projects/projects";
 import { buildLlmsTxt } from "@/lib/llms";
 
 async function getLlmsTxt() {
   "use cache";
-  cacheLife("hours");
+  cacheLife("max"); // content changes only on deploy
 
-  const posts = [...allBlogPosts]
-    .sort(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-    )
-    .slice(0, 15)
-    .map((post) => ({
-      title: post.title,
-      description: post.description,
-      slug: post._meta.path,
-    }));
+  const posts = sortedPosts.slice(0, 15).map((post) => ({
+    title: post.title,
+    description: post.description,
+    slug: post._meta.path,
+  }));
 
-  const projects = allProjects.map((project) => ({
+  const projects = getSortedProjects().map((project) => ({
     title: project.title,
     description: project.description,
     slug: project._meta.path,

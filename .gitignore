@@ -47,13 +47,12 @@ yarn-error.log*
 # vercel
 .vercel
 *.xml
+# The feed route is source, not a build artifact.
+!apps/web/src/app/feed.xml/
+!apps/web/src/app/feed.xml/**
 
 # IDE
 .idea
 
 # local research notes
 .research
-# ...except the feed.xml route handler (a real source directory, not a
-# generated file — the pattern above is aimed at build artifacts).
-!apps/web/src/app/feed.xml/
-!apps/web/src/app/feed.xml/**

@@ -11,8 +11,13 @@ const CONTEXT = "https://schema.org" as const;
 const PERSON_ID = `${siteConfig.url}/#person`;
 const WEBSITE_ID = `${siteConfig.url}/#website`;
 
-/** Other blocks point at the Person by `@id` instead of repeating it. */
-const personRef = { "@id": PERSON_ID, name: siteConfig.author.name };
+/** Google doesn't follow `@id` across pages, so refs stay self-describing. */
+const personRef = {
+  "@type": "Person",
+  "@id": PERSON_ID,
+  name: siteConfig.author.name,
+  url: siteConfig.url,
+};
 
 function absoluteUrl(path: string): string {
   if (/^https?:\/\//.test(path)) return path;
