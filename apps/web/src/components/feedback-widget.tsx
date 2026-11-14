@@ -132,7 +132,8 @@ export default function FeedbackWidget() {
 
   const openManually = useCallback((preset?: Reason) => {
     if (readMemory().status === "new") writeMemory({ status: "seen" });
-    if (preset) setReason(preset);
+    // Don't overwrite a topic the visitor already picked.
+    if (preset) setReason((current) => current || preset);
     setOpen(true);
     capture("feedback_opened");
   }, []);
@@ -144,7 +145,17 @@ export default function FeedbackWidget() {
       const trigger = (e.target as Element | null)?.closest<HTMLElement>(
         "[data-open-chat]",
       );
-      if (!trigger) return;
+      // A modified click opens a new tab; don't also pop the chat here.
+      if (
+        !trigger ||
+        e.defaultPrevented ||
+        e.button !== 0 ||
+        e.metaKey ||
+        e.ctrlKey ||
+        e.shiftKey ||
+        e.altKey
+      )
+        return;
       const preset = trigger.dataset.openChat;
       window.clearTimeout(timer);
       timer = window.setTimeout(
@@ -177,7 +188,8 @@ export default function FeedbackWidget() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!message.trim()) return;
+    // Enter submits via requestSubmit(), which skips the disabled button.
+    if (loading || !message.trim()) return;
     setLoading(true);
 
     try {

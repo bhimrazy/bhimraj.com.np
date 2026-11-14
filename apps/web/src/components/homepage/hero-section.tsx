@@ -30,7 +30,6 @@ export default function HeroSection() {
                 height={52}
                 sizes="52px"
                 className="size-13 rounded-full border border-site-border object-cover"
-                priority
               />
               <div className="leading-tight">
                 <p className="font-display font-semibold text-site-text">
