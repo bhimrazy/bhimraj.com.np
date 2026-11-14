@@ -8,8 +8,6 @@ import {
 import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { capture } from "@/lib/analytics";
 import {
@@ -39,30 +37,38 @@ type Reason = (typeof REASONS)[number];
 const isReason = (value: string | undefined): value is Reason =>
   REASONS.includes(value as Reason);
 
-const fieldClass = "h-9 bg-site-bg text-sm dark:bg-site-bg-secondary";
+/** My reply once a topic is picked, so the panel reads like a conversation. */
+const FOLLOW_UPS: Record<Reason, string> = {
+  "Hiring / collab": "Great! Tell me a bit about the role or project.",
+  "Your work / OSS": "Nice. Which project, and what's on your mind?",
+  "A blog post": "Which post? Questions and corrections are both welcome.",
+  "Just curious": "Happy you're here. Ask me anything.",
+};
 
-function FieldLabel({
-  children,
-  htmlFor,
-  optional,
-}: {
-  children: string;
-  htmlFor?: string;
-  optional?: boolean;
-}) {
-  const Tag = htmlFor ? "label" : "span";
+const bubble =
+  "w-fit max-w-[85%] rounded-2xl rounded-tl-sm bg-site-bg-secondary px-3.5 py-2.5 text-site-text text-sm leading-relaxed dark:bg-white/5";
+
+/** A slim input with its label inside the box, for the composer's reply-to rows. */
+function InlineField({
+  id,
+  label,
+  ...props
+}: { id: string; label: string } & React.ComponentProps<"input">) {
   return (
-    <Tag
-      htmlFor={htmlFor}
-      className="flex items-baseline gap-1.5 font-medium font-mono text-[11px] text-site-text-tertiary uppercase tracking-[0.8px]"
-    >
-      {children}
-      {optional && (
-        <span className="text-site-text-tertiary/70 normal-case tracking-normal">
-          optional
-        </span>
-      )}
-    </Tag>
+    <div className="flex h-8 items-center gap-2 rounded-lg border border-site-border/70 bg-site-bg px-2.5 transition-colors focus-within:border-site-accent/50 dark:border-white/8 dark:bg-site-bg-secondary">
+      <label
+        htmlFor={id}
+        className="w-11 shrink-0 font-mono text-[11px] text-site-text-tertiary uppercase tracking-[0.6px]"
+      >
+        {label}
+      </label>
+      <input
+        id={id}
+        placeholder="optional"
+        className="h-full min-w-0 flex-1 bg-transparent text-site-text text-sm outline-none placeholder:text-site-text-tertiary/60"
+        {...props}
+      />
+    </div>
   );
 }
 
@@ -79,7 +85,6 @@ export default function FeedbackWidget() {
   const [email, setEmail] = useState("");
   const [website, setWebsite] = useState(""); // honeypot
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const nameRef = useRef<HTMLInputElement>(null);
   const fieldId = useId();
   const openRef = useRef(open);
   openRef.current = open;
@@ -122,10 +127,7 @@ export default function FeedbackWidget() {
   }, []);
 
   useEffect(() => {
-    // Start at the top field, unless a restored draft means they've begun writing.
-    if (!open) return;
-    const draft = textareaRef.current?.value;
-    (draft ? textareaRef.current : nameRef.current)?.focus();
+    if (open) textareaRef.current?.focus();
   }, [open]);
 
   const openManually = useCallback((preset?: Reason) => {
@@ -255,114 +257,126 @@ export default function FeedbackWidget() {
             </button>
           </div>
 
-          <form onSubmit={submit} className="space-y-4 px-4 pb-4">
-            <p className="w-fit max-w-[90%] rounded-2xl rounded-tl-sm bg-site-bg-secondary px-3.5 py-2.5 text-site-text text-sm leading-relaxed dark:bg-white/4">
-              Hey 👋 What brought you by? A project, a question, or just saying
-              hi, all welcome.
-            </p>
+          <form onSubmit={submit}>
+            <div className="space-y-2.5 px-4 pb-4">
+              <p className={bubble}>Hey 👋 What brought you by today?</p>
 
-            <div className="grid grid-cols-2 gap-2">
-              <div className="space-y-1.5">
-                <FieldLabel htmlFor={`${fieldId}-name`} optional>
-                  Name
-                </FieldLabel>
-                <Input
-                  id={`${fieldId}-name`}
-                  ref={nameRef}
-                  type="text"
-                  name="name"
-                  autoComplete="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  maxLength={100}
-                  className={fieldClass}
-                />
-              </div>
-              <div className="space-y-1.5">
-                <FieldLabel htmlFor={`${fieldId}-email`} optional>
-                  Email
-                </FieldLabel>
-                <Input
-                  id={`${fieldId}-email`}
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  maxLength={254}
-                  aria-describedby={`${fieldId}-hint`}
-                  className={fieldClass}
-                />
-              </div>
+              {reason ? (
+                <>
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setReason("")}
+                      aria-label={`Topic: ${reason}. Change topic`}
+                      className="group rounded-2xl rounded-tr-sm bg-site-accent px-3.5 py-2 font-medium text-site-on-accent text-sm focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
+                    >
+                      {reason}
+                      <span
+                        aria-hidden
+                        className="ml-1.5 opacity-60 transition-opacity group-hover:opacity-100"
+                      >
+                        ×
+                      </span>
+                    </button>
+                  </div>
+                  <p className={bubble}>{FOLLOW_UPS[reason]}</p>
+                </>
+              ) : (
+                <fieldset className="flex flex-wrap justify-end gap-1.5 pl-8">
+                  <legend className="sr-only">What&apos;s it about?</legend>
+                  {REASONS.map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setReason(r)}
+                      className="rounded-full border border-site-accent/30 px-3 py-1.5 font-medium text-site-accent text-xs transition-colors hover:bg-site-accent-subtle focus-visible:outline-2 focus-visible:outline-site-accent"
+                    >
+                      {r}
+                    </button>
+                  ))}
+                </fieldset>
+              )}
             </div>
 
-            <fieldset className="space-y-1.5">
-              <legend>
-                <FieldLabel>About</FieldLabel>
-              </legend>
-              <div className="flex flex-wrap gap-1.5">
-                {REASONS.map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    aria-pressed={reason === r}
-                    onClick={() => setReason(reason === r ? "" : r)}
-                    className={cn(
-                      "rounded-full border px-2.5 py-1 font-medium text-xs transition-colors focus-visible:outline-2 focus-visible:outline-site-accent",
-                      reason === r
-                        ? "border-site-accent/40 bg-site-accent-subtle text-site-accent"
-                        : "border-site-border/60 text-site-text-secondary hover:border-site-border-hover hover:text-site-text dark:border-white/8",
-                    )}
-                  >
-                    {r}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
-
-            <div className="space-y-1.5">
-              <FieldLabel htmlFor={`${fieldId}-message`}>Message</FieldLabel>
-              <Textarea
-                id={`${fieldId}-message`}
-                ref={textareaRef}
-                value={message}
-                onChange={(e) => {
-                  setMessage(e.target.value);
-                  writeDraft(e.target.value);
-                }}
-                maxLength={2000}
-                rows={3}
-                required
-                className="min-h-20 resize-none bg-site-bg text-sm dark:bg-site-bg-secondary"
+            <div className="space-y-2 border-site-border/60 border-t bg-site-bg-secondary/40 p-3 dark:border-white/6 dark:bg-white/2">
+              <InlineField
+                id={`${fieldId}-name`}
+                label="Name"
+                type="text"
+                name="name"
+                autoComplete="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                maxLength={100}
               />
-            </div>
+              <InlineField
+                id={`${fieldId}-email`}
+                label="Email"
+                type="email"
+                name="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                maxLength={254}
+                aria-describedby={`${fieldId}-hint`}
+              />
 
-            <Input
-              type="text"
-              name="website"
-              tabIndex={-1}
-              autoComplete="off"
-              aria-hidden="true"
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
-              className="sr-only"
-            />
+              <div className="relative">
+                <Textarea
+                  ref={textareaRef}
+                  value={message}
+                  onChange={(e) => {
+                    setMessage(e.target.value);
+                    writeDraft(e.target.value);
+                  }}
+                  onKeyDown={(e) => {
+                    // Enter sends, Shift+Enter adds a line, as in any chat.
+                    if (
+                      e.key === "Enter" &&
+                      !e.shiftKey &&
+                      !e.nativeEvent.isComposing
+                    ) {
+                      e.preventDefault();
+                      e.currentTarget.form?.requestSubmit();
+                    }
+                  }}
+                  maxLength={2000}
+                  rows={2}
+                  required
+                  aria-label="Message"
+                  placeholder="Write a message…"
+                  className="min-h-16 resize-none bg-site-bg pr-12 text-sm placeholder:text-site-text-tertiary dark:bg-site-bg-secondary"
+                />
+                <button
+                  type="submit"
+                  disabled={loading || !message.trim()}
+                  aria-label={loading ? "Sending" : "Send"}
+                  className="absolute right-2 bottom-2 flex size-8 cursor-pointer items-center justify-center rounded-lg bg-site-accent text-site-on-accent transition-colors hover:bg-site-accent/85 focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2 disabled:cursor-default disabled:bg-site-border/60 disabled:text-site-text-tertiary dark:disabled:bg-white/6"
+                >
+                  <PaperPlaneIcon
+                    aria-hidden
+                    className={cn("size-3.5", loading && "animate-pulse")}
+                  />
+                </button>
+              </div>
 
-            <div className="flex items-center justify-between gap-3">
               <p
                 id={`${fieldId}-hint`}
-                className="text-[11px] text-site-text-tertiary leading-snug"
+                className="px-1 text-[11px] text-site-text-tertiary"
               >
-                Add an email if you&apos;d like a reply.
+                Your email is only used to reply.
               </p>
-              <Button
-                type="submit"
-                disabled={loading || !message.trim()}
-                className="h-9 shrink-0 cursor-pointer gap-1.5 rounded-lg border-0 bg-site-accent px-4 font-semibold text-site-on-accent hover:bg-site-accent/85 disabled:bg-site-bg-secondary disabled:text-site-text-tertiary disabled:opacity-100 dark:disabled:bg-white/5"
-              >
-                {loading ? "Sending…" : "Send"}
-                <PaperPlaneIcon aria-hidden className="size-3.5" />
-              </Button>
+
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+                className="sr-only"
+              />
             </div>
           </form>
         </div>

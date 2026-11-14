@@ -43,12 +43,17 @@ export default function ExperienceSection() {
           description="Products, open source, and infrastructure."
         />
 
-        <ul className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {EXPERIENCE.map((thread) => {
+        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {EXPERIENCE.map((thread, i) => {
             return (
               <li
                 key={thread.key}
-                className={cn(surface, "flex flex-col p-5 sm:p-7")}
+                className={cn(
+                  surface,
+                  "flex flex-col p-5 sm:p-7",
+                  // md: the first role gets its own row, the other two share the next.
+                  i === 0 && "md:col-span-2 lg:col-span-1",
+                )}
               >
                 <div className="flex h-8 items-center">
                   <Mark role={thread} />
