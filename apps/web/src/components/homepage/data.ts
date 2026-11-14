@@ -25,7 +25,7 @@ export const THREADS = [
     orgHref: "https://www.fetch.ly/",
     role: "Software Engineer · full-time",
     since: "2022",
-    line: "Leading the team that takes new products and features from idea to launch, and building right alongside them.",
+    line: "Leading the team that takes products and features from idea to launch, and building right alongside them.",
     highlight: "Trusted to step in when a project needs direction.",
     logo: "fetchly",
   },
