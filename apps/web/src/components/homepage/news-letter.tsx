@@ -1,20 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { toast } from "sonner";
-import { Container } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { capture } from "@/lib/analytics";
 
-export default function NewsLetter() {
+/** Newsletter sign-up form — the only interactive leaf of the contact section. */
+export default function NewsletterForm() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [website, setWebsite] = useState("");
+  const [status, setStatus] = useState<string | null>(null);
+  const statusId = useId();
 
   const subscribe = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     setLoading(true);
+    setStatus(null);
 
     try {
       const res = await fetch("/api/subscribe", {
@@ -27,14 +31,20 @@ export default function NewsLetter() {
       if (res.ok) {
         setEmail("");
         capture("newsletter_submitted", { result: "success" });
-        toast.success(
-          data?.message ?? "🎉 You're in! Please check your inbox.",
-        );
+        const message =
+          data?.message ?? "🎉 You're in! Please check your inbox.";
+        setStatus(message);
+        toast.success(message);
       } else {
         capture("newsletter_submitted", { result: "error" });
-        toast.error(data?.error ?? "Something went wrong. Please try again.");
+        const message =
+          data?.error ?? "Something went wrong. Please try again.";
+        setStatus(message);
+        toast.error(message);
       }
     } catch {
+      capture("newsletter_submitted", { result: "error" });
+      setStatus("Something went wrong. Please try again.");
       toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
@@ -42,54 +52,55 @@ export default function NewsLetter() {
   };
 
   return (
-    <section className="py-24">
-      <Container>
-        <div className="rounded-2xl border border-site-border/50 bg-site-card px-8 py-14 text-center dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary">
-          <span className="mb-3 inline-block font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">
-            Newsletter
-          </span>
-          <h2 className="mb-3 font-bold font-display text-2xl text-site-text">
-            Stay in the loop
-          </h2>
-          <p className="mx-auto mb-8 max-w-sm text-base text-site-text-secondary">
-            Notes on software engineering, OSS, and AI research — sent only when
-            I ship or learn something worth sharing. No filler.
-          </p>
-
-          <form
-            onSubmit={subscribe}
-            className="mx-auto flex max-w-sm flex-col gap-3 sm:flex-row"
-          >
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="john.doe@example.com"
-              required
-              aria-label="Email for newsletter"
-              className="flex-1 rounded-lg border border-site-border/50 bg-site-bg text-site-text text-sm placeholder:text-site-text-tertiary focus-visible:border-site-accent/40 focus-visible:ring-site-accent/15 dark:border-white/6 dark:bg-site-bg-secondary"
-              disabled={loading}
-            />
-            <Input
-              type="text"
-              name="website"
-              tabIndex={-1}
-              autoComplete="off"
-              aria-hidden="true"
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
-              className="sr-only"
-            />
-            <Button
-              type="submit"
-              disabled={loading}
-              className="cursor-pointer rounded-lg border-0 bg-site-accent px-6 font-semibold text-white hover:bg-site-accent/85"
-            >
-              {loading ? "Subscribing…" : "Subscribe"}
-            </Button>
-          </form>
+    <form
+      onSubmit={subscribe}
+      aria-busy={loading}
+      aria-describedby={statusId}
+      className="flex flex-col gap-3"
+    >
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <Input
+          type="email"
+          name="email"
+          autoComplete="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Your email address"
+          required
+          aria-label="Email for newsletter"
+          className="h-10 flex-1 rounded-lg border border-site-border bg-site-bg text-site-text text-sm placeholder:text-site-text-tertiary focus-visible:border-site-accent/50 focus-visible:ring-site-accent/20 dark:border-white/8 dark:bg-site-bg-secondary"
+          // readOnly rather than disabled, so the field keeps focus while submitting.
+          readOnly={loading}
+        />
+        {/* Honeypot: invisible to people, filled in by naive bots. The name is
+            deliberately meaningless so browser autofill never touches it. */}
+        <div aria-hidden="true" className="sr-only">
+          <input
+            type="text"
+            name="hp-leave-empty"
+            tabIndex={-1}
+            autoComplete="off"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+          />
         </div>
-      </Container>
-    </section>
+        <Button
+          type="submit"
+          aria-disabled={loading}
+          variant="outline"
+          className="h-10 cursor-pointer rounded-lg px-5 font-semibold text-site-text focus-visible:ring-2 focus-visible:ring-site-accent aria-disabled:opacity-60"
+        >
+          {loading ? "Subscribing…" : "Subscribe"}
+        </Button>
+      </div>
+      {/* Inline status for people who miss the toast (and for screen readers). */}
+      <p
+        id={statusId}
+        aria-live="polite"
+        className="min-h-5 text-site-text-secondary text-xs"
+      >
+        {status}
+      </p>
+    </form>
   );
 }

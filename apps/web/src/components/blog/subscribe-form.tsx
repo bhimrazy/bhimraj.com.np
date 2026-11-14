@@ -68,7 +68,7 @@ export default function SubscribeForm() {
       <Button
         type="submit"
         disabled={loading}
-        className="h-10 cursor-pointer rounded-lg border-0 bg-site-accent px-5 font-semibold text-white hover:bg-site-accent/85 focus-visible:ring-site-accent/40"
+        className="h-10 cursor-pointer rounded-lg border-0 bg-site-accent px-5 font-semibold text-site-on-accent hover:bg-site-accent/85 focus-visible:ring-site-accent/40"
       >
         {loading ? "Subscribing…" : "Subscribe"}
       </Button>

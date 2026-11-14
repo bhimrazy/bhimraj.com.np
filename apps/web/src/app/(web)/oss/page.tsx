@@ -14,6 +14,7 @@ import { ActivityBreakdown } from "@/components/oss/activity-breakdown";
 import { ContributionGraph } from "@/components/oss/contribution-graph";
 import { Timeline } from "@/components/oss/timeline";
 import { siteConfig } from "@/config/site";
+import { formatCompact } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Open Source Journey — Bhimraj Yadav",
@@ -24,11 +25,6 @@ export const metadata: Metadata = {
 
 const USERNAME = username;
 const UTM = siteConfig.utmParams;
-
-function formatCount(n: number): string {
-  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
-  return String(n);
-}
 
 function repoUrl(fullName: string, org: string): string {
   if (org.toLowerCase() === USERNAME.toLowerCase()) {
@@ -52,7 +48,7 @@ export default async function OSSPage() {
 
   const stats = [
     {
-      value: `${formatCount(oss.totalCommits)}+`,
+      value: `${formatCompact(oss.totalCommits)}+`,
       label: "Contributions",
     },
     {
@@ -60,7 +56,7 @@ export default async function OSSPage() {
       label: "PRs Merged",
     },
     {
-      value: `${formatCount(ownStars)}+`,
+      value: `${formatCompact(ownStars)}+`,
       label: "Stars Earned",
     },
     { value: `${yearsActive}+`, label: "Years Active" },
@@ -173,8 +169,8 @@ export default async function OSSPage() {
               <div className="flex items-center gap-x-3 font-mono text-[11px] text-site-text-tertiary sm:ml-auto sm:shrink-0">
                 <span className="text-site-accent">{c.commits} commits</span>
                 {c.prs > 0 && <span>{c.prs} PRs</span>}
-                <span>★ {formatCount(c.stars)}</span>
-                <span>⑂ {formatCount(c.forks)}</span>
+                <span>★ {formatCompact(c.stars)}</span>
+                <span>⑂ {formatCompact(c.forks)}</span>
               </div>
             </a>
           ))}
