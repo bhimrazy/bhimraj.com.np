@@ -54,7 +54,6 @@ export function ContributionGraph({ data }: { data: MonthlyContribution[] }) {
               {/* A button, so the breakdown opens from the keyboard too. */}
               <button
                 type="button"
-                aria-label={`${d.label} ${d.year}: ${count}`}
                 className="group relative flex h-full w-full flex-1 cursor-default items-end justify-center rounded-sm focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
               >
                 <span

@@ -31,9 +31,8 @@ export function Timeline() {
         <JourneyReveal
           label={`Show full journey · ${earlier.length} earlier ${earlier.length === 1 ? "moment" : "moments"}, back to ${oldest}`}
         >
-          {/* No outer gap before the first group: the rail must run straight
-              into the collapsed part (the reveal clips overflow, so spacing
-              lives inside the list, never as a negative margin). */}
+          {/* No gap here: the rail runs straight into the collapsed part, so
+              spacing lives inside the list. */}
           <div className="flex flex-col gap-10">
             {earlierGroups.map(([year, items], i) => (
               <YearGroup

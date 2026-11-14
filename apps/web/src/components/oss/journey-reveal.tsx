@@ -23,16 +23,22 @@ export function JourneyReveal({
   const [open, setOpen] = useState(false);
   const id = useId();
   const button = useRef<HTMLButtonElement>(null);
+  const region = useRef<HTMLDivElement>(null);
 
   const toggle = () => {
     const next = !open;
     setOpen(next);
-    if (next) return;
+    if (next) {
+      // The revealed entries sit above the button; move focus to them so the
+      // next Tab doesn't skip past to the contact section.
+      requestAnimationFrame(() =>
+        region.current?.focus({ preventScroll: true }),
+      );
+      return;
+    }
 
-    // Collapsing from the bottom of a long list: the content above the
-    // button folds away, so without help the button (and the reader's place)
-    // would fly up by the list's height and the shrinking page would clamp
-    // the scroll position. Keep the button where it is on screen instead.
+    // The list above folds away; pin the button on screen so the reader keeps
+    // their place and the shrinking page doesn't clamp the scroll position.
     const el = button.current;
     if (!el) return;
     const top = el.getBoundingClientRect().top;
@@ -65,17 +71,23 @@ export function JourneyReveal({
       >
         {/* No opacity fade here: the text must be visible while the region
             grows, or it reads as a blank block filling in. */}
-        <div inert={!open} className="min-h-0 overflow-hidden">
+        {/* Clip vertically only, so milestone rings at the rail aren't cut. */}
+        <div
+          ref={region}
+          inert={!open}
+          tabIndex={-1}
+          className="min-h-0 overflow-y-clip outline-none"
+        >
           {children}
         </div>
       </div>
 
       <div className="relative mt-2">
-        {/* Fade into the collapsed tail; an overlay, since mask-image can't animate. */}
+        {/* Fades only the rail's tail, never the last entry's text or link. */}
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-x-0 bottom-full h-16 bg-linear-to-t from-site-bg to-transparent transition-opacity duration-300 motion-reduce:transition-none",
+            "pointer-events-none absolute bottom-full left-0 h-16 w-5 bg-linear-to-t from-site-bg to-transparent transition-opacity duration-300 motion-reduce:transition-none",
             open && "opacity-0",
           )}
         />

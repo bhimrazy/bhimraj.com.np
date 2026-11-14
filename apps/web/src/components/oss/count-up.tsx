@@ -5,9 +5,9 @@ import { useEffect, useRef } from "react";
 const DURATION_MS = 700;
 
 /**
- * Counts the leading number of a formatted stat ("1,090+") up on first view.
- * The server renders the final text, so there is no layout shift and nothing
- * depends on JavaScript; with reduced motion the text simply stays put.
+ * Counts the leading number of a formatted stat ("1,090+") up when it first
+ * scrolls into view. Already on screen at hydration, it stays put rather than
+ * flash from the final value to zero. Screen readers get the final text only.
  */
 export function CountUp({ children }: { children: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -22,7 +22,11 @@ export function CountUp({ children }: { children: string }) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let raf = 0;
+    let first = true;
     const observer = new IntersectionObserver(([entry]) => {
+      const visibleAtMount = first && entry?.isIntersecting;
+      first = false;
+      if (visibleAtMount) return observer.disconnect();
       if (!entry?.isIntersecting) return;
       observer.disconnect();
       const start = performance.now();
@@ -45,5 +49,12 @@ export function CountUp({ children }: { children: string }) {
     };
   }, [children]);
 
-  return <span ref={ref}>{children}</span>;
+  return (
+    <>
+      <span className="sr-only">{children}</span>
+      <span ref={ref} aria-hidden>
+        {children}
+      </span>
+    </>
+  );
 }

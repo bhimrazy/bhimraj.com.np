@@ -203,7 +203,7 @@ export const TIMELINE: TimelineItem[] = [
   {
     date: "Oct 2026",
     title: "100th merged PR to LitData",
-    body: "One hundred merged pull requests to LitData, nearly a year and a half after a one-line first PR.",
+    body: "One hundred merged pull requests to LitData, nearly two and a half years after a one-line first PR.",
     link: {
       label: "LitData #941",
       href: "https://github.com/Lightning-AI/litData/pull/941",
