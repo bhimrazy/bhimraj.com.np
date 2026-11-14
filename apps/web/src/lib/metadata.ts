@@ -11,11 +11,13 @@ export function pageMetadata({
   title,
   description,
   path,
+  keywords,
   ownCard = false,
 }: {
   title: string;
   description: string;
   path: `/${string}`;
+  keywords?: string[];
   ownCard?: boolean;
 }): Metadata {
   const images = ownCard
@@ -35,6 +37,7 @@ export function pageMetadata({
   return {
     title,
     description,
+    keywords,
     alternates: { canonical: path },
     openGraph: {
       type: "website",

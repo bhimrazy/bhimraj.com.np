@@ -10,6 +10,15 @@ export const metadata: Metadata = pageMetadata({
   description:
     "Receipt OCR, the vps-ready VPS hardening CLI, and open-source model APIs and demos built with LitServe and PyTorch: vision LLMs, TTS and detection.",
   path: "/projects",
+  keywords: [
+    "receipt OCR",
+    "VPS hardening",
+    "Rust CLI",
+    "LitServe",
+    "model serving",
+    "vision LLM",
+    "open source projects",
+  ],
 });
 
 export default function Projects() {

@@ -9,6 +9,13 @@ export const metadata: Metadata = pageMetadata({
   title: blog.title,
   description: blog.description,
   path: "/blog",
+  keywords: [
+    "machine learning",
+    "PyTorch",
+    "UNet",
+    "software architecture",
+    "event-driven architecture",
+  ],
   ownCard: true,
 });
 

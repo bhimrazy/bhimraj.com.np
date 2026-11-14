@@ -21,6 +21,13 @@ export const metadata: Metadata = pageMetadata({
   description:
     "An IEEE Access paper comparing deep learning models for segmenting pores in SEM images, plus a short reading list on model architecture and training.",
   path: "/research",
+  keywords: [
+    "semantic segmentation",
+    "SEM images",
+    "deep learning",
+    "IEEE Access",
+    "computer vision research",
+  ],
 });
 
 type Author = { given: string; family: string };
