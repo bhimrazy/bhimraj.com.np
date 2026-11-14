@@ -28,16 +28,26 @@ import {
   formatShortDate,
   yearsAtLeast,
 } from "@/lib/format";
+import { pageMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
 
 // Search snippets outlive the daily sync, so the description uses a floor.
 const COMMITS_FLOOR = Math.floor(getOSSStats().totalCommits / 100) * 100;
 
-export const metadata: Metadata = {
-  title: "Open Source Journey — Bhimraj Yadav",
-  description: `${COMMITS_FLOOR}+ commits across PyTorch Lightning, LitServe, LitData, and LitGPT. My open source story.`,
-  alternates: { canonical: "/oss" },
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Open source contributions",
+  description: `Bhimraj Yadav is a PyTorch Lightning contributor with ${COMMITS_FLOOR}+ contributions across Lightning, LitServe, LitData and LitGPT, plus reviews and issue work.`,
+  path: "/oss",
+  keywords: [
+    "open source contributions",
+    "PyTorch Lightning contributor",
+    "LitServe",
+    "LitData",
+    "LitGPT",
+    "Lightning AI",
+    "code review",
+  ],
+});
 
 const USERNAME = username;
 const UTM = siteConfig.utmParams;

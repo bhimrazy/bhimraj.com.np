@@ -10,6 +10,7 @@ import { notFound } from "next/navigation";
 import { Chip } from "@/components/chip";
 import { Container } from "@/components/container";
 import ContactSection from "@/components/homepage/contact-section";
+import { JsonLd } from "@/components/json-ld";
 import { withUtm } from "@/components/projects/link-utils";
 import { ProjectCover } from "@/components/projects/project-cover";
 import {
@@ -21,6 +22,10 @@ import { ArrowLink, PageHeader } from "@/components/section-heading";
 import { focusRing, surfaceInteractive } from "@/components/surface";
 import { siteConfig } from "@/config/site";
 import { formatCompact, formatShortDate } from "@/lib/format";
+import {
+  buildBreadcrumbJsonLd,
+  buildSoftwareSourceCodeJsonLd,
+} from "@/lib/structured-data";
 import { cn } from "@/lib/utils";
 
 export async function generateMetadata({
@@ -32,31 +37,32 @@ export async function generateMetadata({
   const project = allProjects.find((p) => p._meta.path === slug);
 
   if (!project) {
-    return { title: `Project not found | ${siteConfig.name}` };
+    return { title: "Project not found" };
   }
 
   const projectURL = `/projects/${project._meta.path}`;
+  const title = project.seoTitle ?? project.title;
+  const description = project.seoDescription ?? project.description;
 
   return {
-    title: project.title,
-    description: project.description,
+    title,
+    description,
     alternates: { canonical: projectURL },
     keywords: project.tags,
     openGraph: {
-      title: project.title,
-      description: project.description,
+      title,
+      description,
       url: projectURL,
       siteName: siteConfig.name,
-      images: [{ url: project.image }],
       type: "article",
       locale: "en_US",
     },
     twitter: {
       card: "summary_large_image",
-      title: project.title,
-      description: project.description,
+      title,
+      description,
+      site: siteConfig.author.handle,
       creator: siteConfig.author.handle,
-      images: [project.image],
     },
     robots: {
       index: true,
@@ -92,6 +98,24 @@ export default async function ProjectDetail({
 
   return (
     <main>
+      <JsonLd
+        data={[
+          buildSoftwareSourceCodeJsonLd({
+            title: project.title,
+            description: project.description,
+            slug: project._meta.path,
+            githubLink: project.githubLink,
+            tags: project.tags,
+            publishedAt: project.publishedAt,
+            updatedAt: project.updatedAt,
+          }),
+          buildBreadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Projects", path: "/projects" },
+            { name: project.title, path: `/projects/${project._meta.path}` },
+          ]),
+        ]}
+      />
       <Container className="px-4 pt-28 pb-20 sm:px-8 sm:pt-32 sm:pb-24">
         <div className="mx-auto max-w-3xl">
           <Link

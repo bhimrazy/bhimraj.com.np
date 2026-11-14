@@ -12,9 +12,14 @@ import SponsorCard from "@/components/blog/sponsor-card";
 import TitleSection from "@/components/blog/title-section";
 import Toc from "@/components/blog/toc";
 import { Container } from "@/components/container";
+import { JsonLd } from "@/components/json-ld";
 import { mdxComponents } from "@/components/mdx/mdx-components";
 import { ads } from "@/config/ads";
 import { siteConfig } from "@/config/site";
+import {
+  buildBlogPostingJsonLd,
+  buildBreadcrumbJsonLd,
+} from "@/lib/structured-data";
 
 export async function generateMetadata({
   params,
@@ -25,28 +30,30 @@ export async function generateMetadata({
   const post = allBlogPosts.find((p) => p._meta.path === slug);
   if (!post) notFound();
 
-  const blogURL = `/blog/${post?._meta.path}`;
+  const blogURL = `/blog/${post._meta.path}`;
+  const description = post.seoDescription ?? post.description;
+  const title = post.seoTitle ?? post.title;
 
   return {
-    title: post?.title,
-    description: post?.description,
+    title,
+    description,
     alternates: { canonical: blogURL },
-    keywords: post?.tags,
+    keywords: post.tags,
     openGraph: {
-      title: post?.title,
-      description: post?.description,
+      title,
+      description,
       url: blogURL,
       siteName: siteConfig.name,
       authors: siteConfig.author.name,
-      publishedTime: post?.publishedAt,
-      modifiedTime: post?.updatedAt,
+      publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt,
       type: "article",
       locale: "en_US",
     },
     twitter: {
       card: "summary_large_image",
-      title: post?.title,
-      description: post?.description,
+      title,
+      description,
       creator: siteConfig.author.handle,
       site: siteConfig.author.handle,
     },
@@ -85,6 +92,24 @@ export default async function BlogPostPage({
 
   return (
     <main id="top" className="pt-28 pb-24 sm:pt-32">
+      <JsonLd
+        data={[
+          buildBlogPostingJsonLd({
+            title: post.title,
+            description: post.description,
+            slug: post._meta.path,
+            publishedAt: post.publishedAt,
+            updatedAt: post.updatedAt,
+            tags: post.tags,
+            image: post.image,
+          }),
+          buildBreadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Blog", path: "/blog" },
+            { name: post.title, path: `/blog/${post._meta.path}` },
+          ]),
+        ]}
+      />
       <ReadingProgress targetId="post-body" />
 
       <Container className="px-5 sm:px-8">
@@ -105,7 +130,7 @@ export default async function BlogPostPage({
               <figure className="mb-12 overflow-hidden rounded-xl border border-site-border dark:border-white/6">
                 <Image
                   src={post.image}
-                  alt=""
+                  alt={post.title}
                   width={1920}
                   height={1080}
                   preload

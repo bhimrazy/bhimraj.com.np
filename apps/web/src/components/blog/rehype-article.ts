@@ -82,14 +82,10 @@ function transformFigures(parent: Parent) {
     const img = content[0];
     if (content.length !== 1 || !isElement(img, "img")) continue;
 
-    // The first figure is often the largest thing above the fold (it may even
-    // be the cover), so it loads eagerly; the rest wait until scrolled near.
-    if (seenImage) {
-      img.properties.loading = "lazy";
-    } else {
-      img.properties.fetchPriority = "high";
-      seenImage = true;
-    }
+    // The first figure may be above the fold, so it loads eagerly; the rest
+    // wait until scrolled near. No fetchPriority: the page's cover owns that.
+    if (seenImage) img.properties.loading = "lazy";
+    seenImage = true;
     img.properties.decoding = "async";
 
     const figure: Element = {

@@ -5,6 +5,7 @@ import rehypeShiki from "@shikijs/rehype";
 import rehypeSlug from "rehype-slug";
 import type { Pluggable } from "unified";
 import { z } from "zod";
+import { feedHtml } from "./src/components/blog/feed-html";
 import { postMeta, remarkDropDek } from "./src/components/blog/post-meta";
 import rehypeArticle from "./src/components/blog/rehype-article";
 import { codeTransformers } from "./src/components/mdx/shiki-transformers";
@@ -38,6 +39,9 @@ const BlogPost = defineCollection({
   schema: z.object({
     content: z.string(),
     title: z.string(),
+    /** Search title and description when the on-page ones run long. */
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional(),
     description: z.string(),
     publishedAt: z.string(),
     updatedAt: z.string(),
@@ -47,7 +51,12 @@ const BlogPost = defineCollection({
   }),
   transform: async (document, context) => {
     const mdx = await compileMDX(context, document, blogMdxOptions);
-    return { ...document, ...postMeta(document.content, document.image), mdx };
+    return {
+      ...document,
+      ...postMeta(document.content, document.image),
+      mdx,
+      feedHtml: feedHtml(mdx, `/blog/${document._meta.path}`),
+    };
   },
 });
 
@@ -58,6 +67,9 @@ const Project = defineCollection({
   schema: z.object({
     content: z.string(),
     title: z.string(),
+    /** Search title and description when the on-page ones run long. */
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional(),
     description: z.string(),
     publishedAt: z.string(),
     updatedAt: z.string().optional(),

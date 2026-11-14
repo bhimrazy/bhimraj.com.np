@@ -123,11 +123,13 @@ export default function HeroSection() {
             />
             <div className="relative h-82.5 w-67 overflow-hidden rounded-2xl border border-site-border shadow-2xl/30">
               <Image
-                src={PERSON.avatar}
+                src={PERSON.portrait}
                 alt={PERSON.name}
                 fill
                 className="object-cover"
-                priority
+                // Eager, not preloaded: a preload ignores that it's hidden below lg.
+                loading="eager"
+                fetchPriority="high"
                 sizes="268px"
               />
               <div

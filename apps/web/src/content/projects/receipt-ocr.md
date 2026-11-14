@@ -1,5 +1,7 @@
 ---
 title: "Receipt OCR"
+seoTitle: "Receipt OCR: Python package, CLI and API"
+seoDescription: "Open-source receipt OCR in Python: Tesseract for raw text, an LLM for structured JSON (merchant, date, total, line items). CLI and FastAPI service."
 description: "An efficient open-source OCR engine for receipt image processing. Combines Tesseract OCR for raw text extraction with LLM-powered structured data parsing — available as a CLI tool and FastAPI service."
 publishedAt: "2023-12-01"
 tags: [Python, OCR, LLM, FastAPI]

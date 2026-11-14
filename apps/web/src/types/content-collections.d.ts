@@ -6,6 +6,8 @@ declare module "content-collections" {
   export interface BlogPost {
     _meta: ContentMeta;
     title: string;
+    seoTitle?: string;
+    seoDescription?: string;
     description: string;
     publishedAt: string;
     updatedAt?: string;
@@ -19,11 +21,15 @@ declare module "content-collections" {
     toc: { id: string; text: string; level: number }[];
     readingTime: string;
     coverInBody: boolean;
+    /** Body as static HTML for the RSS feed; figures link to the post. */
+    feedHtml: string;
   }
 
   export interface Project {
     _meta: ContentMeta;
     title: string;
+    seoTitle?: string;
+    seoDescription?: string;
     description: string;
     publishedAt: string;
     updatedAt?: string;

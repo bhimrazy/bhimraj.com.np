@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
+import { siteConfig } from "@/config/site";
 import { capture } from "@/lib/analytics";
 import {
   readDraft,
@@ -245,7 +246,7 @@ export default function FeedbackWidget() {
           />
           <div className="flex items-center gap-3 px-4 pt-4 pb-3">
             <Image
-              src="/bhimraj-yadav.jpg"
+              src={siteConfig.author.avatar}
               alt=""
               width={40}
               height={40}

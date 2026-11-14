@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Chip } from "@/components/chip";
 import { Container } from "@/components/container";
 import ContactSection from "@/components/homepage/contact-section";
+import { JsonLd } from "@/components/json-ld";
 import { CiteButton } from "@/components/research/cite-button";
 import {
   ArrowLink,
@@ -11,14 +12,23 @@ import {
 import { SectionSeparator } from "@/components/section-separator";
 import { surface } from "@/components/surface";
 import { siteConfig } from "@/config/site";
+import { pageMetadata } from "@/lib/metadata";
+import { buildScholarlyArticleJsonLd } from "@/lib/structured-data";
 import { cn } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "Research — Bhimraj Yadav",
+export const metadata: Metadata = pageMetadata({
+  title: "Research: IEEE Access paper & reading list",
   description:
-    "An IEEE Access paper comparing deep learning models for segmenting pores in SEM images, and a short list of papers on model architecture and training.",
-  alternates: { canonical: "/research" },
-};
+    "An IEEE Access paper comparing deep learning models for segmenting pores in SEM images, plus a short reading list on model architecture and training.",
+  path: "/research",
+  keywords: [
+    "semantic segmentation",
+    "SEM images",
+    "deep learning",
+    "IEEE Access",
+    "computer vision research",
+  ],
+});
 
 type Author = { given: string; family: string };
 
@@ -141,6 +151,14 @@ function AuthorList({ authors }: { authors: readonly Author[] }) {
 export default function ResearchPage() {
   return (
     <main>
+      <JsonLd
+        data={PUBLICATIONS.map((pub) =>
+          buildScholarlyArticleJsonLd({
+            ...pub,
+            authors: pub.authors.map(fullName),
+          }),
+        )}
+      />
       <section className="pt-28 pb-16 sm:pt-32 sm:pb-20">
         <Container className="px-4 sm:px-8">
           <PageHeader

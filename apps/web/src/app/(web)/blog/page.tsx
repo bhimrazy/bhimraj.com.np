@@ -3,27 +3,21 @@ import BlogSection from "@/components/blog/blog-section";
 import { sortedPosts } from "@/components/blog/posts";
 import { Container } from "@/components/container";
 import { blog } from "@/config/blog";
-import { siteConfig } from "@/config/site";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: blog.title,
   description: blog.description,
-  alternates: { canonical: blog.url },
-  openGraph: {
-    type: "website",
-    url: blog.url,
-    title: blog.title,
-    description: blog.description,
-    siteName: siteConfig.name,
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: siteConfig.author.handle,
-    creator: siteConfig.author.handle,
-    title: blog.title,
-    description: blog.description,
-  },
-};
+  path: "/blog",
+  keywords: [
+    "machine learning",
+    "PyTorch",
+    "UNet",
+    "software architecture",
+    "event-driven architecture",
+  ],
+  ownCard: true,
+});
 
 const years = sortedPosts.map((p) => new Date(p.publishedAt).getUTCFullYear());
 const span =

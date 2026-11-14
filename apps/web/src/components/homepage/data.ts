@@ -9,7 +9,8 @@ export const PERSON = {
   handle: "@bhimrazy",
   role: "Software engineer",
   city: "Kathmandu, Nepal",
-  avatar: "/bhimraj-yadav.jpg",
+  avatar: "/bhimraj-yadav-avatar.webp",
+  portrait: "/bhimraj-yadav-portrait.webp",
   studios: "https://lightning.ai/bhimrajyadav",
 } as const;
 
