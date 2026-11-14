@@ -1,10 +1,10 @@
 import { Container } from "@/components/container";
 import { ArrowLink, SectionHeading } from "@/components/section-heading";
+import { surface } from "@/components/surface";
 import { cn } from "@/lib/utils";
 import { CompanyLogo, LOGOS } from "./company-logo";
 import { THREADS } from "./data";
 import { OssBreakdown } from "./oss-breakdown";
-import { surface } from "./surface";
 
 /** "https://www.fetch.ly/" → "fetch.ly", for the link under each card. */
 const hostOf = (href: string) => new URL(href).host.replace(/^www\./, "");

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { postHref, sortedPosts } from "@/components/blog/posts";
 import { ArrowLink } from "@/components/section-heading";
+import { surface } from "@/components/surface";
 import { formatShortDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { ColumnTitle } from "./column-title";
-import { surface } from "./surface";
 
 const latestPosts = sortedPosts.slice(0, 3);
 

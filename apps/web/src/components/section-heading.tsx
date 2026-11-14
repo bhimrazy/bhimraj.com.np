@@ -107,3 +107,33 @@ export function SectionHeading({
     </div>
   );
 }
+
+/** Page-level heading: the section eyebrow over an h1, for top-level pages. */
+export function PageHeader({
+  eyebrow,
+  title,
+  description,
+  children,
+}: {
+  eyebrow: string;
+  title: ReactNode;
+  description?: ReactNode;
+  children?: ReactNode;
+}) {
+  return (
+    <header className="max-w-3xl">
+      <p className="font-medium font-mono text-[12px] text-site-accent-text uppercase tracking-[1.5px]">
+        {eyebrow}
+      </p>
+      <h1 className="mt-4 text-balance font-bold font-display text-4xl text-site-text leading-[1.08] tracking-tight sm:text-5xl">
+        {title}
+      </h1>
+      {description && (
+        <p className="mt-5 max-w-2xl text-pretty text-base text-site-text-secondary leading-relaxed sm:text-[17px]">
+          {description}
+        </p>
+      )}
+      {children}
+    </header>
+  );
+}

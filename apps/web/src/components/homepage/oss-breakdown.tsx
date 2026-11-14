@@ -5,10 +5,10 @@ import {
   getOSSStats,
 } from "@bhimrazy/github";
 import { ArrowLink } from "@/components/section-heading";
+import { surface } from "@/components/surface";
 import { siteConfig } from "@/config/site";
 import { formatCompact } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { surface } from "./surface";
 
 /** Accent ramp, strongest first; the remainder is neutral. */
 const TONES = [

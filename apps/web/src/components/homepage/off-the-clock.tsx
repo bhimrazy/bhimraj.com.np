@@ -1,7 +1,7 @@
+import { surface } from "@/components/surface";
 import { cn } from "@/lib/utils";
 import { PERSON, PERSONAL } from "./data";
 import { FloatingPills } from "./floating-pills";
-import { surface } from "./surface";
 
 /** Layered ridgelines with a low sun: the hills around the Kathmandu valley. */
 function Ridges() {

@@ -1,5 +1,5 @@
 /**
- * Shared card surfaces for the homepage, so every section draws from the same
+ * Shared card surfaces, so every page draws from the same
  * border / background / hover language instead of re-typing it per file.
  */
 
