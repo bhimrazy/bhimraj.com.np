@@ -3,6 +3,7 @@ title: "Chat with Qwen2-VL"
 description: "Deploy and chat with Alibaba's Qwen2-VL multimodal large language model using LitServe. Supports image understanding, document parsing, and visual reasoning tasks."
 publishedAt: "2024-08-31"
 tags: [LitServe, Multimodal, LLM, Qwen]
+category: "Multimodal LLMs"
 image: "https://opengraph.githubassets.com/1/bhimrazy/chat-with-qwen2-vl"
 githubLink: "https://github.com/bhimrazy/chat-with-qwen2-vl"
 liveLink: "https://lightning.ai/bhimrajyadav/studios/deploy-and-chat-with-qwen2-vl-using-litserve"

@@ -1,12 +1,12 @@
 import { GitHubLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
 import { Container } from "@/components/container";
 import { SectionHeading } from "@/components/section-heading";
+import { surface } from "@/components/surface";
 import { Button } from "@/components/ui/button";
 import { XLogoIcon } from "@/components/x-logo-icon";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import NewsletterForm from "./news-letter";
-import { surface } from "./surface";
 
 const CHANNELS = [
   {
@@ -29,7 +29,7 @@ const CHANNELS = [
   },
 ] as const;
 
-export default function ContactSection() {
+export default function ContactSection({ index }: { index?: string }) {
   return (
     <section id="contact" className="scroll-mt-20 pb-24 sm:pb-28">
       <Container className="px-4 sm:px-8">
@@ -43,7 +43,7 @@ export default function ContactSection() {
 
           <div className="relative p-7 sm:p-10 lg:p-12">
             <SectionHeading
-              index="05"
+              index={index}
               eyebrow="Contact"
               title="Say hello."
               description="Products, open-source tools, infrastructure, or a research idea: I'm open to talking about any of them. A direct message is the fastest way to reach me."

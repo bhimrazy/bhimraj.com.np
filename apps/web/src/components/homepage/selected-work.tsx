@@ -4,10 +4,10 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Container } from "@/components/container";
 import { SectionHeading } from "@/components/section-heading";
+import { surfaceInteractive } from "@/components/surface";
 import { formatCompact } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { SELECTED_WORK } from "./data";
-import { surfaceInteractive } from "./surface";
 
 type Work = (typeof SELECTED_WORK)[number];
 type Featured = (typeof SELECTED_WORK)[0];

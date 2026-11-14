@@ -5,10 +5,10 @@ import {
   getOSSStats,
 } from "@bhimrazy/github";
 import { ArrowLink } from "@/components/section-heading";
+import { surface } from "@/components/surface";
 import { siteConfig } from "@/config/site";
-import { formatCompact } from "@/lib/format";
+import { atLeast, formatCompact } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { surface } from "./surface";
 
 /** Accent ramp, strongest first; the remainder is neutral. */
 const TONES = [
@@ -18,12 +18,6 @@ const TONES = [
   "bg-site-accent/25",
 ] as const;
 const REST_TONE = "bg-site-text-tertiary/35";
-
-/** Snapshot counts only grow, so show a floor: 54 → "50+", 304 → "300+". */
-function atLeast(n: number, step = n >= 100 ? 10 : 5): string {
-  if (n < step) return String(n); // a floor of 0 would read as "0+"
-  return `${Math.floor(n / step) * step}+`;
-}
 
 type Segment = {
   key: string;
