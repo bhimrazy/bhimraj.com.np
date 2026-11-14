@@ -55,9 +55,9 @@ export default function HeroSection() {
 
             <p className="mb-8 max-w-2xl text-pretty text-base text-site-text-secondary leading-relaxed sm:mb-9 sm:text-[17px]">
               I&apos;m a software engineer based in Kathmandu, Nepal. Most days
-              I&apos;m shipping products, contributing to open source, or
-              experimenting with LLMs and agents, and I write about what I learn
-              along the way.
+              I&apos;m designing systems and shipping features with my team,
+              contributing to open source, or experimenting with LLMs and
+              agents, and I write about what I learn along the way.
             </p>
 
             <div className="flex flex-wrap items-center gap-3">
