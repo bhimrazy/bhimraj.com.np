@@ -1,6 +1,6 @@
-/** Compact count for stars/forks: 725 → "725", 31361 → "31.4k". */
+/** Compact count for stars/forks: 725 → "725", 1000 → "1k", 31361 → "31.4k". */
 export function formatCompact(n: number): string {
-  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
+  if (n >= 1000) return `${(n / 1000).toFixed(1).replace(/\.0$/, "")}k`;
   return String(n);
 }
 

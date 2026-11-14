@@ -1,16 +1,12 @@
-import { allBlogPosts } from "content-collections";
 import Link from "next/link";
+import { postHref, sortedPosts } from "@/components/blog/posts";
 import { ArrowLink } from "@/components/section-heading";
 import { formatShortDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { ColumnTitle } from "./column-title";
 import { surface } from "./surface";
 
-const latestPosts = [...allBlogPosts]
-  .sort(
-    (a, b) => Number(new Date(b.publishedAt)) - Number(new Date(a.publishedAt)),
-  )
-  .slice(0, 3);
+const latestPosts = sortedPosts.slice(0, 3);
 
 /** Latest posts as a dated list — one column of the Writing & research pair. */
 export default function BlogPreview() {
@@ -30,7 +26,7 @@ export default function BlogPreview() {
         {latestPosts.map((post) => (
           <li key={post._meta.path}>
             <Link
-              href={`/blog/${post._meta.path}/`}
+              href={postHref(post)}
               className="group flex gap-5 px-6 py-5 transition-colors hover:bg-site-bg-secondary/70 focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:-outline-offset-2 sm:px-7 dark:hover:bg-white/3"
             >
               <time

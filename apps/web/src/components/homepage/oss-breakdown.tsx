@@ -1,4 +1,9 @@
-import { getLightningAIEcosystemStats } from "@bhimrazy/github";
+import {
+  getLightningAIEcosystemStats,
+  getOSSActivity,
+  getOSSActivitySearchUrls,
+  getOSSStats,
+} from "@bhimrazy/github";
 import { ArrowLink } from "@/components/section-heading";
 import { siteConfig } from "@/config/site";
 import { formatCompact } from "@/lib/format";
@@ -14,9 +19,9 @@ const TONES = [
 ] as const;
 const REST_TONE = "bg-site-text-tertiary/35";
 
-/** Snapshot counts only grow, so show a floor: 54 → "50+", 300 → "300+". */
-function atLeast(n: number): string {
-  const step = n >= 100 ? 10 : 5;
+/** Snapshot counts only grow, so show a floor: 54 → "50+", 304 → "300+". */
+function atLeast(n: number, step = n >= 100 ? 10 : 5): string {
+  if (n < step) return String(n); // a floor of 0 would read as "0+"
   return `${Math.floor(n / step) * step}+`;
 }
 
@@ -30,8 +35,8 @@ type Segment = {
 };
 
 /**
- * Where the merged open-source PRs land, as one compact strip under the
- * Experience cards: a share bar, then each repo in a row of columns.
+ * Open-source activity under the Experience cards: headline counts (reviews
+ * and issue work, not just merged PRs), then where the merged PRs land.
  */
 export function OssBreakdown() {
   const { totalPrs, repos } = getLightningAIEcosystemStats();
@@ -56,22 +61,60 @@ export function OssBreakdown() {
     : tracked;
   const barTotal = segments.reduce((sum, s) => sum + s.prs, 0) || 1;
 
+  const activity = getOSSActivity();
+  const search = getOSSActivitySearchUrls();
+  const stats = [
+    { value: getOSSStats().totalPrs, label: "PRs merged", href: "/oss" },
+    {
+      value: activity.prsReviewed,
+      label: "PRs reviewed",
+      href: search.prsReviewed,
+    },
+    {
+      value: activity.issuesHelped,
+      label: "issues helped on",
+      href: search.issuesHelped,
+    },
+    {
+      value: activity.issuesResolved,
+      label: "issues resolved",
+      href: search.issuesResolved,
+    },
+  ];
+
   return (
     <div className={cn(surface, "mt-4 p-5 sm:p-7")}>
-      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
-        <p className="flex items-baseline gap-3">
-          <span className="font-bold font-display text-[26px] text-site-text tabular-nums tracking-tight sm:text-[28px]">
-            {atLeast(totalPrs)}
-          </span>
-          <span className="text-site-text-secondary text-sm">
-            merged pull requests across the Lightning AI ecosystem
-          </span>
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+        <p className="font-medium font-mono text-[12px] text-site-text-tertiary uppercase tracking-[1.2px]">
+          In open source
         </p>
         <ArrowLink href="/oss">Full open-source journey</ArrowLink>
       </div>
 
+      <dl className="mt-5 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4">
+        {stats.map((s) => (
+          <div key={s.label} className="flex flex-col-reverse">
+            <dt className="mt-1 text-site-text-secondary text-sm">{s.label}</dt>
+            <dd>
+              <a
+                href={s.href}
+                {...(s.href.startsWith("http")
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+                className="rounded-sm font-bold font-display text-[26px] text-site-text tabular-nums tracking-tight transition-colors hover:text-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2 sm:text-[28px]"
+              >
+                {atLeast(s.value)}
+              </a>
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      <p className="mt-7 border-site-border/60 border-t pt-5 font-mono text-[11px] text-site-text-tertiary uppercase tracking-[1px] dark:border-white/5">
+        Merged PRs across the Lightning AI ecosystem
+      </p>
       <div
-        className="mt-5 flex h-2.5 w-full gap-0.5 overflow-hidden rounded-full"
+        className="mt-3 flex h-2.5 w-full gap-0.5 overflow-hidden rounded-full"
         role="img"
         aria-label={segments
           .map((s) => `${s.name}: ${s.prs} merged PRs`)
@@ -104,7 +147,7 @@ export function OssBreakdown() {
               </span>
               <span className="mt-1 block pl-4 font-mono text-[11px] text-site-text-tertiary">
                 <span className="text-site-text-secondary tabular-nums">
-                  {s.prs} PRs
+                  {atLeast(s.prs, 5)} PRs
                 </span>
                 {s.stars !== undefined && ` · ★ ${formatCompact(s.stars)}`}
               </span>

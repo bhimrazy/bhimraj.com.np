@@ -11,7 +11,6 @@ const CURRENTLY = [
   { label: "Building", value: PERSONAL.currently.building },
   { label: "Learning", value: PERSONAL.currently.learning },
   { label: "Reading", value: PERSONAL.currently.reading },
-  { label: "Off-screen", value: PERSONAL.currently.elsewhere },
 ] as const;
 
 /** The person behind the work: what he's on right now, and off the clock. */

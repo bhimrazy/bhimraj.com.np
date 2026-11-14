@@ -43,12 +43,17 @@ export default function ExperienceSection() {
           description="Products, open source, and infrastructure."
         />
 
-        <ul className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {EXPERIENCE.map((thread) => {
+        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {EXPERIENCE.map((thread, i) => {
             return (
               <li
                 key={thread.key}
-                className={cn(surface, "flex flex-col p-5 sm:p-7")}
+                className={cn(
+                  surface,
+                  "flex flex-col p-5 sm:p-7",
+                  // md: the first role gets its own row, the other two share the next.
+                  i === 0 && "md:col-span-2 lg:col-span-1",
+                )}
               >
                 <div className="flex h-8 items-center">
                   <Mark role={thread} />
@@ -69,6 +74,14 @@ export default function ExperienceSection() {
                   <p className="flex-1 text-pretty text-site-text-secondary text-sm leading-relaxed">
                     {thread.line}
                   </p>
+                  {"highlight" in thread && (
+                    <p className="mt-4 flex items-start gap-2 rounded-lg bg-site-accent-subtle px-3 py-2 text-site-text text-xs leading-snug">
+                      <span aria-hidden className="text-site-accent">
+                        ✦
+                      </span>
+                      {thread.highlight}
+                    </p>
+                  )}
                   <div className="mt-5">
                     <ArrowLink href={thread.orgHref} external>
                       {hostOf(thread.orgHref)}
