@@ -47,6 +47,18 @@ const nextConfig: NextConfig = {
         destination: "/blog",
         permanent: true,
       },
+      // Old static brand assets: browsers still probe some of these paths.
+      ...[
+        ["/apple-touch-icon.png", "/apple-icon.png"],
+        ["/apple-touch-icon-precomposed.png", "/apple-icon.png"],
+        ["/site.webmanifest", "/manifest.webmanifest"],
+        ["/opengraph-image.jpg", "/opengraph-image"],
+        ["/blog-opengraph.jpg", "/opengraph-image"],
+      ].map(([source, destination]) => ({
+        source,
+        destination,
+        permanent: true,
+      })),
     ];
   },
 };
