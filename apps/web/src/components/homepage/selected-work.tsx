@@ -18,7 +18,8 @@ function sparkline(history: FeaturedRepoStats["history"]) {
   if (history.length < 2) return null;
   const t0 = history[0].t;
   const tRange = history[history.length - 1].t - t0 || 1;
-  const sMax = history[history.length - 1].stars || 1;
+  // Stars can drop (unstars), so scale to the peak, not the latest point.
+  const sMax = Math.max(...history.map((p) => p.stars)) || 1;
   const line = history
     .map((p, i) => {
       const x = ((p.t - t0) / tRange) * CHART_W;
@@ -177,17 +178,7 @@ function FeaturedCard({ work }: { work: Work }) {
   );
 }
 
-type Stat = { value: string; label: string };
-
-function WorkCard({
-  work,
-  line = work.line,
-  stat,
-}: {
-  work: Work;
-  line?: string;
-  stat?: Stat;
-}) {
+function WorkCard({ work }: { work: Work }) {
   return (
     <CardLink href={work.href} className="p-6">
       <KindRow work={work} />
@@ -198,18 +189,8 @@ function WorkCard({
         <Arrow href={work.href} />
       </div>
       <p className="mt-2 flex-1 text-pretty text-site-text-secondary text-sm leading-relaxed">
-        {line}
+        {work.line}
       </p>
-      {stat && (
-        <p className="mt-5 flex items-baseline gap-2.5 border-site-border/60 border-t pt-4 dark:border-white/5">
-          <span className="font-bold font-display text-2xl text-site-text tracking-tight">
-            {stat.value}
-          </span>
-          <span className="text-pretty text-site-text-tertiary text-xs leading-snug">
-            {stat.label}
-          </span>
-        </p>
-      )}
     </CardLink>
   );
 }

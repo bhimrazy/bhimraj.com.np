@@ -143,8 +143,6 @@ export const PERSONAL = {
         href: "https://sre.google/sre-book/table-of-contents/",
       },
     ],
-    // Seasonal: update after Tihar.
-    elsewhere: [{ text: "Celebrating Dashain, Nepal’s biggest festival" }],
   },
   voiceLine:
     "Away from the keyboard, you'll find me travelling, exploring new things, working out, or lost in a good playlist.",
