@@ -65,8 +65,12 @@ export function JourneyReveal({
       <div
         id={id}
         className={cn(
-          "grid transition-[grid-template-rows,visibility] duration-500 ease-out motion-reduce:transition-none",
-          open ? "visible grid-rows-[1fr]" : "invisible grid-rows-[0fr]",
+          "grid duration-500 ease-out motion-reduce:transition-none",
+          // Visible at once on open so the region can take focus; hidden only
+          // after the fold on close.
+          open
+            ? "visible grid-rows-[1fr] transition-[grid-template-rows]"
+            : "invisible grid-rows-[0fr] transition-[grid-template-rows,visibility]",
         )}
       >
         {/* No opacity fade here: the text must be visible while the region
