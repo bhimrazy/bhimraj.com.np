@@ -35,8 +35,8 @@ import { cn } from "@/lib/utils";
 const COMMITS_FLOOR = Math.floor(getOSSStats().totalCommits / 100) * 100;
 
 export const metadata: Metadata = pageMetadata({
-  title: "Open source",
-  description: `${COMMITS_FLOOR}+ contributions across PyTorch Lightning, LitServe, LitData and LitGPT, plus code reviews and issue work.`,
+  title: "Open source: PyTorch Lightning & LitServe",
+  description: `Bhimraj Yadav is a PyTorch Lightning contributor with ${COMMITS_FLOOR}+ contributions across Lightning, LitServe, LitData and LitGPT, plus reviews and issue work.`,
   path: "/oss",
 });
 

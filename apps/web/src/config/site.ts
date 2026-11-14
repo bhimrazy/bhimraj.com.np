@@ -5,7 +5,9 @@ export const siteConfig = {
     username: "bhimrazy",
     name: "Bhimraj Yadav",
     designation: "Software Engineer",
-    avatar: "/bhimraj-yadav.jpg",
+    avatar: "/bhimraj-yadav-avatar.webp",
+    /** Larger photo for structured data and other sites. */
+    photo: "/bhimraj-yadav.jpg",
   },
   url: "https://bhimraj.com.np",
   description:
@@ -15,6 +17,7 @@ export const siteConfig = {
     github: "https://github.com/bhimrazy",
     linkedin: "https://www.linkedin.com/in/bhimrazy",
     youtube: "https://www.youtube.com/@bhimrajyadav",
+    lightning: "https://lightning.ai/bhimrajyadav",
   },
   utmParams: "utm_source=bhimraj.com.np&utm_medium=referral",
 };

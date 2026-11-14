@@ -41,15 +41,17 @@ export async function generateMetadata({
   }
 
   const projectURL = `/projects/${project._meta.path}`;
+  const title = project.seoTitle ?? project.title;
+  const description = project.seoDescription ?? project.description;
 
   return {
-    title: project.title,
-    description: project.description,
+    title,
+    description,
     alternates: { canonical: projectURL },
     keywords: project.tags,
     openGraph: {
-      title: project.title,
-      description: project.description,
+      title,
+      description,
       url: projectURL,
       siteName: siteConfig.name,
       type: "article",
@@ -57,8 +59,9 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: project.title,
-      description: project.description,
+      title,
+      description,
+      site: siteConfig.author.handle,
       creator: siteConfig.author.handle,
     },
     robots: {

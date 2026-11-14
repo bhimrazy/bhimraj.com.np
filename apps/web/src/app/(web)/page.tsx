@@ -7,7 +7,10 @@ import SelectedWork from "@/components/homepage/selected-work";
 import WritingSection from "@/components/homepage/writing-section";
 import { JsonLd } from "@/components/json-ld";
 import { SectionSeparator } from "@/components/section-separator";
-import { buildPersonJsonLd, buildWebSiteJsonLd } from "@/lib/structured-data";
+import {
+  buildProfilePageJsonLd,
+  buildWebSiteJsonLd,
+} from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -21,7 +24,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main>
-      <JsonLd data={[buildPersonJsonLd(), buildWebSiteJsonLd()]} />
+      <JsonLd data={[buildProfilePageJsonLd(), buildWebSiteJsonLd()]} />
       <HeroSection />
       <SectionSeparator />
       <ExperienceSection />

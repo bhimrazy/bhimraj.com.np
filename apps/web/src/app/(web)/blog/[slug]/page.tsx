@@ -30,28 +30,30 @@ export async function generateMetadata({
   const post = allBlogPosts.find((p) => p._meta.path === slug);
   if (!post) notFound();
 
-  const blogURL = `/blog/${post?._meta.path}`;
+  const blogURL = `/blog/${post._meta.path}`;
+  const description = post.seoDescription ?? post.description;
+  const title = post.seoTitle ?? post.title;
 
   return {
-    title: post?.title,
-    description: post?.description,
+    title,
+    description,
     alternates: { canonical: blogURL },
-    keywords: post?.tags,
+    keywords: post.tags,
     openGraph: {
-      title: post?.title,
-      description: post?.description,
+      title,
+      description,
       url: blogURL,
       siteName: siteConfig.name,
       authors: siteConfig.author.name,
-      publishedTime: post?.publishedAt,
-      modifiedTime: post?.updatedAt,
+      publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt,
       type: "article",
       locale: "en_US",
     },
     twitter: {
       card: "summary_large_image",
-      title: post?.title,
-      description: post?.description,
+      title,
+      description,
       creator: siteConfig.author.handle,
       site: siteConfig.author.handle,
     },
@@ -128,7 +130,7 @@ export default async function BlogPostPage({
               <figure className="mb-12 overflow-hidden rounded-xl border border-site-border dark:border-white/6">
                 <Image
                   src={post.image}
-                  alt=""
+                  alt={post.title}
                   width={1920}
                   height={1080}
                   preload

@@ -17,9 +17,9 @@ import { buildScholarlyArticleJsonLd } from "@/lib/structured-data";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Research",
+  title: "Research: IEEE Access paper & reading list",
   description:
-    "An IEEE Access paper comparing deep learning models for segmenting pores in SEM images, and a short list of papers on model architecture and training.",
+    "An IEEE Access paper comparing deep learning models for segmenting pores in SEM images, plus a short reading list on model architecture and training.",
   path: "/research",
 });
 

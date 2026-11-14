@@ -31,6 +31,7 @@ export function pageMetadata({
           },
         ],
       };
+  const socialTitle = `${title} · ${siteConfig.author.name}`;
   return {
     title,
     description,
@@ -39,14 +40,14 @@ export function pageMetadata({
       type: "website",
       locale: "en_US",
       url: path,
-      title,
+      title: socialTitle,
       description,
       siteName: siteConfig.name,
       ...images,
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: socialTitle,
       description,
       site: siteConfig.author.handle,
       creator: siteConfig.author.handle,

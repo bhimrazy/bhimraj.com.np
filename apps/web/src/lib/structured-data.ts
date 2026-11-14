@@ -25,21 +25,43 @@ function absoluteUrl(path: string): string {
   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
-export function buildPersonJsonLd(): JsonLdObject {
+/** The home page as a ProfilePage about the Person (Google's profile markup). */
+export function buildProfilePageJsonLd(): JsonLdObject {
+  const { "@context": _, ...person } = buildPersonJsonLd();
+  return {
+    "@context": CONTEXT,
+    "@type": "ProfilePage",
+    url: siteConfig.url,
+    mainEntity: person,
+  };
+}
+
+function buildPersonJsonLd(): JsonLdObject {
   return {
     "@context": CONTEXT,
     "@type": "Person",
     "@id": PERSON_ID,
+    description: siteConfig.description,
     name: siteConfig.author.name,
     alternateName: siteConfig.author.username,
     url: siteConfig.url,
-    image: absoluteUrl(siteConfig.author.avatar),
+    image: absoluteUrl(siteConfig.author.photo),
     jobTitle: siteConfig.author.designation,
     address: {
       "@type": "PostalAddress",
       addressLocality: "Kathmandu",
       addressCountry: "NP",
     },
+    worksFor: { "@type": "Organization", name: "Fetchly Labs" },
+    knowsAbout: [
+      "PyTorch Lightning",
+      "LitServe",
+      "LitData",
+      "LitGPT",
+      "Computer vision",
+      "Deep learning",
+      "Python",
+    ],
     sameAs: Object.values(siteConfig.links),
   };
 }

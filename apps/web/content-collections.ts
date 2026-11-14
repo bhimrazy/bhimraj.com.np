@@ -39,6 +39,9 @@ const BlogPost = defineCollection({
   schema: z.object({
     content: z.string(),
     title: z.string(),
+    /** Search title and description when the on-page ones run long. */
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional(),
     description: z.string(),
     publishedAt: z.string(),
     updatedAt: z.string(),
@@ -64,6 +67,9 @@ const Project = defineCollection({
   schema: z.object({
     content: z.string(),
     title: z.string(),
+    /** Search title and description when the on-page ones run long. */
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional(),
     description: z.string(),
     publishedAt: z.string(),
     updatedAt: z.string().optional(),

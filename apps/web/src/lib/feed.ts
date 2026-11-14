@@ -29,12 +29,13 @@ function toRfc822(dateString: string): string {
 
 /**
  * Feed readers resolve relative URLs against their own origin, so make every
- * root-relative `src`/`href` absolute. The empty heading permalink anchors
- * (`#…`) are meaningless outside the page, so they are dropped.
+ * root-relative `src`/`href` absolute. Heading permalink anchors and the
+ * `<link>` tags React hoists mean nothing outside the page, so they go.
  */
 function absolutizeHtml(html: string, baseUrl: string): string {
   return html
     .replace(/<a class="heading-anchor"[^>]*><\/a>/g, "")
+    .replace(/<link\b[^>]*>/g, "")
     .replace(/\b(src|href)="\/(?!\/)/g, `$1="${baseUrl}/`);
 }
 

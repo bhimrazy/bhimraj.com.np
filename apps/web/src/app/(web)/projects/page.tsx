@@ -5,12 +5,10 @@ import ProjectSection from "@/components/projects/project-section";
 import { PageHeader } from "@/components/section-heading";
 import { pageMetadata } from "@/lib/metadata";
 
-const description =
-  "Receipt OCR, vps-ready, and open-source model APIs and demos: multimodal LLMs, model serving and computer vision.";
-
 export const metadata: Metadata = pageMetadata({
-  title: "Projects",
-  description,
+  title: "Projects: receipt OCR, vps-ready, model APIs",
+  description:
+    "Receipt OCR, the vps-ready VPS hardening CLI, and open-source model APIs and demos built with LitServe and PyTorch: vision LLMs, TTS and detection.",
   path: "/projects",
 });
 

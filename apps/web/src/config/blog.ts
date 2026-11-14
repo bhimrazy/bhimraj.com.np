@@ -1,6 +1,6 @@
 export const blog = {
-  title: "Insights and Stories",
+  title: "Blog: machine learning and software design",
   description:
-    "Explore the latest insights, stories, and tutorials by Bhimraj Yadav",
+    "Tutorials and explainers by Bhimraj Yadav on machine learning and software design, including UNet in PyTorch and event-driven architecture.",
   url: "/blog",
 };
