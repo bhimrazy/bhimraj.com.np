@@ -35,7 +35,7 @@ export function CiteButton({ bibtex }: { bibtex: string }) {
         type="button"
         onClick={handleCopy}
         title="Copy BibTeX citation"
-        className="inline-flex items-center gap-1.5 rounded-md border border-site-border bg-site-bg-secondary px-2.5 py-1 font-mono text-[11px] text-site-text-secondary transition-colors hover:border-site-border-hover hover:text-site-text"
+        className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-site-border bg-site-bg-secondary px-3.5 font-medium text-site-text-secondary text-sm transition-colors hover:border-site-border-hover hover:text-site-text focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
       >
         {label}
       </button>

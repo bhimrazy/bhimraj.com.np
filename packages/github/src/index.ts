@@ -15,7 +15,7 @@ export {
   featuredRepo,
   githubConfig,
   ossRepos,
-  ossStartYear,
+  ossStartDate,
   username,
 } from "./config";
 export type {

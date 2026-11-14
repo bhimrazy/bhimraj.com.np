@@ -1,5 +1,17 @@
 import type { MonthlyContribution } from "@bhimrazy/github";
+import { surface } from "@/components/surface";
 import { cn } from "@/lib/utils";
+
+/**
+ * A centred w-44 card overhangs the outer bars on a phone, so the outer thirds
+ * anchor to their own edge and grow inward.
+ */
+function tooltipAnchor(i: number, count: number): string {
+  const third = Math.floor(count / 3);
+  if (i < third) return "left-0";
+  if (i >= count - third) return "right-0";
+  return "left-1/2 -translate-x-1/2";
+}
 
 export function ContributionGraph({ data }: { data: MonthlyContribution[] }) {
   const max = Math.max(...data.map((d) => d.commits), 1);
@@ -10,7 +22,8 @@ export function ContributionGraph({ data }: { data: MonthlyContribution[] }) {
   );
 
   return (
-    <div className="rounded-xl border border-site-border bg-site-card p-6 sm:p-8 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary">
+    // overflow-visible: tall tooltips may rise above the card's top edge.
+    <div className={cn(surface, "overflow-visible p-6 sm:p-7")}>
       <div className="mb-7 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h3 className="font-display font-semibold text-base text-site-text">
@@ -27,8 +40,9 @@ export function ContributionGraph({ data }: { data: MonthlyContribution[] }) {
         )}
       </div>
 
-      <div className="flex h-44 items-end gap-1.5 sm:gap-2.5">
-        {data.map((d) => {
+      {/* Clip is a backstop: a stray tooltip must never widen the page. */}
+      <div className="flex h-44 items-end gap-1.5 overflow-x-clip sm:gap-2.5">
+        {data.map((d, i) => {
           const heightPct =
             d.commits > 0 ? Math.max((d.commits / max) * 100, 4) : 2;
           const count = `${d.commits} commit${d.commits === 1 ? "" : "s"}`;
@@ -43,13 +57,17 @@ export function ContributionGraph({ data }: { data: MonthlyContribution[] }) {
                 aria-label={`${d.label} ${d.year}: ${count}`}
                 className="group relative flex h-full w-full flex-1 cursor-default items-end justify-center rounded-sm focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
               >
-                {/* Hover / focus breakdown card */}
-                <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 block w-44 -translate-x-1/2 rounded-lg border border-site-border bg-site-card p-3 text-left opacity-0 shadow-black/10 shadow-xl transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 dark:border-white/8 dark:bg-site-bg-tertiary">
+                <span
+                  className={cn(
+                    "pointer-events-none absolute bottom-full z-10 mb-2 block w-44 rounded-lg border border-site-border bg-site-card p-3 text-left opacity-0 shadow-black/10 shadow-xl transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 dark:border-white/8 dark:bg-site-bg-tertiary",
+                    tooltipAnchor(i, data.length),
+                  )}
+                >
                   <span className="flex items-baseline justify-between gap-2 border-site-border/60 border-b pb-1.5">
                     <span className="font-display font-semibold text-site-text text-xs">
                       {d.label} {d.year}
                     </span>
-                    <span className="font-mono text-[11px] text-site-accent">
+                    <span className="font-mono text-[11px] text-site-accent-text">
                       {count}
                     </span>
                   </span>

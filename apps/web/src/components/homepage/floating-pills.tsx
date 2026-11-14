@@ -111,6 +111,10 @@ function drift(area: HTMLElement, isPaused: () => boolean) {
     for (const p of particles) {
       p.w = p.el.offsetWidth;
       p.h = p.el.offsetHeight;
+      // step() clamps too, but it doesn't run while paused or off screen.
+      p.x = Math.min(p.x, Math.max(0, width - p.w));
+      p.y = Math.min(p.y, Math.max(0, height - p.h));
+      p.el.style.translate = `${p.x.toFixed(1)}px ${p.y.toFixed(1)}px`;
     }
   });
   resize.observe(area);

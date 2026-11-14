@@ -24,9 +24,6 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: siteConfig.author.name, url: siteConfig.url }],
   creator: siteConfig.author.username,
-  // OG/Twitter images are supplied by the root `opengraph-image.tsx` /
-  // `twitter-image.tsx` file conventions (a branded default card); every
-  // other route either inherits this or defines its own image files.
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -39,14 +36,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
+    site: siteConfig.author.handle,
     creator: siteConfig.author.handle,
   },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
-  },
-  manifest: `${siteConfig.url}/site.webmanifest`,
 };
 
 /* next/font variables — use unique names to avoid conflict with @theme entries */

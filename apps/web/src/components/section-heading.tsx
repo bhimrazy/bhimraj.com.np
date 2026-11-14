@@ -17,7 +17,7 @@ export function ArrowLink({
   className,
 }: ArrowLinkProps) {
   const classes = cn(
-    "group/arrow inline-flex items-center gap-1.5 rounded-sm font-medium text-site-accent text-sm transition-colors hover:text-site-accent-hover focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4",
+    "group/arrow inline-flex items-center gap-1.5 rounded-sm font-medium text-site-accent-text text-sm transition-colors hover:text-site-text dark:hover:text-site-accent-hover focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4",
     className,
   );
   const arrow = (
@@ -77,7 +77,7 @@ export function SectionHeading({
       )}
     >
       <div className="max-w-2xl">
-        <p className="flex items-center gap-3 font-medium font-mono text-[12px] text-site-accent uppercase tracking-[1.5px]">
+        <p className="flex items-center gap-3 font-medium font-mono text-[12px] text-site-accent-text uppercase tracking-[1.5px]">
           {index && (
             <>
               <span className="text-site-text-tertiary">{index}</span>
@@ -105,5 +105,35 @@ export function SectionHeading({
         </ArrowLink>
       )}
     </div>
+  );
+}
+
+/** Page-level heading: the section eyebrow over an h1, for top-level pages. */
+export function PageHeader({
+  eyebrow,
+  title,
+  description,
+  children,
+}: {
+  eyebrow: string;
+  title: ReactNode;
+  description?: ReactNode;
+  children?: ReactNode;
+}) {
+  return (
+    <header className="max-w-3xl">
+      <p className="font-medium font-mono text-[12px] text-site-accent-text uppercase tracking-[1.5px]">
+        {eyebrow}
+      </p>
+      <h1 className="mt-4 text-balance font-bold font-display text-4xl text-site-text leading-[1.08] tracking-tight sm:text-5xl">
+        {title}
+      </h1>
+      {description && (
+        <p className="mt-5 max-w-2xl text-pretty text-base text-site-text-secondary leading-relaxed sm:text-[17px]">
+          {description}
+        </p>
+      )}
+      {children}
+    </header>
   );
 }

@@ -39,6 +39,9 @@ const BlogPost = defineCollection({
   schema: z.object({
     content: z.string(),
     title: z.string(),
+    /** Search title and description when the on-page ones run long. */
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional(),
     description: z.string(),
     publishedAt: z.string(),
     updatedAt: z.string(),
@@ -64,30 +67,29 @@ const Project = defineCollection({
   schema: z.object({
     content: z.string(),
     title: z.string(),
+    /** Search title and description when the on-page ones run long. */
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional(),
     description: z.string(),
     publishedAt: z.string(),
     updatedAt: z.string().optional(),
     tags: z.array(z.string()),
     image: z.string(),
-    githubLink: z.string(),
+    githubLink: z.string().optional(),
     liveLink: z.string().optional(),
+    /** CTA text for `liveLink`; see `liveLabel()` for the default. */
+    liveLabel: z.string().optional(),
     featured: z.boolean().default(false),
-    category: z
-      .enum([
-        "Multimodal LLMs",
-        "Model Serving",
-        "Computer Vision & Medical AI",
-      ])
-      .default("Model Serving"),
+    category: z.enum([
+      "Developer Tools",
+      "Multimodal LLMs",
+      "Model Serving",
+      "Computer Vision & Medical AI",
+    ]),
   }),
   transform: async (document, context) => {
     const html = await compileMarkdown(context, document, { rehypePlugins });
-    return {
-      ...document,
-      html,
-      liveLink: document.liveLink,
-      updatedAt: document.updatedAt,
-    };
+    return { ...document, html };
   },
 });
 

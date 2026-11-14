@@ -4,12 +4,13 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Container } from "@/components/container";
 import { SectionHeading } from "@/components/section-heading";
+import { surfaceInteractive } from "@/components/surface";
 import { formatCompact } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { SELECTED_WORK } from "./data";
-import { surfaceInteractive } from "./surface";
 
 type Work = (typeof SELECTED_WORK)[number];
+type Featured = (typeof SELECTED_WORK)[0];
 
 const CHART_W = 100;
 const CHART_H = 40;
@@ -18,7 +19,8 @@ function sparkline(history: FeaturedRepoStats["history"]) {
   if (history.length < 2) return null;
   const t0 = history[0].t;
   const tRange = history[history.length - 1].t - t0 || 1;
-  const sMax = history[history.length - 1].stars || 1;
+  // Stars can drop (unstars), so scale to the peak, not the latest point.
+  const sMax = Math.max(...history.map((p) => p.stars)) || 1;
   const line = history
     .map((p, i) => {
       const x = ((p.t - t0) / tRange) * CHART_W;
@@ -86,8 +88,8 @@ function KindRow({ work }: { work: Work }) {
   );
 }
 
-/** Receipt OCR: the one self-started project, with its live star history. */
-function FeaturedCard({ work }: { work: Work }) {
+/** The title is a stretched link, so the app and repo links can sit inside the card without nesting <a>. */
+function FeaturedCard({ work }: { work: Featured }) {
   const repo = getFeaturedRepoStats();
   const spark = repo ? sparkline(repo.history) : null;
   const since = repo?.history[0]
@@ -95,29 +97,39 @@ function FeaturedCard({ work }: { work: Work }) {
     : null;
 
   return (
-    <CardLink href={work.href} className="p-6 sm:p-8">
+    <article
+      className={cn(
+        surfaceInteractive,
+        "group isolate flex h-full flex-col p-6 sm:p-8",
+      )}
+    >
       <span
         aria-hidden
-        className="pointer-events-none absolute -top-24 -right-20 size-72 rounded-full bg-site-accent-subtle opacity-60 blur-3xl transition-opacity duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute -top-24 -right-20 -z-10 size-72 rounded-full bg-site-accent-subtle opacity-60 blur-3xl transition-opacity duration-300 group-hover:opacity-100"
       />
       <KindRow work={work} />
 
-      <div className="relative mt-5 flex items-start justify-between gap-4">
+      <div className="mt-5 flex items-start justify-between gap-4">
         <h3 className="font-display font-semibold text-2xl text-site-text tracking-tight sm:text-[28px]">
-          {work.title}
+          <Link
+            href={work.href}
+            className="rounded-sm after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-site-accent focus-visible:after:outline-offset-2"
+          >
+            {work.title}
+          </Link>
         </h3>
         <Arrow href={work.href} />
       </div>
-      <p className="relative mt-2 max-w-lg text-pretty text-site-text-secondary leading-relaxed">
+      <p className="mt-2 max-w-lg text-pretty text-site-text-secondary leading-relaxed">
         {work.line}
       </p>
 
       {repo && spark && (
-        <div className="relative mt-8 flex flex-1 flex-col">
+        <div className="mt-6 flex flex-1 flex-col justify-end">
           <svg
             viewBox={`0 0 ${CHART_W} ${CHART_H}`}
             preserveAspectRatio="none"
-            className="min-h-28 w-full flex-1"
+            className="h-24 w-full sm:h-28"
             role="img"
             aria-label={`Star history for ${repo.fullName}, now at ${repo.stars} stars`}
           >
@@ -154,40 +166,51 @@ function FeaturedCard({ work }: { work: Work }) {
           </svg>
           <p className="mt-2 flex justify-between font-mono text-[10px] text-site-text-tertiary uppercase tracking-[0.5px]">
             <span>{since ?? ""}</span>
-            <span>Stars over time</span>
+            <span>GitHub stars · now</span>
           </p>
         </div>
       )}
 
-      {repo && (
-        <div className="relative mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-site-border/60 border-t pt-4 text-site-text-tertiary text-xs dark:border-white/5">
-          <span className="flex items-center gap-1.5 font-semibold text-site-accent">
-            <StarFilledIcon className="size-3.5" aria-hidden />
-            {formatCompact(repo.stars)} stars
-          </span>
-          <span>{formatCompact(repo.forks)} forks</span>
-          {repo.language && <span>{repo.language}</span>}
-          <span className="ml-auto hidden items-center gap-1.5 font-mono sm:flex">
-            <GitHubLogoIcon className="size-3.5" aria-hidden />
-            {repo.fullName}
-          </span>
-        </div>
-      )}
-    </CardLink>
+      <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 border-site-border/60 border-t pt-4 text-site-text-tertiary text-xs dark:border-white/5">
+        {repo && (
+          <>
+            <span className="flex items-center gap-1.5 font-semibold text-site-accent">
+              <StarFilledIcon className="size-3.5" aria-hidden />
+              {formatCompact(repo.stars)} stars
+            </span>
+            <span>{formatCompact(repo.forks)} forks</span>
+            {repo.language && <span>{repo.language}</span>}
+          </>
+        )}
+        {/* z-10 lifts these above the title's stretched link. */}
+        <span className="relative z-10 ml-auto flex items-center gap-2">
+          {repo && (
+            <a
+              href={`https://github.com/${repo.fullName}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg px-3 font-mono text-site-text-secondary transition-colors hover:text-site-text focus-visible:outline-2 focus-visible:outline-site-accent"
+            >
+              <GitHubLogoIcon className="size-3.5" aria-hidden />
+              <span className="hidden sm:inline">{repo.fullName}</span>
+              <span className="sm:hidden">Source</span>
+            </a>
+          )}
+          <a
+            href={work.app}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-site-accent px-3.5 font-semibold text-site-on-accent text-sm transition-colors hover:bg-site-accent/85 focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
+          >
+            Try the app <span aria-hidden>↗</span>
+          </a>
+        </span>
+      </div>
+    </article>
   );
 }
 
-type Stat = { value: string; label: string };
-
-function WorkCard({
-  work,
-  line = work.line,
-  stat,
-}: {
-  work: Work;
-  line?: string;
-  stat?: Stat;
-}) {
+function WorkCard({ work }: { work: Work }) {
   return (
     <CardLink href={work.href} className="p-6">
       <KindRow work={work} />
@@ -197,27 +220,33 @@ function WorkCard({
         </h3>
         <Arrow href={work.href} />
       </div>
-      <p className="mt-2 flex-1 text-pretty text-site-text-secondary text-sm leading-relaxed">
-        {line}
+      <p className="mt-2 text-pretty text-site-text-secondary text-sm leading-relaxed">
+        {work.line}
       </p>
-      {stat && (
-        <p className="mt-5 flex items-baseline gap-2.5 border-site-border/60 border-t pt-4 dark:border-white/5">
-          <span className="font-bold font-display text-2xl text-site-text tracking-tight">
-            {stat.value}
-          </span>
-          <span className="text-pretty text-site-text-tertiary text-xs leading-snug">
-            {stat.label}
-          </span>
+      {"terminal" in work && (
+        <div className="mt-5 flex flex-1 flex-col justify-center">
+          <pre className="overflow-x-auto rounded-lg border border-site-border/60 bg-site-bg/60 p-4 font-mono text-[11px] leading-relaxed dark:border-white/5">
+            {work.terminal.map(({ cmd, out }) => (
+              <span key={cmd} className="not-first:mt-2 block">
+                <span className="text-site-accent">$</span>{" "}
+                <span className="text-site-text">{cmd}</span>
+                {"\n"}
+                <span className="text-site-text-tertiary">{out}</span>
+              </span>
+            ))}
+          </pre>
+        </div>
+      )}
+      {"stack" in work && (
+        <p className="mt-5 flex items-center justify-between gap-3 border-site-border/60 border-t pt-4 text-site-text-tertiary text-xs dark:border-white/5">
+          <span>{work.stack}</span>
+          <span className="font-mono">{new URL(work.href).host}</span>
         </p>
       )}
     </CardLink>
   );
 }
 
-/*
- * Grid: Receipt OCR takes a 2×2 block (it has a chart to show), two cards
- * stack beside it, and the paper runs full width underneath.
- */
 export default function SelectedWork() {
   const [featured, ...rest] = SELECTED_WORK;
 
@@ -233,15 +262,13 @@ export default function SelectedWork() {
         />
 
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <li className="md:col-span-2 lg:row-span-2">
+          <li className="md:col-span-2">
             <FeaturedCard work={featured} />
           </li>
           {rest.map((work, i) => (
             <li
               key={work.title}
-              className={cn(
-                i === rest.length - 1 && "md:col-span-2 lg:col-span-3",
-              )}
+              className={cn(i === rest.length - 1 && "md:col-span-2")}
             >
               <WorkCard work={work} />
             </li>

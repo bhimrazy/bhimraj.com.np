@@ -1,10 +1,6 @@
 import type { JsonLdObject } from "@/lib/structured-data";
 
-/**
- * Renders one or more schema.org JSON-LD blocks as `<script>` tags.
- * Usage: `<JsonLd data={buildPersonJsonLd()} />` or
- * `<JsonLd data={[buildBlogPostingJsonLd(post), buildBreadcrumbJsonLd(trail)]} />`.
- */
+/** One `<script type="application/ld+json">` per schema.org block. */
 export function JsonLd({ data }: { data: JsonLdObject | JsonLdObject[] }) {
   const blocks = Array.isArray(data) ? data : [data];
 

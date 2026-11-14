@@ -29,18 +29,19 @@ function toRfc822(dateString: string): string {
 
 /**
  * Feed readers resolve relative URLs against their own origin, so make every
- * root-relative `src`/`href` absolute. The empty heading permalink anchors
- * (`#…`) are meaningless outside the page, so they are dropped.
+ * root-relative `src`/`href` absolute. Heading permalink anchors and the
+ * `<link>` tags React hoists mean nothing outside the page, so they go.
  */
 function absolutizeHtml(html: string, baseUrl: string): string {
   return html
     .replace(/<a class="heading-anchor"[^>]*><\/a>/g, "")
+    .replace(/<link\b[^>]*>/g, "")
     .replace(/\b(src|href)="\/(?!\/)/g, `$1="${baseUrl}/`);
 }
 
 /**
- * Builds an RSS 2.0 feed (full content via `content:encoded`) from blog
- * posts, sorted newest-first, with absolute URLs — pure and testable.
+ * RSS 2.0 with full content in `content:encoded`, newest first, absolute
+ * URLs.
  */
 export function buildRssFeed(posts: FeedPost[]): string {
   const baseUrl = siteConfig.url.replace(/\/$/, "");
@@ -72,7 +73,7 @@ export function buildRssFeed(posts: FeedPost[]): string {
       <pubDate>${toRfc822(post.publishedAt)}</pubDate>
       <description>${escapeXml(post.description)}</description>
       ${post.tags.map((tag) => `<category>${escapeXml(tag)}</category>`).join("\n      ")}
-      <content:encoded><![CDATA[${absolutizeHtml(post.html, baseUrl)}]]></content:encoded>
+      <content:encoded><![CDATA[${absolutizeHtml(post.html, baseUrl).replaceAll("]]>", "]]]]><![CDATA[>")}]]></content:encoded>
       <dc:creator>${escapeXml(siteConfig.author.name)}</dc:creator>
     </item>`;
     })

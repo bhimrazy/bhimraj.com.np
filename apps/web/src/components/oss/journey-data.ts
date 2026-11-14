@@ -1,10 +1,12 @@
-export type TimelineQuote = {
+import { OSS_START_LABEL } from "./start-date";
+
+type TimelineQuote = {
   text: string;
   author: string;
   role: string;
 };
 
-export type TimelineLink = {
+type TimelineLink = {
   label: string;
   href: string;
 };
@@ -27,7 +29,8 @@ export type TimelineItem = {
  */
 export const TIMELINE: TimelineItem[] = [
   {
-    date: "Mar 2024",
+    // Same source as the "Active since" stat.
+    date: OSS_START_LABEL,
     title: "Joined the Lightning AI Studios Publisher Program",
     body: "Invited into the Publisher Program to collaborate with the team and build Studios — my first foothold in the Lightning AI ecosystem.",
     quotes: [
@@ -215,7 +218,7 @@ export const TIMELINE: TimelineItem[] = [
 ];
 
 /** Pulls the year out of a "Mon YYYY" date label, e.g. "Mar 2024" -> "2024". */
-export function yearOf(date: string): string {
+function yearOf(date: string): string {
   return date.split(" ").at(-1) ?? date;
 }
 

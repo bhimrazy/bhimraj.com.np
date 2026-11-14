@@ -4,7 +4,7 @@ import { buildRssFeed } from "@/lib/feed";
 
 async function getFeedXml() {
   "use cache";
-  cacheLife("hours");
+  cacheLife("max"); // content changes only on deploy
 
   return buildRssFeed(
     allBlogPosts.map((post) => ({

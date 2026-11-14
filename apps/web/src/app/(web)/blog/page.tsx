@@ -5,11 +5,18 @@ import { Container } from "@/components/container";
 import { blog } from "@/config/blog";
 import { pageMetadata } from "@/lib/metadata";
 
-// No explicit images: the generated card in ./opengraph-image.tsx applies.
 export const metadata: Metadata = pageMetadata({
   title: blog.title,
   description: blog.description,
   path: "/blog",
+  keywords: [
+    "machine learning",
+    "PyTorch",
+    "UNet",
+    "software architecture",
+    "event-driven architecture",
+  ],
+  ownCard: true,
 });
 
 const years = sortedPosts.map((p) => new Date(p.publishedAt).getUTCFullYear());

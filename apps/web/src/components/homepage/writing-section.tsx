@@ -9,12 +9,12 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Container } from "@/components/container";
 import { SectionHeading } from "@/components/section-heading";
+import { surface } from "@/components/surface";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import BlogPreview from "./blog-preview";
 import { ColumnTitle } from "./column-title";
 import { PERSON, THREADS } from "./data";
-import { surface } from "./surface";
 
 type Place = {
   icon: ReactNode;

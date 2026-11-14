@@ -6,6 +6,8 @@ declare module "content-collections" {
   export interface BlogPost {
     _meta: ContentMeta;
     title: string;
+    seoTitle?: string;
+    seoDescription?: string;
     description: string;
     publishedAt: string;
     updatedAt?: string;
@@ -26,15 +28,19 @@ declare module "content-collections" {
   export interface Project {
     _meta: ContentMeta;
     title: string;
+    seoTitle?: string;
+    seoDescription?: string;
     description: string;
     publishedAt: string;
     updatedAt?: string;
     tags: string[];
     image: string;
-    githubLink: string;
+    githubLink?: string;
     liveLink?: string;
+    liveLabel?: string;
     featured: boolean;
     category:
+      | "Developer Tools"
       | "Multimodal LLMs"
       | "Model Serving"
       | "Computer Vision & Medical AI";

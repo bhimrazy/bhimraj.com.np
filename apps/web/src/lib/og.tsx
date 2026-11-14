@@ -1,231 +1,226 @@
-/**
- * Shared helpers for generated Open Graph / Twitter card images
- * (next/og `ImageResponse`). Kept framework-agnostic-ish so each
- * `opengraph-image.tsx` / `twitter-image.tsx` route can stay a few lines.
- */
-
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { cacheLife } from "next/cache";
 import { ImageResponse } from "next/og";
+import { BRAND_COLORS as C, MARK_CUT, RIDGE_PATH, SUN } from "@/lib/brand";
 
-type Font = NonNullable<
-  ConstructorParameters<typeof ImageResponse>[1]
->["fonts"] extends (infer F)[] | undefined
-  ? F
-  : never;
-
-export const OG_SIZE = { width: 1200, height: 630 } as const;
+export const OG_SIZE = { width: 1200, height: 630 };
 export const OG_CONTENT_TYPE = "image/png";
 
-// Warm-dark brand tokens (mirrors apps/web/src/app/globals.css `.dark` scope).
-const OG_COLORS = {
-  bg: "#0f0d0a",
-  bgSecondary: "#16140f",
-  card: "#17150f",
-  border: "#2a2620",
-  text: "#f5f0e8",
-  textSecondary: "#a09882",
-  textTertiary: "#706a58",
-  accent: "#f59e0b",
-  accentSubtle: "rgba(245, 158, 11, 0.12)",
+/** Past this, a title would run to a third line at full size. */
+const LONG_TITLE = 45;
+
+const fontsDir = join(process.cwd(), "src/assets/fonts");
+
+const THEMES = {
+  dark: {
+    bg: C.night,
+    ink: C.cream,
+    muted: C.creamMuted,
+    kicker: C.amber,
+    sun: C.amber,
+    glow: "rgba(245, 158, 11, 0.26)",
+    hillBack: C.nightCard,
+    hillFront: C.nightLine,
+  },
+  light: {
+    bg: C.paper,
+    ink: C.ink,
+    muted: C.inkMuted,
+    kicker: C.amberTextOnLight,
+    sun: C.amberOnLight,
+    glow: "rgba(217, 119, 6, 0.2)",
+    hillBack: "#f0eeec",
+    hillFront: "#e7e5e4",
+  },
 } as const;
 
-const FONT_FAMILY = "Space Grotesk";
-const FONT_DIR = join(process.cwd(), "src/assets/fonts");
-
-let fonts: Promise<Font[]> | undefined;
-
-/**
- * Space Grotesk ships in the repo (OFL — see `assets/fonts/OFL.txt`), so card
- * generation never calls out to Google Fonts: no request-time network, no
- * glyph subsetting (which dropped CSS-uppercased letters), and the images can
- * prerender at build. Read once per server process.
- */
-function loadFonts(): Promise<Font[]> {
-  fonts ??= Promise.all(
-    (
-      [
-        [500, "SpaceGrotesk-Medium.ttf"],
-        [700, "SpaceGrotesk-Bold.ttf"],
-      ] as const
-    ).map(async ([weight, file]) => ({
-      name: FONT_FAMILY,
-      data: await readFile(join(FONT_DIR, file)),
-      weight,
-      style: "normal" as const,
-    })),
-  ).catch((error: unknown) => {
-    // Don't cache a failed read; the next render retries.
-    fonts = undefined;
-    throw error;
-  });
-  return fonts;
-}
-
-type OgCardProps = {
-  eyebrow: string;
+type OgCard = {
+  kicker: string;
   title: string;
-  meta?: string;
-  tags?: string[];
+  footLeft: string;
+  footRight?: string;
+  theme?: keyof typeof THEMES;
 };
 
 /**
- * Renders the branded card; every `opengraph-image.tsx` route calls this.
- * The PNG bytes are cached (a `Response` can't cross a `"use cache"`
- * boundary), which lets Cache Components prerender the image at build.
+ * The 1200×630 card for every page: lockup top left, one bold title, the URL
+ * bottom left, an amber glow for the sun and the site's ridgeline below.
  */
-export async function renderOgImage(props: OgCardProps) {
-  return new Response(await renderOgPng(props), {
-    headers: {
-      "Content-Type": OG_CONTENT_TYPE,
-      "Cache-Control": "public, max-age=31536000, immutable",
-    },
-  });
-}
+async function renderCard({
+  kicker,
+  title,
+  footLeft,
+  footRight,
+  theme = "dark",
+}: OgCard) {
+  const t = THEMES[theme];
+  const long = title.length > LONG_TITLE;
+  const [display, mono] = await Promise.all([
+    readFile(join(fontsDir, "SpaceGrotesk-Bold.ttf")),
+    readFile(join(fontsDir, "JetBrainsMono-Regular.ttf")),
+  ]);
 
-async function renderOgPng(
-  props: OgCardProps,
-): Promise<Uint8Array<ArrayBuffer>> {
-  "use cache";
-  const image = new ImageResponse(<OgCard {...props} />, {
-    ...OG_SIZE,
-    fonts: await loadFonts(),
-  });
-  return new Uint8Array(await image.arrayBuffer());
-}
-
-/**
- * The shared visual template for every generated OG/Twitter card: warm-dark
- * background, amber accent, eyebrow label, title, optional meta line (e.g.
- * reading time) and tags, plus the "bhimraj." wordmark.
- */
-function OgCard({ eyebrow, title, meta, tags }: OgCardProps) {
-  return (
+  return new ImageResponse(
     <div
       style={{
         width: "100%",
         height: "100%",
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        padding: "72px",
-        backgroundColor: OG_COLORS.bg,
-        backgroundImage: `radial-gradient(circle at 82% 8%, ${OG_COLORS.accentSubtle} 0%, rgba(0,0,0,0) 55%)`,
-        fontFamily: FONT_FAMILY,
+        position: "relative",
+        backgroundColor: t.bg,
+        backgroundImage: `radial-gradient(circle at 86% -8%, ${t.glow}, transparent 42%)`,
+        color: t.ink,
+        fontFamily: "Space Grotesk",
       }}
     >
-      {/* Eyebrow */}
+      <svg
+        width="1200"
+        height="252"
+        viewBox="0 0 600 200"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        style={{ position: "absolute", left: 0, bottom: 0 }}
+      >
+        <defs>
+          <linearGradient id="fade" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stopColor="#fff" stopOpacity="0" />
+            <stop offset="0.45" stopColor="#fff" stopOpacity="1" />
+          </linearGradient>
+          <mask id="m">
+            <rect width="600" height="200" fill="url(#fade)" />
+          </mask>
+        </defs>
+        <g mask="url(#m)">
+          <path
+            d="M0 128 L55 104 L100 116 L165 66 L210 94 L262 50 L304 82 L352 38 L398 78 L446 58 L500 92 L552 72 L600 96 V200 H0 Z"
+            fill={t.hillBack}
+          />
+          <path
+            d="M0 156 L70 128 L136 148 L208 112 L276 142 L338 118 L414 148 L486 122 L600 142 V200 H0 Z"
+            fill={t.hillFront}
+          />
+        </g>
+      </svg>
+
       <div
         style={{
+          position: "absolute",
+          top: 44,
+          left: 72,
           display: "flex",
           alignItems: "center",
-          gap: 12,
+          gap: 18,
+        }}
+      >
+        <svg width="54" height="54" viewBox="0 0 32 32" aria-hidden="true">
+          <path
+            d={RIDGE_PATH}
+            fill="none"
+            stroke={t.ink}
+            strokeWidth={MARK_CUT.regular.stroke}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <circle
+            cx={SUN.cx}
+            cy={SUN.cy}
+            r={MARK_CUT.regular.sunR}
+            fill={t.sun}
+          />
+        </svg>
+        <div style={{ display: "flex", alignItems: "flex-end", fontSize: 38 }}>
+          bhimraj
+          <div
+            style={{
+              width: 10,
+              height: 10,
+              borderRadius: 999,
+              backgroundColor: t.sun,
+              marginLeft: 3,
+              marginBottom: 11,
+            }}
+          />
+        </div>
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          top: 182,
+          left: 72,
+          right: long ? 120 : 216,
+          display: "flex",
+          flexDirection: "column",
+          gap: 24,
         }}
       >
         <div
           style={{
-            width: 10,
-            height: 10,
-            borderRadius: "50%",
-            backgroundColor: OG_COLORS.accent,
-          }}
-        />
-        <span
-          style={{
-            fontSize: 22,
-            fontWeight: 700,
-            letterSpacing: 3,
+            fontFamily: "JetBrains Mono",
+            fontSize: 23,
+            letterSpacing: 1.8,
             textTransform: "uppercase",
-            color: OG_COLORS.accent,
+            color: t.kicker,
           }}
         >
-          {eyebrow}
-        </span>
-      </div>
-
-      {/* Title + meta */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 20,
-          maxWidth: 1000,
-        }}
-      >
-        <span
+          {kicker}
+        </div>
+        <div
           style={{
-            fontSize: title.length > 60 ? 56 : 68,
-            fontWeight: 700,
-            lineHeight: 1.15,
-            color: OG_COLORS.text,
+            fontSize: long ? 59 : 77,
+            lineHeight: long ? 1.08 : 1.04,
+            letterSpacing: long ? -1.8 : -2.6,
+            // Satori's balance leaves double gaps in three-line titles.
+            textWrap: long ? "wrap" : "balance",
           }}
         >
           {title}
-        </span>
-        {(meta || (tags && tags.length > 0)) && (
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            {meta && (
-              <span
-                style={{
-                  fontSize: 24,
-                  fontWeight: 500,
-                  color: OG_COLORS.textSecondary,
-                }}
-              >
-                {meta}
-              </span>
-            )}
-            {meta && tags && tags.length > 0 && (
-              <span style={{ fontSize: 24, color: OG_COLORS.textTertiary }}>
-                ·
-              </span>
-            )}
-            {tags && tags.length > 0 && (
-              <div style={{ display: "flex", gap: 10 }}>
-                {tags.slice(0, 3).map((tag) => (
-                  <span
-                    key={tag}
-                    style={{
-                      fontSize: 20,
-                      fontWeight: 500,
-                      padding: "6px 14px",
-                      borderRadius: 8,
-                      color: OG_COLORS.accent,
-                      backgroundColor: OG_COLORS.accentSubtle,
-                    }}
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        </div>
       </div>
 
-      {/* Footer / wordmark */}
       <div
         style={{
+          position: "absolute",
+          left: 72,
+          right: 72,
+          bottom: 44,
           display: "flex",
-          alignItems: "center",
           justifyContent: "space-between",
-          borderTop: `1px solid ${OG_COLORS.border}`,
-          paddingTop: 28,
+          fontFamily: "JetBrains Mono",
+          fontSize: 24,
         }}
       >
-        <span style={{ fontSize: 28, fontWeight: 700, color: OG_COLORS.text }}>
-          bhimraj<span style={{ color: OG_COLORS.accent }}>.</span>
-        </span>
-        <span
-          style={{
-            fontSize: 20,
-            fontWeight: 500,
-            color: OG_COLORS.textTertiary,
-          }}
-        >
-          bhimraj.com.np
-        </span>
+        <span>{footLeft}</span>
+        {footRight && <span style={{ color: t.muted }}>{footRight}</span>}
       </div>
-    </div>
+    </div>,
+    {
+      ...OG_SIZE,
+      fonts: [
+        { name: "Space Grotesk", data: display, weight: 700, style: "normal" },
+        { name: "JetBrains Mono", data: mono, weight: 400, style: "normal" },
+      ],
+    },
   );
+}
+
+/** Rendered once per card and kept until the next deploy. */
+async function cardPng(card: OgCard): Promise<Uint8Array> {
+  "use cache";
+  cacheLife("max");
+  const image = await renderCard(card);
+  return new Uint8Array(await image.arrayBuffer());
+}
+
+export async function ogImage(card: OgCard): Promise<Response> {
+  const png = await cardPng(card);
+  return new Response(new Blob([png as Uint8Array<ArrayBuffer>]), {
+    headers: {
+      "Content-Type": OG_CONTENT_TYPE,
+      // Card URLs carry a route hash, not a content hash, so stay revalidatable.
+      "Cache-Control":
+        "public, max-age=86400, s-maxage=31536000, stale-while-revalidate=86400",
+    },
+  });
 }

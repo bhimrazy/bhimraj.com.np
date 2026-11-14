@@ -46,3 +46,10 @@ describe("buildRssFeed", () => {
     ).toThrow(/Invalid post date/);
   });
 });
+
+describe("buildRssFeed CDATA", () => {
+  it("splits ]]> so it can't end the section early", () => {
+    const xml = buildRssFeed([{ ...post, html: "<p>a]]>b</p>" }]);
+    expect(xml).toContain("a]]]]><![CDATA[>b");
+  });
+});

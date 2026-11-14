@@ -4,6 +4,8 @@ import {
   getOSSStats,
   type OSSActivityMetric,
 } from "@bhimrazy/github";
+import { surfaceInteractive } from "@/components/surface";
+import { atLeast } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 type Tile = {
@@ -40,12 +42,14 @@ const SECONDARY: readonly Tile[] = [
   },
 ];
 
-const tileClass =
-  "group relative flex flex-col overflow-hidden rounded-xl border border-site-border bg-site-card p-5 transition-colors hover:border-site-border-hover focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2 dark:border-white/4 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary dark:hover:border-white/10";
+const tileClass = cn(
+  surfaceInteractive,
+  "group flex flex-col p-6 focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2",
+);
 
 function VerifyHint({ label }: { label?: string }) {
   return (
-    <span className="mt-auto whitespace-nowrap pt-3 font-mono text-[11px] text-site-text-tertiary transition-colors group-hover:text-site-accent">
+    <span className="mt-auto whitespace-nowrap pt-3 font-mono text-[11px] text-site-text-tertiary transition-colors group-hover:text-site-accent-text">
       {label ?? (
         <>
           Verify<span className="hidden sm:inline"> on GitHub</span>
@@ -79,7 +83,7 @@ function ReviewedVsMerged({
             {row.label}
           </dt>
           <dd className="font-mono text-[11px] text-site-text-secondary tabular-nums">
-            {row.value}
+            {atLeast(row.value)}
           </dd>
           <dd className="col-span-2 h-1.5 overflow-hidden rounded-full bg-site-bg-tertiary">
             <span
@@ -110,14 +114,14 @@ export function ActivityBreakdown() {
         href={urls.prsReviewed}
         target="_blank"
         rel="nofollow noopener noreferrer"
-        className={cn(tileClass, "col-span-2 p-6 lg:row-span-2")}
+        className={cn(tileClass, "col-span-2 sm:p-7 lg:row-span-2")}
       >
         <span className="pointer-events-none absolute -top-16 -right-12 size-48 rounded-full bg-site-accent-subtle blur-3xl" />
-        <span className="relative font-mono text-[11px] text-site-accent uppercase tracking-[1.5px]">
+        <span className="relative font-mono text-[11px] text-site-accent-text uppercase tracking-[1.5px]">
           Code review
         </span>
         <span className="relative mt-4 font-bold font-display text-5xl text-site-text tracking-tight sm:text-6xl">
-          {activity.prsReviewed}
+          {atLeast(activity.prsReviewed)}
         </span>
         <span className="relative mt-1 font-display font-semibold text-lg text-site-text">
           PRs reviewed for other contributors
@@ -126,10 +130,10 @@ export function ActivityBreakdown() {
           <>
             <p className="relative mt-3 max-w-sm text-site-text-secondary text-sm leading-relaxed">
               That&apos;s{" "}
-              <strong className="font-semibold text-site-accent">
+              <strong className="font-semibold text-site-accent-text">
                 {reviewRatio.toFixed(1)}×
               </strong>{" "}
-              the {totalPrs} pull requests of my own that have merged.
+              the {atLeast(totalPrs)} pull requests of my own that have merged.
             </p>
             <ReviewedVsMerged
               reviewed={activity.prsReviewed}
@@ -150,8 +154,11 @@ export function ActivityBreakdown() {
           rel="nofollow noopener noreferrer"
           className={tileClass}
         >
-          <span className="flex items-center gap-2 font-bold font-display text-3xl text-site-text">
-            {activity[tile.metric]}
+          <span className="flex items-center gap-2 font-bold font-display text-[26px] text-site-text tabular-nums tracking-tight sm:text-[28px]">
+            {/* Open PRs go up and down, so no floor. */}
+            {tile.metric === "prsOpen"
+              ? activity[tile.metric]
+              : atLeast(activity[tile.metric])}
             {tile.metric === "prsOpen" && (
               <span
                 role="img"

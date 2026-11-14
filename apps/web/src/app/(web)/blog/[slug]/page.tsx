@@ -30,33 +30,30 @@ export async function generateMetadata({
   const post = allBlogPosts.find((p) => p._meta.path === slug);
   if (!post) notFound();
 
-  const blogURL = `/blog/${post?._meta.path}`;
+  const blogURL = `/blog/${post._meta.path}`;
+  const description = post.seoDescription ?? post.description;
+  const title = post.seoTitle ?? post.title;
 
-  // OG/Twitter images are supplied by the `opengraph-image.tsx` /
-  // `twitter-image.tsx` file conventions in this route segment (a branded
-  // card with title, reading time, and tags), which takes priority over
-  // the static `post.image` here — that field remains the hero image used
-  // on the blog listing card.
   return {
-    title: post?.title,
-    description: post?.description,
+    title,
+    description,
     alternates: { canonical: blogURL },
-    keywords: post?.tags,
+    keywords: post.tags,
     openGraph: {
-      title: post?.title,
-      description: post?.description,
+      title,
+      description,
       url: blogURL,
       siteName: siteConfig.name,
       authors: siteConfig.author.name,
-      publishedTime: post?.publishedAt,
-      modifiedTime: post?.updatedAt,
+      publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt,
       type: "article",
       locale: "en_US",
     },
     twitter: {
       card: "summary_large_image",
-      title: post?.title,
-      description: post?.description,
+      title,
+      description,
       creator: siteConfig.author.handle,
       site: siteConfig.author.handle,
     },
@@ -107,6 +104,7 @@ export default async function BlogPostPage({
             image: post.image,
           }),
           buildBreadcrumbJsonLd([
+            { name: "Home", path: "/" },
             { name: "Blog", path: "/blog" },
             { name: post.title, path: `/blog/${post._meta.path}` },
           ]),
@@ -132,7 +130,7 @@ export default async function BlogPostPage({
               <figure className="mb-12 overflow-hidden rounded-xl border border-site-border dark:border-white/6">
                 <Image
                   src={post.image}
-                  alt=""
+                  alt={post.title}
                   width={1920}
                   height={1080}
                   preload

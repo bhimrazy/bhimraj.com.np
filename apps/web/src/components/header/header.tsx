@@ -1,6 +1,7 @@
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { Suspense } from "react";
+import { BrandMark, Wordmark } from "@/components/brand-mark";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
@@ -21,21 +22,14 @@ export default function Header() {
         {/* Wordmark */}
         <Link
           href="/"
-          className="group flex items-center gap-2.5 font-display font-semibold text-base text-site-text"
+          aria-label="Bhimraj Yadav, home"
+          className="group flex items-center gap-2.5 rounded-md font-display font-semibold text-base text-site-text focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4"
         >
-          <span
-            className="flex h-8 w-8 items-center justify-center rounded-xl font-bold font-mono text-[15px] text-white shadow-sm transition-transform duration-300 group-hover:-rotate-6"
-            style={{
-              background:
-                "linear-gradient(135deg, var(--site-accent), var(--site-accent-hover))",
-              boxShadow: "0 4px 14px var(--site-accent-subtle)",
-            }}
-          >
-            b
-          </span>
-          <span className="tracking-tight">
-            bhimraj<span className="text-site-accent">.</span>
-          </span>
+          <BrandMark
+            size={28}
+            sunClassName="transition-transform duration-300 [transform-box:fill-box] group-hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-y-0"
+          />
+          <Wordmark />
         </Link>
 
         <Suspense fallback={<NavIsland />}>

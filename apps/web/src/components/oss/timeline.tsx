@@ -1,3 +1,4 @@
+import { ArrowLink } from "@/components/section-heading";
 import {
   groupByYear,
   splitJourney,
@@ -102,7 +103,7 @@ function YearGroup({
                 }
               />
             )}
-            <span className="font-medium font-mono text-[11px] text-site-accent uppercase tracking-[1px]">
+            <span className="font-medium font-mono text-[11px] text-site-accent-text uppercase tracking-[1px]">
               {item.date}
             </span>
             <h3
@@ -119,7 +120,7 @@ function YearGroup({
             </p>
 
             {item.quotes && item.quotes.length > 0 && (
-              <div className="mt-3 flex flex-col gap-2.5">
+              <div className="mt-3 flex max-w-2xl flex-col gap-2.5">
                 {item.quotes.map((q) => (
                   <blockquote
                     key={q.author}
@@ -143,20 +144,11 @@ function YearGroup({
             )}
 
             {item.link && (
-              <a
-                href={item.link.href}
-                target="_blank"
-                rel="nofollow noopener noreferrer"
-                className="group mt-3 inline-flex items-center gap-1 font-mono text-[12px] text-site-accent transition-colors hover:text-site-accent-hover"
-              >
-                {item.link.label}
-                <span
-                  aria-hidden
-                  className="transition-transform group-hover:translate-x-0.5 motion-reduce:transform-none"
-                >
-                  →
-                </span>
-              </a>
+              <div className="mt-3">
+                <ArrowLink href={item.link.href} external>
+                  {item.link.label}
+                </ArrowLink>
+              </div>
             )}
           </li>
         ))}
