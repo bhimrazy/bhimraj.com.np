@@ -1,14 +1,15 @@
 import { blog } from "@/config/blog";
-import { OG_CONTENT_TYPE, OG_SIZE, renderOgImage } from "@/lib/og";
+import { OG_CONTENT_TYPE, OG_SIZE, ogImage } from "@/lib/og";
 
-export const alt = `${blog.title} — blog`;
+export const alt = blog.title;
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
 export default function Image() {
-  return renderOgImage({
-    eyebrow: "Blog",
-    title: blog.title,
-    meta: blog.description,
+  return ogImage({
+    kicker: "Blog",
+    title: "Insights, stories and tutorials",
+    footLeft: "bhimraj.com.np/blog",
+    theme: "light",
   });
 }

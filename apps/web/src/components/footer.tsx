@@ -48,6 +48,7 @@ export default async function Footer() {
             </p>
             <Link
               href="/#contact"
+              data-open-chat="Hiring / collab"
               className="mt-5 inline-flex items-center gap-1.5 rounded-sm font-medium text-site-accent text-sm transition-colors hover:text-site-accent-hover focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
             >
               Get in touch <span aria-hidden>→</span>

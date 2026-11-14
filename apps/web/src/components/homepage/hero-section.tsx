@@ -30,7 +30,6 @@ export default function HeroSection() {
                 height={52}
                 sizes="52px"
                 className="size-13 rounded-full border border-site-border object-cover"
-                priority
               />
               <div className="leading-tight">
                 <p className="font-display font-semibold text-site-text">
@@ -42,10 +41,6 @@ export default function HeroSection() {
               </div>
             </div>
 
-            <p className="mb-5 hidden font-mono text-[12px] text-site-text-secondary uppercase tracking-[1.5px] lg:block">
-              {PERSON.name}
-            </p>
-
             <h1 className="mb-6 text-balance font-bold font-display text-[34px] text-site-text leading-[1.08] tracking-tight sm:text-5xl sm:leading-[1.05] lg:text-[50px] xl:text-[54px]">
               I build products,{" "}
               <span className="text-site-text-secondary xl:block">
@@ -55,9 +50,9 @@ export default function HeroSection() {
 
             <p className="mb-8 max-w-2xl text-pretty text-base text-site-text-secondary leading-relaxed sm:mb-9 sm:text-[17px]">
               I&apos;m a software engineer based in Kathmandu, Nepal. Most days
-              I&apos;m shipping products, contributing to open source, or
-              experimenting with LLMs and agents, and I write about what I learn
-              along the way.
+              I&apos;m designing systems and shipping features with my team,
+              contributing to open source, or experimenting with LLMs and
+              agents, and I write about what I learn along the way.
             </p>
 
             <div className="flex flex-wrap items-center gap-3">
@@ -75,26 +70,49 @@ export default function HeroSection() {
                 variant="outline"
                 className="h-10 rounded-lg px-4 font-semibold text-site-text focus-visible:ring-2 focus-visible:ring-site-accent sm:px-6"
               >
-                <a href="#contact">Get in touch</a>
+                <a href="#contact" data-open-chat="Hiring / collab">
+                  Get in touch
+                </a>
               </Button>
             </div>
 
-            {/* The one quiet line: the newest thing on the bench. */}
-            <p className="mt-10 flex max-w-xl items-start gap-2.5 text-pretty font-mono text-[12px] text-site-text-tertiary leading-relaxed">
-              <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-site-success motion-safe:animate-pulse-dot" />
-              <span>
-                <span className="text-site-text-secondary">New:</span>{" "}
-                <a
-                  href={LATEST.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-sm text-site-text underline decoration-site-accent/40 underline-offset-4 transition-colors hover:text-site-accent hover:decoration-site-accent focus-visible:outline-2 focus-visible:outline-site-accent"
-                >
-                  {LATEST.text}
-                </a>
-                , {LATEST.note} ↗
+            <div className="mt-10 flex flex-wrap items-center gap-2.5">
+              <span className="flex items-center gap-2 font-mono text-[11px] text-site-text-tertiary uppercase tracking-[1.2px]">
+                <span
+                  aria-hidden
+                  className="size-1.5 rounded-full bg-site-success motion-safe:animate-pulse-dot"
+                />
+                New
               </span>
-            </p>
+              <ul className="flex flex-wrap gap-2">
+                {LATEST.map((item) => (
+                  <li key={item.href}>
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-2 rounded-full border border-site-border bg-site-card/70 py-1.5 pr-3 pl-3.5 text-[13px] backdrop-blur-sm transition-colors hover:border-site-accent/40 focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2 dark:border-white/8"
+                    >
+                      <span className="font-medium text-site-text">
+                        {item.text}
+                      </span>
+                      <span aria-hidden className="text-site-text-tertiary">
+                        ·
+                      </span>
+                      <span className="text-site-text-secondary">
+                        {item.note}
+                      </span>
+                      <span
+                        aria-hidden
+                        className="text-site-accent transition-transform group-hover:translate-x-0.5"
+                      >
+                        ↗
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           {/* Desktop portrait */}
@@ -118,10 +136,11 @@ export default function HeroSection() {
               />
             </div>
             <div className="absolute -right-4 -bottom-4 rounded-xl border border-site-border bg-site-card/90 px-4 py-3 backdrop-blur-md">
-              <p className="mb-0.5 font-mono text-[11px] text-site-text-tertiary">
-                From Lahan · based in
+              <p className="font-display font-semibold text-[15px] text-site-text leading-tight">
+                {PERSON.name}
               </p>
-              <p className="font-mono text-[12px] text-site-text-secondary">
+              <p className="mt-1 font-mono text-[11px] text-site-text-tertiary">
+                From Lahan · based in{" "}
                 <span className="font-semibold text-site-accent">
                   Kathmandu
                 </span>

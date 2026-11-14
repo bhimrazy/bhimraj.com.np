@@ -1,7 +1,8 @@
 import { allBlogPosts } from "content-collections";
 import { notFound } from "next/navigation";
-import { OG_CONTENT_TYPE, OG_SIZE, renderOgImage } from "@/lib/og";
+import { OG_CONTENT_TYPE, OG_SIZE, ogImage } from "@/lib/og";
 
+export const alt = "Blog post by Bhimraj Yadav";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
@@ -17,11 +18,11 @@ export default async function Image({
   const { slug } = await params;
   const post = allBlogPosts.find((p) => p._meta.path === slug);
   if (!post) notFound();
-
-  return renderOgImage({
-    eyebrow: "Blog",
+  return ogImage({
+    kicker: "Blog",
     title: post.title,
-    meta: post.readingTime,
-    tags: post.tags,
+    footLeft: "bhimraj.com.np/blog",
+    footRight: post.readingTime,
+    theme: "light",
   });
 }

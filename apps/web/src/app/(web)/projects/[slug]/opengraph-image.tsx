@@ -1,7 +1,8 @@
 import { allProjects } from "content-collections";
 import { notFound } from "next/navigation";
-import { OG_CONTENT_TYPE, OG_SIZE, renderOgImage } from "@/lib/og";
+import { OG_CONTENT_TYPE, OG_SIZE, ogImage } from "@/lib/og";
 
+export const alt = "Project by Bhimraj Yadav";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
@@ -17,10 +18,10 @@ export default async function Image({
   const { slug } = await params;
   const project = allProjects.find((p) => p._meta.path === slug);
   if (!project) notFound();
-
-  return renderOgImage({
-    eyebrow: "Project",
+  return ogImage({
+    kicker: project.category,
     title: project.title,
-    tags: project.tags,
+    footLeft: "bhimraj.com.np/projects",
+    footRight: project.tags.slice(0, 3).join(" · "),
   });
 }

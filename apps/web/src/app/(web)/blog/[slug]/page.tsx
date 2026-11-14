@@ -32,11 +32,6 @@ export async function generateMetadata({
 
   const blogURL = `/blog/${post?._meta.path}`;
 
-  // OG/Twitter images are supplied by the `opengraph-image.tsx` /
-  // `twitter-image.tsx` file conventions in this route segment (a branded
-  // card with title, reading time, and tags), which takes priority over
-  // the static `post.image` here — that field remains the hero image used
-  // on the blog listing card.
   return {
     title: post?.title,
     description: post?.description,
@@ -107,6 +102,7 @@ export default async function BlogPostPage({
             image: post.image,
           }),
           buildBreadcrumbJsonLd([
+            { name: "Home", path: "/" },
             { name: "Blog", path: "/blog" },
             { name: post.title, path: `/blog/${post._meta.path}` },
           ]),

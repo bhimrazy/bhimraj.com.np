@@ -1,17 +1,16 @@
 import { Container } from "@/components/container";
 import { SectionHeading } from "@/components/section-heading";
+import { surface } from "@/components/surface";
 import { cn } from "@/lib/utils";
 import { ColumnTitle } from "./column-title";
 import { PERSONAL } from "./data";
 import { NowItems } from "./now-items";
 import { OffTheClock } from "./off-the-clock";
-import { surface } from "./surface";
 
 const CURRENTLY = [
   { label: "Building", value: PERSONAL.currently.building },
   { label: "Learning", value: PERSONAL.currently.learning },
   { label: "Reading", value: PERSONAL.currently.reading },
-  { label: "Off-screen", value: PERSONAL.currently.elsewhere },
 ] as const;
 
 /** The person behind the work: what he's on right now, and off the clock. */

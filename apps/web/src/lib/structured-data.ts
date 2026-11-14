@@ -7,43 +7,51 @@ export type JsonLdObject = {
   [key: string]: unknown;
 };
 
+const CONTEXT = "https://schema.org" as const;
+const PERSON_ID = `${siteConfig.url}/#person`;
+const WEBSITE_ID = `${siteConfig.url}/#website`;
+
+/** Other blocks point at the Person by `@id` instead of repeating it. */
+const personRef = { "@id": PERSON_ID, name: siteConfig.author.name };
+
 function absoluteUrl(path: string): string {
   if (/^https?:\/\//.test(path)) return path;
   const base = siteConfig.url.replace(/\/$/, "");
   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
-/** `Person` schema for Bhimraj, reused wherever an author needs to be identified. */
 export function buildPersonJsonLd(): JsonLdObject {
   return {
-    "@context": "https://schema.org",
+    "@context": CONTEXT,
     "@type": "Person",
+    "@id": PERSON_ID,
     name: siteConfig.author.name,
-    alternateName: siteConfig.author.handle,
+    alternateName: siteConfig.author.username,
     url: siteConfig.url,
     image: absoluteUrl(siteConfig.author.avatar),
     jobTitle: siteConfig.author.designation,
-    sameAs: [
-      siteConfig.links.github,
-      siteConfig.links.twitter,
-      siteConfig.links.linkedin,
-    ],
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Kathmandu",
+      addressCountry: "NP",
+    },
+    sameAs: Object.values(siteConfig.links),
   };
 }
 
-/** `WebSite` schema for the site root, with a `SearchAction` omitted (no site search exists). */
 export function buildWebSiteJsonLd(): JsonLdObject {
   return {
-    "@context": "https://schema.org",
+    "@context": CONTEXT,
     "@type": "WebSite",
-    name: siteConfig.name,
+    "@id": WEBSITE_ID,
+    name: siteConfig.author.name,
     url: siteConfig.url,
     description: siteConfig.description,
-    author: { "@type": "Person", name: siteConfig.author.name },
+    publisher: { "@id": PERSON_ID },
   };
 }
 
-export type BlogPostingInput = {
+type BlogPostingInput = {
   title: string;
   description: string;
   slug: string;
@@ -53,11 +61,10 @@ export type BlogPostingInput = {
   image?: string;
 };
 
-/** `BlogPosting` schema for an individual blog post. */
 export function buildBlogPostingJsonLd(post: BlogPostingInput): JsonLdObject {
   const url = absoluteUrl(`/blog/${post.slug}`);
   return {
-    "@context": "https://schema.org",
+    "@context": CONTEXT,
     "@type": "BlogPosting",
     headline: post.title,
     description: post.description,
@@ -67,25 +74,18 @@ export function buildBlogPostingJsonLd(post: BlogPostingInput): JsonLdObject {
     dateModified: post.updatedAt || post.publishedAt,
     keywords: post.tags?.join(", "),
     image: post.image ? absoluteUrl(post.image) : undefined,
-    author: {
-      "@type": "Person",
-      name: siteConfig.author.name,
-      url: siteConfig.url,
-    },
-    publisher: {
-      "@type": "Person",
-      name: siteConfig.author.name,
-      url: siteConfig.url,
-    },
+    author: personRef,
+    publisher: personRef,
+    isPartOf: { "@id": WEBSITE_ID },
   };
 }
 
-/** `BreadcrumbList` schema — a flat trail of `{ name, path }` steps ending at the current page. */
+/** A flat trail of `{ name, path }` steps ending at the current page. */
 export function buildBreadcrumbJsonLd(
   items: { name: string; path: string }[],
 ): JsonLdObject {
   return {
-    "@context": "https://schema.org",
+    "@context": CONTEXT,
     "@type": "BreadcrumbList",
     itemListElement: items.map((item, index) => ({
       "@type": "ListItem",
@@ -96,69 +96,65 @@ export function buildBreadcrumbJsonLd(
   };
 }
 
-export type ScholarlyArticleInput = {
+type ScholarlyArticleInput = {
   title: string;
-  authors: string;
-  venue: string;
+  authors: readonly string[];
+  journal: string;
+  volume: string;
+  pages: readonly [string, string];
   year: string;
   doi: string;
+  url: string;
   abstract: string;
 };
 
-/** `ScholarlyArticle` schema for the IEEE (or similar) publications listed on /research. */
 export function buildScholarlyArticleJsonLd(
   article: ScholarlyArticleInput,
 ): JsonLdObject {
   return {
-    "@context": "https://schema.org",
+    "@context": CONTEXT,
     "@type": "ScholarlyArticle",
     headline: article.title,
     name: article.title,
     abstract: article.abstract,
     datePublished: article.year,
-    url: article.doi,
-    isPartOf: { "@type": "Periodical", name: article.venue },
-    author: article.authors
-      .split(",")
-      .map((name) => name.trim())
-      .filter((name) => name && !/^et al\.?$/i.test(name))
-      .map((name) => ({ "@type": "Person", name })),
+    url: article.url,
+    sameAs: `https://doi.org/${article.doi}`,
+    pagination: `${article.pages[0]}-${article.pages[1]}`,
+    isPartOf: {
+      "@type": "PublicationVolume",
+      volumeNumber: article.volume,
+      isPartOf: { "@type": "Periodical", name: article.journal },
+    },
+    author: article.authors.map((name) =>
+      name === siteConfig.author.name ? personRef : { "@type": "Person", name },
+    ),
   };
 }
 
-export type SoftwareSourceCodeInput = {
+type SoftwareSourceCodeInput = {
   title: string;
   description: string;
   slug: string;
-  githubLink: string;
-  liveLink?: string;
+  githubLink?: string;
   tags?: string[];
   publishedAt: string;
   updatedAt?: string;
-  image?: string;
 };
 
-/** `SoftwareSourceCode` schema for an individual project page. */
 export function buildSoftwareSourceCodeJsonLd(
   project: SoftwareSourceCodeInput,
 ): JsonLdObject {
-  const url = absoluteUrl(`/projects/${project.slug}`);
   return {
-    "@context": "https://schema.org",
+    "@context": CONTEXT,
     "@type": "SoftwareSourceCode",
     name: project.title,
     description: project.description,
-    url,
+    url: absoluteUrl(`/projects/${project.slug}`),
     codeRepository: project.githubLink,
-    ...(project.liveLink ? { discussionUrl: project.liveLink } : {}),
     keywords: project.tags?.join(", "),
-    image: project.image ? absoluteUrl(project.image) : undefined,
     datePublished: project.publishedAt,
     dateModified: project.updatedAt || project.publishedAt,
-    author: {
-      "@type": "Person",
-      name: siteConfig.author.name,
-      url: siteConfig.url,
-    },
+    author: personRef,
   };
 }

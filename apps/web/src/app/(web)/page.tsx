@@ -30,7 +30,7 @@ export default function Home() {
       <SectionSeparator />
       <WritingSection />
       <BeyondSection />
-      <ContactSection />
+      <ContactSection index="05" />
     </main>
   );
 }
