@@ -90,7 +90,7 @@ export const TIMELINE: TimelineItem[] = [
       {
         text: "I want to welcome Bhimraj Yadav to the LitData core-team. He made some splendid contributions to LitData in the past months and we are quite eager to see what comes next 😉",
         author: "Thomas Chaton",
-        role: "then LitData core team, Lightning AI",
+        role: "LitData core team, Lightning AI",
       },
     ],
   },
