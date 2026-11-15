@@ -37,7 +37,7 @@ export const TIMELINE: TimelineItem[] = [
       {
         text: "We're excited for you to collaborate with us and build some great Studios.",
         author: "Corey Strausman",
-        role: "Lightning AI",
+        role: "then at Lightning AI",
       },
     ],
   },
@@ -90,7 +90,7 @@ export const TIMELINE: TimelineItem[] = [
       {
         text: "I want to welcome Bhimraj Yadav to the LitData core-team. He made some splendid contributions to LitData in the past months and we are quite eager to see what comes next 😉",
         author: "Thomas Chaton",
-        role: "LitData maintainer, Lightning AI",
+        role: "then LitData core team, Lightning AI",
       },
     ],
   },
