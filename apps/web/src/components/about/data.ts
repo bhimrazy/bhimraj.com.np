@@ -223,6 +223,7 @@ export const SKIPPED_JOURNEY_QUOTES: ReadonlySet<string> = new Set([
   "Let's goo! Merged 🚀",
 ]);
 
+/** `school` awards the degree; `via` is the college that teaches it. */
 export const EDUCATION: readonly {
   school: string;
   via?: string;
@@ -238,8 +239,8 @@ export const EDUCATION: readonly {
     current: true,
   },
   {
-    school: "Kathford International College of Engineering and Management",
-    via: "Tribhuvan University",
+    school: "Tribhuvan University",
+    via: "Kathford International College of Engineering and Management",
     degree: "Bachelor of Computer Engineering (BCT)",
     years: "2018 – 2023",
   },
