@@ -63,12 +63,12 @@ export const TIMELINE: TimelineItem[] = [
       {
         text: "Let's goo! Merged 🚀",
         author: "Luca Antiga",
-        role: "CTO, Lightning AI",
+        role: "then CTO, Lightning AI",
       },
       {
         text: "congrats @bhimrazy! solid contribution",
         author: "William Falcon",
-        role: "CEO, Lightning AI",
+        role: "then CEO, Lightning AI",
       },
     ],
   },

@@ -23,11 +23,6 @@ export function Education() {
               <span className="text-site-text-tertiary"> · {item.via}</span>
             )}
           </p>
-          {item.note && (
-            <p className="mt-3 text-pretty text-site-text-secondary text-sm leading-relaxed">
-              {item.note}
-            </p>
-          )}
         </li>
       ))}
     </ul>

@@ -205,14 +205,14 @@ export const ABOUT_QUOTES: readonly Quote[] = [
   {
     text: "@bhimrazyadav knows how to ship 🔥",
     author: "Luca Antiga",
-    role: "CTO, Lightning AI",
+    role: "then CTO, Lightning AI",
     context: "On OpenAI-compatible embeddings in LitServe · Nov 2024",
     href: "https://x.com/bhimrazy/status/1861866608513445941",
   },
   {
     text: "Super! Yet another cool idea Bhimraj, keep shipping ⚡️",
     author: "Luca Antiga",
-    role: "CTO, Lightning AI",
+    role: "then CTO, Lightning AI",
     context: "On using LitData with MinIO · Jun 2024",
     href: "https://x.com/bhimrazy/status/1801909093872943315",
   },
@@ -228,7 +228,6 @@ export const EDUCATION: readonly {
   via?: string;
   degree: string;
   years: string;
-  note?: string;
   current?: boolean;
 }[] = [
   {
@@ -243,6 +242,5 @@ export const EDUCATION: readonly {
     via: "Tribhuvan University",
     degree: "Bachelor of Computer Engineering (BCT)",
     years: "2018 – 2023",
-    note: "Executive member of KathFOSS, the college's free and open-source software community.",
   },
 ];
