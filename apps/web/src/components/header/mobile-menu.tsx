@@ -52,7 +52,7 @@ export function MobileMenu({
               className={cn(
                 "cursor-pointer font-medium text-site-text-secondary hover:bg-site-bg-secondary hover:text-site-text focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:-outline-offset-2",
                 link.href === activeHref &&
-                  "text-site-accent hover:text-site-accent focus:text-site-accent dark:focus:text-site-accent",
+                  "text-site-accent-text hover:text-site-accent-text focus:text-site-accent-text dark:focus:text-site-accent-text",
               )}
             >
               {link.label}

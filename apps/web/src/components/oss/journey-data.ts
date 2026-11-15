@@ -248,3 +248,14 @@ export function splitJourney(items: TimelineItem[], visible: number) {
     earlier: newestFirst.slice(visible),
   };
 }
+
+/** Every quote in the journey, newest first, with the moment it was said. */
+export function journeyQuotes() {
+  return [...TIMELINE].reverse().flatMap((item) =>
+    (item.quotes ?? []).map((quote) => ({
+      ...quote,
+      context: `${item.title} · ${item.date}`,
+      href: item.link?.href,
+    })),
+  );
+}
