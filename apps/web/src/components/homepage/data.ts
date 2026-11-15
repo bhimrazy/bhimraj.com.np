@@ -55,7 +55,7 @@ export const THREADS = [
     key: "research",
     verb: "Do research",
     org: "Computer vision & healthcare AI",
-    role: "IEEE Access 2024 · MS in Applied AI (in progress)",
+    role: "IEEE Access 2024",
     since: null,
     line: "Co-authored a peer-reviewed study of segmentation models. Now interested in small, efficient vision-language models that can run where doctors are scarce.",
     logo: undefined,

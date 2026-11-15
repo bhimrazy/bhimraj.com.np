@@ -17,7 +17,7 @@ export function ArrowLink({
   className,
 }: ArrowLinkProps) {
   const classes = cn(
-    "group/arrow inline-flex items-center gap-1.5 rounded-sm font-medium text-site-accent-text text-sm transition-colors hover:text-site-text dark:hover:text-site-accent-hover focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4",
+    "group/arrow -my-2 inline-flex items-center gap-1.5 rounded-sm py-2 font-medium text-site-accent-text text-sm transition-colors hover:text-site-text dark:hover:text-site-accent-hover focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4",
     className,
   );
   const arrow = (

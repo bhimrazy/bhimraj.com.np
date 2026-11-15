@@ -53,6 +53,10 @@ function buildPersonJsonLd(): JsonLdObject {
       addressCountry: "NP",
     },
     worksFor: { "@type": "Organization", name: "Fetchly Labs" },
+    alumniOf: {
+      "@type": "CollegeOrUniversity",
+      name: "Kathford International College of Engineering and Management",
+    },
     knowsAbout: [
       "PyTorch Lightning",
       "LitServe",
@@ -63,6 +67,24 @@ function buildPersonJsonLd(): JsonLdObject {
       "Python",
     ],
     sameAs: Object.values(siteConfig.links),
+  };
+}
+
+/** /about as an AboutPage; the full Person lives on the homepage's ProfilePage. */
+export function buildAboutPageJsonLd(description: string): JsonLdObject {
+  return {
+    "@context": CONTEXT,
+    "@type": "AboutPage",
+    url: absoluteUrl("/about"),
+    name: `About ${siteConfig.author.name}`,
+    description,
+    mainEntity: personRef,
+    isPartOf: {
+      "@type": "WebSite",
+      "@id": WEBSITE_ID,
+      name: siteConfig.author.name,
+      url: siteConfig.url,
+    },
   };
 }
 

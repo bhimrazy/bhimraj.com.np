@@ -10,7 +10,6 @@ import {
 } from "@bhimrazy/github";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
 import { Chip } from "@/components/chip";
 import { Container } from "@/components/container";
 import ContactSection from "@/components/homepage/contact-section";
@@ -18,6 +17,7 @@ import { ActivityBreakdown } from "@/components/oss/activity-breakdown";
 import { ContributionGraph } from "@/components/oss/contribution-graph";
 import { OSS_START_LABEL } from "@/components/oss/start-date";
 import { Timeline } from "@/components/oss/timeline";
+import { PageSection } from "@/components/page-section";
 import { PageHeader, SectionHeading } from "@/components/section-heading";
 import { SectionSeparator } from "@/components/section-separator";
 import { surface } from "@/components/surface";
@@ -66,14 +66,6 @@ function monthsBetween(fromISO: string, toISO: string): number {
   return (
     (to.getUTCFullYear() - from.getUTCFullYear()) * 12 +
     (to.getUTCMonth() - from.getUTCMonth())
-  );
-}
-
-function Section({ id, children }: { id: string; children: ReactNode }) {
-  return (
-    <section id={id} className="scroll-mt-20 py-20 sm:py-24">
-      <Container className="px-4 sm:px-8">{children}</Container>
-    </section>
   );
 }
 
@@ -150,7 +142,7 @@ export default async function OSSPage() {
       {hasActivity && (
         <>
           <SectionSeparator />
-          <Section id="beyond">
+          <PageSection id="beyond">
             <SectionHeading
               index={index("beyond")}
               eyebrow="Maintainer work"
@@ -158,22 +150,22 @@ export default async function OSSPage() {
               description="Reviews, resolved issues, and support threads across the same repos — each number links to the GitHub search behind it."
             />
             <ActivityBreakdown />
-          </Section>
+          </PageSection>
         </>
       )}
 
       <SectionSeparator />
-      <Section id="activity">
+      <PageSection id="activity">
         <SectionHeading
           index={index("activity")}
           eyebrow="Activity"
           title="Month by month"
         />
         <ContributionGraph data={monthly} />
-      </Section>
+      </PageSection>
 
       <SectionSeparator />
-      <Section id="contributions">
+      <PageSection id="contributions">
         <SectionHeading
           index={index("contributions")}
           eyebrow="Repositories"
@@ -235,17 +227,17 @@ export default async function OSSPage() {
             </a>
           ))}
         </div>
-      </Section>
+      </PageSection>
 
       <SectionSeparator />
-      <Section id="journey">
+      <PageSection id="journey">
         <SectionHeading
           index={index("journey")}
           eyebrow="Journey"
           title="How I got here"
         />
         <Timeline />
-      </Section>
+      </PageSection>
 
       <ContactSection index={String(sections.length + 1).padStart(2, "0")} />
     </main>

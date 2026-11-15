@@ -23,6 +23,7 @@ export function buildLlmsTxt(input: {
     "## Pages",
     "",
     `- [Home](${baseUrl}/): Overview, experience, and highlights.`,
+    `- [About](${baseUrl}/about): Background, a year-by-year timeline, toolbox, education, and kind words from the Lightning AI team and fellow maintainers.`,
     `- [Open Source](${baseUrl}/oss): OSS contribution history and stats across Lightning AI projects.`,
     `- [Projects](${baseUrl}/projects): Open-source AI projects — multimodal LLMs, model serving, computer vision, dev tools.`,
     `- [Blog](${baseUrl}/blog): Writing on engineering, open source, and AI.`,

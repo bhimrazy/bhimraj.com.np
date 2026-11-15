@@ -37,7 +37,7 @@ export const TIMELINE: TimelineItem[] = [
       {
         text: "We're excited for you to collaborate with us and build some great Studios.",
         author: "Corey Strausman",
-        role: "Lightning AI",
+        role: "then at Lightning AI",
       },
     ],
   },
@@ -63,12 +63,12 @@ export const TIMELINE: TimelineItem[] = [
       {
         text: "Let's goo! Merged 🚀",
         author: "Luca Antiga",
-        role: "CTO, Lightning AI",
+        role: "then CTO, Lightning AI",
       },
       {
         text: "congrats @bhimrazy! solid contribution",
         author: "William Falcon",
-        role: "CEO, Lightning AI",
+        role: "then CEO, Lightning AI",
       },
     ],
   },
@@ -90,7 +90,7 @@ export const TIMELINE: TimelineItem[] = [
       {
         text: "I want to welcome Bhimraj Yadav to the LitData core-team. He made some splendid contributions to LitData in the past months and we are quite eager to see what comes next 😉",
         author: "Thomas Chaton",
-        role: "LitData maintainer, Lightning AI",
+        role: "LitData core team, Lightning AI",
       },
     ],
   },
@@ -247,4 +247,15 @@ export function splitJourney(items: TimelineItem[], visible: number) {
     recent: newestFirst.slice(0, visible),
     earlier: newestFirst.slice(visible),
   };
+}
+
+/** Every quote in the journey, newest first, with the moment it was said. */
+export function journeyQuotes() {
+  return [...TIMELINE].reverse().flatMap((item) =>
+    (item.quotes ?? []).map((quote) => ({
+      ...quote,
+      context: `${item.title} · ${item.date}`,
+      href: item.link?.href,
+    })),
+  );
 }

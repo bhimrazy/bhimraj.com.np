@@ -520,3 +520,9 @@
     transition: none;
   }
 }
+
+/* Outlined display numerals for the year chapters on /about. */
+.about-outline-numeral {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--site-accent-text);
+}
