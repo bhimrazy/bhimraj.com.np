@@ -22,8 +22,9 @@ import { cn } from "@/lib/utils";
 
 // Eligibility is gated by shouldAutoOpen() — skips dismissed/submitted
 // visitors and caps lifetime auto-opens. These two just pick when to fire:
-const AUTO_OPEN_MS = 25_000; // fire after 25s on the page…
-const SCROLL_TRIGGER = 0.8; // …or after scrolling 80% down — whichever is first
+const AUTO_OPEN_MS = 60_000; // fire after a minute on the page…
+const SCROLL_TRIGGER = 0.8; // …or after scrolling 80% down, once past SCROLL_MIN_MS
+const SCROLL_MIN_MS = 20_000; // so a quick scroll to the bottom doesn't count as reading
 /** Lets an in-page link (e.g. #contact) finish its scroll before the chat opens. */
 const CTA_OPEN_DELAY_MS = 600;
 
@@ -101,7 +102,9 @@ export default function FeedbackWidget() {
 
     let fired = false;
     let timer = 0;
+    const startedAt = Date.now();
     const onScroll = () => {
+      if (Date.now() - startedAt < SCROLL_MIN_MS) return;
       const max = document.documentElement.scrollHeight - window.innerHeight;
       if (max > 0 && window.scrollY / max >= SCROLL_TRIGGER) tryAutoOpen();
     };
