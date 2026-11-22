@@ -211,7 +211,7 @@ export const TIMELINE: TimelineItem[] = [
   },
   {
     date: "Oct 2026",
-    title: "500th commit across the ecosystem",
+    title: "500th contribution across the ecosystem",
     body: "Five hundred commits across the repos I contribute to, by GitHub's count — most of them in the Lightning ecosystem.",
     milestone: true,
   },

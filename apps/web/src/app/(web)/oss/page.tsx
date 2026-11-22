@@ -36,7 +36,7 @@ const COMMITS_FLOOR = Math.floor(getOSSStats().totalCommits / 100) * 100;
 
 export const metadata: Metadata = pageMetadata({
   title: "Open source contributions",
-  description: `Bhimraj Yadav is a PyTorch Lightning contributor with ${COMMITS_FLOOR}+ commits across Lightning, LitServe, LitData and LitGPT, plus reviews and issue work.`,
+  description: `Bhimraj Yadav is a PyTorch Lightning contributor with ${COMMITS_FLOOR}+ contributions across Lightning, LitServe, LitData and LitGPT, plus reviews and issue work.`,
   path: "/oss",
   keywords: [
     "open source contributions",
@@ -88,7 +88,7 @@ export default async function OSSPage() {
   const maxRepoCommits = Math.max(...contributions.map((c) => c.commits), 1);
 
   const stats = [
-    { value: atLeast(oss.totalCommits), label: "Commits" },
+    { value: atLeast(oss.totalCommits), label: "Contributions" },
     { value: atLeast(oss.totalPrs), label: "PRs merged" },
     {
       value: atLeast(getGitHubStars()),
