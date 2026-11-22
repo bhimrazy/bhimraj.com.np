@@ -22,17 +22,14 @@ export function PathCard({ path }: { path: ResolvedPath }) {
       </p>
       <h3 className="mt-2 text-pretty font-display font-semibold text-lg text-site-text leading-snug tracking-tight transition-colors group-hover:text-site-accent-text">
         {path.title}
-        <span
-          aria-hidden
-          className="ml-1.5 inline-block text-site-accent text-sm transition-transform group-hover:translate-x-0.5"
-        >
-          →
-        </span>
       </h3>
       <p className="mt-2 text-pretty text-site-text-secondary text-sm leading-relaxed">
         {path.promise}
       </p>
-      <ol className="mt-auto flex flex-wrap items-center gap-x-1.5 gap-y-1 pt-5 font-mono text-2xs text-site-text-secondary">
+      <ol
+        aria-label="Steps"
+        className="mt-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-2xs text-site-text-secondary"
+      >
         {path.steps.map((step, index) => (
           <li key={step.resource.slug} className="flex items-center gap-1.5">
             {index > 0 && (
@@ -46,6 +43,15 @@ export function PathCard({ path }: { path: ResolvedPath }) {
           </li>
         ))}
       </ol>
+      <span className="mt-auto inline-flex items-center gap-1.5 pt-5 font-medium text-site-accent-text text-sm">
+        View path
+        <span
+          aria-hidden
+          className="transition-transform group-hover:translate-x-0.5"
+        >
+          →
+        </span>
+      </span>
     </Link>
   );
 }

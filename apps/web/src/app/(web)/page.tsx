@@ -3,6 +3,7 @@ import BeyondSection from "@/components/homepage/beyond-section";
 import ContactSection from "@/components/homepage/contact-section";
 import ExperienceSection from "@/components/homepage/experience-section";
 import HeroSection from "@/components/homepage/hero-section";
+import ResourcesSection from "@/components/homepage/resources-section";
 import SelectedWork from "@/components/homepage/selected-work";
 import WritingSection from "@/components/homepage/writing-section";
 import { JsonLd } from "@/components/json-ld";
@@ -18,8 +19,8 @@ export const metadata: Metadata = {
 
 /*
  * Who he is (hero), the lines of work side by side (01), the evidence across
- * all of them (02), how he thinks (03), the person behind it (04), and how to
- * reach him (05).
+ * all of them (02), how he thinks (03), what he learns from (04), the person
+ * behind it (05), and how to reach him (06).
  */
 export default function Home() {
   return (
@@ -32,8 +33,9 @@ export default function Home() {
       <SelectedWork />
       <SectionSeparator />
       <WritingSection />
+      <ResourcesSection index="04" />
       <BeyondSection />
-      <ContactSection index="05" />
+      <ContactSection index="06" />
     </main>
   );
 }

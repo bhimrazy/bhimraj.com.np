@@ -1,12 +1,11 @@
 /**
- * Pure helpers for learning paths and the homepage "learning" card. They take
- * plain data, so tests can run them without the content build.
+ * Pure helpers for learning paths. They take plain data, so tests can run
+ * them without the content build.
  */
 
 import type { LearningPath } from "content-collections";
-import { IN_PROGRESS_STATUSES, type ResourceStatus } from "./taxonomy";
 
-export type ResolvedStep<R> = { resource: R; why: string };
+type ResolvedStep<R> = { resource: R; why: string };
 
 /**
  * Pairs each step with its resource. Throws on a slug that matches no
@@ -52,47 +51,4 @@ export function pathVideo(steps: { totalSec: number }[]): {
     totalSec: steps.reduce((sum, s) => sum + s.totalSec, 0),
     untimed: steps.filter((s) => s.totalSec === 0).length,
   };
-}
-
-type Progressable = {
-  slug: string;
-  status?: ResourceStatus;
-  added: string;
-};
-
-/**
- * What I'm working through: entries whose status is in progress, "learning"
- * before "revisiting", then newest added.
- */
-export function selectInProgress<R extends Progressable>(
-  resources: readonly R[],
-  limit = 2,
-): R[] {
-  const rank = (r: R) =>
-    r.status ? IN_PROGRESS_STATUSES.indexOf(r.status) : -1;
-  return resources
-    .filter((r) => rank(r) >= 0)
-    .sort((a, b) => rank(a) - rank(b) || b.added.localeCompare(a.added))
-    .slice(0, limit);
-}
-
-/** The newest entry marked "queued", for a "next up" line. */
-export function selectNextUp<R extends Progressable>(
-  resources: readonly R[],
-): R | undefined {
-  return resources
-    .filter((r) => r.status === "queued")
-    .sort((a, b) => b.added.localeCompare(a.added))[0];
-}
-
-/**
- * Share of lectures watched, 0 to 1. Null when either count is missing, so
- * no bar is drawn from a guess.
- */
-export function watchedShare(
-  watched: number | undefined,
-  lectureCount: number,
-): number | null {
-  if (watched === undefined || lectureCount === 0) return null;
-  return Math.min(1, watched / lectureCount);
 }
