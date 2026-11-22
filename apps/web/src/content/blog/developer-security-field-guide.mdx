@@ -20,6 +20,7 @@ image: "/blog/security/developer-security-field-guide.png"
 The last few months gave us these incidents:
 
 - **29 October 2026.** About $6.3 billion left Binance in roughly 20 minutes. Binance traced the attack to one DevOps engineer's laptop.[^binance]
+- **29 October 2026.** For about 11 hours, Cursor's extension marketplace served a fake update of the Claude Code extension. It added the attacker's SSH key to each machine and opened a tunnel back to them. Up to 5,000 users installed it.[^cursor-ext]
 - **21 October 2026.** A poisoned LiteLLM release sat on PyPI for almost two hours. The attackers didn't find a bug in LiteLLM. They used GitHub CLI tokens stolen from three of its engineers.[^litellm-oct]
 - **October 2026.** Wiz tracked 17 separate breaches at AI developer platforms in a single month, and called it "Black October".[^wiz-oct]
 - **May 2026.** Attackers published 84 malicious versions of TanStack packages without stealing a single password. They tricked a CI workflow into handing over its publishing token.[^tanstack]
@@ -130,7 +131,9 @@ A one-time code typed into a fake page works for the attacker too. Passkeys and 
 
 ### Start here: fewer, quieter editor extensions
 
-An editor extension runs with your permissions and updates itself. In October 2025, the GlassWorm campaign spread through VS Code extensions on Open VSX and the Microsoft marketplace, hid its code in invisible Unicode characters, and stole npm, GitHub and Open VSX tokens.[^glassworm] Remove extensions you don't use. Prefer verified publishers. On a work machine, turn off automatic extension updates.
+An editor extension runs with your permissions and updates itself. On 29 October 2026, two versions of the Claude Code extension that Anthropic never wrote appeared in Cursor's marketplace under the real extension's name. Auto-update installed them. They added an SSH key labelled `svc-telemetry` to `~/.ssh/authorized_keys`, opened a reverse SSH tunnel, and set themselves up to run at login.[^cursor-ext] Cursor hasn't said how the versions got into its marketplace. Uninstalling the extension doesn't remove what it planted, so Cursor's advice is to check `authorized_keys`, run its cleanup script, and consider rebuilding the machine.
+
+A year earlier, in October 2025, the GlassWorm campaign spread through VS Code extensions on Open VSX and the Microsoft marketplace, hid its code in invisible Unicode characters, and stole npm, GitHub and Open VSX tokens.[^glassworm] Remove extensions you don't use. Prefer verified publishers. A verified name didn't help in the Cursor case, because the fake build carried the real extension's ID. What would have helped is turning off automatic extension updates and installing updates a few days after release, the same cooldown idea as in chapter 4.
 
 ### Level up: keys that can't be copied
 
@@ -691,6 +694,7 @@ If you spot something wrong or out of date, tell me in the comments below and I'
 [^ssh-add]: OpenBSD manual, [ssh-add(1)](https://man.openbsd.org/ssh-add).
 [^apple-tn]: Apple, [Technical Note TN2449: OpenSSH updates in macOS 10.12.2](https://developer.apple.com/library/archive/technotes/tn2449/_index.html).
 [^chalk]: Aikido, [npm debug and chalk packages compromised](https://www.aikido.dev/blog/npm-debug-and-chalk-packages-compromised), 8 September 2025.
+[^cursor-ext]: Cursor, [Claude Code extension security notice](https://cursor.com/blog/claude-code-extension-security-notice), 29 and 30 October 2026, and BleepingComputer, [Malicious Claude Code extension on Cursor planted SSH backdoors](https://www.bleepingcomputer.com/news/security/malicious-claude-code-extension-on-cursor-planted-ssh-backdoors/).
 [^glassworm]: Veracode, [GlassWorm: a VS Code extension worm](https://www.veracode.com/blog/glassworm-vs-code-extension), October 2025.
 [^yubico]: Yubico, [Securing SSH with FIDO2](https://developers.yubico.com/SSH/Securing_SSH_with_FIDO2.html).
 [^secretive]: [Secretive](https://github.com/maxgoedjen/secretive) and its [FAQ](https://github.com/maxgoedjen/secretive/blob/main/FAQ.md).

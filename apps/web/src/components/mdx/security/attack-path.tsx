@@ -20,6 +20,7 @@ const STATIONS: Station[] = [
     incidents: [
       { name: ["Binance"], date: "Oct 2026" },
       { name: ["LiteLLM"], date: "Oct 2026" },
+      { name: ["Claude Code", "in Cursor"], date: "Oct 2026" },
       { name: ["GlassWorm"], date: "Oct 2025" },
     ],
   },
