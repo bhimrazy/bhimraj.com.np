@@ -97,7 +97,7 @@ export function TabBar({ activeHref = null }: { activeHref?: string | null }) {
       onFocus={reveal}
       className="fixed right-[max(0.75rem,env(safe-area-inset-right))] bottom-(--tab-bar-offset) left-[max(0.75rem,env(safe-area-inset-left))] z-40 installed:block hidden transition-transform duration-300 ease-out data-hidden:translate-y-[calc(100%+var(--tab-bar-offset))] motion-reduce:transition-none"
     >
-      <ul className="flex h-15 items-stretch gap-1 rounded-2xl border border-site-border bg-site-card/70 p-1 shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur-md">
+      <ul className="flex h-15 items-stretch gap-1 rounded-2xl border border-site-border bg-site-card/85 p-1 shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur-xl">
         {TAB_LINKS.map((link) => {
           const Icon = ICONS[link.href] ?? DotsHorizontalIcon;
           const active = link.href === activeHref;
