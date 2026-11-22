@@ -184,7 +184,7 @@ function Step({
   );
 
   return (
-    <li className="relative grid grid-cols-[40px_minmax(0,1fr)] gap-x-4 pb-6 last:pb-0">
+    <li className="relative grid grid-cols-[40px_minmax(0,1fr)] gap-x-3 pb-6 last:pb-0 sm:gap-x-4">
       {/* The rail between markers; the last step ends the line. */}
       {!last && (
         <span
@@ -197,7 +197,7 @@ function Step({
         course={r.slug}
         lectureIds={step.lectureIds}
       />
-      <article className={cn(surface, "p-5 sm:p-6")}>
+      <article className={cn(surface, "p-4 sm:p-6")}>
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1.5 font-mono text-2xs text-site-text-tertiary">
           <Chip tone="neutral">{KIND_LABELS[r.kind].one}</Chip>
           <span className="text-site-text-secondary">{r.source}</span>
