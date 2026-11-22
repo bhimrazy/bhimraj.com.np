@@ -36,10 +36,7 @@ type EventProps = {
   };
 };
 
-/**
- * Thin, typed wrapper over posthog.capture. PostHog loads after idle; early
- * events are queued (max 50) and flushed on init. No-op without a key.
- */
+/** Typed posthog.capture; events before PostHog loads are queued (max 50). */
 export function capture<K extends keyof EventProps>(
   ...args: EventProps[K] extends undefined
     ? [event: K]

@@ -23,7 +23,6 @@ async function loadPosthog(key: string) {
     // Session replay is intentionally off — the feedback widget collects
     // name/email/message and we don't want that on tape.
     disable_session_recording: true,
-    // The site has no surveys.
     disable_surveys: true,
   });
   setPosthog(posthog);
