@@ -1,8 +1,10 @@
-import posthog from "posthog-js";
+import { setPosthog } from "@/lib/posthog-client";
 
-const key = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS;
 
-if (key) {
+async function loadPosthog(key: string) {
+  const { default: posthog } = await import("posthog-js");
   posthog.init(key, {
     api_host:
       process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://us.i.posthog.com",
@@ -21,5 +23,44 @@ if (key) {
     // Session replay is intentionally off — the feedback widget collects
     // name/email/message and we don't want that on tape.
     disable_session_recording: true,
+    disable_surveys: true,
   });
+  setPosthog(posthog);
+}
+
+// Same setup as @next/third-parties' <GoogleAnalytics>. Route changes are
+// covered by gtag's enhanced measurement (history events).
+function loadGoogleAnalytics(id: string) {
+  const w = window as unknown as { dataLayer?: unknown[] };
+  w.dataLayer = w.dataLayer || [];
+  // gtag.js needs `arguments` objects in the dataLayer, not arrays.
+  function gtag(..._args: unknown[]) {
+    // biome-ignore lint/complexity/noArguments: gtag.js requires Arguments
+    w.dataLayer?.push(arguments);
+  }
+  gtag("js", new Date());
+  gtag("config", id);
+  const script = document.createElement("script");
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`;
+  document.head.appendChild(script);
+}
+
+function start() {
+  if (posthogKey) void loadPosthog(posthogKey).catch(() => {});
+  if (gaId) loadGoogleAnalytics(gaId);
+}
+
+// Analytics must not compete with hydration or LCP: wait for load, then idle.
+function afterIdle() {
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(start, { timeout: 4000 });
+  } else {
+    setTimeout(start, 2000);
+  }
+}
+
+if (posthogKey || gaId) {
+  if (document.readyState === "complete") afterIdle();
+  else window.addEventListener("load", afterIdle, { once: true });
 }
