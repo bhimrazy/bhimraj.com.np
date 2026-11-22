@@ -2,7 +2,8 @@ import { z } from "zod";
 import { FeedbackEmail } from "@/emails/feedback-email";
 import { rateLimit } from "@/lib/rate-limit";
 import { resend, resendConfig } from "@/lib/resend";
-import { getClientIp } from "@/lib/security";
+import { clientIpFrom } from "@/lib/security";
+import { turnstileGate } from "@/lib/turnstile";
 
 const FeedbackSchema = z.object({
   message: z.string().trim().min(1).max(2000),
@@ -13,6 +14,7 @@ const FeedbackSchema = z.object({
   referrer: z.string().max(1024).optional(),
   // Honeypot.
   website: z.string().optional(),
+  turnstileToken: z.string().max(2048).optional(),
 });
 
 export async function POST(req: Request) {
@@ -20,7 +22,7 @@ export async function POST(req: Request) {
     return Response.json({ error: "Invalid request." }, { status: 415 });
   }
 
-  const ip = await getClientIp();
+  const ip = clientIpFrom(req.headers);
   if (!rateLimit(`feedback:${ip}`, 4, 60_000).allowed) {
     return Response.json(
       { error: "Too many requests. Please try again shortly." },
@@ -49,6 +51,9 @@ export async function POST(req: Request) {
   if (data.website) {
     return Response.json({ message: "Thanks for the note!" }, { status: 200 });
   }
+
+  const blocked = await turnstileGate(data.turnstileToken, ip);
+  if (blocked) return blocked;
 
   if (!resend || !resendConfig.notifyEmail) {
     console.error("[feedback] Resend not configured");

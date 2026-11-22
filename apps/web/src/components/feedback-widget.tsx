@@ -8,6 +8,7 @@ import {
 import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { toast } from "sonner";
+import { Turnstile, useTurnstile } from "@/components/turnstile";
 import { Textarea } from "@/components/ui/textarea";
 import { siteConfig } from "@/config/site";
 import { capture } from "@/lib/analytics";
@@ -85,6 +86,7 @@ export default function FeedbackWidget() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [website, setWebsite] = useState(""); // honeypot
+  const turnstile = useTurnstile();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
@@ -215,6 +217,12 @@ export default function FeedbackWidget() {
     // Enter submits via requestSubmit(), which skips the disabled button.
     if (loading || !message.trim()) return;
     setLoading(true);
+    const check = await turnstile.getToken();
+    if (check.error !== undefined) {
+      toast.error(check.error);
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch("/api/feedback", {
@@ -226,6 +234,7 @@ export default function FeedbackWidget() {
           name,
           email,
           website,
+          turnstileToken: check.token ?? undefined,
           path: window.location.pathname,
           referrer: document.referrer,
         }),
@@ -251,6 +260,7 @@ export default function FeedbackWidget() {
     } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
+      turnstile.reset();
       setLoading(false);
     }
   };
@@ -414,6 +424,7 @@ export default function FeedbackWidget() {
                 onChange={(e) => setWebsite(e.target.value)}
                 className="sr-only"
               />
+              <Turnstile state={turnstile} />
             </div>
           </form>
         </div>
