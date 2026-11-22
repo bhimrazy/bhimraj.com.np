@@ -3,7 +3,7 @@
 import { useId, useRef, useState } from "react";
 import { toast } from "sonner";
 import { submitSubscription } from "@/components/newsletter/subscribe";
-import { Turnstile, useTurnstile } from "@/components/newsletter/turnstile";
+import { Turnstile, useTurnstile } from "@/components/turnstile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 

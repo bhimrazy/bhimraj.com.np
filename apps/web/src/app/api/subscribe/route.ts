@@ -4,7 +4,7 @@ import { WelcomeEmail } from "@/emails/welcome-email";
 import { rateLimit } from "@/lib/rate-limit";
 import { resend, resendConfig } from "@/lib/resend";
 import { clientIpFrom } from "@/lib/security";
-import { turnstileConfig, verifyTurnstile } from "@/lib/turnstile";
+import { turnstileGate } from "@/lib/turnstile";
 
 const SubscribeSchema = z.object({
   email: z.email().max(254).toLowerCase(),
@@ -12,12 +12,6 @@ const SubscribeSchema = z.object({
   website: z.string().optional(),
   turnstileToken: z.string().max(2048).optional(),
 });
-
-const TURNSTILE_ERRORS = {
-  missing: [400, "Please finish the security check, then try again."],
-  rejected: [403, "The security check failed. Reload the page and try again."],
-  unavailable: [503, "Couldn't run the security check. Please try again."],
-} as const;
 
 const SUBSCRIBED = "🎉 You're in! I just sent a little hello to your inbox.";
 const subscribed = () =>
@@ -53,18 +47,8 @@ export async function POST(req: Request) {
 
   if (parsed.data.website) return subscribed();
 
-  const turnstile = turnstileConfig();
-  if (turnstile) {
-    const human = await verifyTurnstile(
-      parsed.data.turnstileToken,
-      ip,
-      turnstile,
-    );
-    if (!human.ok) {
-      const [status, error] = TURNSTILE_ERRORS[human.reason];
-      return Response.json({ error }, { status });
-    }
-  }
+  const blocked = await turnstileGate(parsed.data.turnstileToken, ip);
+  if (blocked) return blocked;
 
   if (!resend || !resendConfig.audienceId) {
     console.error("[subscribe] Resend not configured");

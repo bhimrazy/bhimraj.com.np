@@ -4,14 +4,20 @@ const SITEVERIFY_URL =
   "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 const TIMEOUT_MS = 5_000;
 
-export type TurnstileResult =
+type TurnstileResult =
   | { ok: true }
   | { ok: false; reason: "missing" | "rejected" | "unavailable" };
 
 type TurnstileConfig = { secretKey: string; allowedHostnames: string[] };
 
+const ERRORS = {
+  missing: [400, "Please finish the security check, then try again."],
+  rejected: [403, "The security check failed. Reload the page and try again."],
+  unavailable: [503, "Couldn't run the security check. Please try again."],
+} as const;
+
 // Enforced whenever the secret is set; unset (local dev) skips the check.
-export function turnstileConfig(
+function turnstileConfig(
   env: NodeJS.ProcessEnv = process.env,
 ): TurnstileConfig | null {
   const secretKey = env.TURNSTILE_SECRET_KEY?.trim();
@@ -30,15 +36,14 @@ export function turnstileConfig(
 }
 
 // Fails closed.
-export async function verifyTurnstile(
+async function verifyTurnstile(
   token: string | undefined,
   remoteIp: string,
   { secretKey, allowedHostnames }: TurnstileConfig,
-  fetchImpl: typeof fetch = fetch,
 ): Promise<TurnstileResult> {
   if (!token) return { ok: false, reason: "missing" };
   try {
-    const res = await fetchImpl(SITEVERIFY_URL, {
+    const res = await fetch(SITEVERIFY_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -58,4 +63,17 @@ export async function verifyTurnstile(
   } catch {
     return { ok: false, reason: "unavailable" };
   }
+}
+
+/** The error response a route should return, or null when the request may go on. */
+export async function turnstileGate(
+  token: string | undefined,
+  remoteIp: string,
+): Promise<Response | null> {
+  const config = turnstileConfig();
+  if (!config) return null;
+  const result = await verifyTurnstile(token, remoteIp, config);
+  if (result.ok) return null;
+  const [status, error] = ERRORS[result.reason];
+  return Response.json({ error }, { status });
 }

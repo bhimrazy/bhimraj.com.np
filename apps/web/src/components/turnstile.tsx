@@ -33,9 +33,9 @@ const WAITING = "Please finish the security check, then try again.";
 const BROKEN =
   "The security check didn't load. Turn off content blockers for this site, or reload.";
 
-// Loads the script only once the form nears the viewport or takes focus.
-export function useTurnstile(form: RefObject<HTMLFormElement | null>) {
-  const [armed, setArmed] = useState(false);
+// With a form, loads once it nears the viewport or takes focus; without, when <Turnstile> mounts.
+export function useTurnstile(form?: RefObject<HTMLFormElement | null>) {
+  const [armed, setArmed] = useState(!form);
   const [interactive, setInteractive] = useState(false);
   const token = useRef<string | null>(null);
   const broken = useRef(false);
@@ -43,7 +43,7 @@ export function useTurnstile(form: RefObject<HTMLFormElement | null>) {
   const widgetId = useRef<string | null>(null);
 
   useEffect(() => {
-    const node = form.current;
+    const node = form?.current;
     if (!SITE_KEY || armed || !node) return;
     const arm = () => setArmed(true);
     const observer = new IntersectionObserver(
