@@ -7,8 +7,11 @@ export default function manifest(): MetadataRoute.Manifest {
     name: siteConfig.author.name,
     short_name: "bhimraj",
     description: siteConfig.description,
+    id: "/",
     start_url: "/",
+    scope: "/",
     display: "standalone",
+    categories: ["education", "developer"],
     background_color: BRAND_COLORS.night,
     theme_color: BRAND_COLORS.night,
     icons: [
@@ -21,6 +24,11 @@ export default function manifest(): MetadataRoute.Manifest {
         purpose: "maskable",
       },
       { src: "/icon.svg", sizes: "any", type: "image/svg+xml" },
+    ],
+    // Long-press on the home-screen icon (Android).
+    shortcuts: [
+      { name: "Blog", url: "/blog" },
+      { name: "Resources", url: "/resources" },
     ],
   };
 }
