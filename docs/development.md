@@ -24,6 +24,10 @@ Scripts are in the root `package.json`. Before a PR: `bun lint`, `bun typecheck`
 
 Posts, projects and resources are Markdown/MDX files in `apps/web/src/content`. A file that breaks its schema fails the build. After changing a schema, delete `apps/web/.content-collections`.
 
+## Newsletter
+
+Double opt-in with no database: `/api/subscribe` only mails a signed link (48 hours), and the contact is added to the Resend audience when the button on `/newsletter/confirm` is pressed. Needs `RESEND_API_KEY`, `RESEND_AUDIENCE_ID` and `NEWSLETTER_SECRET`. Cloudflare Turnstile on the form turns on when both `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are set; tokens are pinned to `bhimraj.com.np` unless `TURNSTILE_ALLOWED_HOSTNAMES` says otherwise. Rate limits are in memory, per serverless instance.
+
 ## Data
 
 The site reads GitHub and YouTube data from the snapshots, never from the APIs. The [sync workflows](../.github/workflows) refresh them on a schedule and open a PR when something changed. To run a sync locally, export `GITHUB_TOKEN` in your shell, or put `YOUTUBE_API_KEY` in `apps/web/.env.local`.

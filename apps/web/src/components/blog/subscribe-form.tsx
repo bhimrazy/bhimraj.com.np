@@ -1,46 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { submitSubscription } from "@/components/newsletter/subscribe";
+import { Turnstile, useTurnstile } from "@/components/newsletter/turnstile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { capture } from "@/lib/analytics";
 
 /** Compact newsletter form for the end of a post. Same API as the homepage. */
 export default function SubscribeForm() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [website, setWebsite] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
+  const turnstile = useTurnstile(formRef);
 
   const subscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, website }),
-      });
-      const data = await res.json();
-
-      if (res.ok) {
-        setEmail("");
-        capture("newsletter_submitted", { result: "success" });
-        toast.success(data?.message ?? "You're in! Please check your inbox.");
-      } else {
-        capture("newsletter_submitted", { result: "error" });
-        toast.error(data?.error ?? "Something went wrong. Please try again.");
-      }
-    } catch {
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+    if (turnstile.blocker) {
+      toast.error(turnstile.blocker);
+      return;
     }
+    setLoading(true);
+    const { ok, message } = await submitSubscription({
+      email,
+      website,
+      turnstileToken: turnstile.token,
+    });
+    turnstile.reset();
+    if (ok) setEmail("");
+    (ok ? toast.success : toast.error)(message);
+    setLoading(false);
   };
 
   return (
-    <form onSubmit={subscribe} className="flex flex-col gap-2.5 sm:flex-row">
+    <form
+      ref={formRef}
+      onSubmit={subscribe}
+      className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap"
+    >
       <Input
         type="email"
         value={email}
@@ -72,6 +70,7 @@ export default function SubscribeForm() {
       >
         {loading ? "Subscribing…" : "Subscribe"}
       </Button>
+      <Turnstile state={turnstile} />
     </form>
   );
 }

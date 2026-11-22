@@ -1,24 +1,34 @@
 import { z } from "zod";
-import { WelcomeEmail } from "@/emails/welcome-email";
+import { newsletterEnabled, requestSubscription } from "@/lib/newsletter";
 import { rateLimit } from "@/lib/rate-limit";
-import { resend, resendConfig } from "@/lib/resend";
-import { getClientIp } from "@/lib/security";
+import { clientIpFrom } from "@/lib/security";
+import { turnstileConfig, verifyTurnstile } from "@/lib/turnstile";
 
 const SubscribeSchema = z.object({
   email: z.email().max(254).toLowerCase(),
   // Honeypot: real users never see or fill this.
   website: z.string().optional(),
+  turnstileToken: z.string().max(2048).optional(),
 });
+
+const TURNSTILE_ERRORS = {
+  missing: [400, "Please finish the security check, then try again."],
+  rejected: [403, "The security check failed. Reload the page and try again."],
+  unavailable: [503, "Couldn't run the security check. Please try again."],
+} as const;
+
+// Same answer for new, pending, subscribed and capped addresses: no enumeration.
+const OK = () => Response.json({ ok: true });
 
 export async function POST(req: Request) {
   if (!req.headers.get("content-type")?.includes("application/json")) {
     return Response.json({ error: "Invalid request." }, { status: 415 });
   }
 
-  const ip = await getClientIp();
-  if (!rateLimit(`subscribe:${ip}`, 5, 60_000).allowed) {
+  const ip = clientIpFrom(req.headers);
+  if (!rateLimit(`subscribe:${ip}`, 5, 10 * 60_000).allowed) {
     return Response.json(
-      { error: "Too many requests. Please try again shortly." },
+      { error: "Too many requests. Please try again later." },
       { status: 429 },
     );
   }
@@ -38,54 +48,29 @@ export async function POST(req: Request) {
     );
   }
 
-  // Honeypot tripped — pretend success, drop silently.
-  if (parsed.data.website) {
-    return Response.json({ message: "🎉 You're subscribed!" }, { status: 200 });
-  }
+  if (parsed.data.website) return OK();
 
-  if (!resend || !resendConfig.audienceId) {
-    console.error("[subscribe] Resend not configured");
+  if (!newsletterEnabled()) {
+    console.error("[subscribe] newsletter not configured");
     return Response.json(
       { error: "Subscriptions are temporarily unavailable." },
       { status: 503 },
     );
   }
 
-  try {
-    const { error } = await resend.contacts.create({
-      email: parsed.data.email,
-      audienceId: resendConfig.audienceId,
-      unsubscribed: false,
-    });
-
-    if (error) {
-      console.error("[subscribe] contacts.create", error);
-      return Response.json(
-        { error: "Something went wrong. Please try again." },
-        { status: 502 },
-      );
+  const turnstile = turnstileConfig();
+  if (turnstile) {
+    const human = await verifyTurnstile(
+      parsed.data.turnstileToken,
+      ip,
+      turnstile,
+    );
+    if (!human.ok) {
+      const [status, error] = TURNSTILE_ERRORS[human.reason];
+      return Response.json({ error }, { status });
     }
-
-    // Best-effort welcome email; don't fail the subscribe if it can't send
-    // (e.g. sending domain not yet verified in Resend).
-    resend.emails
-      .send({
-        from: resendConfig.fromEmail,
-        to: parsed.data.email,
-        subject: "You're subscribed 🎉",
-        react: WelcomeEmail(),
-      })
-      .catch((err) => console.error("[subscribe] welcome email", err));
-
-    return Response.json(
-      { message: "🎉 You're in! I just sent a little hello to your inbox." },
-      { status: 201 },
-    );
-  } catch (err) {
-    console.error("[subscribe] unexpected", err);
-    return Response.json(
-      { error: "Something went wrong. Please try again." },
-      { status: 500 },
-    );
   }
+
+  await requestSubscription(parsed.data.email);
+  return OK();
 }

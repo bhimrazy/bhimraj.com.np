@@ -1,10 +1,11 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { toast } from "sonner";
+import { submitSubscription } from "@/components/newsletter/subscribe";
+import { Turnstile, useTurnstile } from "@/components/newsletter/turnstile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { capture } from "@/lib/analytics";
 
 /** Newsletter sign-up form — the only interactive leaf of the contact section. */
 export default function NewsletterForm() {
@@ -13,46 +14,33 @@ export default function NewsletterForm() {
   const [website, setWebsite] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const statusId = useId();
+  const formRef = useRef<HTMLFormElement>(null);
+  const turnstile = useTurnstile(formRef);
 
   const subscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (loading) return;
+    if (turnstile.blocker) {
+      setStatus(turnstile.blocker);
+      return;
+    }
     setLoading(true);
     setStatus(null);
-
-    try {
-      const res = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, website }),
-      });
-      const data = await res.json();
-
-      if (res.ok) {
-        setEmail("");
-        capture("newsletter_submitted", { result: "success" });
-        const message =
-          data?.message ?? "🎉 You're in! Please check your inbox.";
-        setStatus(message);
-        toast.success(message);
-      } else {
-        capture("newsletter_submitted", { result: "error" });
-        const message =
-          data?.error ?? "Something went wrong. Please try again.";
-        setStatus(message);
-        toast.error(message);
-      }
-    } catch {
-      capture("newsletter_submitted", { result: "error" });
-      setStatus("Something went wrong. Please try again.");
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    const { ok, message } = await submitSubscription({
+      email,
+      website,
+      turnstileToken: turnstile.token,
+    });
+    turnstile.reset();
+    if (ok) setEmail("");
+    setStatus(message);
+    (ok ? toast.success : toast.error)(message);
+    setLoading(false);
   };
 
   return (
     <form
+      ref={formRef}
       onSubmit={subscribe}
       aria-busy={loading}
       aria-describedby={statusId}
@@ -93,6 +81,7 @@ export default function NewsletterForm() {
           {loading ? "Subscribing…" : "Subscribe"}
         </Button>
       </div>
+      <Turnstile state={turnstile} />
       {/* Inline status for people who miss the toast (and for screen readers). */}
       <p
         id={statusId}

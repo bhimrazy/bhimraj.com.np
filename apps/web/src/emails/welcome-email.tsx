@@ -19,7 +19,7 @@ const TOPICS = [
   "AI & ML research worth your time",
 ];
 
-export function WelcomeEmail() {
+export function WelcomeEmail({ unsubscribeUrl }: { unsubscribeUrl: string }) {
   return (
     <Html>
       <Tailwind config={emailTailwindConfig}>
@@ -78,6 +78,10 @@ export function WelcomeEmail() {
           </Container>
           <Text className="mx-auto mt-5 max-w-[540px] text-center text-[12px] text-warm-muted leading-[1.6] tracking-[0.3px]">
             You&apos;re receiving this because you subscribed at bhimraj.com.np
+            ·{" "}
+            <Link href={unsubscribeUrl} className="text-warm-muted underline">
+              Unsubscribe
+            </Link>
           </Text>
         </Body>
       </Tailwind>
