@@ -263,7 +263,7 @@ export function YouTubePlayer({
         <>
           <div ref={hostRef} className="absolute inset-0 size-full" />
           {ended && endCard && (
-            <div className="absolute inset-0 flex items-center justify-center bg-site-bg/95 p-6">
+            <div className="absolute inset-0 flex items-center justify-center bg-site-bg p-6">
               {endCard(() => {
                 setEnded(false);
                 playerRef.current?.seekTo(0, true);
