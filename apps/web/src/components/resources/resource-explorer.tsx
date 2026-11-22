@@ -1,10 +1,12 @@
 "use client";
 
 import { MagnifyingGlassIcon, VideoIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Chip } from "@/components/chip";
 import { focusRing, surface } from "@/components/surface";
 import { capture } from "@/lib/analytics";
+import { formatHours } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { ResourceCardData } from "./resources";
 import {
@@ -345,7 +347,9 @@ function ResourceCard({
           {r.video && (
             <Chip tone="neutral" className="gap-1">
               <VideoIcon aria-hidden className="size-3" />
-              Video
+              {r.lectureCount > 0
+                ? `${r.lectureCount} lectures · ${formatHours(r.totalSec)}`
+                : "Video"}
             </Chip>
           )}
           {r.status && <Chip>{STATUS_LABELS[r.status]}</Chip>}
@@ -353,27 +357,48 @@ function ResourceCard({
       </p>
 
       <h3 className="mt-3 text-pretty font-display font-semibold text-lg text-site-text leading-snug tracking-tight">
-        <a
-          href={r.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() =>
-            capture("resource_opened", { slug: r.slug, kind: r.kind })
-          }
-          className={cn(
-            "group/link rounded-sm transition-colors hover:text-site-accent-text",
-            focusRing,
-          )}
-        >
-          {r.title}
-          <span
-            aria-hidden
-            className="ml-1.5 inline-block text-site-accent text-sm transition-transform group-hover/link:translate-x-0.5"
+        {r.hasPage ? (
+          <Link
+            href={`/resources/${r.slug}`}
+            onClick={() =>
+              capture("resource_opened", { slug: r.slug, kind: r.kind })
+            }
+            className={cn(
+              "group/link rounded-sm transition-colors hover:text-site-accent-text",
+              focusRing,
+            )}
           >
-            ↗
-          </span>
-          <span className="sr-only"> (opens in a new tab)</span>
-        </a>
+            {r.title}
+            <span
+              aria-hidden
+              className="ml-1.5 inline-block text-site-accent text-sm transition-transform group-hover/link:translate-x-0.5"
+            >
+              →
+            </span>
+          </Link>
+        ) : (
+          <a
+            href={r.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              capture("resource_opened", { slug: r.slug, kind: r.kind })
+            }
+            className={cn(
+              "group/link rounded-sm transition-colors hover:text-site-accent-text",
+              focusRing,
+            )}
+          >
+            {r.title}
+            <span
+              aria-hidden
+              className="ml-1.5 inline-block text-site-accent text-sm transition-transform group-hover/link:translate-x-0.5"
+            >
+              ↗
+            </span>
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>
+        )}
       </h3>
       {r.people.length > 0 && (
         <p className="mt-1 text-site-text-tertiary text-xs">

@@ -216,6 +216,39 @@ export function buildResourceCollectionJsonLd(input: {
   };
 }
 
+/** A course page: the course itself, offered online as recorded lectures. */
+export function buildCourseJsonLd(course: {
+  title: string;
+  tldr: string;
+  slug: string;
+  url: string;
+  source: string;
+  people: string[];
+  term?: string;
+  totalSec: number;
+}): JsonLdObject {
+  const instructor = course.people.map((name) => ({ "@type": "Person", name }));
+  return {
+    "@context": CONTEXT,
+    "@type": "Course",
+    name: course.title,
+    description: course.tldr,
+    url: absoluteUrl(`/resources/${course.slug}`),
+    sameAs: course.url,
+    provider: { "@type": "Organization", name: course.source },
+    ...(instructor.length > 0 && { instructor }),
+    hasCourseInstance: {
+      "@type": "CourseInstance",
+      courseMode: "online",
+      ...(course.term && { name: course.term }),
+      ...(course.totalSec > 0 && {
+        courseWorkload: `PT${Math.round(course.totalSec / 3600)}H`,
+      }),
+      ...(instructor.length > 0 && { instructor }),
+    },
+  };
+}
+
 type SoftwareSourceCodeInput = {
   title: string;
   description: string;

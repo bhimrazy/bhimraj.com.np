@@ -1,4 +1,4 @@
-import { allBlogPosts, allProjects } from "content-collections";
+import { allBlogPosts, allProjects, allResources } from "content-collections";
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 
@@ -22,5 +22,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(project.updatedAt || project.publishedAt),
   }));
 
-  return [...staticUrls, ...postUrls, ...projectUrls];
+  const resourceUrls = allResources
+    .filter((resource) => resource.hasPage)
+    .map((resource) => ({
+      url: `${baseUrl}/resources/${resource._meta.path}`,
+    }));
+
+  return [...staticUrls, ...postUrls, ...projectUrls, ...resourceUrls];
 }

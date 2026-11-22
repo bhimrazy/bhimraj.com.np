@@ -9,4 +9,10 @@ tldr: Making models cheap to run, from pruning, quantization and distillation to
 topics: [efficient-ai, ml-systems, llms]
 added: 2026-10-15
 video: true
+playlist: PLH7PIPKvCm38
+otherTerms:
+  - term: Fall 2024
+    url: https://www.youtube.com/playlist?list=PL80kAHvQbh-qGtNc54A6KW4i4bkTPjiRF
+  - term: Fall 2023
+    url: https://www.youtube.com/playlist?list=PL80kAHvQbh-pT4lCkDT53zT8DKmhE0idB
 ---

@@ -30,3 +30,28 @@ export function yearsAtLeast(months: number): string {
   if (months < 12) return `${months} months`;
   return `${Math.floor(months / 6) / 2}+ years`;
 }
+
+/** Lecture lengths: 6268 → "1h 44m", 2940 → "49m", 45 → "1m". */
+export function formatDuration(seconds: number): string {
+  const minutes = Math.max(1, Math.round(seconds / 60));
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  if (h === 0) return `${m}m`;
+  return m === 0 ? `${h}h` : `${h}h ${m}m`;
+}
+
+/** Total watch time, rounded to the hour past 10h: 47520 → "13h". */
+export function formatHours(seconds: number): string {
+  return seconds >= 36_000
+    ? `${Math.round(seconds / 3600)}h`
+    : formatDuration(seconds);
+}
+
+/** Player position: 83 → "1:23", 3723 → "1:02:03". */
+export function formatTimestamp(seconds: number): string {
+  const s = Math.max(0, Math.floor(seconds));
+  const h = Math.floor(s / 3600);
+  const mm = String(Math.floor((s % 3600) / 60));
+  const ss = String(s % 60).padStart(2, "0");
+  return h > 0 ? `${h}:${mm.padStart(2, "0")}:${ss}` : `${mm}:${ss}`;
+}

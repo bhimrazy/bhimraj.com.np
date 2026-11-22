@@ -63,6 +63,16 @@ declare module "content-collections" {
     note?: string;
     video: boolean;
     featured: boolean;
+    playlist?: string;
+    playlistOrder: "published" | "playlist";
+    watched?: number;
+    forWho?: string;
+    skipIf?: string;
+    prereqs: string[];
+    otherTerms: { term: string; url: string }[];
+    /** The body as HTML: my notes on the course, or null when empty. */
+    notes: string | null;
+    hasPage: boolean;
   }
 
   export const allBlogPosts: BlogPost[];

@@ -4,8 +4,13 @@ url: https://cme295.stanford.edu/
 kind: course
 source: Stanford
 people: [Afshine Amidi, Shervine Amidi]
+term: Autumn 2026
 tldr: From the evolution of NLP to the core Transformer components, how they become LLMs, and the techniques that make LLMs perform better.
 topics: [llms]
 added: 2026-10-15
 video: true
+playlist: PLakGfbKCei80
+otherTerms:
+  - term: Autumn 2025
+    url: https://www.youtube.com/playlist?list=PLoROMvodv4rOCXd21gf0CF4xr35yINeOy
 ---
