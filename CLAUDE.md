@@ -10,6 +10,7 @@
 ```
 apps/web                 # the Next.js site
 packages/github          # @bhimrazy/github — GitHub data layer + snapshot
+packages/youtube         # @bhimrazy/youtube — YouTube lecture data + snapshot
 packages/utils           # @bhimrazy/utils  — shared createLogger()
 ```
 
@@ -23,6 +24,7 @@ bun lint           # biome lint
 bun run knip       # unused-code check
 bun run lint:versions  # syncpack — one version per dependency across workspaces
 bun run sync       # regenerate the GitHub snapshot (needs GITHUB_TOKEN for full data)
+bun run sync:youtube   # regenerate the YouTube lectures snapshot (needs YOUTUBE_API_KEY)
 ```
 
 ## GitHub data is a snapshot, not a live fetch
