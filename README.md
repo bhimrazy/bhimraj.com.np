@@ -16,12 +16,9 @@ Personal site of Bhimraj Yadav, software engineer in Kathmandu: [bhimraj.com.np]
 
 Next.js 16 (App Router), React, Tailwind CSS v4, shadcn/ui, Content Collections, Resend, PostHog, Biome and Vitest, in a Bun and Turborepo monorepo.
 
-## Docs
+## Development
 
-- [Getting started](docs/getting-started.md): install, run and commands
-- [Project structure](docs/project-structure.md): what lives where
-- [Environment variables](docs/environment.md)
-- [Content and data](docs/content-and-data.md): writing content and refreshing the snapshots
+Setup, commands, layout and environment: [docs/development.md](docs/development.md).
 
 ## Deployment
 
@@ -29,7 +26,7 @@ Deployed on [Vercel](https://vercel.com); every pull request gets a preview depl
 
 ## Contributing
 
-Run `bun format:write`, `bun lint`, `bun typecheck` and `bun test` before opening a PR. See [getting started](docs/getting-started.md).
+Run `bun format:write`, `bun lint`, `bun typecheck` and `bun test` before opening a PR. See [docs/development.md](docs/development.md).
 
 ## License
 
