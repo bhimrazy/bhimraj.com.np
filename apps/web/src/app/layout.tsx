@@ -5,6 +5,7 @@ import { Pwa } from "@/components/pwa";
 import { ThemeProvider } from "@/components/theme-provider";
 import { siteConfig } from "@/config/site";
 import { BRAND_COLORS } from "@/lib/brand";
+import { startupImages } from "@/lib/ios-splash";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -34,7 +35,11 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     siteName: siteConfig.name,
   },
-  appleWebApp: { title: "bhimraj", statusBarStyle: "default" },
+  appleWebApp: {
+    title: "bhimraj",
+    statusBarStyle: "default",
+    startupImage: startupImages,
+  },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
