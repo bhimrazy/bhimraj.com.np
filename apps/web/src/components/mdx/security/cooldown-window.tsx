@@ -54,7 +54,7 @@ function Chart({
   narrow?: boolean;
   className?: string;
 }) {
-  const W = narrow ? 300 : 680;
+  const W = narrow ? 300 : 600;
   const rowH = narrow ? 30 : 27;
   const L = narrow ? 6 : 128;
   const R = W - (narrow ? 44 : 64);

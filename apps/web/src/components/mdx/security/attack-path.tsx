@@ -176,7 +176,7 @@ const summary = (active?: StationId) =>
   }`;
 
 /* Desktop: left to right. */
-const DW = 680;
+const DW = 600;
 const COL = DW / STATIONS.length;
 const TAGS_TOP = 132;
 const TAG_GAP = 8;
