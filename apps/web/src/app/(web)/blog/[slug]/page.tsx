@@ -3,6 +3,7 @@ import { allBlogPosts } from "content-collections";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import Comments from "@/components/blog/comments";
 import MobileToc from "@/components/blog/mobile-toc";
 import PostEnd from "@/components/blog/post-end";
 import { getPost } from "@/components/blog/posts";
@@ -147,6 +148,7 @@ export default async function BlogPostPage({
             </div>
 
             <PostEnd post={post} url={postUrl} />
+            <Comments />
           </article>
 
           <aside className="hidden xl:block">

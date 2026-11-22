@@ -47,6 +47,25 @@ declare module "content-collections" {
     html: string;
   }
 
+  export interface Resource {
+    _meta: ContentMeta;
+    content: string;
+    title: string;
+    url: string;
+    kind: import("@/components/resources/taxonomy").ResourceKind;
+    source: string;
+    people: string[];
+    term?: string;
+    tldr: string;
+    topics: import("@/components/resources/taxonomy").ResourceTopic[];
+    added: string;
+    status?: import("@/components/resources/taxonomy").ResourceStatus;
+    note?: string;
+    video: boolean;
+    featured: boolean;
+  }
+
   export const allBlogPosts: BlogPost[];
   export const allProjects: Project[];
+  export const allResources: Resource[];
 }
