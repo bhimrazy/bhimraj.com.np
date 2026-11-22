@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { ArrowUpIcon } from "@radix-ui/react-icons";
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 export interface TocItem {
   id: string;
@@ -8,37 +10,48 @@ export interface TocItem {
   level: number;
 }
 
-interface TocProps {
-  items: TocItem[];
-}
+/** Offset below the fixed header at which a heading counts as "current". */
+const ACTIVE_OFFSET = 140;
 
-export default function Toc({ items }: TocProps) {
+function useActiveHeading(ids: string[]) {
   const [activeId, setActiveId] = useState<string>("");
-  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
-    if (items.length === 0) return;
+    if (ids.length === 0) return;
+    const headings = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
 
-    const headingIds = items.map((item) => item.id);
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      let current = "";
+      for (const el of headings) {
+        if (el.getBoundingClientRect().top - ACTIVE_OFFSET > 0) break;
+        current = el.id;
+      }
+      setActiveId(current);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
 
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        }
-      },
-      { rootMargin: "-80px 0% -70% 0%", threshold: 0 },
-    );
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [ids]);
 
-    for (const id of headingIds) {
-      const el = document.getElementById(id);
-      if (el) observerRef.current.observe(el);
-    }
+  return activeId;
+}
 
-    return () => observerRef.current?.disconnect();
-  }, [items]);
+export default function Toc({ items }: { items: TocItem[] }) {
+  const [ids] = useState(() => items.map((item) => item.id));
+  const activeId = useActiveHeading(ids);
 
   if (items.length === 0) return null;
 
@@ -47,31 +60,21 @@ export default function Toc({ items }: TocProps) {
       <p className="mb-4 font-medium font-mono text-[11px] text-site-text-tertiary uppercase tracking-[1.5px]">
         On this page
       </p>
-      <ul className="flex flex-col gap-1">
+      <ul className="flex flex-col border-site-border border-l">
         {items.map((item) => {
           const isActive = activeId === item.id;
           return (
-            <li
-              key={item.id}
-              style={{ paddingLeft: item.level === 3 ? "12px" : "0" }}
-            >
+            <li key={item.id}>
               <a
                 href={`#${item.id}`}
-                className="block rounded py-1 pr-2 text-[13px] leading-snug transition-colors"
-                style={{
-                  color: isActive
-                    ? "var(--site-accent)"
-                    : "var(--site-text-tertiary)",
-                  fontWeight: isActive ? 500 : 400,
-                  borderLeft: `2px solid ${isActive ? "var(--site-accent)" : "transparent"}`,
-                  paddingLeft: item.level === 3 ? "16px" : "8px",
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  document
-                    .getElementById(item.id)
-                    ?.scrollIntoView({ behavior: "smooth", block: "start" });
-                }}
+                aria-current={isActive ? "location" : undefined}
+                className={cn(
+                  "-ml-px block border-l-2 py-1.5 pr-2 text-[13px] leading-snug transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:-outline-offset-2 motion-reduce:transition-none",
+                  item.level === 3 ? "pl-7" : "pl-4",
+                  isActive
+                    ? "border-site-accent font-medium text-site-text"
+                    : "border-transparent text-site-text-secondary hover:border-site-border-hover hover:text-site-text",
+                )}
               >
                 {item.text}
               </a>
@@ -79,6 +82,13 @@ export default function Toc({ items }: TocProps) {
           );
         })}
       </ul>
+      <a
+        href="#top"
+        className="mt-6 inline-flex items-center gap-1.5 rounded-sm font-mono text-[11px] text-site-text-secondary uppercase tracking-[1.5px] transition-colors hover:text-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
+      >
+        <ArrowUpIcon className="size-3" />
+        Back to top
+      </a>
     </nav>
   );
 }

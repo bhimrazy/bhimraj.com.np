@@ -3,6 +3,7 @@ title: "Chat with MiniCPM-V 2.6"
 description: "Deploy MiniCPM-V 2.6 — a GPT-4V level multimodal LLM designed for edge devices — using LitServe. Handles single image, multi-image, and video inputs."
 publishedAt: "2024-08-16"
 tags: [LitServe, Multimodal, LLM, MiniCPM]
+category: "Multimodal LLMs"
 image: "https://opengraph.githubassets.com/1/bhimrazy/chat-with-minicpm"
 githubLink: "https://github.com/bhimrazy/chat-with-minicpm"
 ---

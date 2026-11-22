@@ -18,23 +18,22 @@ export function formatDate(dateOrString: Date | string): string {
     month: "long",
     day: "numeric",
     year: "numeric",
+    // "YYYY-MM-DD" strings parse as UTC; format in UTC too so a build west
+    // of Greenwich doesn't print the previous day.
+    timeZone: "UTC",
   };
   return date?.toLocaleDateString("en-US", options);
 }
 
-/**
- * Calculate the estimated reading time for a given text.
- *
- * @param text - The text for which to calculate the reading time.
- * @param wordsPerMinute - The average number of words a person can read per minute (default: 200).
- * @returns The estimated reading time in a human-readable format.
- */
-export function getReadingTime(text: string, wordsPerMinute = 300): string {
-  const words = text
-    .replace(/<[^>]+>/g, "")
-    .trim()
-    .split(/\s+/).length;
-  const minutes = Math.ceil(words / wordsPerMinute);
-
-  return minutes <= 1 ? "1 min read" : `${minutes} min read`;
+/** Formats a date as "Oct 16" — for lists already grouped by year. */
+export function formatMonthDay(dateOrString: Date | string): string {
+  const date =
+    typeof dateOrString === "string" ? new Date(dateOrString) : dateOrString;
+  // Dates in frontmatter are plain "YYYY-MM-DD" strings (parsed as UTC), so
+  // format them in UTC too or a build west of Greenwich shifts them a day.
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  });
 }

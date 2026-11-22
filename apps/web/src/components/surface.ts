@@ -1,0 +1,15 @@
+/**
+ * Shared card surfaces, so every page draws from the same
+ * border / background / hover language instead of re-typing it per file.
+ */
+
+/** Static card: warm gradient in dark mode, plain card in light. */
+export const surface =
+  "relative overflow-hidden rounded-2xl border border-site-border bg-site-card dark:border-white/5 dark:bg-linear-to-br dark:from-site-card dark:to-site-bg-secondary";
+
+/** Card that lifts on hover. Put `group` on the element (or a parent link). */
+export const surfaceInteractive = `${surface} transition-[translate,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-site-border-hover hover:shadow-xl/5 motion-reduce:hover:translate-y-0 dark:hover:border-white/10`;
+
+/** Keyboard focus ring shared by links and buttons. */
+export const focusRing =
+  "focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2";

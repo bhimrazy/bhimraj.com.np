@@ -1,10 +1,11 @@
 "use client";
 
+import { HomeIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { activeNavHref, NAV_LINKS } from "./nav-links";
+import { activeNavHref, MENU_LINKS } from "./nav-links";
 
 /**
  * Reads the URL, so it only resolves at request time — render it inside a
@@ -75,7 +76,7 @@ export function NavIsland({
         }}
       />
 
-      {NAV_LINKS.map((link) => (
+      {MENU_LINKS.map((link) => (
         <li
           key={link.href}
           ref={(el) => {
@@ -85,14 +86,22 @@ export function NavIsland({
         >
           <Link
             href={link.href}
+            aria-current={link.href === activeHref ? "page" : undefined}
+            aria-label={link.href === "/" ? link.label : undefined}
             className={cn(
-              "relative block rounded-full px-4 py-1.5 font-body font-medium text-sm transition-colors duration-200",
+              "relative block rounded-full py-1.5 font-body font-medium text-sm transition-colors duration-200",
+              // Home is an icon, so the pill keeps its width.
+              link.href === "/" ? "px-3" : "px-4",
               link.href === activeHref
                 ? "text-site-text"
                 : "text-site-text-secondary hover:text-site-text",
             )}
           >
-            {link.label}
+            {link.href === "/" ? (
+              <HomeIcon aria-hidden className="my-0.5 size-4" />
+            ) : (
+              link.label
+            )}
           </Link>
         </li>
       ))}

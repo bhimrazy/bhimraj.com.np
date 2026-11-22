@@ -51,6 +51,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
+      # 429 (rate limited) and 503 (temporarily down) say nothing about
+      # whether a link is broken, so they don't fail the build; 404s still do.
+      # Lightning Studio pages redirect to platform.lightning.ai and loop for
+      # bots, so they are skipped until that settles.
       - name: Check documentation links
         uses: lycheeverse/lychee-action@v2
         with:
@@ -59,12 +63,14 @@ jobs:
             --no-progress
             --timeout 20
             --max-retries 2
+            --accept "100..=103,200..=299,429,503"
             --root-dir ./apps/web/public
             --exclude "localhost"
             --exclude "linkedin.com"
             --exclude "instagram.com"
             --exclude "content-collections.dev"
             --exclude "huggingface.co"
+            --exclude "lightning\.ai/[^/]+/(studios|templates)/"
             "**/*.md"
             "**/*.mdx"
           fail: true

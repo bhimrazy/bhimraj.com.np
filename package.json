@@ -15,6 +15,7 @@
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
     "sync": "turbo run sync --filter=@bhimrazy/github",
+    "sync:youtube": "turbo run sync --filter=@bhimrazy/youtube",
     "lint": "biome lint .",
     "lint:fix": "biome lint --write .",
     "format:write": "biome format --write .",

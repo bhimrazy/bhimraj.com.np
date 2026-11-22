@@ -4,7 +4,11 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   cacheComponents: true,
   poweredByHeader: false,
-  transpilePackages: ["@bhimrazy/github", "@bhimrazy/utils"],
+  transpilePackages: [
+    "@bhimrazy/github",
+    "@bhimrazy/utils",
+    "@bhimrazy/youtube",
+  ],
   logging: {
     fetches: {
       fullUrl: true,
@@ -40,6 +44,13 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["clsx", "tailwind-merge"],
   },
+  headers: async () => [
+    {
+      // giscus loads these cross-origin from its iframe.
+      source: "/giscus/:file*",
+      headers: [{ key: "Access-Control-Allow-Origin", value: "*" }],
+    },
+  ],
   redirects: async () => {
     return [
       {
@@ -47,6 +58,18 @@ const nextConfig: NextConfig = {
         destination: "/blog",
         permanent: true,
       },
+      // Old static brand assets: browsers still probe some of these paths.
+      ...[
+        ["/apple-touch-icon.png", "/apple-icon.png"],
+        ["/apple-touch-icon-precomposed.png", "/apple-icon.png"],
+        ["/site.webmanifest", "/manifest.webmanifest"],
+        ["/opengraph-image.jpg", "/opengraph-image"],
+        ["/blog-opengraph.jpg", "/opengraph-image"],
+      ].map(([source, destination]) => ({
+        source,
+        destination,
+        permanent: true,
+      })),
     ];
   },
 };

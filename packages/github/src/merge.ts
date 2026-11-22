@@ -1,3 +1,4 @@
+import type { FreshSnapshot } from "./snapshot";
 import type {
   ContributedRepo,
   GitHubSnapshot,
@@ -31,10 +32,21 @@ export type MergeResult = {
  * fall within `DROP_TOLERANCE`. `generatedAt` always advances.
  */
 export function mergeSnapshot(
-  next: GitHubSnapshot,
+  next: FreshSnapshot,
   prev: GitHubSnapshot | null,
 ): MergeResult {
-  if (!prev) return { snapshot: next, anomalies: [] };
+  if (!prev) {
+    return {
+      snapshot: {
+        ...next,
+        ossActivity: {
+          ...next.ossActivity,
+          prsOpen: next.ossActivity.prsOpen ?? 0,
+        },
+      },
+      anomalies: [],
+    };
+  }
 
   const anomalies: SnapshotAnomaly[] = [];
 
@@ -81,6 +93,7 @@ export function mergeSnapshot(
           prev.ossStats.totalPrs,
         ),
       },
+      ossActivity: mergeActivity(next, prev, keepMax, record),
       lightningEcosystem: {
         totalPrs: keepMax(
           "lightningEcosystem.totalPrs",
@@ -165,7 +178,7 @@ function mergeRepoList<T extends RepoCard>(
  * lost a repo to a failed fetch — revert the whole bucket, `byRepo` included.
  */
 function mergeMonths(
-  next: GitHubSnapshot,
+  next: FreshSnapshot,
   prev: GitHubSnapshot,
   record: (field: string, prev: number, next: number) => number,
 ): GitHubSnapshot["monthlyContributions"] {
@@ -187,7 +200,7 @@ function mergeMonths(
 
 /** Failed stargazer pages truncate the history, so keep whichever is longer. */
 function mergeFeaturedRepo(
-  next: GitHubSnapshot,
+  next: FreshSnapshot,
   prev: GitHubSnapshot,
   keepCount: KeepFn,
 ): GitHubSnapshot["featuredRepo"] {
@@ -210,5 +223,46 @@ function mergeFeaturedRepo(
       next.featuredRepo.history.length < prev.featuredRepo.history.length
         ? prev.featuredRepo.history
         : next.featuredRepo.history,
+  };
+}
+
+/**
+ * Every activity metric is cumulative except `prsOpen`, which falls whenever a
+ * PR merges. A failed fetch arrives as `null` and keeps the previous value;
+ * a fetched 0 is a real "nothing open right now".
+ */
+function mergeActivity(
+  next: FreshSnapshot,
+  prev: GitHubSnapshot,
+  keepMax: KeepFn,
+  record: (field: string, prev: number, next: number) => number,
+): GitHubSnapshot["ossActivity"] {
+  const a = next.ossActivity;
+  const b = prev.ossActivity;
+  return {
+    prsReviewed: keepMax(
+      "ossActivity.prsReviewed",
+      a.prsReviewed,
+      b.prsReviewed,
+    ),
+    issuesResolved: keepMax(
+      "ossActivity.issuesResolved",
+      a.issuesResolved,
+      b.issuesResolved,
+    ),
+    prsOpen:
+      a.prsOpen === null
+        ? record("ossActivity.prsOpen", b.prsOpen, 0)
+        : a.prsOpen,
+    issuesHelped: keepMax(
+      "ossActivity.issuesHelped",
+      a.issuesHelped,
+      b.issuesHelped,
+    ),
+    issuesOpened: keepMax(
+      "ossActivity.issuesOpened",
+      a.issuesOpened,
+      b.issuesOpened,
+    ),
   };
 }

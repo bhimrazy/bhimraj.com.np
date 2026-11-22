@@ -1,35 +1,32 @@
-import { allBlogPosts, allProjects } from "content-collections";
+import { allBlogPosts, allProjects, allResources } from "content-collections";
+import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 
-export default async function sitemap() {
+// No lastModified: `new Date()` would mark every page changed on each build.
+const STATIC_PAGES = ["", "blog", "projects", "oss", "research", "resources"];
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.url.replace(/\/$/, "");
-  // Get all pages
-  const pages = ["", "blog", "projects"];
-  const pagesUrls =
-    pages.map((page) => {
-      return {
-        url: `${baseUrl}/${page}`,
-        lastModified: new Date(),
-      };
-    }) ?? [];
 
-  // Get all posts slugs
-  const postsUrls =
-    allBlogPosts.map((post) => {
-      return {
-        url: `${baseUrl}/blog/${post._meta.path}`,
-        lastModified: new Date(post.updatedAt || post.publishedAt),
-      };
-    }) || [];
+  const staticUrls = STATIC_PAGES.map((path) => ({
+    url: `${baseUrl}/${path}`,
+  }));
 
-  // Get all projects slugs
-  const projectsUrls =
-    allProjects.map((post) => {
-      return {
-        url: `${baseUrl}/projects/${post._meta.path}`,
-        lastModified: new Date(post.updatedAt || post.publishedAt),
-      };
-    }) ?? [];
+  const postUrls = allBlogPosts.map((post) => ({
+    url: `${baseUrl}/blog/${post._meta.path}`,
+    lastModified: new Date(post.updatedAt || post.publishedAt),
+  }));
 
-  return [...pagesUrls, ...postsUrls, ...projectsUrls];
+  const projectUrls = allProjects.map((project) => ({
+    url: `${baseUrl}/projects/${project._meta.path}`,
+    lastModified: new Date(project.updatedAt || project.publishedAt),
+  }));
+
+  const resourceUrls = allResources
+    .filter((resource) => resource.hasPage)
+    .map((resource) => ({
+      url: `${baseUrl}/resources/${resource._meta.path}`,
+    }));
+
+  return [...staticUrls, ...postUrls, ...projectUrls, ...resourceUrls];
 }

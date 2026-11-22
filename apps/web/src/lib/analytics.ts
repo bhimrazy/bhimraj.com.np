@@ -13,6 +13,27 @@ type EventProps = {
   newsletter_submitted: { result: "success" | "error" };
   code_copied: { slug: string };
   blog_link_copied: { slug: string };
+  resource_opened: { slug: string; kind: string };
+  /** Course pages; `course` is the resource slug, `video` the YouTube ID. */
+  course_started: { course: string };
+  lecture_played: {
+    course: string;
+    video: string;
+    index: number;
+    /** False when the lecture opened on YouTube instead. */
+    embedded: boolean;
+  };
+  lecture_completed: { course: string; video: string };
+  progress_exported: { lectures: number };
+  progress_imported: { lectures: number };
+  progress_reset: { course: string };
+  /** Debounced; `query` is trimmed, lowercased and capped at 60 chars. */
+  resources_filtered: {
+    kind: string | null;
+    topic: string | null;
+    query: string | null;
+    results: number;
+  };
 };
 
 /** Thin, typed wrapper over posthog.capture — no-ops if PostHog isn't loaded. */

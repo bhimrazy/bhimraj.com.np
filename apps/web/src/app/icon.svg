@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <title>bhimraj</title>
+  <style>
+    path { stroke: #1c1917 }
+    circle { fill: #d97706 }
+    @media (prefers-color-scheme: dark) {
+      path { stroke: #f5f0e8 }
+      circle { fill: #f59e0b }
+    }
+  </style>
+  <path d="M3 25L9 17L13 21L19 10L27 25" fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="25" cy="7.5" r="3.5"/>
+</svg>
