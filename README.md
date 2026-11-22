@@ -1,6 +1,6 @@
 # bhimraj.com.np
 
-![bhimraj.com.np social preview](https://bhimraj.com.np/opengraph-image)
+![bhimraj.com.np](docs/og.webp)
 
 Personal site of Bhimraj Yadav, software engineer in Kathmandu: [bhimraj.com.np](https://bhimraj.com.np).
 
