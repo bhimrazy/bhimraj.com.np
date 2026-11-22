@@ -25,8 +25,6 @@ import { cn } from "@/lib/utils";
 const AUTO_OPEN_MS = 60_000; // fire after a minute on the page…
 const SCROLL_TRIGGER = 0.8; // …or after scrolling 80% down, once past SCROLL_MIN_MS
 const SCROLL_MIN_MS = 20_000; // so a quick scroll to the bottom doesn't count as reading
-/** Lets an in-page link (e.g. #contact) finish its scroll before the chat opens. */
-const CTA_OPEN_DELAY_MS = 600;
 
 const REASONS = [
   "Hiring / collab",
@@ -67,7 +65,7 @@ function InlineField({
       <input
         id={id}
         placeholder="optional"
-        className="h-full min-w-0 flex-1 bg-transparent text-site-text text-sm outline-none placeholder:text-site-text-tertiary/60"
+        className="h-full min-w-0 flex-1 bg-transparent text-base text-site-text outline-none placeholder:text-site-text-tertiary/60 sm:text-sm"
         {...props}
       />
     </div>
@@ -77,6 +75,7 @@ function InlineField({
 /**
  * Chat-style feedback box. Besides the launcher and the auto-open, any element
  * with `data-open-chat` opens it; a value naming one of REASONS preselects it.
+ * On phones, a `data-no-chat-launcher` element (video player) hides the launcher.
  */
 export default function FeedbackWidget() {
   const [open, setOpen] = useState(false);
@@ -87,6 +86,12 @@ export default function FeedbackWidget() {
   const [email, setEmail] = useState("");
   const [website, setWebsite] = useState(""); // honeypot
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  // Where focus goes back on close; null falls back to the launcher.
+  const openerRef = useRef<HTMLElement | null>(null);
+  const autoOpenedRef = useRef(false);
+  const restoreFocusRef = useRef(false);
   const fieldId = useId();
   const openRef = useRef(open);
   openRef.current = open;
@@ -118,6 +123,8 @@ export default function FeedbackWidget() {
       if (openRef.current || !shouldAutoOpen(readMemory())) return;
       const mem = readMemory();
       writeMemory({ status: "seen", autoOpens: mem.autoOpens + 1 });
+      autoOpenedRef.current = true;
+      openerRef.current = null;
       setOpen(true);
       capture("feedback_auto_opened");
     }
@@ -131,20 +138,32 @@ export default function FeedbackWidget() {
   }, []);
 
   useEffect(() => {
-    if (open) textareaRef.current?.focus();
+    if (open) {
+      // An auto-open must not pull focus (or the phone keyboard) from the page.
+      if (!autoOpenedRef.current) textareaRef.current?.focus();
+      return;
+    }
+    if (!restoreFocusRef.current) return;
+    restoreFocusRef.current = false;
+    const opener = openerRef.current;
+    (opener?.isConnected ? opener : launcherRef.current)?.focus();
   }, [open]);
 
-  const openManually = useCallback((preset?: Reason) => {
+  const openManually = useCallback((preset?: Reason, opener?: HTMLElement) => {
     if (readMemory().status === "new") writeMemory({ status: "seen" });
+    autoOpenedRef.current = false;
+    openerRef.current = opener ?? null;
     // Don't overwrite a topic the visitor already picked.
     if (preset) setReason((current) => current || preset);
+    // Already open (e.g. auto-opened): the effect won't rerun, so focus here.
+    if (openRef.current) textareaRef.current?.focus();
     setOpen(true);
     capture("feedback_opened");
   }, []);
 
   // Delegated, so server-rendered CTAs can open the chat without a client wrapper.
+  // Their href is the no-JS fallback.
   useEffect(() => {
-    let timer = 0;
     const onClick = (e: MouseEvent) => {
       const trigger = (e.target as Element | null)?.closest<HTMLElement>(
         "[data-open-chat]",
@@ -160,26 +179,27 @@ export default function FeedbackWidget() {
         e.altKey
       )
         return;
+      e.preventDefault();
       const preset = trigger.dataset.openChat;
-      window.clearTimeout(timer);
-      timer = window.setTimeout(
-        () => openManually(isReason(preset) ? preset : undefined),
-        CTA_OPEN_DELAY_MS,
-      );
+      openManually(isReason(preset) ? preset : undefined, trigger);
     };
     document.addEventListener("click", onClick);
-    return () => {
-      window.clearTimeout(timer);
-      document.removeEventListener("click", onClick);
-    };
+    return () => document.removeEventListener("click", onClick);
   }, [openManually]);
+
+  // Only restore focus that was in the panel, so an ignored auto-open moves none.
+  const close = useCallback(() => {
+    restoreFocusRef.current =
+      dialogRef.current?.contains(document.activeElement) ?? false;
+    setOpen(false);
+  }, []);
 
   const dismiss = useCallback(() => {
     if (readMemory().status !== "submitted")
       writeMemory({ status: "dismissed" });
-    setOpen(false);
+    close();
     capture("feedback_dismissed");
-  }, []);
+  }, [close]);
 
   useEffect(() => {
     if (!open) return;
@@ -219,7 +239,7 @@ export default function FeedbackWidget() {
           reason: reason || null,
           has_email: Boolean(email.trim()),
         });
-        setOpen(false);
+        close();
         setMessage("");
         setReason("");
         setName("");
@@ -239,6 +259,7 @@ export default function FeedbackWidget() {
     <div className="fixed right-[max(1rem,env(safe-area-inset-right))] bottom-[max(1rem,env(safe-area-inset-bottom))] installed:bottom-[calc(var(--tab-bar-space)+0.75rem)] z-50 sm:right-[max(1.5rem,env(safe-area-inset-right))] sm:bottom-[max(1.5rem,env(safe-area-inset-bottom))]">
       {open ? (
         <div
+          ref={dialogRef}
           role="dialog"
           aria-label="Message Bhimraj"
           className="fade-in zoom-in-95 slide-in-from-bottom-2 relative isolate w-[min(calc(100vw-2rem),23rem)] origin-bottom-right animate-in overflow-hidden rounded-2xl border border-site-border/60 bg-site-card shadow-2xl shadow-black/10 duration-200 dark:border-white/8 dark:shadow-black/40"
@@ -305,7 +326,7 @@ export default function FeedbackWidget() {
                       key={r}
                       type="button"
                       onClick={() => setReason(r)}
-                      className="rounded-full border border-site-accent/30 px-3 py-1.5 font-medium text-site-accent text-xs transition-colors hover:bg-site-accent-subtle focus-visible:outline-2 focus-visible:outline-site-accent"
+                      className="rounded-full border border-site-accent/30 px-3 py-1.5 font-medium text-site-accent-text text-xs transition-colors hover:bg-site-accent-subtle focus-visible:outline-2 focus-visible:outline-site-accent"
                     >
                       {r}
                     </button>
@@ -361,7 +382,7 @@ export default function FeedbackWidget() {
                   required
                   aria-label="Message"
                   placeholder="Write a message…"
-                  className="min-h-16 resize-none bg-site-bg pr-12 text-sm placeholder:text-site-text-tertiary dark:bg-site-bg-secondary"
+                  className="min-h-16 resize-none bg-site-bg pr-12 text-base placeholder:text-site-text-tertiary sm:text-sm dark:bg-site-bg-secondary"
                 />
                 <button
                   type="submit"
@@ -398,10 +419,11 @@ export default function FeedbackWidget() {
         </div>
       ) : (
         <button
+          ref={launcherRef}
           type="button"
           onClick={() => openManually()}
           aria-label="Message Bhimraj"
-          className="flex size-12 cursor-pointer items-center justify-center rounded-full bg-site-accent text-site-on-accent shadow-lg shadow-site-accent/25 transition-transform hover:scale-105 hover:bg-site-accent/90 focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2 motion-reduce:hover:scale-100"
+          className="flex size-12 cursor-pointer items-center justify-center rounded-full bg-site-accent text-site-on-accent shadow-lg shadow-site-accent/25 transition-transform hover:scale-105 hover:bg-site-accent/90 focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2 motion-reduce:hover:scale-100 max-sm:[body:has([data-no-chat-launcher])_&]:hidden"
         >
           <ChatBubbleIcon className="size-5" />
         </button>

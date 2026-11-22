@@ -70,7 +70,7 @@ export default function HeroSection() {
                 variant="outline"
                 className="h-10 rounded-lg px-4 font-semibold text-site-text focus-visible:ring-2 focus-visible:ring-site-accent sm:px-6"
               >
-                <a href="#contact" data-open-chat="Hiring / collab">
+                <a href="#contact" data-open-chat="">
                   Get in touch
                 </a>
               </Button>
@@ -104,7 +104,7 @@ export default function HeroSection() {
                       </span>
                       <span
                         aria-hidden
-                        className="text-site-accent transition-transform group-hover:translate-x-0.5"
+                        className="text-site-accent-text transition-transform group-hover:translate-x-0.5"
                       >
                         ↗
                       </span>
@@ -143,7 +143,7 @@ export default function HeroSection() {
               </p>
               <p className="mt-1 font-mono text-[11px] text-site-text-tertiary">
                 From Lahan · based in{" "}
-                <span className="font-semibold text-site-accent">
+                <span className="font-semibold text-site-accent-text">
                   Kathmandu
                 </span>
                 , Nepal

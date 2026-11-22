@@ -35,7 +35,8 @@ export default async function Footer() {
 
   return (
     <footer className="mt-auto border-site-border/60 border-t dark:border-white/4">
-      <Container className="py-14">
+      {/* Phones: room so the chat launcher clears the last line. */}
+      <Container className="pt-14 pb-24 sm:pb-14">
         <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-[1.6fr_1fr_1fr]">
           {/* Brand + contact */}
           <div className="col-span-2 max-w-sm md:col-span-1">
@@ -46,13 +47,14 @@ export default async function Footer() {
               Software engineer based in Kathmandu, Nepal. Products, open
               source, infrastructure, and research.
             </p>
-            <Link
+            {/* Plain <a>: next/link would swallow the chat click. */}
+            <a
               href="/#contact"
-              data-open-chat="Hiring / collab"
-              className="mt-5 inline-flex items-center gap-1.5 rounded-sm font-medium text-site-accent text-sm transition-colors hover:text-site-accent-hover focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
+              data-open-chat=""
+              className="mt-5 inline-flex items-center gap-1.5 rounded-sm font-medium text-site-accent-text text-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
             >
               Get in touch <span aria-hidden>→</span>
-            </Link>
+            </a>
           </div>
 
           <nav aria-label="Footer" className="flex flex-col gap-2.5">

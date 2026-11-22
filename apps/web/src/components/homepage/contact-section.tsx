@@ -46,7 +46,7 @@ export default function ContactSection({ index }: { index?: string }) {
               index={index}
               eyebrow="Contact"
               title="Say hello."
-              description="Products, open-source tools, infrastructure, or a research idea: I'm open to talking about any of them. A direct message is the fastest way to reach me."
+              description="Products, open-source tools, infrastructure, or a research idea: I'm open to talking about any of them. Message me on LinkedIn or leave a note in the chat; I read both."
               className="mb-0 sm:mb-0"
             />
 
