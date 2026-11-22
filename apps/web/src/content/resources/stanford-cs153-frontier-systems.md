@@ -8,4 +8,6 @@ term: Spring 2026
 tldr: The stack behind frontier AI, from energy and silicon to models, applications, security and deployment policy, with weekly talks from people building it.
 topics: [ml-systems]
 added: 2026-10-15
+video: true
+playlist: PLoROMvodv4rN447WKQ5oz_YdYbS74M5IA
 ---

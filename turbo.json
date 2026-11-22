@@ -15,8 +15,7 @@
         "RESEND_FROM_EMAIL",
         "FEEDBACK_NOTIFY_EMAIL",
         "MAILCHIMP_API_SERVER",
-        "MAILCHIMP_AUDIENCE_ID",
-        "YOUTUBE_API_URL"
+        "MAILCHIMP_AUDIENCE_ID"
       ]
     },
     "typecheck": {
@@ -32,7 +31,7 @@
     "knip": {},
     "sync": {
       "cache": false,
-      "passThroughEnv": ["GITHUB_TOKEN"]
+      "passThroughEnv": ["GITHUB_TOKEN", "YOUTUBE_API_KEY"]
     },
     "email:preview": {
       "cache": false,

@@ -4,7 +4,11 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   cacheComponents: true,
   poweredByHeader: false,
-  transpilePackages: ["@bhimrazy/github", "@bhimrazy/utils"],
+  transpilePackages: [
+    "@bhimrazy/github",
+    "@bhimrazy/utils",
+    "@bhimrazy/youtube",
+  ],
   logging: {
     fetches: {
       fullUrl: true,

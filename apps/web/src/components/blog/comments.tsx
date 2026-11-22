@@ -21,7 +21,12 @@ function themeUrl(dark: boolean) {
  * matched by pathname). Readers need a GitHub account. Rendered after mount
  * so the theme is known, and the iframe loads lazily near the viewport.
  */
-export default function Comments() {
+export default function Comments({
+  className = "mx-auto mt-16 max-w-measure",
+}: {
+  /** Placement; defaults to the blog's centred reading column. */
+  className?: string;
+}) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -29,10 +34,7 @@ export default function Comments() {
   const { repo, repoId, category, categoryId } = siteConfig.comments;
 
   return (
-    <section
-      aria-labelledby="comments-heading"
-      className="mx-auto mt-16 max-w-measure"
-    >
+    <section aria-labelledby="comments-heading" className={className}>
       <h2
         id="comments-heading"
         className="mb-6 font-display font-semibold text-site-text text-xl"

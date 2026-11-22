@@ -9,4 +9,5 @@ tldr: A hands-on course with no prerequisites on working with AI tools, covering
 topics: [dev-workflow]
 added: 2026-11-14
 video: true
+playlist: PLDrJO3v_iAZY
 ---

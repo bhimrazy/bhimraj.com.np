@@ -9,4 +9,5 @@ tldr: Building agentic systems, from simple LLM pipelines to compound systems an
 topics: [agents, llms]
 added: 2026-11-14
 video: true
+playlist: PLPRcF5HR02_U
 ---

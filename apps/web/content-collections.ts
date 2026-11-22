@@ -124,7 +124,29 @@ const Resource = defineCollection({
     /** Lecture or talk recordings are public. */
     video: z.boolean().default(false),
     featured: z.boolean().default(false),
+    // Course pages (/resources/[slug]). An entry gets one when it has a
+    // playlist or notes in its body.
+    /** YouTube playlist ID; `bun run sync:youtube` fetches its lectures. */
+    playlist: z.string().optional(),
+    /** "playlist" keeps YouTube's order instead of sorting by upload date. */
+    playlistOrder: z.enum(["published", "playlist"]).default("published"),
+    /** How many lectures I've watched, shown as my progress. */
+    watched: z.number().int().nonnegative().optional(),
+    /** Who it suits, and when to skip it, in a sentence each. */
+    forWho: z.string().optional(),
+    skipIf: z.string().optional(),
+    prereqs: z.array(z.string()).default([]),
+    /** Earlier offerings, newest first. */
+    otherTerms: z
+      .array(z.object({ term: z.string(), url: z.url() }))
+      .default([]),
   }),
+  transform: async (document, context) => {
+    const notes = document.content.trim()
+      ? await compileMarkdown(context, document, { rehypePlugins })
+      : null;
+    return { ...document, notes, hasPage: Boolean(document.playlist || notes) };
+  },
 });
 
 export default defineConfig({
