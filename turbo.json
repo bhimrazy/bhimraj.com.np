@@ -13,9 +13,7 @@
         "RESEND_API_KEY",
         "RESEND_AUDIENCE_ID",
         "RESEND_FROM_EMAIL",
-        "FEEDBACK_NOTIFY_EMAIL",
-        "MAILCHIMP_API_SERVER",
-        "MAILCHIMP_AUDIENCE_ID"
+        "FEEDBACK_NOTIFY_EMAIL"
       ]
     },
     "typecheck": {
