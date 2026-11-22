@@ -12,7 +12,7 @@ export default function TitleSection({ blog }: { blog: BlogPost }) {
     <header className="mx-auto mb-10 max-w-measure sm:mb-12">
       <Link
         href="/blog"
-        className="group mb-10 inline-flex items-center gap-2 rounded-sm font-mono text-site-text-secondary text-xs uppercase tracking-[1.5px] transition-colors hover:text-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4"
+        className="group -mt-3.5 mb-6.5 inline-flex items-center gap-2 rounded-sm py-3.5 font-mono text-site-text-secondary text-xs uppercase tracking-[1.5px] transition-colors hover:text-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4"
       >
         <ArrowLeftIcon className="size-3.5 transition-transform group-hover:-translate-x-0.5 motion-reduce:transition-none" />
         All writing

@@ -23,6 +23,7 @@ export function ModeToggle() {
     <Button
       variant="ghost"
       size="icon"
+      className="size-11 md:size-9"
       onClick={toggle}
       aria-label="Toggle theme"
       suppressHydrationWarning

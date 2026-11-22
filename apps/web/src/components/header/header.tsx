@@ -15,7 +15,7 @@ import { ActiveNavIsland, NavIsland } from "./nav-island";
  */
 export default function Header() {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 py-2">
+    <header className="fixed inset-x-0 top-0 z-50 pt-[calc(0.5rem+env(safe-area-inset-top))] pr-[env(safe-area-inset-right)] pb-2 pl-[env(safe-area-inset-left)]">
       <HeaderBackdrop />
 
       <nav className="relative mx-auto flex h-12 w-full max-w-7xl items-center justify-between px-4 sm:px-6">
@@ -23,7 +23,7 @@ export default function Header() {
         <Link
           href="/"
           aria-label="Bhimraj Yadav, home"
-          className="group flex items-center gap-2.5 rounded-md font-display font-semibold text-base text-site-text focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4"
+          className="group flex h-11 items-center gap-2.5 rounded-md font-display font-semibold text-base text-site-text focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4"
         >
           <BrandMark
             size={28}
@@ -38,7 +38,12 @@ export default function Header() {
 
         {/* Actions */}
         <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-11 md:size-9"
+            asChild
+          >
             <a
               href={siteConfig.links.github}
               target="_blank"

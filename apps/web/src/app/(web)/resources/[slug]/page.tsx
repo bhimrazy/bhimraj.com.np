@@ -100,7 +100,7 @@ export default async function ResourcePage({ params }: Props) {
         <Link
           href="/resources"
           className={cn(
-            "inline-flex items-center gap-1 rounded-sm font-mono text-site-text-tertiary text-xs transition-colors hover:text-site-text",
+            "-my-3.5 inline-flex items-center gap-1 rounded-sm py-3.5 font-mono text-site-text-tertiary text-xs transition-colors hover:text-site-text",
             focusRing,
           )}
         >

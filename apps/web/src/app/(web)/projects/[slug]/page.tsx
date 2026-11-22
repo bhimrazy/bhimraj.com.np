@@ -121,7 +121,7 @@ export default async function ProjectDetail({
           <Link
             href="/projects"
             className={cn(
-              "mb-10 inline-flex items-center gap-1.5 rounded-sm text-site-text-secondary text-sm transition-colors hover:text-site-text",
+              "-mt-3 mb-7 inline-flex items-center gap-1.5 rounded-sm py-3 text-site-text-secondary text-sm transition-colors hover:text-site-text",
               focusRing,
             )}
           >

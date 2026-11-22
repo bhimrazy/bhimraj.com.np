@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#0f0d0a" />
+    <title>Offline · Bhimraj Yadav</title>
+    <script>
+      // Same rule as next-themes on the site: a stored choice, else dark.
+      try {
+        if (localStorage.getItem("theme") === "light") {
+          document.documentElement.classList.add("light");
+          document.querySelector('meta[name="theme-color"]').content = "#fafaf9";
+        }
+      } catch {}
+    </script>
+    <style>
+      /* Served by the service worker with no network, so all inline.
+         Colours are the --site-* tokens in src/app/globals.css. */
+      :root {
+        --bg: #0f0d0a;
+        --card: #17150f;
+        --text: #f5f0e8;
+        --muted: #a09882;
+        --border: #2a2620;
+        --accent: #f59e0b;
+        --on-accent: #0f0d0a;
+        color-scheme: dark;
+      }
+      :root.light {
+        --bg: #fafaf9;
+        --card: #ffffff;
+        --text: #1c1917;
+        --muted: #57534e;
+        --border: #e7e5e4;
+        --accent: #d97706;
+        --on-accent: #1c1917;
+        color-scheme: light;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: max(16px, env(safe-area-inset-top))
+          max(16px, env(safe-area-inset-right))
+          max(16px, env(safe-area-inset-bottom))
+          max(16px, env(safe-area-inset-left));
+        background: var(--bg);
+        color: var(--text);
+        font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      main {
+        width: 100%;
+        max-width: 24rem;
+        padding: 2rem 1.5rem;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+        text-align: center;
+      }
+      h1 {
+        margin: 1rem 0 0.5rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+      p {
+        margin: 0;
+        font-size: 0.9375rem;
+        color: var(--muted);
+      }
+      .actions {
+        margin-top: 1.5rem;
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+      }
+      button,
+      a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0 1.25rem;
+        border-radius: 999px;
+        font: inherit;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      button {
+        border: 0;
+        background: var(--accent);
+        color: var(--on-accent);
+      }
+      a {
+        border: 1px solid var(--border);
+        color: var(--text);
+      }
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <svg width="48" height="48" viewBox="0 0 32 32" aria-hidden="true">
+        <path
+          d="M3 25L9 17L13 21L19 10L27 25"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <circle cx="25" cy="7.5" r="3" fill="var(--accent)" />
+      </svg>
+      <h1>You're offline</h1>
+      <p>
+        This page isn't saved on this device yet. Pages you've already read
+        still open offline.
+      </p>
+      <div class="actions">
+        <button type="button" onclick="location.reload()">Try again</button>
+        <a href="/">Home</a>
+      </div>
+    </main>
+    <script>
+      addEventListener("online", () => location.reload());
+    </script>
+  </body>
+</html>

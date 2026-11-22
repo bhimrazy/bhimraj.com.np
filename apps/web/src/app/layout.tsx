@@ -1,8 +1,10 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { Pwa } from "@/components/pwa";
 import { ThemeProvider } from "@/components/theme-provider";
 import { siteConfig } from "@/config/site";
+import { BRAND_COLORS } from "@/lib/brand";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -32,6 +34,7 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     siteName: siteConfig.name,
   },
+  appleWebApp: { title: "bhimraj", statusBarStyle: "default" },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
@@ -61,10 +64,11 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fafaf9" },
-    { media: "(prefers-color-scheme: dark)", color: "#0f0d0a" },
-  ],
+  // The site defaults to dark whatever the OS says; <Pwa /> follows a toggle.
+  themeColor: BRAND_COLORS.night,
+  // Draw under notches and the home indicator; fixed bars pad with
+  // env(safe-area-inset-*).
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -87,7 +91,7 @@ export default function RootLayout({
           href="/feed.xml"
         />
       </head>
-      <body className="flex min-h-dvh flex-col antialiased">
+      <body className="flex min-h-dvh flex-col pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -95,6 +99,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Pwa />
         </ThemeProvider>
       </body>
       {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
