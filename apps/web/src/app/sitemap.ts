@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 
 // No lastModified: `new Date()` would mark every page changed on each build.
-const STATIC_PAGES = ["", "blog", "projects", "oss", "research"];
+const STATIC_PAGES = ["", "blog", "projects", "oss", "research", "resources"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.url.replace(/\/$/, "");
