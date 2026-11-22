@@ -47,6 +47,7 @@ export function feedHtml(mdx: string, postPath: string): string {
         UNetTrace: nothing,
         RequestVsEvent: nothing,
         AttackPath: nothing,
+        BlastRadius: nothing,
         KeyTheft: nothing,
         EnvOnDisk: nothing,
         CveByYear: nothing,

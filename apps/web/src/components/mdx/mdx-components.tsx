@@ -5,6 +5,7 @@ import { CopyButton } from "./copy-button";
 import { RequestVsEvent } from "./events/request-vs-event";
 import { Figure } from "./figure";
 import { AttackPath } from "./security/attack-path";
+import { BlastRadius } from "./security/blast-radius";
 import { CooldownWindow } from "./security/cooldown-window";
 import { CveByYear } from "./security/cve-by-year";
 import { EnvOnDisk } from "./security/env-on-disk";
@@ -39,6 +40,7 @@ export const mdxComponents = {
   Shape,
   RequestVsEvent,
   AttackPath,
+  BlastRadius,
   KeyTheft,
   EnvOnDisk,
   CveByYear,

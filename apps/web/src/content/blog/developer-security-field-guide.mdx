@@ -225,6 +225,25 @@ A gitignored `.env` file was good advice. It kept secrets out of source code. Th
 
 You also might not know it happened. A stealer that runs during `npm install` and exits leaves no trace you'd notice. So the goal is that a stolen file holds nothing useful.
 
+### One machine, many projects
+
+Most of us don't have one project on our machine. We have a day job, a client or two, side projects and some open source, all under one user account. Each project has its own `.env`. The home directory holds logins that every project shares: AWS profiles, an npm token in `~/.npmrc`, the GitHub CLI token, browser sessions for every dashboard.
+
+Now a dependency in your weekend side project turns malicious. It runs as you, so it doesn't stop at that project. It reads the client's production database URL, your employer's cloud profile and the token that publishes your open source package. One bad install becomes a breach of several organisations, and some of them aren't yours.
+
+<Figure label="Blast radius" caption="Three projects on one machine. A malicious install in one of them can read everything your user account can read. Isolating projects and scoping logins shrinks what one compromise reaches.">
+  <BlastRadius />
+</Figure>
+
+So give each project its own walls:
+
+- **Start here.** Keep one vault or project per client in your secrets manager, and use references instead of values, as the next section shows.
+- **Start here.** Scope every login to the project. Use fine-grained GitHub tokens for one repository, and a separate cloud SSO profile per client that expires within hours: `aws sso login --profile client-a`.
+- **Start here.** Keep no long-lived tokens in your home directory. Remove the token line from `~/.npmrc`, and log in to npm only when you publish, or better, publish from CI with trusted publishing.
+- **Level up.** Start AI agents inside the project folder, never from your home directory, so they only see that project.
+- **Level up.** Run client projects in their own dev container or VM, with only that project's secrets and no home directory mounted. A malicious install then sees one project.
+- **Advanced.** Use a separate OS user, or a separate machine, for work that has production access.
+
 ### Start here: commit references, not values
 
 Most secrets managers can inject values into a process when it starts. Your `.env` file then holds a pointer to each secret instead of the secret itself. With the 1Password CLI, it looks like this:[^op-refs]
@@ -711,6 +730,7 @@ You don't need to do all of this at once. Each tier builds on the one before.
 ### This month
 
 - [ ] Move SSH keys to a security key, Secretive or the 1Password agent
+- [ ] Give client work its own dev container, secrets vault and cloud profile
 - [ ] Replace stored CI cloud keys with OIDC
 - [ ] Move package publishing to trusted publishing
 - [ ] Audit your servers, close public SSH ports and confirm automatic updates
