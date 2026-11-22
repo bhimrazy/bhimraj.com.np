@@ -9,7 +9,7 @@ export default function PostNotFound() {
     <main className="pt-32 pb-24">
       <Container>
         <div className="mx-auto max-w-measure">
-          <p className="mb-3 font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">
+          <p className="mb-3 font-medium font-mono text-[13px] text-site-accent-text uppercase tracking-[1.5px]">
             404
           </p>
           <h1 className="text-balance font-bold font-display text-4xl text-site-text leading-tight tracking-tight">
@@ -27,7 +27,7 @@ export default function PostNotFound() {
                   href={postHref(post)}
                   className="group block rounded-sm py-4 focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
                 >
-                  <span className="block font-display font-semibold text-site-text transition-colors group-hover:text-site-accent">
+                  <span className="block font-display font-semibold text-site-text transition-colors group-hover:text-site-accent-text">
                     {post.title}
                   </span>
                   <span className="mt-1 block font-mono text-site-text-tertiary text-xs">
@@ -40,7 +40,7 @@ export default function PostNotFound() {
 
           <Link
             href="/blog"
-            className="group mt-8 inline-flex items-center gap-2 rounded-sm font-mono text-site-text-secondary text-xs uppercase tracking-[1.5px] transition-colors hover:text-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4"
+            className="group mt-8 inline-flex items-center gap-2 rounded-sm font-mono text-site-text-secondary text-xs uppercase tracking-[1.5px] transition-colors hover:text-site-accent-text focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4"
           >
             <ArrowLeftIcon className="size-3.5 transition-transform group-hover:-translate-x-0.5 motion-reduce:transition-none" />
             All writing

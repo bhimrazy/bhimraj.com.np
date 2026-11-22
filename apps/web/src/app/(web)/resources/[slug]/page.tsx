@@ -44,11 +44,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lectures = getLectures(resource);
   const facts =
     lectures.length > 0
-      ? ` ${lectures.length} lectures, ${formatHours(totalSeconds(lectures))} in all, with a checklist that keeps your progress in your browser.`
+      ? ` ${lectures.length} lectures, ${formatHours(totalSeconds(lectures))}.`
       : "";
+  const withFacts = `${resource.tldr}${facts}`;
   return pageMetadata({
-    title: `${resource.title}${resource.term ? ` (${resource.term})` : ""}`,
-    description: `${resource.tldr}${facts}`,
+    title: resource.title,
+    description: withFacts.length <= 160 ? withFacts : resource.tldr,
     path: `/resources/${resource._meta.path}`,
     keywords: [resource.source, ...resource.topics.map((t) => TOPIC_LABELS[t])],
     ownCard: true,
@@ -199,7 +200,7 @@ export default async function ResourcePage({ params }: Props) {
       </Container>
 
       {lectures.length > 0 ? (
-        <section aria-label="Lectures" className="pb-16">
+        <section aria-label="Lectures" data-no-chat-launcher className="pb-16">
           <Container className="px-4 sm:px-8">
             <CourseClassroom
               course={slug}
@@ -266,7 +267,7 @@ export default async function ResourcePage({ params }: Props) {
             )}
             {resource.notes && (
               <div
-                className="prose dark:prose-invert mt-4 max-w-none prose-headings:font-display prose-a:text-site-accent prose-headings:text-site-text prose-li:text-site-text-secondary prose-p:text-site-text-secondary prose-p:leading-relaxed prose-headings:tracking-tight dark:prose-headings:text-site-text dark:prose-li:text-site-text-secondary dark:prose-p:text-site-text-secondary dark:prose-strong:text-site-text"
+                className="prose dark:prose-invert mt-4 max-w-none prose-headings:font-display prose-a:text-site-accent-text prose-headings:text-site-text prose-li:text-site-text-secondary prose-p:text-site-text-secondary prose-p:leading-relaxed prose-headings:tracking-tight dark:prose-headings:text-site-text dark:prose-li:text-site-text-secondary dark:prose-p:text-site-text-secondary dark:prose-strong:text-site-text"
                 // biome-ignore lint/security/noDangerouslySetInnerHtml: compiled from my own markdown at build time
                 dangerouslySetInnerHTML={{ __html: resource.notes }}
               />

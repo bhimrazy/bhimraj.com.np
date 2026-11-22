@@ -1,6 +1,7 @@
 ---
 title: "Chat with Phi 3.5 Vision"
-description: "Deploy and chat with Microsoft's Phi 3.5-vision multimodal LLM. LitServe handles high-performance inference while a Streamlit frontend gives you multi-image chat, comparison, and video summarization."
+seoDescription: "Deploy Microsoft's Phi 3.5-vision multimodal LLM with LitServe and a Streamlit UI for multi-image chat, image comparison and video summarization."
+description: "Deploy and chat with Microsoft's Phi 3.5-vision multimodal LLM. LitServe serves the model while a Streamlit frontend gives you multi-image chat, comparison, and video summarization."
 publishedAt: "2024-05-23"
 tags: [LitServe, Multimodal, LLM, Streamlit]
 category: "Multimodal LLMs"
@@ -11,10 +12,10 @@ liveLink: "https://lightning.ai/bhimrajyadav/studios/deploy-and-chat-with-phi-3-
 
 ## Overview
 
-**Phi-3.5-vision** is Microsoft's lightweight state-of-the-art open multimodal model, capable of multi-frame image understanding, image comparison, and video summarization.
+**Phi-3.5-vision** is Microsoft's lightweight open multimodal model, capable of multi-frame image understanding, image comparison, and video summarization.
 
-This project wraps it in a production-ready stack:
-- **LitServe** for fast, scalable inference serving
+This project pairs it with:
+- **LitServe** for inference serving
 - **Streamlit** for an interactive chat UI
 - **Flash Attention** for optimized GPU throughput
 

@@ -12,14 +12,14 @@ export default function TitleSection({ blog }: { blog: BlogPost }) {
     <header className="mx-auto mb-10 max-w-measure sm:mb-12">
       <Link
         href="/blog"
-        className="group -mt-3.5 mb-6.5 inline-flex items-center gap-2 rounded-sm py-3.5 font-mono text-site-text-secondary text-xs uppercase tracking-[1.5px] transition-colors hover:text-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4"
+        className="group -mt-3.5 mb-6.5 inline-flex items-center gap-2 rounded-sm py-3.5 font-mono text-site-text-secondary text-xs uppercase tracking-[1.5px] transition-colors hover:text-site-accent-text focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-4"
       >
         <ArrowLeftIcon className="size-3.5 transition-transform group-hover:-translate-x-0.5 motion-reduce:transition-none" />
         All writing
       </Link>
 
       {blog.tags.length > 0 && (
-        <p className="mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 font-medium font-mono text-[11px] text-site-accent uppercase tracking-[1.5px]">
+        <p className="mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 font-medium font-mono text-[11px] text-site-accent-text uppercase tracking-[1.5px]">
           {blog.tags.slice(0, 3).map((tag, i) => (
             <span
               key={tag}
@@ -63,7 +63,7 @@ export default function TitleSection({ blog }: { blog: BlogPost }) {
             href={siteConfig.links.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-fit rounded-sm font-medium text-site-text text-sm transition-colors hover:text-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
+            className="w-fit rounded-sm font-medium text-site-text text-sm transition-colors hover:text-site-accent-text focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
           >
             {siteConfig.author.name}
           </a>

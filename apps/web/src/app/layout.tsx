@@ -1,4 +1,3 @@
-import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { Suspense } from "react";
@@ -121,9 +120,6 @@ export default function RootLayout({
           <Pwa />
         </ThemeProvider>
       </body>
-      {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
-      )}
     </html>
   );
 }

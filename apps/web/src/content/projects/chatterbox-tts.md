@@ -1,6 +1,7 @@
 ---
 title: "Chatterbox TTS API"
-description: "Production-ready Text-to-Speech API built on Resemble AI's Chatterbox model with LitServe. Supports zero-shot voice cloning, emotion intensity control, and base64 audio I/O."
+seoDescription: "A text-to-speech REST API on Resemble AI's Chatterbox model, served with LitServe: zero-shot voice cloning, emotion control and base64 audio I/O."
+description: "Text-to-Speech API built on Resemble AI's Chatterbox model with LitServe. Supports zero-shot voice cloning, emotion intensity control, and base64 audio I/O."
 publishedAt: "2026-03-12"
 tags: [LitServe, TTS, Voice Cloning, AI]
 category: "Model Serving"
@@ -11,7 +12,7 @@ liveLink: "https://lightning.ai/bhimrajyadav/studios/build-a-production-ready-tt
 
 ## Overview
 
-**Chatterbox TTS API** wraps Resemble AI's [Chatterbox](https://huggingface.co/ResembleAI/chatterbox) model — an open-source, MIT-licensed TTS model — in a LitServe-powered REST API built for production use.
+**Chatterbox TTS API** wraps Resemble AI's [Chatterbox](https://huggingface.co/ResembleAI/chatterbox) model — an open-source, MIT-licensed TTS model — in a LitServe-powered REST API.
 
 ## Features
 

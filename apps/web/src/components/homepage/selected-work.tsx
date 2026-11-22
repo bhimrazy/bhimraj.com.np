@@ -68,7 +68,7 @@ function Arrow({ href }: { href: string }) {
   return (
     <span
       aria-hidden
-      className="text-site-accent text-sm transition-transform group-hover:translate-x-0.5"
+      className="text-site-accent-text text-sm transition-transform group-hover:translate-x-0.5"
     >
       {href.startsWith("http") ? "↗" : "→"}
     </span>
@@ -78,7 +78,7 @@ function Arrow({ href }: { href: string }) {
 function KindRow({ work }: { work: Work }) {
   return (
     <p className="flex items-center justify-between gap-3 font-mono text-[11px]">
-      <span className="rounded-md bg-site-accent-subtle px-2 py-0.5 text-site-accent">
+      <span className="rounded-md bg-site-accent-subtle px-2 py-0.5 text-site-accent-text">
         {work.kind}
       </span>
       <span className="text-site-text-tertiary">
@@ -174,7 +174,7 @@ function FeaturedCard({ work }: { work: Featured }) {
       <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 border-site-border/60 border-t pt-4 text-site-text-tertiary text-xs dark:border-white/5">
         {repo && (
           <>
-            <span className="flex items-center gap-1.5 font-semibold text-site-accent">
+            <span className="flex items-center gap-1.5 font-semibold text-site-accent-text">
               <StarFilledIcon className="size-3.5" aria-hidden />
               {formatCompact(repo.stars)} stars
             </span>
@@ -228,7 +228,7 @@ function WorkCard({ work }: { work: Work }) {
           <pre className="overflow-x-auto rounded-lg border border-site-border/60 bg-site-bg/60 p-4 font-mono text-[11px] leading-relaxed dark:border-white/5">
             {work.terminal.map(({ cmd, out }) => (
               <span key={cmd} className="not-first:mt-2 block">
-                <span className="text-site-accent">$</span>{" "}
+                <span className="text-site-accent-text">$</span>{" "}
                 <span className="text-site-text">{cmd}</span>
                 {"\n"}
                 <span className="text-site-text-tertiary">{out}</span>

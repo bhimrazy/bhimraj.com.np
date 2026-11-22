@@ -34,7 +34,7 @@ export default function Blog() {
         {/* Page header */}
         <header className="mb-12 flex flex-col gap-6 md:mb-14 md:flex-row md:items-end md:justify-between">
           <div>
-            <span className="mb-3 inline-block font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]">
+            <span className="mb-3 inline-block font-medium font-mono text-[13px] text-site-accent-text uppercase tracking-[1.5px]">
               Blog
             </span>
             <h1 className="mb-3 font-bold font-display text-4xl text-site-text leading-tight tracking-tight sm:text-5xl">

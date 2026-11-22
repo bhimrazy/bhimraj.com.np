@@ -95,7 +95,7 @@ export function OssBreakdown() {
                 {...(s.href.startsWith("http")
                   ? { target: "_blank", rel: "noopener noreferrer" }
                   : {})}
-                className="rounded-sm font-bold font-display text-[26px] text-site-text tabular-nums tracking-tight transition-colors hover:text-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2 sm:text-[28px]"
+                className="rounded-sm font-bold font-display text-[26px] text-site-text tabular-nums tracking-tight transition-colors hover:text-site-accent-text focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2 sm:text-[28px]"
               >
                 {atLeast(s.value)}
               </a>
@@ -135,7 +135,7 @@ export function OssBreakdown() {
                   aria-hidden
                   className={cn("size-2 shrink-0 rounded-sm", s.tone)}
                 />
-                <span className="truncate font-medium text-site-text text-sm transition-colors group-hover:text-site-accent">
+                <span className="truncate font-medium text-site-text text-sm transition-colors group-hover:text-site-accent-text">
                   {s.name}
                 </span>
               </span>

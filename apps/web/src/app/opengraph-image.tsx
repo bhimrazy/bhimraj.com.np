@@ -8,7 +8,7 @@ export const contentType = OG_CONTENT_TYPE;
 export default function Image() {
   return ogImage({
     kicker: siteConfig.author.designation,
-    title: "I build products, and the tools developers use.",
+    title: "I build products, and the tools developers use to build them.",
     footLeft: "bhimraj.com.np",
     footRight: "Products · Open source · AI",
   });

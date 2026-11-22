@@ -15,7 +15,7 @@ import {
   buildResourceCollectionJsonLd,
 } from "@/lib/structured-data";
 
-const TITLE = "Resources: free courses, books and talks on AI and systems";
+const TITLE = "Free AI and systems courses, books and talks";
 const DESCRIPTION =
   "Free courses, books and talks on LLMs, agents, efficient AI, ML systems and reliability, from Stanford, MIT, Harvard and Google, with a short summary of each.";
 

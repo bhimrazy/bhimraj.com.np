@@ -34,8 +34,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const path = getPath((await params).slug);
   if (!path) return { title: "Not found" };
   return pageMetadata({
-    title: `${path.title}: a learning path`,
-    description: `${path.promise} ${path.steps.length} free resources in order, each with a line on why it comes where it does.`,
+    title: path.title,
+    description: `${path.promise} A learning path of ${path.steps.length} free resources, in order.`,
     path: `/resources/paths/${path.slug}`,
     keywords: ["learning path", ...path.steps.map((s) => s.resource.title)],
     ownCard: true,
@@ -104,7 +104,7 @@ export default async function PathPage({ params }: Props) {
           </dl>
           {path.intro && (
             <div
-              className="prose dark:prose-invert mt-6 max-w-none prose-a:text-site-accent prose-p:text-site-text-secondary prose-p:leading-relaxed dark:prose-p:text-site-text-secondary"
+              className="prose dark:prose-invert mt-6 max-w-none prose-a:text-site-accent-text prose-p:text-site-text-secondary prose-p:leading-relaxed dark:prose-p:text-site-text-secondary"
               // biome-ignore lint/security/noDangerouslySetInnerHtml: compiled from my own markdown at build time
               dangerouslySetInnerHTML={{ __html: path.intro }}
             />
@@ -129,7 +129,7 @@ export default async function PathPage({ params }: Props) {
           </ol>
           <p className="mt-8 max-w-2xl text-pretty text-site-text-tertiary text-xs leading-relaxed sm:ml-14">
             {path.totalSec > 0 &&
-              `Hours add up the lectures on YouTube so far${path.untimed > 0 ? `; ${path.untimed === 1 ? "one step has" : `${path.untimed} steps have`} no recordings to count` : ""}. `}
+              `Hours count only the lectures posted on YouTube so far${path.untimed > 0 ? `; ${path.untimed === 1 ? "one step has" : `${path.untimed} steps have`} no recordings to count` : ""}. `}
             {hasLectures &&
               "Tick lectures on a course page and its step fills in here. That progress stays in your browser."}
           </p>
@@ -177,7 +177,7 @@ function Step({
   const arrow = (glyph: string) => (
     <span
       aria-hidden
-      className="ml-1.5 inline-block text-site-accent text-sm transition-transform group-hover/link:translate-x-0.5"
+      className="ml-1.5 inline-block text-site-accent-text text-sm transition-transform group-hover/link:translate-x-0.5"
     >
       {glyph}
     </span>

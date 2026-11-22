@@ -1,4 +1,4 @@
-import posthog from "posthog-js";
+import { capturePosthog } from "@/lib/posthog-client";
 
 /**
  * Named events worth capturing explicitly — everything else (pageviews,
@@ -36,13 +36,12 @@ type EventProps = {
   };
 };
 
-/** Thin, typed wrapper over posthog.capture — no-ops if PostHog isn't loaded. */
+/** Typed posthog.capture; events before PostHog loads are queued (max 50). */
 export function capture<K extends keyof EventProps>(
   ...args: EventProps[K] extends undefined
     ? [event: K]
     : [event: K, props: EventProps[K]]
 ): void {
-  if (!posthog.__loaded) return;
   const [event, props] = args;
-  posthog.capture(event, props);
+  capturePosthog(event, props);
 }

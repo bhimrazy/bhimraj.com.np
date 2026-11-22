@@ -36,7 +36,7 @@ export default function BlogPreview() {
                 {formatShortDate(post.publishedAt)}
               </time>
               <div className="min-w-0 flex-1">
-                <h4 className="text-pretty font-display font-semibold text-base text-site-text leading-snug transition-colors group-hover:text-site-accent">
+                <h4 className="text-pretty font-display font-semibold text-base text-site-text leading-snug transition-colors group-hover:text-site-accent-text">
                   {post.title}
                 </h4>
                 <p className="mt-1.5 line-clamp-2 text-site-text-secondary text-sm leading-relaxed">
@@ -51,7 +51,7 @@ export default function BlogPreview() {
                   </span>
                   <span>{post.readingTime}</span>
                   {post.tags?.slice(0, 2).map((tag: string) => (
-                    <span key={tag} className="text-site-accent/80">
+                    <span key={tag} className="text-site-accent-text">
                       #{tag.replace(/\s+/g, "-")}
                     </span>
                   ))}

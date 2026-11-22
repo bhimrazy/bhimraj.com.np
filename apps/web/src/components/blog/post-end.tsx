@@ -128,7 +128,7 @@ export default function PostEnd({
                     target="_blank"
                     rel="noopener noreferrer"
                     className={cn(
-                      "inline-flex items-center gap-1.5 rounded-sm text-site-text-secondary transition-colors hover:text-site-accent",
+                      "inline-flex items-center gap-1.5 rounded-sm text-site-text-secondary transition-colors hover:text-site-accent-text",
                       focusRing,
                     )}
                   >
@@ -176,7 +176,7 @@ function KeepReading({ related }: { related: RelatedPost[] }) {
         <Link
           href="/blog"
           className={cn(
-            "group inline-flex items-center gap-1.5 rounded-sm font-mono text-site-text-secondary text-xs transition-colors hover:text-site-accent",
+            "group inline-flex items-center gap-1.5 rounded-sm font-mono text-site-text-secondary text-xs transition-colors hover:text-site-accent-text",
             focusRing,
           )}
         >
@@ -211,8 +211,10 @@ function KeepReading({ related }: { related: RelatedPost[] }) {
                 />
               </div>
               <div className="flex flex-1 flex-col p-5">
-                <p className={cn(kicker, "mb-2 text-site-accent")}>{reason}</p>
-                <h3 className="text-pretty font-display font-semibold text-base text-site-text leading-snug transition-colors group-hover:text-site-accent">
+                <p className={cn(kicker, "mb-2 text-site-accent-text")}>
+                  {reason}
+                </p>
+                <h3 className="text-pretty font-display font-semibold text-base text-site-text leading-snug transition-colors group-hover:text-site-accent-text">
                   {post.title}
                 </h3>
                 <p className="mt-auto pt-4 font-mono text-site-text-tertiary text-xs">
