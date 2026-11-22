@@ -11,14 +11,14 @@ import { LATEST, PERSON } from "./data";
  */
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden pt-24 pb-20 sm:pt-36 sm:pb-24 lg:pt-40 lg:pb-28">
+    <section className="relative overflow-hidden pt-24 pb-20 sm:pt-36 sm:pb-24 lg:flex lg:min-h-[min(100svh,56rem)] lg:items-center lg:pt-36 lg:pb-20">
       {/* Backdrop: a warm glow, and the slow aurora waves (they fade out at the bottom). */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-radial-[ellipse_at_80%_0%] from-site-accent-subtle via-transparent to-transparent" />
         <AuroraBg />
       </div>
 
-      <Container className="relative px-4 sm:px-8">
+      <Container className="relative w-full px-4 sm:px-8">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_280px] lg:gap-16">
           <div>
             {/* Mobile identity: small avatar instead of the portrait */}
