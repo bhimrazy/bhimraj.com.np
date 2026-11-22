@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@latest/schema.json",
-  "entry": ["src/content/**/*.mdx"],
+  "entry": ["src/content/**/*.mdx", "scripts/*.{ts,tsx}"],
   "ignore": ["public/giscus/*.css"],
   "next": {
     "config": ["next.config.{js,ts,cjs,mjs}"],

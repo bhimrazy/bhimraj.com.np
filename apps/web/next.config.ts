@@ -50,6 +50,14 @@ const nextConfig: NextConfig = {
       source: "/giscus/:file*",
       headers: [{ key: "Access-Control-Allow-Origin", value: "*" }],
     },
+    {
+      // Browsers check for a new worker on each visit; a cached copy of the
+      // script would hold updates back.
+      source: "/sw.js",
+      headers: [
+        { key: "Cache-Control", value: "no-cache, max-age=0, must-revalidate" },
+      ],
+    },
   ],
   redirects: async () => {
     return [

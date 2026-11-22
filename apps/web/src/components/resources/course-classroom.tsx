@@ -410,7 +410,7 @@ export function CourseClassroom({
                   aria-label={`Mark "${l.title}" as watched`}
                   onClick={() => toggleDone(l)}
                   className={cn(
-                    "mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border transition-colors disabled:opacity-50",
+                    "relative mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border transition-colors after:absolute after:-inset-2 disabled:opacity-50",
                     focusRing,
                     saved?.done
                       ? "border-site-accent bg-site-accent text-site-on-accent"

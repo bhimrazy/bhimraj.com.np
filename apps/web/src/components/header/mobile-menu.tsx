@@ -31,7 +31,12 @@ export function MobileMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="md:hidden">
-        <Button variant="ghost" size="icon" aria-label="Open menu">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-11"
+          aria-label="Open menu"
+        >
           <HamburgerMenuIcon className="h-5 w-5" />
         </Button>
       </DropdownMenuTrigger>
@@ -44,7 +49,7 @@ export function MobileMenu({
           <DropdownMenuItem
             key={link.href}
             asChild
-            className="rounded-lg px-3 py-2 text-sm focus:bg-site-bg-secondary focus:text-site-text dark:focus:bg-site-bg-secondary dark:focus:text-site-text"
+            className="rounded-lg px-3 py-3 text-sm focus:bg-site-bg-secondary focus:text-site-text dark:focus:bg-site-bg-secondary dark:focus:text-site-text"
           >
             <Link
               href={link.href}
