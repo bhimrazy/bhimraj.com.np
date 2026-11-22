@@ -2,16 +2,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const send = vi.fn();
 const create = vi.fn();
-const update = vi.fn();
 
 vi.mock("@/lib/resend", () => ({
-  resend: { emails: { send }, contacts: { create, update } },
+  resend: { emails: { send }, contacts: { create } },
   resendConfig: { audienceId: "aud_test", fromEmail: "Test <t@example.com>" },
 }));
 
 const { POST } = await import("@/app/api/subscribe/route");
-const { confirmSubscription, unsubscribe } = await import("@/lib/newsletter");
-const { signNewsletterToken } = await import("@/lib/newsletter-token");
 
 let ipCounter = 0;
 function post(body: unknown, ip = `203.0.113.${++ipCounter}`) {
@@ -25,12 +22,9 @@ function post(body: unknown, ip = `203.0.113.${++ipCounter}`) {
 }
 
 beforeEach(() => {
-  vi.stubEnv("NEWSLETTER_SECRET", "route-secret");
-  vi.stubEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY", "");
   vi.stubEnv("TURNSTILE_SECRET_KEY", "");
   send.mockResolvedValue({ data: { id: "e" }, error: null });
   create.mockResolvedValue({ data: { id: "c" }, error: null });
-  update.mockResolvedValue({ data: { id: "c" }, error: null });
 });
 
 afterEach(() => {
@@ -40,32 +34,30 @@ afterEach(() => {
 });
 
 describe("POST /api/subscribe", () => {
-  it("mails only a confirmation link and creates no contact", async () => {
+  it("adds the contact and sends the welcome mail", async () => {
     const res = await post({ email: "New@Example.com" });
-    expect(await res.json()).toEqual({ ok: true });
-    expect(create).not.toHaveBeenCalled();
-    expect(send).toHaveBeenCalledTimes(1);
-    const mail = send.mock.calls[0]?.[0];
-    expect(mail.to).toBe("new@example.com");
-    expect(mail.subject).toMatch(/confirm/i);
+    expect(res.status).toBe(201);
+    expect(create).toHaveBeenCalledWith({
+      email: "new@example.com",
+      audienceId: "aud_test",
+      unsubscribed: false,
+    });
+    expect(send.mock.calls[0]?.[0].to).toBe("new@example.com");
   });
 
-  it("answers the same when the address is capped or the mail fails", async () => {
-    const email = "capped@example.com";
-    const answers = [];
-    for (let i = 0; i < 3; i++)
-      answers.push(await (await post({ email })).json());
-    send.mockRejectedValueOnce(new Error("down"));
-    answers.push(await (await post({ email: "fails@example.com" })).json());
-    expect(answers).toEqual(Array(4).fill({ ok: true }));
-    // 2 per address per hour, plus the failed one.
-    expect(send).toHaveBeenCalledTimes(3);
+  it("caps mail to one address at 2 an hour with the same answer", async () => {
+    const statuses = [];
+    for (let i = 0; i < 3; i++) {
+      statuses.push((await post({ email: "capped@example.com" })).status);
+    }
+    expect(statuses).toEqual([201, 201, 201]);
+    expect(send).toHaveBeenCalledTimes(2);
   });
 
-  it("drops honeypot submissions with the same answer", async () => {
+  it("drops honeypot submissions as success", async () => {
     const res = await post({ email: "bot@example.com", website: "x" });
-    expect(await res.json()).toEqual({ ok: true });
-    expect(send).not.toHaveBeenCalled();
+    expect(res.status).toBe(201);
+    expect(create).not.toHaveBeenCalled();
   });
 
   it("keeps validation, content-type and per-IP limits", async () => {
@@ -83,42 +75,43 @@ describe("POST /api/subscribe", () => {
         (await post({ email: `u${i}@example.com` }, "198.51.100.9")).status,
       );
     }
-    expect(statuses).toEqual([200, 200, 200, 200, 200, 429]);
+    expect(statuses).toEqual([201, 201, 201, 201, 201, 429]);
   });
 
-  it("is unavailable without a signing secret", async () => {
-    vi.stubEnv("NEWSLETTER_SECRET", "");
-    expect((await post({ email: "a@example.com" })).status).toBe(503);
+  it("returns a generic error when Resend refuses the contact", async () => {
+    create.mockResolvedValueOnce({ data: null, error: { name: "x" } });
+    const res = await post({ email: "a@example.com" });
+    expect(res.status).toBe(502);
     expect(send).not.toHaveBeenCalled();
   });
 
-  describe("with Turnstile configured", () => {
-    beforeEach(() => {
-      vi.stubEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY", "site");
-      vi.stubEnv("TURNSTILE_SECRET_KEY", "secret");
-    });
+  describe("with TURNSTILE_SECRET_KEY set", () => {
+    beforeEach(() => vi.stubEnv("TURNSTILE_SECRET_KEY", "secret"));
 
     const siteverify = (body: unknown) =>
       vi.stubGlobal("fetch", vi.fn().mockResolvedValue(Response.json(body)));
 
     it("requires a token", async () => {
       expect((await post({ email: "a@example.com" })).status).toBe(400);
-      expect(send).not.toHaveBeenCalled();
+      expect(create).not.toHaveBeenCalled();
     });
 
     it("accepts a token verified for our hostname", async () => {
       siteverify({ success: true, hostname: "bhimraj.com.np" });
-      const res = await post({ email: "a@example.com", turnstileToken: "tok" });
-      expect(await res.json()).toEqual({ ok: true });
-      expect(send).toHaveBeenCalledTimes(1);
+      const res = await post(
+        { email: "a@example.com", turnstileToken: "tok" },
+        "192.0.2.7",
+      );
+      expect(res.status).toBe(201);
       const [, init] = vi.mocked(fetch).mock.calls[0] ?? [];
-      expect(JSON.parse(String(init?.body))).toMatchObject({
+      expect(JSON.parse(String(init?.body))).toEqual({
         secret: "secret",
         response: "tok",
+        remoteip: "192.0.2.7",
       });
     });
 
-    it("rejects a token from another hostname or a failed check", async () => {
+    it("rejects another hostname or a failed check", async () => {
       siteverify({ success: true, hostname: "evil.example" });
       expect(
         (await post({ email: "a@example.com", turnstileToken: "t" })).status,
@@ -127,7 +120,15 @@ describe("POST /api/subscribe", () => {
       expect(
         (await post({ email: "a@example.com", turnstileToken: "t" })).status,
       ).toBe(403);
-      expect(send).not.toHaveBeenCalled();
+      expect(create).not.toHaveBeenCalled();
+    });
+
+    it("honours TURNSTILE_ALLOWED_HOSTNAMES", async () => {
+      vi.stubEnv("TURNSTILE_ALLOWED_HOSTNAMES", "preview.example, other.test");
+      siteverify({ success: true, hostname: "preview.example" });
+      expect(
+        (await post({ email: "a@example.com", turnstileToken: "t" })).status,
+      ).toBe(201);
     });
 
     it("fails closed when siteverify is unreachable", async () => {
@@ -148,48 +149,5 @@ describe("clientIpFrom", () => {
     ).toBe("1.1.1.1");
     expect(h({ "x-forwarded-for": "2.2.2.2, 3.3.3.3" })).toBe("2.2.2.2");
     expect(h({})).toBe("unknown");
-  });
-});
-
-describe("confirm and unsubscribe", () => {
-  const confirm = (email: string) =>
-    signNewsletterToken("route-secret", "confirm", email, { ttlSeconds: 60 });
-
-  it("creates the contact and sends the welcome mail", async () => {
-    expect(await confirmSubscription(confirm("a@example.com"))).toBe("done");
-    expect(create).toHaveBeenCalledWith({
-      email: "a@example.com",
-      audienceId: "aud_test",
-      unsubscribed: false,
-    });
-    expect(send).toHaveBeenCalledTimes(1);
-  });
-
-  it("re-subscribes an existing contact", async () => {
-    create.mockResolvedValueOnce({ data: null, error: { name: "exists" } });
-    expect(await confirmSubscription(confirm("b@example.com"))).toBe("done");
-    expect(update).toHaveBeenCalledWith(
-      expect.objectContaining({ email: "b@example.com", unsubscribed: false }),
-    );
-  });
-
-  it("rejects bad tokens without touching Resend", async () => {
-    expect(await confirmSubscription("garbage")).toBe("invalid");
-    expect(await confirmSubscription(null)).toBe("invalid");
-    expect(create).not.toHaveBeenCalled();
-  });
-
-  it("marks the contact unsubscribed", async () => {
-    const token = signNewsletterToken(
-      "route-secret",
-      "unsubscribe",
-      "c@example.com",
-    );
-    expect(await unsubscribe(token)).toBe("done");
-    expect(update).toHaveBeenCalledWith({
-      email: "c@example.com",
-      audienceId: "aud_test",
-      unsubscribed: true,
-    });
   });
 });

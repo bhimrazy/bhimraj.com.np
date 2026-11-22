@@ -19,11 +19,7 @@ export async function submitSubscription(body: {
     const data = await res.json().catch(() => null);
     capture("newsletter_submitted", { result: res.ok ? "success" : "error" });
     return res.ok
-      ? {
-          ok: true,
-          message:
-            "Almost there! Check your inbox to confirm your subscription.",
-        }
+      ? { ok: true, message: data?.message ?? "🎉 You're in!" }
       : { ok: false, message: data?.error ?? FAILED };
   } catch {
     capture("newsletter_submitted", { result: "error" });

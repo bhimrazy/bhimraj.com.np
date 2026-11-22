@@ -10,13 +10,12 @@ export type TurnstileResult =
 
 type TurnstileConfig = { secretKey: string; allowedHostnames: string[] };
 
-// Both keys or off, so a half-configured deploy keeps working.
+// Enforced whenever the secret is set; unset (local dev) skips the check.
 export function turnstileConfig(
   env: NodeJS.ProcessEnv = process.env,
 ): TurnstileConfig | null {
-  const siteKey = env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
   const secretKey = env.TURNSTILE_SECRET_KEY?.trim();
-  if (!siteKey || !secretKey) return null;
+  if (!secretKey) return null;
   // Refuses tokens minted on other hosts using the same widget.
   const pinned = (env.TURNSTILE_ALLOWED_HOSTNAMES ?? "")
     .split(",")

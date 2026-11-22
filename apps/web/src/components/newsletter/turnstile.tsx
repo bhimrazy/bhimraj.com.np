@@ -28,11 +28,18 @@ declare global {
 
 export type TurnstileState = ReturnType<typeof useTurnstile>;
 
+const TOKEN_WAIT_MS = 15_000;
+const WAITING = "Please finish the security check, then try again.";
+const BROKEN =
+  "The security check didn't load. Turn off content blockers for this site, or reload.";
+
 // Loads the script only once the form nears the viewport or takes focus.
 export function useTurnstile(form: RefObject<HTMLFormElement | null>) {
   const [armed, setArmed] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-  const [broken, setBroken] = useState(false);
+  const [interactive, setInteractive] = useState(false);
+  const token = useRef<string | null>(null);
+  const broken = useRef(false);
+  const waiters = useRef<Array<() => void>>([]);
   const widgetId = useRef<string | null>(null);
 
   useEffect(() => {
@@ -51,32 +58,47 @@ export function useTurnstile(form: RefObject<HTMLFormElement | null>) {
     };
   }, [form, armed]);
 
+  const settle = useCallback((next: string | null, failed = false) => {
+    token.current = next;
+    broken.current = failed;
+    if (next || failed) for (const wake of waiters.current.splice(0)) wake();
+  }, []);
+
+  // Resolves once the invisible widget has a token, so submit never waits on a box.
+  const getToken = useCallback(async (): Promise<
+    { token: string | null; error?: undefined } | { error: string }
+  > => {
+    if (!SITE_KEY) return { token: null };
+    setArmed(true);
+    if (!token.current && !broken.current) {
+      await new Promise<void>((resolve) => {
+        waiters.current.push(resolve);
+        setTimeout(resolve, TOKEN_WAIT_MS);
+      });
+    }
+    if (token.current) return { token: token.current };
+    return { error: broken.current ? BROKEN : WAITING };
+  }, []);
+
   // Tokens are single use.
   const reset = useCallback(() => {
-    setToken(null);
+    token.current = null;
     if (widgetId.current) window.turnstile?.reset(widgetId.current);
   }, []);
 
-  const blocker =
-    !SITE_KEY || token
-      ? null
-      : broken
-        ? "The security check didn't load. Turn off content blockers for this site, or reload."
-        : "Wait a moment for the security check to finish, then try again.";
-
   return {
-    token,
-    blocker,
+    getToken,
     reset,
-    widget: { armed, setToken, setBroken, widgetId },
+    widget: { armed, interactive, setInteractive, settle, widgetId },
   };
 }
 
+// Managed widget, interaction-only: invisible unless Cloudflare needs the visitor.
 export function Turnstile({ state }: { state: TurnstileState }) {
   const container = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
   const { resolvedTheme } = useTheme();
-  const { armed, setToken, setBroken, widgetId } = state.widget;
+  const { armed, interactive, setInteractive, settle, widgetId } = state.widget;
 
   useEffect(() => {
     const node = container.current;
@@ -87,23 +109,20 @@ export function Turnstile({ state }: { state: TurnstileState }) {
       theme: resolvedTheme === "light" ? "light" : "dark",
       size: "flexible",
       appearance: "interaction-only",
-      callback: (t: string) => {
-        setBroken(false);
-        setToken(t);
-      },
-      "expired-callback": () => setToken(null),
-      "error-callback": () => {
-        setToken(null);
-        setBroken(true);
-      },
+      callback: (t: string) => settle(t),
+      "expired-callback": () => settle(null),
+      "error-callback": () => settle(null, true),
+      "before-interactive-callback": () => setInteractive(true),
+      "after-interactive-callback": () => setInteractive(false),
     });
     widgetId.current = id;
     return () => {
       turnstile.remove(id);
       widgetId.current = null;
-      setToken(null);
+      settle(null);
+      setInteractive(false);
     };
-  }, [ready, resolvedTheme, setToken, setBroken, widgetId]);
+  }, [ready, resolvedTheme, settle, setInteractive, widgetId]);
 
   if (!SITE_KEY || !armed) return null;
   return (
@@ -111,9 +130,13 @@ export function Turnstile({ state }: { state: TurnstileState }) {
       <Script
         src={SCRIPT_SRC}
         onReady={() => setReady(true)}
-        onError={() => setBroken(true)}
+        onError={() => settle(null, true)}
       />
-      <div ref={container} className="w-full empty:hidden" />
+      {/* Out of flow while invisible, so the form's gap leaves no empty row. */}
+      <div
+        ref={container}
+        className={interactive ? "w-full" : "pointer-events-none absolute"}
+      />
     </>
   );
 }

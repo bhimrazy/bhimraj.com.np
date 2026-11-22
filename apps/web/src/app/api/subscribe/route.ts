@@ -1,6 +1,8 @@
+import { createHash } from "node:crypto";
 import { z } from "zod";
-import { newsletterEnabled, requestSubscription } from "@/lib/newsletter";
+import { WelcomeEmail } from "@/emails/welcome-email";
 import { rateLimit } from "@/lib/rate-limit";
+import { resend, resendConfig } from "@/lib/resend";
 import { clientIpFrom } from "@/lib/security";
 import { turnstileConfig, verifyTurnstile } from "@/lib/turnstile";
 
@@ -17,8 +19,9 @@ const TURNSTILE_ERRORS = {
   unavailable: [503, "Couldn't run the security check. Please try again."],
 } as const;
 
-// Same answer for new, pending, subscribed and capped addresses: no enumeration.
-const OK = () => Response.json({ ok: true });
+const SUBSCRIBED = "🎉 You're in! I just sent a little hello to your inbox.";
+const subscribed = () =>
+  Response.json({ message: SUBSCRIBED }, { status: 201 });
 
 export async function POST(req: Request) {
   if (!req.headers.get("content-type")?.includes("application/json")) {
@@ -48,15 +51,7 @@ export async function POST(req: Request) {
     );
   }
 
-  if (parsed.data.website) return OK();
-
-  if (!newsletterEnabled()) {
-    console.error("[subscribe] newsletter not configured");
-    return Response.json(
-      { error: "Subscriptions are temporarily unavailable." },
-      { status: 503 },
-    );
-  }
+  if (parsed.data.website) return subscribed();
 
   const turnstile = turnstileConfig();
   if (turnstile) {
@@ -71,6 +66,52 @@ export async function POST(req: Request) {
     }
   }
 
-  await requestSubscription(parsed.data.email);
-  return OK();
+  if (!resend || !resendConfig.audienceId) {
+    console.error("[subscribe] Resend not configured");
+    return Response.json(
+      { error: "Subscriptions are temporarily unavailable." },
+      { status: 503 },
+    );
+  }
+
+  const { email } = parsed.data;
+  // Caps welcome mails to one address, whichever IPs ask; answered as success.
+  const digest = createHash("sha256").update(email).digest("hex");
+  if (!rateLimit(`subscribe:to:${digest}`, 2, 60 * 60_000).allowed) {
+    return subscribed();
+  }
+
+  try {
+    const { error } = await resend.contacts.create({
+      email,
+      audienceId: resendConfig.audienceId,
+      unsubscribed: false,
+    });
+
+    if (error) {
+      console.error("[subscribe] contacts.create", error);
+      return Response.json(
+        { error: "Something went wrong. Please try again." },
+        { status: 502 },
+      );
+    }
+
+    // Best effort, but awaited: serverless may stop once the response is sent.
+    await resend.emails
+      .send({
+        from: resendConfig.fromEmail,
+        to: email,
+        subject: "You're subscribed 🎉",
+        react: WelcomeEmail(),
+      })
+      .catch((err) => console.error("[subscribe] welcome email", err));
+
+    return subscribed();
+  } catch (err) {
+    console.error("[subscribe] unexpected", err);
+    return Response.json(
+      { error: "Something went wrong. Please try again." },
+      { status: 500 },
+    );
+  }
 }

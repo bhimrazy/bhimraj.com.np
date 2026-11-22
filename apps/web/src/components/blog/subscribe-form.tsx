@@ -17,15 +17,17 @@ export default function SubscribeForm() {
 
   const subscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (turnstile.blocker) {
-      toast.error(turnstile.blocker);
+    setLoading(true);
+    const check = await turnstile.getToken();
+    if (check.error !== undefined) {
+      toast.error(check.error);
+      setLoading(false);
       return;
     }
-    setLoading(true);
     const { ok, message } = await submitSubscription({
       email,
       website,
-      turnstileToken: turnstile.token,
+      turnstileToken: check.token,
     });
     turnstile.reset();
     if (ok) setEmail("");

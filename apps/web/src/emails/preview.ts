@@ -1,6 +1,5 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { render } from "@react-email/components";
-import { ConfirmEmail } from "@/emails/confirm-email";
 import { FeedbackEmail } from "@/emails/feedback-email";
 import { WelcomeEmail } from "@/emails/welcome-email";
 
@@ -9,15 +8,7 @@ const OUT_DIR = ".email-preview";
 async function main() {
   await mkdir(OUT_DIR, { recursive: true });
 
-  const unsubscribeUrl =
-    "https://bhimraj.com.np/newsletter/unsubscribe?token=preview";
-  const confirm = await render(
-    ConfirmEmail({
-      confirmUrl: "https://bhimraj.com.np/newsletter/confirm?token=preview",
-      unsubscribeUrl,
-    }),
-  );
-  const welcome = await render(WelcomeEmail({ unsubscribeUrl }));
+  const welcome = await render(WelcomeEmail());
   const feedback = await render(
     FeedbackEmail({
       message:
@@ -32,12 +23,11 @@ async function main() {
     }),
   );
 
-  await writeFile(`${OUT_DIR}/confirm.html`, confirm);
   await writeFile(`${OUT_DIR}/welcome.html`, welcome);
   await writeFile(`${OUT_DIR}/feedback.html`, feedback);
 
   console.log(
-    `✓ Rendered confirm.html, welcome.html and feedback.html in ${OUT_DIR}`,
+    `✓ Rendered ${OUT_DIR}/welcome.html and ${OUT_DIR}/feedback.html`,
   );
 }
 

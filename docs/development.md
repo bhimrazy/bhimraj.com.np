@@ -26,7 +26,7 @@ Posts, projects and resources are Markdown/MDX files in `apps/web/src/content`. 
 
 ## Newsletter
 
-Double opt-in with no database: `/api/subscribe` only mails a signed link (48 hours), and the contact is added to the Resend audience when the button on `/newsletter/confirm` is pressed. Needs `RESEND_API_KEY`, `RESEND_AUDIENCE_ID` and `NEWSLETTER_SECRET`. Cloudflare Turnstile on the form turns on when both `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are set; tokens are pinned to `bhimraj.com.np` unless `TURNSTILE_ALLOWED_HOSTNAMES` says otherwise. Rate limits are in memory, per serverless instance.
+`/api/subscribe` adds the address to the Resend audience (`RESEND_API_KEY`, `RESEND_AUDIENCE_ID`) and sends a welcome email. Cloudflare Turnstile is checked server-side whenever `TURNSTILE_SECRET_KEY` is set, with tokens pinned to `bhimraj.com.np` unless `TURNSTILE_ALLOWED_HOSTNAMES` says otherwise; `NEXT_PUBLIC_TURNSTILE_SITE_KEY` shows the widget. Rate limits are in memory, per serverless instance.
 
 ## Data
 
