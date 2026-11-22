@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { activeNavHref, NAV_LINKS } from "./nav-links";
+import { activeNavHref, MENU_LINKS } from "./nav-links";
 
 /**
  * Reads the URL, so it only resolves at request time — render it inside a
@@ -40,7 +40,7 @@ export function MobileMenu({
         sideOffset={8}
         className="w-48 rounded-xl border-site-border bg-site-card p-1.5 text-site-text shadow-2xl shadow-black/10 dark:border-white/8 dark:bg-site-card dark:text-site-text dark:shadow-black/40"
       >
-        {NAV_LINKS.map((link) => (
+        {MENU_LINKS.map((link) => (
           <DropdownMenuItem
             key={link.href}
             asChild
