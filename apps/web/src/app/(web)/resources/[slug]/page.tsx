@@ -12,6 +12,7 @@ import { CourseClassroom } from "@/components/resources/course-classroom";
 import { groupMaterials } from "@/components/resources/materials";
 import {
   getLectures,
+  getPathsWith,
   getResource,
   totalSeconds,
 } from "@/components/resources/resources";
@@ -62,6 +63,7 @@ export default async function ResourcePage({ params }: Props) {
   const lectures = getLectures(resource);
   const totalSec = totalSeconds(lectures);
   const { byLecture, general } = groupMaterials(resource.materials);
+  const inPaths = getPathsWith(slug);
   const playlistUrl = resource.playlist
     ? `https://www.youtube.com/playlist?list=${resource.playlist}`
     : null;
@@ -155,6 +157,25 @@ export default async function ResourcePage({ params }: Props) {
               </li>
             ))}
           </ul>
+
+          {inPaths.length > 0 && (
+            <ul className="mt-4 space-y-1 text-site-text-secondary text-sm">
+              {inPaths.map(({ path, position }) => (
+                <li key={path.slug}>
+                  Step {position} of {path.steps.length} in{" "}
+                  <Link
+                    href={`/resources/paths/${path.slug}`}
+                    className={cn(
+                      "rounded-sm font-medium text-site-text underline decoration-site-accent/40 underline-offset-4 transition-colors hover:text-site-accent-text hover:decoration-site-accent",
+                      focusRing,
+                    )}
+                  >
+                    {path.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </header>
 
         {(resource.forWho ||

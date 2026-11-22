@@ -48,6 +48,7 @@ export const TOPIC_LABELS: Record<ResourceTopic, string> = {
 };
 
 export const RESOURCE_STATUSES = [
+  "learning",
   "recommended",
   "revisiting",
   "queued",
@@ -55,10 +56,17 @@ export const RESOURCE_STATUSES = [
 export type ResourceStatus = (typeof RESOURCE_STATUSES)[number];
 
 export const STATUS_LABELS: Record<ResourceStatus, string> = {
+  learning: "Learning now",
   recommended: "Recommended",
   revisiting: "Revisiting",
   queued: "On my list",
 };
+
+/** Statuses the homepage shows as what I'm working through right now. */
+export const IN_PROGRESS_STATUSES: readonly ResourceStatus[] = [
+  "learning",
+  "revisiting",
+];
 
 /** What a course-material link points to; the page shows its label. */
 export const MATERIAL_KINDS = [

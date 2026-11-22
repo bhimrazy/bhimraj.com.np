@@ -1,4 +1,9 @@
-import { allBlogPosts, allProjects, allResources } from "content-collections";
+import {
+  allBlogPosts,
+  allLearningPaths,
+  allProjects,
+  allResources,
+} from "content-collections";
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 
@@ -28,5 +33,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${baseUrl}/resources/${resource._meta.path}`,
     }));
 
-  return [...staticUrls, ...postUrls, ...projectUrls, ...resourceUrls];
+  const pathUrls = allLearningPaths.map((path) => ({
+    url: `${baseUrl}/resources/paths/${path._meta.path}`,
+  }));
+
+  return [
+    ...staticUrls,
+    ...postUrls,
+    ...projectUrls,
+    ...resourceUrls,
+    ...pathUrls,
+  ];
 }

@@ -81,7 +81,20 @@ declare module "content-collections" {
     hasPage: boolean;
   }
 
+  export interface LearningPath {
+    _meta: ContentMeta;
+    content: string;
+    title: string;
+    promise: string;
+    forWho: string;
+    order: number;
+    steps: { resource: string; why: string }[];
+    /** The body as HTML, or null when empty. */
+    intro: string | null;
+  }
+
   export const allBlogPosts: BlogPost[];
   export const allProjects: Project[];
   export const allResources: Resource[];
+  export const allLearningPaths: LearningPath[];
 }

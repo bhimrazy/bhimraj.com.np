@@ -166,6 +166,41 @@ const Resource = defineCollection({
   },
 });
 
+/**
+ * A route through resources in an order I chose. `getPaths()` checks each
+ * step's slug against the resources, so a typo fails the build.
+ */
+const LearningPath = defineCollection({
+  name: "LearningPath",
+  directory: "src/content/paths",
+  include: "*.md",
+  schema: z.object({
+    content: z.string(),
+    title: z.string(),
+    /** One sentence on where the path gets you. */
+    promise: z.string(),
+    forWho: z.string(),
+    /** Position on /resources, lowest first. */
+    order: z.number().int().default(100),
+    steps: z
+      .array(
+        z.object({
+          /** A resource's file name, without `.md`. */
+          resource: z.string(),
+          /** One line on why it comes at this point. */
+          why: z.string(),
+        }),
+      )
+      .min(2),
+  }),
+  transform: async (document, context) => {
+    const intro = document.content.trim()
+      ? await compileMarkdown(context, document, { rehypePlugins })
+      : null;
+    return { ...document, intro };
+  },
+});
+
 export default defineConfig({
-  content: [BlogPost, Project, Resource],
+  content: [BlogPost, Project, Resource, LearningPath],
 });

@@ -4,6 +4,7 @@ import { surface } from "@/components/surface";
 import { cn } from "@/lib/utils";
 import { ColumnTitle } from "./column-title";
 import { PERSONAL } from "./data";
+import { getLearningSlots, LearningNow } from "./learning-now";
 import { NowItems } from "./now-items";
 import { OffTheClock } from "./off-the-clock";
 
@@ -15,6 +16,14 @@ const CURRENTLY = [
 
 /** The person behind the work: what he's on right now, and off the clock. */
 export default function BeyondSection() {
+  // Once a resource file marks something in progress, the card below shows
+  // it with progress, so the hand-written "Learning" row steps aside.
+  const learning = getLearningSlots();
+  const currently =
+    learning.length > 0
+      ? CURRENTLY.filter((row) => row.label !== "Learning")
+      : CURRENTLY;
+
   return (
     <section id="beyond" className="scroll-mt-20 pt-4 pb-20 sm:pb-24">
       <Container className="px-4 sm:px-8">
@@ -34,7 +43,7 @@ export default function BeyondSection() {
                 "flex-1 divide-y divide-site-border/60 dark:divide-white/5",
               )}
             >
-              {CURRENTLY.map(({ label, value }) => (
+              {currently.map(({ label, value }) => (
                 <div
                   key={label}
                   className="grid grid-cols-[88px_1fr] gap-4 px-6 py-4 sm:grid-cols-[110px_1fr] sm:px-7"
@@ -54,6 +63,8 @@ export default function BeyondSection() {
             <ColumnTitle title="Off the clock" />
             <OffTheClock />
           </div>
+
+          <LearningNow slots={learning} />
         </div>
       </Container>
     </section>
