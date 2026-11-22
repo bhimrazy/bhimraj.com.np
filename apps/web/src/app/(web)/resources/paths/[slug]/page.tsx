@@ -34,8 +34,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const path = getPath((await params).slug);
   if (!path) return { title: "Not found" };
   return pageMetadata({
-    title: `${path.title}: a learning path`,
-    description: `${path.promise} ${path.steps.length} free resources in order, each with a line on why it comes where it does.`,
+    title: path.title,
+    description: `${path.promise} A learning path of ${path.steps.length} free resources, in order.`,
     path: `/resources/paths/${path.slug}`,
     keywords: ["learning path", ...path.steps.map((s) => s.resource.title)],
     ownCard: true,
@@ -129,7 +129,7 @@ export default async function PathPage({ params }: Props) {
           </ol>
           <p className="mt-8 max-w-2xl text-pretty text-site-text-tertiary text-xs leading-relaxed sm:ml-14">
             {path.totalSec > 0 &&
-              `Hours add up the lectures on YouTube so far${path.untimed > 0 ? `; ${path.untimed === 1 ? "one step has" : `${path.untimed} steps have`} no recordings to count` : ""}. `}
+              `Hours count only the lectures posted on YouTube so far${path.untimed > 0 ? `; ${path.untimed === 1 ? "one step has" : `${path.untimed} steps have`} no recordings to count` : ""}. `}
             {hasLectures &&
               "Tick lectures on a course page and its step fills in here. That progress stays in your browser."}
           </p>

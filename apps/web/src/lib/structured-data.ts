@@ -245,6 +245,18 @@ export function buildLearningPathJsonLd(path: {
   };
 }
 
+const PROVIDERS: [prefix: string, name: string][] = [
+  ["Stanford", "Stanford University"],
+  ["MIT", "Massachusetts Institute of Technology"],
+  ["Harvard", "Harvard University"],
+  ["Google", "Google"],
+];
+
+// `source` may be a format, not an institution: no provider then.
+function providerName(source: string): string | undefined {
+  return PROVIDERS.find(([prefix]) => source.startsWith(prefix))?.[1];
+}
+
 /** A course page: the course itself, offered online as recorded lectures. */
 export function buildCourseJsonLd(course: {
   title: string;
@@ -257,6 +269,7 @@ export function buildCourseJsonLd(course: {
   totalSec: number;
 }): JsonLdObject {
   const instructor = course.people.map((name) => ({ "@type": "Person", name }));
+  const provider = providerName(course.source);
   return {
     "@context": CONTEXT,
     "@type": "Course",
@@ -264,7 +277,7 @@ export function buildCourseJsonLd(course: {
     description: course.tldr,
     url: absoluteUrl(`/resources/${course.slug}`),
     sameAs: course.url,
-    provider: { "@type": "Organization", name: course.source },
+    ...(provider && { provider: { "@type": "Organization", name: provider } }),
     ...(instructor.length > 0 && { instructor }),
     hasCourseInstance: {
       "@type": "CourseInstance",
