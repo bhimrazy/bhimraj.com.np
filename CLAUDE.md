@@ -4,20 +4,11 @@ Personal site of Bhimraj Yadav: Next.js 16 (App Router) in a Bun + Turborepo mon
 
 ## Commands
 
-Run from the root.
+Scripts are in the root `package.json`. Worth knowing:
 
-```bash
-bun dev
-bun run build
-bun typecheck
-bun run test             # not `bun test`, which is Bun's own runner
-bun lint
-bun format:write
-bun run knip
-bun run lint:versions
-bun run sync             # GITHUB_TOKEN for full data
-bun run sync:youtube     # needs YOUTUBE_API_KEY
-```
+- `bun run test`, not `bun test` (that is Bun's own runner).
+- `bun run knip` finds unused code; `bun run lint:versions` keeps one version of each dependency.
+- `bun run sync` needs `GITHUB_TOKEN` for full data; `bun run sync:youtube` needs `YOUTUBE_API_KEY`.
 
 ## Rules
 
