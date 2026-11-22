@@ -1,11 +1,7 @@
 import { withContentCollections } from "@content-collections/next";
 import type { NextConfig } from "next";
 
-// Built from what the site loads. Next's inline bootstrap scripts need
-// 'unsafe-inline': nonces don't work with prerendered pages under
-// cacheComponents, and hashes can't cover per-build inline payloads.
-// To collect reports later, add `report-uri <endpoint>` (and a
-// Reporting-Endpoints header for `report-to`).
+// 'unsafe-inline' for Next's inline scripts: nonces don't work with prerendered pages.
 const contentSecurityPolicy = [
   "default-src 'self'",
   [
@@ -95,7 +91,6 @@ const nextConfig: NextConfig = {
           key: "Permissions-Policy",
           value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
         },
-        // Enforced on its own: no page of this site is meant to be framed.
         { key: "Content-Security-Policy", value: "frame-ancestors 'none'" },
         // Report-only until the Vercel preview shows no violations.
         {
