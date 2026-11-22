@@ -134,7 +134,7 @@ An editor extension runs with your permissions and updates itself. In October 20
 
 ### Level up: keys that can't be copied
 
-The strongest fix keeps the private key in hardware, where no file holds it. There's nothing for a stealer to copy, and every use needs your touch or fingerprint.
+The strongest fix keeps the private key in hardware, where no file holds it. There's nothing for a stealer to copy. If you set the key to require it, every use also needs your touch or fingerprint. A prompt you didn't start is then your alarm.
 
 - **A FIDO2 security key**, like a YubiKey, holds an `ed25519-sk` key. `verify-required` asks for your PIN or fingerprint on every signature.[^yubico]
 
@@ -563,6 +563,20 @@ Scope it tightly. Grant `id-token: write` only to the publish job, from one work
 
 The last stop is where stolen credentials get spent. With exploits arriving in days, the server rules are about two things: expose as little as possible, and patch automatically.
 
+If you deploy to a VPS of your own, those steps are yours. A fresh server gives you `root@ip`, and there are about fifteen things to set up before it should face the internet: an admin user with a key, SSH hardening, a firewall, automatic updates, kernel settings. The common way to get it wrong is to lock yourself out of SSH halfway through.
+
+### Start here: harden a fresh VPS with a tool that can undo
+
+I built [vps-ready](https://vps-ready.bhimraj.com.np/) for this. It's an open source tool for Debian and Ubuntu that audits the server, shows you a plan of every change before it writes anything, and applies it. If a change could lock you out, like SSH or firewall settings, a timer rolls it back unless you confirm from a new SSH login within five minutes. It's in beta, so expect rough edges, but it covers the common setup for a single server.[^vps-ready]
+
+```sh
+sudo vps-ready audit     # what fails, and why it matters
+sudo vps-ready plan      # what would change; nothing is written
+sudo vps-ready           # guided setup: asks a few questions, then applies with the rollback timer
+```
+
+The sections below are the same steps by hand, if you'd rather do them yourself or want to know what the tool changes.
+
 ### Start here: SSH with keys only
 
 Put this in a drop-in file so package upgrades don't overwrite it:[^sshd]
@@ -597,6 +611,8 @@ You don't need port 22 open to the internet. Tailscale or WireGuard gives you a 
 sudo ufw default deny incoming
 sudo ufw allow in on tailscale0
 ```
+
+If you run Docker, check what is actually reachable from outside. Ports that Docker publishes go around ufw's rules, so a container you thought was firewalled may be open to the internet. Bind published ports to `127.0.0.1` and put a reverse proxy in front.
 
 ### Level up: don't park long-lived keys on platforms
 
@@ -650,7 +666,7 @@ You don't need to do all of this at once. Each tier builds on the one before.
 - [ ] Move SSH keys to a security key, Secretive or the 1Password agent
 - [ ] Replace stored CI cloud keys with OIDC
 - [ ] Move package publishing to trusted publishing
-- [ ] Close public SSH ports and confirm automatic updates
+- [ ] Audit your servers, close public SSH ports and confirm automatic updates
 - [ ] Add spend caps and alerts to every AI and cloud API key
 - [ ] Turn on audit logs for cloud, GitHub and your secrets manager
 - [ ] Write down your leaked-key steps before you need them
@@ -716,6 +732,7 @@ If you spot something wrong or out of date, tell me in the comments below and I'
 [^oidc-aws]: GitHub Docs, [Configuring OpenID Connect in AWS](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws).
 [^zizmor]: zizmor, [usage](https://docs.zizmor.sh/usage/), [audits](https://docs.zizmor.sh/audits) and [integrations](https://docs.zizmor.sh/integrations/).
 [^npm-trusted]: npm Docs, [Trusted publishing](https://docs.npmjs.com/trusted-publishers).
+[^vps-ready]: [vps-ready](https://github.com/bhimrazy/vps-ready), v0.7, for Debian 12 and 13 and Ubuntu 22.04 and 24.04.
 [^sshd]: OpenBSD manual, [sshd_config(5)](https://man.openbsd.org/sshd_config).
 [^unattended]: Ubuntu Server docs, [Automatic updates](https://ubuntu.com/server/docs/how-to/software/automatic-updates/).
 [^tailscale]: Tailscale, [Tailscale SSH](https://tailscale.com/kb/1193/tailscale-ssh), and Cloudflare, [SSH with Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/use-cases/ssh/).
