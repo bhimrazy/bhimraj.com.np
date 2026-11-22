@@ -65,7 +65,9 @@ notations when a post needs them, not before.
 - `events/`: `RequestVsEvent` (timelines in `request-flow.ts`) for the
   event-driven architecture post.
 - `security/`: `AttackPath` (laptop to production with real incidents; `active`
-  marks one station), `KeyTheft` and `EnvOnDisk` for the developer security post.
+  marks one station), `KeyTheft`, `EnvOnDisk`, `CveByYear`, `CooldownWindow`,
+  `TagVsSha` and `LethalTrifecta` for the developer security post (data and
+  sources in `field-guide-data.ts`).
 
 After changing `content-collections.ts` or the Shiki transformers, delete
 `apps/web/.content-collections`: its cache is keyed by content, not config.
