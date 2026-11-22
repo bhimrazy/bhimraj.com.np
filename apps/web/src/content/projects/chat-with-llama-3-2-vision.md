@@ -1,6 +1,7 @@
 ---
 title: "Chat with Llama 3.2 Vision"
-description: "Deploy Meta's Llama 3.2 Vision multimodal LLM with LitServe for lightning-fast inference. Supports image understanding and visual question answering via a clean REST API."
+seoDescription: "Serve Meta's Llama 3.2 Vision multimodal LLM with LitServe: image understanding and visual question answering over a REST API, with a client script."
+description: "Deploy Meta's Llama 3.2 Vision multimodal LLM with LitServe. Supports image understanding and visual question answering via a clean REST API."
 publishedAt: "2024-09-25"
 tags: [LitServe, Llama, Multimodal, LLM]
 category: "Multimodal LLMs"
@@ -11,7 +12,7 @@ liveLink: "https://lightning.ai/bhimrajyadav/studios/deploy-and-chat-with-llama-
 
 ## Overview
 
-**Llama 3.2 Vision** is Meta's multimodal open model capable of image reasoning, captioning, and visual QA. This project deploys it using LitServe for production-grade serving with minimal boilerplate.
+**Llama 3.2 Vision** is Meta's multimodal open model capable of image reasoning, captioning, and visual QA. This project deploys it using LitServe with minimal boilerplate.
 
 ## Get Started
 
