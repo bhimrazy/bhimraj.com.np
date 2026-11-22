@@ -46,7 +46,7 @@ const OUTCOME: Record<
       detail: "No prompt, and the logs say it was you.",
     },
     story:
-      "A plain key file is the key itself: a stealer copies it and signs in from anywhere until you revoke it, and malware on your laptop uses it without asking.",
+      "A plain key file is the key itself: a stealer copies it and signs in from anywhere until you revoke it, and malware on your device uses it without asking.",
   },
   passphrase: {
     copy: {
@@ -228,7 +228,7 @@ function CopyScene({ storage }: { storage: Storage }) {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full">
       <title>{`Stealer copies ~/.ssh: ${v.title}.`}</title>
-      <Box x={LEFT} label="your laptop" />
+      <Box x={LEFT} label="your device" />
       <Box x={RIGHT} label="attacker's machine" />
       <text
         x={lx}
@@ -276,7 +276,7 @@ function CopyScene({ storage }: { storage: Storage }) {
   );
 }
 
-/** (b) Malware on the laptop signs in to your servers as you. */
+/** (b) Malware on the device signs in to your servers as you. */
 function MalwareScene({ storage }: { storage: Storage }) {
   const v = OUTCOME[storage].malware;
   const lx = LEFT + BOX.w / 2;
@@ -286,7 +286,7 @@ function MalwareScene({ storage }: { storage: Storage }) {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full">
       <title>{`Malware running as you: ${v.title}.`}</title>
-      <Box x={LEFT} label="your laptop" />
+      <Box x={LEFT} label="your device" />
       <Box x={RIGHT} label="your servers" />
       <rect
         x={lx - 26}

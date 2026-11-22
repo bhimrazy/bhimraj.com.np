@@ -1,8 +1,8 @@
 ---
 title: "A developer's security field guide for the AI era"
 seoTitle: "Developer security in the AI era: a practical guide"
-seoDescription: "A practical, beginner-to-advanced guide to securing your laptop, secrets, AI agents, dependencies, CI and servers, with real incidents and copy-paste config."
-description: "Attackers rarely break in any more. They log in with tokens they took from a laptop, a package or a pipeline. This guide walks the path your code takes to production and hardens each stop, from SSH keys to dependency cooldowns."
+seoDescription: "A practical, beginner-to-advanced guide to securing your device, secrets, AI agents, dependencies, CI and servers, with real incidents and copy-paste config."
+description: "Attackers rarely break in any more. They log in with tokens they took from a developer's device, a package or a pipeline. This guide walks the path your code takes to production and hardens each stop, from SSH keys to dependency cooldowns."
 publishedAt: "2026-11-22"
 updatedAt: "2026-11-22"
 tags:
@@ -17,22 +17,27 @@ tags:
 image: "/blog/security/developer-security-field-guide.png"
 ---
 
-The last few months gave us these incidents:
+October 2026 was a hard month to be a developer reading the news.
 
-- **29 October 2026.** About $6.3 billion left Binance in roughly 20 minutes. Binance traced the attack to one DevOps engineer's laptop.[^binance]
-- **29 October 2026.** For about 11 hours, Cursor's extension marketplace served a fake update of the Claude Code extension. It added the attacker's SSH key to each machine and opened a tunnel back to them. Up to 5,000 users installed it.[^cursor-ext]
-- **21 October 2026.** A poisoned LiteLLM release sat on PyPI for almost two hours. The attackers didn't find a bug in LiteLLM. They used GitHub CLI tokens stolen from three of its engineers.[^litellm-oct]
-- **October 2026.** Wiz tracked 17 separate breaches at AI developer platforms in a single month, and called it "Black October".[^wiz-oct]
-- **May 2026.** Attackers published 84 malicious versions of TanStack packages without stealing a single password. They tricked a CI workflow into publishing for them.[^tanstack]
-- **November 2025.** The Shai-Hulud 2.0 worm spread through about 800 npm packages and dumped stolen secrets into more than 25,000 public repositories.[^shai2]
+On 29 October, about $6.3 billion left Binance in roughly 20 minutes. Binance traced it back to one engineer's laptop.[^binance] The same day, Cursor's extension marketplace served up to 5,000 developers a fake update of the Claude Code extension. It planted the attacker's SSH key on their machines.[^cursor-ext] A week earlier, a poisoned LiteLLM release went out on PyPI, published with tokens stolen from LiteLLM's own engineers.[^litellm-oct]
 
-Most of these attacks share a pattern. Nobody broke any encryption. The attackers logged in with credentials that a laptop, a package or a pipeline gave up. This guide is about closing those doors.
+None of these needed a clever exploit. Nobody broke any encryption. The attackers logged in, with credentials that a developer's device, a package or a pipeline gave up.
+
+That's the part that stayed with me. These are well-run companies and projects, using the same tools most of us use every day: an editor that updates itself, a package manager, a CI pipeline, a token sitting in the terminal. The doors they left open are probably open on my machine too, and on yours.
+
+And it wasn't one bad month:
+
+- In October 2026 alone, Wiz tracked 17 separate breaches at AI developer platforms and called it "Black October".[^wiz-oct]
+- In May 2026, attackers published 84 malicious versions of TanStack packages without stealing a single password. They tricked a CI workflow into publishing for them.[^tanstack]
+- In November 2025, the Shai-Hulud 2.0 worm spread through about 800 npm packages and dumped stolen secrets into more than 25,000 public repositories.[^shai2]
+
+This guide is my attempt to close those doors. It's for working developers, whether you've never thought about any of this or you already run the pipeline for your team.
 
 ## How this guide works
 
-A line of code travels a path before it reaches users. It starts on your laptop, goes into a Git repository, pulls in dependencies, runs through CI and lands on a server. Attackers have broken in at every one of those stops in the last two years, and each chapter below covers one stop.
+A line of code travels a path before it reaches users. It starts on your device, goes into a Git repository, pulls in dependencies, runs through CI and lands on a server. Attackers have broken in at every one of those stops in the last two years, and each chapter below covers one stop.
 
-<Figure label="Where attacks land" caption="The path a change takes from your laptop to production, with real incidents at each stop. Each chapter of this guide covers one stop.">
+<Figure label="Where attacks land" caption="The path a change takes from your device to production, with real incidents at each stop. Each chapter of this guide covers one stop.">
   <AttackPath />
 </Figure>
 
@@ -74,10 +79,10 @@ That leads to the threat model for the rest of this guide:
 
 Most of the fixes below do one of three things. They keep secrets off the disk, they make credentials expire, or they slow down untrusted code before it can run.
 
-## 1. Your laptop
+## 1. Your device
 
 <Figure label="Chapter 1">
-  <AttackPath active="laptop" />
+  <AttackPath active="device" />
 </Figure>
 
 An infostealer is malware that copies credentials and leaves. It usually runs once, from a malicious package or a fake installer. In its first few seconds it reads the usual places: `~/.ssh`, `~/.aws`, every `.env` file it can find, browser cookies, `~/.npmrc`, the GitHub CLI's config, and now your AI tools' login files. It sends them home, and the attacker logs in from somewhere else, often within minutes.
@@ -202,7 +207,7 @@ Check the defaults. OrbStack, for example, mounts your Mac's files and forwards 
 
 ## 2. Secrets: get them off the disk
 
-Secrets aren't one stop on the path. They sit at every stop, which is why they get their own chapter. Most leaks still start as a copy on a laptop.
+Secrets aren't one stop on the path. They sit at every stop, which is why they get their own chapter. Most leaks still start as a copy on a developer's machine.
 
 A secret is anything that lets someone act as you or as your system: passwords, API keys, tokens, SSH keys, database URLs, signing keys. A useful test: would you be fine seeing it on a billboard? If not, treat it as a secret.
 
@@ -210,13 +215,13 @@ Secrets rarely leak through clever hacking. They leak through copies. GitGuardia
 
 - a key committed to Git, which stays in history after you delete the file
 - a key pasted into Slack, a doc or a ticket, which stays searchable
-- a `.env` file on a laptop, which a stealer collects in one glob
+- a `.env` file on a developer's machine, which a stealer collects in one glob
 - a value typed into a hosting dashboard, which is only as safe as that platform
 - an old key nobody revoked, which still works years later
 
 ### Why `.env` files became a liability
 
-A gitignored `.env` file was good advice. It kept secrets out of source code. The trouble is that it keeps them in plaintext on every laptop that runs the project, next to every other project's `.env`. Malware from a poisoned package doesn't need to know your project. It searches for `**/.env` and takes them all.
+A gitignored `.env` file was good advice. It kept secrets out of source code. The trouble is that it keeps them in plaintext on every machine that runs the project, next to every other project's `.env`. Malware from a poisoned package doesn't need to know your project. It searches for `**/.env` and takes them all.
 
 You also might not know it happened. A stealer that runs during `npm install` and exits leaves no trace you'd notice. So the goal is that a stolen file holds nothing useful.
 
@@ -672,7 +677,7 @@ Get the digest with `docker buildx imagetools inspect node:22-slim`. Use small b
 
 It will happen eventually. What matters is the order you do things in, and whether you have the logs to see what happened. Check now that audit logging is on for your cloud accounts, GitHub organisation and secrets manager. Logs you never turned on can't help you later.
 
-1. **Revoke and rotate the key at the provider first.** This makes the leaked value useless. Cleaning Git history first only hides a key that still works. If a laptop was involved, also sign out every session on GitHub, Google and your cloud console, because stealers take browser cookies and a session cookie skips your passkey.
+1. **Revoke and rotate the key at the provider first.** This makes the leaked value useless. Cleaning Git history first only hides a key that still works. If a device was involved, also sign out every session on GitHub, Google and your cloud console, because stealers take browser cookies and a session cookie skips your passkey.
 2. **Check the logs** for any use of the key since the leak: cloud audit logs, API dashboards, billing spikes.
 3. **Clean up the copies** in Git history, chat, docs and CI logs. Forks and clones keep their copy, which is why step 1 comes first.
 4. **Fix the cause.** Move the new value into your secrets manager, and add a scanner rule or a policy so the same mistake gets caught next time.

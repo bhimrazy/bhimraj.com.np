@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-type StationId = "laptop" | "source" | "deps" | "ci" | "prod";
+type StationId = "device" | "source" | "deps" | "ci" | "prod";
 
 type Incident = { name: string[]; date: string };
 
@@ -14,8 +14,8 @@ type Station = {
 
 const STATIONS: Station[] = [
   {
-    id: "laptop",
-    name: "Your laptop",
+    id: "device",
+    name: "Your device",
     parts: ["editor, terminal,", "AI agents"],
     incidents: [
       { name: ["Binance"], date: "Oct 2026" },
@@ -66,7 +66,7 @@ const STATIONS: Station[] = [
 
 /** 20×20 stroke glyphs, one per station. */
 const ICON: Record<StationId, string> = {
-  laptop: "M4 4.5h12v8H4zM1.5 15.5h17",
+  device: "M4 4.5h12v8H4zM1.5 15.5h17",
   source:
     "M6 3v14M6 13c0-3.5 8-3 8-7M6 4.5a1.5 1.5 0 1 0 0-.01M14 4.5a1.5 1.5 0 1 0 0-.01M6 17a1.5 1.5 0 1 0 0-.01",
   deps: "M10 2.5l6.5 3.5v8L10 17.5 3.5 14V6zM3.5 6L10 9.5 16.5 6M10 9.5v8",
@@ -169,7 +169,7 @@ function Tag({
 }
 
 const summary = (active?: StationId) =>
-  `Five stations a change passes through, from your laptop to production, each with real incidents.${
+  `Five stations a change passes through, from your device to production, each with real incidents.${
     active
       ? ` Highlighted: ${STATIONS.find((s) => s.id === active)?.name}.`
       : ""
@@ -359,7 +359,7 @@ function Vertical({ active }: { active?: StationId }) {
   );
 }
 
-/** Where a change travels from laptop to production, with real incidents at each stop. `active` marks one station, for use as a chapter marker. */
+/** Where a change travels from device to production, with real incidents at each stop. `active` marks one station, for use as a chapter marker. */
 export function AttackPath({ active }: { active?: StationId }) {
   return (
     <div>
