@@ -10,4 +10,6 @@ topics: [ml-systems]
 added: 2026-10-15
 video: true
 playlist: PLoROMvodv4rN447WKQ5oz_YdYbS74M5IA
+materials:
+  - { kind: doc, label: "Readings & Materials", url: https://docs.google.com/document/d/1FzHEHXFNx_aG7ooLFLJcAatoxLsvrKYoBP3H1C-Q6-w/edit }
 ---

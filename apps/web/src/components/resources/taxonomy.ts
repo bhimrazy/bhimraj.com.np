@@ -59,3 +59,25 @@ export const STATUS_LABELS: Record<ResourceStatus, string> = {
   revisiting: "Revisiting",
   queued: "On my list",
 };
+
+/** What a course-material link points to; the page shows its label. */
+export const MATERIAL_KINDS = [
+  "slides",
+  "reading",
+  "code",
+  "lab",
+  "page",
+  "exam",
+  "doc",
+] as const;
+export type MaterialKind = (typeof MATERIAL_KINDS)[number];
+
+export const MATERIAL_LABELS: Record<MaterialKind, string> = {
+  slides: "Slides",
+  reading: "Reading",
+  code: "Code",
+  lab: "Lab",
+  page: "Lecture page",
+  exam: "Exam",
+  doc: "Document",
+};

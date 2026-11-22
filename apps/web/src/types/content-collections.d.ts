@@ -70,6 +70,12 @@ declare module "content-collections" {
     skipIf?: string;
     prereqs: string[];
     otherTerms: { term: string; url: string }[];
+    materials: {
+      kind: import("@/components/resources/taxonomy").MaterialKind;
+      url: string;
+      lecture?: number;
+      label?: string;
+    }[];
     /** The body as HTML: my notes on the course, or null when empty. */
     notes: string | null;
     hasPage: boolean;

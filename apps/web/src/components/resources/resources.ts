@@ -27,7 +27,7 @@ export function totalSeconds(lectures: Lecture[]): number {
 /** The fields a card needs; the body and notes stay on the server. */
 export type ResourceCardData = Omit<
   Resource,
-  "_meta" | "content" | "notes" | "otherTerms" | "prereqs"
+  "_meta" | "content" | "notes" | "otherTerms" | "prereqs" | "materials"
 > & {
   slug: string;
   lectureCount: number;
@@ -41,6 +41,7 @@ export function toCardData(resource: Resource): ResourceCardData {
     notes: _notes,
     otherTerms: _terms,
     prereqs: _prereqs,
+    materials: _materials,
     ...rest
   } = resource;
   const lectures = getLectures(resource);
