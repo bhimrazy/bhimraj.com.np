@@ -37,10 +37,13 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
   },
   appleWebApp: {
+    capable: true,
     title: "bhimraj",
     statusBarStyle: "default",
     startupImage: startupImages,
   },
+  // Next only emits the unprefixed tag; iOS ignores startup images without this one.
+  other: { "apple-mobile-web-app-capable": "yes" },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
