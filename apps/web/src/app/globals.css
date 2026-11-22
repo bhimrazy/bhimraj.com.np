@@ -520,3 +520,15 @@
     transition: none;
   }
 }
+
+/* giscus starts its iframe at the browser default (150px) and grows it once
+   loaded. Start it at the empty-thread height (372px, matched by the
+   skeleton in comments.tsx) and as a block, so loading doesn't move the
+   page; only a thread with comments grows past it. */
+giscus-widget {
+  display: block;
+}
+giscus-widget::part(iframe) {
+  display: block;
+  min-height: 23.25rem;
+}
