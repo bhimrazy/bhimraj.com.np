@@ -4,6 +4,10 @@ import { CodeWalkthrough, Step } from "./code-walkthrough";
 import { CopyButton } from "./copy-button";
 import { RequestVsEvent } from "./events/request-vs-event";
 import { Figure } from "./figure";
+import { CooldownWindow } from "./security/cooldown-window";
+import { CveByYear } from "./security/cve-by-year";
+import { LethalTrifecta } from "./security/lethal-trifecta";
+import { TagVsSha } from "./security/tag-vs-sha";
 import { UNetExplorer } from "./unet/unet-explorer";
 import { Shape, UNetTrace } from "./unet/unet-trace";
 
@@ -31,4 +35,8 @@ export const mdxComponents = {
   UNetTrace,
   Shape,
   RequestVsEvent,
+  CveByYear,
+  CooldownWindow,
+  TagVsSha,
+  LethalTrifecta,
 };
