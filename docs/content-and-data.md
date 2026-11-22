@@ -21,7 +21,7 @@ Content Collections caches by content hash, not by config. After editing a schem
    - `kind` is one of `course`, `book`, `talk`, `paper`, `article`.
    - `topics` come from the closed list in `apps/web/src/components/resources/taxonomy.ts`.
 3. For a course with lecture videos, set `video: true` and `playlist` (a YouTube playlist ID). `materials` lists slides and labs per lecture; see `mit-6-5940-efficient-ai.md` for an example.
-4. Run `bun run sync:youtube` to pull the lectures, then commit the updated snapshot.
+4. Lectures come from `bun run sync:youtube` (needs a YouTube API key). Merging a change to a course file also runs the sync action, which opens a PR with the updated snapshot.
 
 ## Data snapshots
 
