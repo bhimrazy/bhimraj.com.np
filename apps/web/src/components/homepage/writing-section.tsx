@@ -68,11 +68,11 @@ function PlaceRow({ place }: { place: Place }) {
     "group flex items-center gap-4 px-6 py-4.5 transition-colors hover:bg-site-bg-secondary/70 focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:-outline-offset-2 sm:px-7 dark:hover:bg-white/3";
   const body = (
     <>
-      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-site-border bg-site-bg-secondary text-site-text-secondary transition-colors group-hover:text-site-accent dark:border-white/6 dark:bg-white/3 [&_svg]:size-4">
+      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-site-border bg-site-bg-secondary text-site-text-secondary transition-colors group-hover:text-site-accent-text dark:border-white/6 dark:bg-white/3 [&_svg]:size-4">
         {place.icon}
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block font-display font-semibold text-site-text transition-colors group-hover:text-site-accent">
+        <span className="block font-display font-semibold text-site-text transition-colors group-hover:text-site-accent-text">
           {place.title}
         </span>
         <span className="mt-0.5 block text-pretty text-site-text-tertiary text-xs leading-snug">
@@ -81,7 +81,7 @@ function PlaceRow({ place }: { place: Place }) {
       </span>
       <span
         aria-hidden
-        className="text-site-accent text-sm transition-transform group-hover:translate-x-0.5"
+        className="text-site-accent-text text-sm transition-transform group-hover:translate-x-0.5"
       >
         {place.external ? "↗" : "→"}
       </span>

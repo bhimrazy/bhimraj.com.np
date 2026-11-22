@@ -429,7 +429,14 @@ export function CourseClassroom({
                   )}
                 >
                   <span className="flex items-baseline gap-2">
-                    <span className="font-mono text-site-text-tertiary text-xs">
+                    <span
+                      className={cn(
+                        "font-mono text-xs",
+                        isCurrent
+                          ? "text-site-text-secondary"
+                          : "text-site-text-tertiary",
+                      )}
+                    >
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span
@@ -446,7 +453,14 @@ export function CourseClassroom({
                     </span>
                   </span>
                   {l.speakers && (
-                    <span className="mt-0.5 block pl-7 text-site-text-tertiary text-xs">
+                    <span
+                      className={cn(
+                        "mt-0.5 block pl-7 text-xs",
+                        isCurrent
+                          ? "text-site-text-secondary"
+                          : "text-site-text-tertiary",
+                      )}
+                    >
                       {l.speakers}
                     </span>
                   )}
@@ -462,7 +476,14 @@ export function CourseClassroom({
                     </span>
                   )}
                 </button>
-                <span className="mt-0.5 flex shrink-0 items-center gap-1 font-mono text-site-text-tertiary text-xs">
+                <span
+                  className={cn(
+                    "mt-0.5 flex shrink-0 items-center gap-1 font-mono text-xs",
+                    isCurrent
+                      ? "text-site-text-secondary"
+                      : "text-site-text-tertiary",
+                  )}
+                >
                   {!l.embeddable && (
                     <>
                       <ExternalLinkIcon aria-hidden className="size-3" />

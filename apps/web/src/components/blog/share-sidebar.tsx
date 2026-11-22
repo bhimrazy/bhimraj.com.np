@@ -132,7 +132,7 @@ export default function ShareSidebar({
           buttonClass,
           "cursor-pointer",
           copied
-            ? "border-site-accent bg-site-accent-subtle text-site-accent"
+            ? "border-site-accent bg-site-accent-subtle text-site-accent-text"
             : "border-site-border bg-site-card text-site-text-secondary hover:border-site-border-hover hover:text-site-text",
         )}
       >

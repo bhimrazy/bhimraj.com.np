@@ -20,7 +20,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
             "group-[.toast]:bg-site-accent group-[.toast]:text-white",
           cancelButton:
             "group-[.toast]:bg-site-bg-secondary group-[.toast]:text-site-text-secondary",
-          success: "group-[.toast]:text-site-accent",
+          success: "group-[.toast]:text-site-accent-text",
           error: "group-[.toast]:text-red-400",
         },
       }}

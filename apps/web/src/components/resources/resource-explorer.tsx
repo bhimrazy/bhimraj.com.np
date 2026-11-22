@@ -170,6 +170,7 @@ export function ResourceExplorer({
             type="search"
             value={filters.q}
             onChange={(e) => setFilters((f) => ({ ...f, q: e.target.value }))}
+            aria-label="Search resources"
             placeholder="Search by title, school, person or topic"
             className={cn(
               "h-11 w-full rounded-xl border border-site-border bg-site-card pr-4 pl-10 text-site-text text-sm placeholder:text-site-text-tertiary dark:border-white/8",
@@ -371,7 +372,7 @@ function ResourceCard({
             {r.title}
             <span
               aria-hidden
-              className="ml-1.5 inline-block text-site-accent text-sm transition-transform group-hover/link:translate-x-0.5"
+              className="ml-1.5 inline-block text-site-accent-text text-sm transition-transform group-hover/link:translate-x-0.5"
             >
               →
             </span>
@@ -392,7 +393,7 @@ function ResourceCard({
             {r.title}
             <span
               aria-hidden
-              className="ml-1.5 inline-block text-site-accent text-sm transition-transform group-hover/link:translate-x-0.5"
+              className="ml-1.5 inline-block text-site-accent-text text-sm transition-transform group-hover/link:translate-x-0.5"
             >
               ↗
             </span>
