@@ -6,11 +6,6 @@ import { useEffect, useState } from "react";
 import { siteConfig } from "@/config/site";
 
 /**
- * Comments and reactions live in GitHub Discussions (one thread per page,
- * matched by pathname). Readers need a GitHub account. Rendered after mount
- * so the theme is known, and the iframe loads lazily near the viewport.
- */
-/**
  * giscus fetches the theme CSS itself, so it must be a public HTTPS URL. Use
  * our own files (public/giscus) from whichever deployment served the page, so
  * previews test them too; plain-HTTP local dev falls back to the built-ins.
@@ -21,6 +16,11 @@ function themeUrl(dark: boolean) {
   return protocol === "https:" ? `${origin}/giscus/${name}.css` : name;
 }
 
+/**
+ * Comments and reactions live in GitHub Discussions (one thread per page,
+ * matched by pathname). Readers need a GitHub account. Rendered after mount
+ * so the theme is known, and the iframe loads lazily near the viewport.
+ */
 export default function Comments() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
