@@ -20,4 +20,11 @@ export const siteConfig = {
     lightning: "https://lightning.ai/bhimrajyadav",
   },
   utmParams: "utm_source=bhimraj.com.np&utm_medium=referral",
+  /** giscus: IDs come from the GitHub GraphQL API (repository, discussionCategories). */
+  comments: {
+    repo: "bhimrazy/bhimraj.com.np" as `${string}/${string}`,
+    repoId: "MDEwOlJlcG9zaXRvcnkzNDIzMjM3NDU=",
+    category: "General",
+    categoryId: "MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMyNjEyMzg3",
+  },
 };

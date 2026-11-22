@@ -40,6 +40,13 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["clsx", "tailwind-merge"],
   },
+  headers: async () => [
+    {
+      // giscus loads these cross-origin from its iframe.
+      source: "/giscus/:file*",
+      headers: [{ key: "Access-Control-Allow-Origin", value: "*" }],
+    },
+  ],
   redirects: async () => {
     return [
       {
