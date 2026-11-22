@@ -5,6 +5,26 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Installed app (PWA) on a phone: where the bottom tab bar shows. Pure CSS,
+   so every visitor gets the same HTML. Older iOS home-screen apps may not
+   match display-mode, so layout.tsx also flags them with data-standalone. */
+@custom-variant installed {
+  @media (display-mode: standalone) and (max-width: 767px) {
+    @slot;
+  }
+  @media (max-width: 767px) {
+    &:where([data-standalone] *) {
+      @slot;
+    }
+  }
+}
+
+:root {
+  /* Tab bar: gap below it, and the total bottom space it takes. */
+  --tab-bar-offset: max(0.5rem, env(safe-area-inset-bottom));
+  --tab-bar-space: calc(3.75rem + var(--tab-bar-offset));
+}
+
 /* ── Design tokens ───────────────────────────────────────────────── */
 :root {
   /* Light theme */

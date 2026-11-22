@@ -30,7 +30,8 @@ export function MobileMenu({
 }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild className="md:hidden">
+      {/* The tab bar replaces it in the installed app. */}
+      <DropdownMenuTrigger asChild className="installed:hidden md:hidden">
         <Button
           variant="ghost"
           size="icon"
@@ -40,31 +41,42 @@ export function MobileMenu({
           <HamburgerMenuIcon className="h-5 w-5" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        sideOffset={8}
-        className="w-48 rounded-xl border-site-border bg-site-card p-1.5 text-site-text shadow-2xl shadow-black/10 dark:border-white/8 dark:bg-site-card dark:text-site-text dark:shadow-black/40"
-      >
-        {MENU_LINKS.map((link) => (
-          <DropdownMenuItem
-            key={link.href}
-            asChild
-            className="rounded-lg px-3 py-3 text-sm focus:bg-site-bg-secondary focus:text-site-text dark:focus:bg-site-bg-secondary dark:focus:text-site-text"
-          >
-            <Link
-              href={link.href}
-              aria-current={link.href === activeHref ? "page" : undefined}
-              className={cn(
-                "cursor-pointer font-medium text-site-text-secondary hover:bg-site-bg-secondary hover:text-site-text focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:-outline-offset-2",
-                link.href === activeHref &&
-                  "text-site-accent hover:text-site-accent focus:text-site-accent dark:focus:text-site-accent",
-              )}
-            >
-              {link.label}
-            </Link>
-          </DropdownMenuItem>
-        ))}
+      <DropdownMenuContent align="end" sideOffset={8} className={MENU_CONTENT}>
+        <MenuLinks links={MENU_LINKS} activeHref={activeHref} />
       </DropdownMenuContent>
     </DropdownMenu>
   );
+}
+
+/** Dropdown panel style, shared with the tab bar's "More" menu. */
+export const MENU_CONTENT =
+  "w-48 rounded-xl border-site-border bg-site-card p-1.5 text-site-text shadow-2xl shadow-black/10 dark:border-white/8 dark:bg-site-card dark:text-site-text dark:shadow-black/40";
+
+/** Dropdown items for a list of nav links, the active one in accent. */
+export function MenuLinks({
+  links,
+  activeHref,
+}: {
+  links: { label: string; href: string }[];
+  activeHref: string | null;
+}) {
+  return links.map((link) => (
+    <DropdownMenuItem
+      key={link.href}
+      asChild
+      className="rounded-lg px-3 py-3 text-sm focus:bg-site-bg-secondary focus:text-site-text dark:focus:bg-site-bg-secondary dark:focus:text-site-text"
+    >
+      <Link
+        href={link.href}
+        aria-current={link.href === activeHref ? "page" : undefined}
+        className={cn(
+          "cursor-pointer font-medium text-site-text-secondary hover:bg-site-bg-secondary hover:text-site-text focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:-outline-offset-2",
+          link.href === activeHref &&
+            "text-site-accent hover:text-site-accent focus:text-site-accent dark:focus:text-site-accent",
+        )}
+      >
+        {link.label}
+      </Link>
+    </DropdownMenuItem>
+  ));
 }
