@@ -199,6 +199,43 @@ export function CourseClassroom({
                     embedded: true,
                   })
                 }
+                endCard={(replay) => {
+                  const next = lectures[lectureIndex + 1];
+                  return (
+                    <div className="max-w-sm text-center">
+                      <p className="font-mono text-site-accent-text text-xs">
+                        Lecture finished
+                      </p>
+                      {next ? (
+                        <button
+                          type="button"
+                          onClick={() => select(next.id, false)}
+                          className={cn(
+                            "mt-3 rounded-lg bg-site-accent px-4 py-2 font-semibold text-site-on-accent text-sm transition-colors hover:bg-site-accent/85",
+                            focusRing,
+                          )}
+                        >
+                          Next: {String(lectureIndex + 2).padStart(2, "0")}.{" "}
+                          {next.title}
+                        </button>
+                      ) : (
+                        <p className="mt-2 text-site-text text-sm">
+                          That was the last lecture.
+                        </p>
+                      )}
+                      <button
+                        type="button"
+                        onClick={replay}
+                        className={cn(
+                          "mt-3 block w-full rounded-sm text-site-text-secondary text-xs underline-offset-4 hover:text-site-text hover:underline",
+                          focusRing,
+                        )}
+                      >
+                        Watch again
+                      </button>
+                    </div>
+                  );
+                }}
               />
             ) : (
               <ExternalLecture
@@ -560,7 +597,27 @@ function ExternalLecture({
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        onClick={onOpen}
+        onClick={(e) => {
+          onOpen();
+          // On desktop, a window beside the page keeps the checklist in
+          // view; elsewhere (or if it's blocked) the link opens a tab.
+          if (
+            !window.matchMedia("(min-width: 1024px) and (pointer: fine)")
+              .matches
+          )
+            return;
+          const width = Math.round(window.screen.availWidth * 0.6);
+          const height = Math.round(window.screen.availHeight * 0.8);
+          const win = window.open(
+            href,
+            "lecture",
+            `popup,width=${width},height=${height},left=0,top=0`,
+          );
+          if (win) {
+            win.opener = null;
+            e.preventDefault();
+          }
+        }}
         className={cn(
           "group relative block aspect-video overflow-hidden rounded-2xl border border-site-border bg-black dark:border-white/8",
           focusRing,
@@ -577,14 +634,14 @@ function ExternalLecture({
             Watch on YouTube
             <ExternalLinkIcon aria-hidden className="size-4" />
             <span className="sr-only">
-              : {lecture.title} (opens in a new tab)
+              : {lecture.title} (opens in a new window)
             </span>
           </span>
         </span>
       </a>
       <p className="mt-2 text-site-text-tertiary text-xs">
-        The channel only allows this lecture to play on YouTube. Tick it off
-        here when you&apos;ve watched it.
+        The channel only allows this lecture to play on YouTube, so it opens
+        there. Tick it off here when you&apos;ve watched it.
       </p>
     </div>
   );

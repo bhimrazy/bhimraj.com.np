@@ -1,7 +1,13 @@
 "use client";
 
 import { PlayIcon } from "@radix-ui/react-icons";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { focusRing } from "@/components/surface";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +16,8 @@ type YTPlayer = {
   loadVideoById: (opts: { videoId: string; startSeconds?: number }) => void;
   getCurrentTime: () => number;
   getDuration: () => number;
+  seekTo: (seconds: number, allowSeekAhead: boolean) => void;
+  playVideo: () => void;
   destroy: () => void;
 };
 type YTNamespace = {
@@ -82,10 +90,16 @@ export function YouTubePlayer({
   startSec,
   onPlayback,
   onStart,
+  endCard,
 }: {
   video: string;
   title: string;
   startSec: number;
+  /**
+   * Shown over the player when a video ends, covering YouTube's end-screen
+   * suggestions. Gets a replay callback.
+   */
+  endCard?: (replay: () => void) => ReactNode;
   onPlayback: (event: PlaybackEvent) => void;
   /** Fires once per video, on its first play. */
   onStart: (video: string) => void;
@@ -94,6 +108,7 @@ export function YouTubePlayer({
   const playerRef = useRef<YTPlayer | null>(null);
   const [active, setActive] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [ended, setEnded] = useState(false);
 
   // Callbacks and the current video, readable from YouTube's handlers.
   const latest = useRef({ video, startSec, onPlayback, onStart });
@@ -162,6 +177,7 @@ export function YouTubePlayer({
             },
             onStateChange: ({ data }) => {
               if (data === YT.PlayerState.PLAYING) {
+                setEnded(false);
                 const current = loaded.current;
                 if (!started.current.has(current)) {
                   started.current.add(current);
@@ -177,6 +193,7 @@ export function YouTubePlayer({
                 reportRef.current("pause");
               } else if (data === YT.PlayerState.ENDED) {
                 stopTimer();
+                setEnded(true);
                 reportRef.current("end");
               }
             },
@@ -213,6 +230,7 @@ export function YouTubePlayer({
     const player = playerRef.current;
     if (!player || !ready.current || loaded.current === video) return;
     stopTimer(); // restarts when the new video plays
+    setEnded(false);
     reportRef.current("pause");
     loaded.current = video;
     player.loadVideoById({
@@ -242,7 +260,18 @@ export function YouTubePlayer({
   return (
     <div className="relative aspect-video overflow-hidden rounded-2xl border border-site-border bg-black dark:border-white/8">
       {active ? (
-        <div ref={hostRef} className="absolute inset-0 size-full" />
+        <>
+          <div ref={hostRef} className="absolute inset-0 size-full" />
+          {ended && endCard && (
+            <div className="absolute inset-0 flex items-center justify-center bg-site-bg/95 p-6">
+              {endCard(() => {
+                setEnded(false);
+                playerRef.current?.seekTo(0, true);
+                playerRef.current?.playVideo();
+              })}
+            </div>
+          )}
+        </>
       ) : (
         <button
           type="button"

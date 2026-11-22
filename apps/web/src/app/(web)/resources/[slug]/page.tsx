@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Comments from "@/components/blog/comments";
+import { EndMark } from "@/components/blog/post-end";
 import { Chip } from "@/components/chip";
 import { Container } from "@/components/container";
 import { JsonLd } from "@/components/json-ld";
@@ -228,7 +229,8 @@ export default async function ResourcePage({ params }: Props) {
       )}
 
       <Container className="px-4 pb-20 sm:px-8">
-        <Comments />
+        <EndMark className="mb-12" />
+        <Comments className="max-w-3xl" />
       </Container>
     </main>
   );

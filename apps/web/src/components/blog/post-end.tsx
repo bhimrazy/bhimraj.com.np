@@ -25,6 +25,17 @@ const focusRing =
   "focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2";
 
 /** Everything after the article body: tags, share, author, subscribe, next reads. */
+/** A rule with an amber diamond: marks where a post's body ends. */
+export function EndMark({ className }: { className?: string }) {
+  return (
+    <div aria-hidden className={cn("flex items-center gap-3", className)}>
+      <span className="h-px flex-1 bg-site-border" />
+      <span className="size-1.5 rotate-45 bg-site-accent" />
+      <span className="h-px flex-1 bg-site-border" />
+    </div>
+  );
+}
+
 export default function PostEnd({
   post,
   url,
@@ -38,11 +49,7 @@ export default function PostEnd({
     <footer className="mt-16 sm:mt-20">
       {/* End mark + tags + share */}
       <div className="mx-auto max-w-measure">
-        <div aria-hidden className="mb-10 flex items-center gap-3">
-          <span className="h-px flex-1 bg-site-border" />
-          <span className="size-1.5 rotate-45 bg-site-accent" />
-          <span className="h-px flex-1 bg-site-border" />
-        </div>
+        <EndMark className="mb-10" />
 
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           {post.tags.length > 0 && (
