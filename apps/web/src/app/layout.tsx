@@ -1,6 +1,8 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { Suspense } from "react";
+import { ActiveTabBar, TabBar } from "@/components/header/tab-bar";
 import { Pwa } from "@/components/pwa";
 import { ThemeProvider } from "@/components/theme-provider";
 import { siteConfig } from "@/config/site";
@@ -95,8 +97,17 @@ export default function RootLayout({
           title={`${siteConfig.name} — RSS Feed`}
           href="/feed.xml"
         />
+        {/* Older iOS home-screen apps don't match display-mode: standalone;
+            flag them before paint for the `installed` CSS variant. */}
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: static string
+          dangerouslySetInnerHTML={{
+            __html:
+              'if(navigator.standalone)document.documentElement.dataset.standalone=""',
+          }}
+        />
       </head>
-      <body className="flex min-h-dvh flex-col pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] antialiased">
+      <body className="flex min-h-dvh flex-col pr-[env(safe-area-inset-right)] installed:pb-[calc(var(--tab-bar-space)+0.5rem)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -104,6 +115,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Suspense fallback={<TabBar />}>
+            <ActiveTabBar />
+          </Suspense>
           <Pwa />
         </ThemeProvider>
       </body>
