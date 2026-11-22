@@ -27,6 +27,7 @@ export function buildLlmsTxt(input: {
     `- [Projects](${baseUrl}/projects): Open-source AI projects — multimodal LLMs, model serving, computer vision, dev tools.`,
     `- [Blog](${baseUrl}/blog): Writing on engineering, open source, and AI.`,
     `- [Research](${baseUrl}/research): An IEEE Access paper and a reading list.`,
+    `- [Resources](${baseUrl}/resources): Free courses, books and talks on LLMs, agents, efficient AI, ML systems and SRE, each with a one-line summary.`,
     `- [RSS Feed](${baseUrl}/feed.xml)`,
   ];
 

@@ -159,6 +159,63 @@ export function buildScholarlyArticleJsonLd(
   };
 }
 
+type ResourceInput = {
+  title: string;
+  url: string;
+  kind: string;
+  source: string;
+  people: string[];
+  tldr: string;
+};
+
+/** Talks stay CreativeWork: a VideoObject without thumbnail and date fails validation. */
+const RESOURCE_TYPES: Record<string, string> = {
+  course: "Course",
+  book: "Book",
+  paper: "ScholarlyArticle",
+  article: "Article",
+};
+
+/** /resources as a CollectionPage whose main entity lists every entry. */
+export function buildResourceCollectionJsonLd(input: {
+  path: string;
+  name: string;
+  description: string;
+  resources: ResourceInput[];
+}): JsonLdObject {
+  return {
+    "@context": CONTEXT,
+    "@type": "CollectionPage",
+    name: input.name,
+    description: input.description,
+    url: absoluteUrl(input.path),
+    isPartOf: { "@id": WEBSITE_ID },
+    author: personRef,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: input.resources.length,
+      itemListElement: input.resources.map((r, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": RESOURCE_TYPES[r.kind] ?? "CreativeWork",
+          name: r.title,
+          url: r.url,
+          description: r.tldr,
+          ...(r.kind === "course"
+            ? { provider: { "@type": "Organization", name: r.source } }
+            : { publisher: { "@type": "Organization", name: r.source } }),
+          ...(r.people.length > 0 && {
+            [r.kind === "course" ? "instructor" : "author"]: r.people.map(
+              (name) => ({ "@type": "Person", name }),
+            ),
+          }),
+        },
+      })),
+    },
+  };
+}
+
 type SoftwareSourceCodeInput = {
   title: string;
   description: string;

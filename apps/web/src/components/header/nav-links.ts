@@ -3,6 +3,7 @@ export const NAV_LINKS = [
   { label: "Blog", href: "/blog" },
   { label: "Research", href: "/research" },
   { label: "Projects", href: "/projects" },
+  { label: "Resources", href: "/resources" },
 ];
 
 /** The nav entry owning the current URL, or null when none matches. */

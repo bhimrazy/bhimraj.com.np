@@ -9,6 +9,11 @@ import { feedHtml } from "./src/components/blog/feed-html";
 import { postMeta, remarkDropDek } from "./src/components/blog/post-meta";
 import rehypeArticle from "./src/components/blog/rehype-article";
 import { codeTransformers } from "./src/components/mdx/shiki-transformers";
+import {
+  RESOURCE_KINDS,
+  RESOURCE_STATUSES,
+  RESOURCE_TOPICS,
+} from "./src/components/resources/taxonomy";
 
 const rehypePlugins: Pluggable[] = [
   rehypeSlug,
@@ -93,6 +98,35 @@ const Project = defineCollection({
   },
 });
 
+const Resource = defineCollection({
+  name: "Resource",
+  directory: "src/content/resources",
+  include: "*.md",
+  schema: z.object({
+    content: z.string(),
+    title: z.string(),
+    url: z.url(),
+    kind: z.enum(RESOURCE_KINDS),
+    /** Institution or publisher, e.g. "Stanford". */
+    source: z.string(),
+    /** Instructors or authors, as the source names them. */
+    people: z.array(z.string()).default([]),
+    /** The offering linked to, e.g. "Fall 2026" or "2017". */
+    term: z.string().optional(),
+    /** One factual sentence on what it covers. */
+    tldr: z.string(),
+    topics: z.array(z.enum(RESOURCE_TOPICS)).min(1),
+    /** ISO date it went on the list; newest sort first within a group. */
+    added: z.iso.date(),
+    status: z.enum(RESOURCE_STATUSES).optional(),
+    /** One line in my own words on why it's here. */
+    note: z.string().optional(),
+    /** Lecture or talk recordings are public. */
+    video: z.boolean().default(false),
+    featured: z.boolean().default(false),
+  }),
+});
+
 export default defineConfig({
-  content: [BlogPost, Project],
+  content: [BlogPost, Project, Resource],
 });
