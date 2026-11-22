@@ -6,11 +6,11 @@ Personal site of Bhimraj Yadav, software engineer in Kathmandu: [bhimraj.com.np]
 
 ## What's on the site
 
-- **Blog**: long-form posts on machine learning and software engineering.
-- **Projects**: write-ups of side projects and experiments.
-- **Open source**: contribution stats, pulled from a daily snapshot of GitHub data.
-- **Research**: my IEEE Access paper and a short reading list.
-- **Resources**: a reading and watching list of courses, books, talks and papers, with progress tracking on course pages.
+- **Blog**: writing on machine learning and software engineering.
+- **Projects**: things I've built.
+- **Open source**: my contributions.
+- **Research**: papers and reading.
+- **Resources**: courses, books and talks worth learning from.
 
 ## Built with
 
