@@ -64,6 +64,8 @@ notations when a post needs them, not before.
   `unet-shapes.ts`, which mirrors the post's PyTorch code (tested).
 - `events/`: `RequestVsEvent` (timelines in `request-flow.ts`) for the
   event-driven architecture post.
+- `security/`: `AttackPath` (laptop to production with real incidents; `active`
+  marks one station), `KeyTheft` and `EnvOnDisk` for the developer security post.
 
 After changing `content-collections.ts` or the Shiki transformers, delete
 `apps/web/.content-collections`: its cache is keyed by content, not config.

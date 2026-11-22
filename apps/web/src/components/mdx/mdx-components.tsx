@@ -4,6 +4,9 @@ import { CodeWalkthrough, Step } from "./code-walkthrough";
 import { CopyButton } from "./copy-button";
 import { RequestVsEvent } from "./events/request-vs-event";
 import { Figure } from "./figure";
+import { AttackPath } from "./security/attack-path";
+import { EnvOnDisk } from "./security/env-on-disk";
+import { KeyTheft } from "./security/key-theft";
 import { UNetExplorer } from "./unet/unet-explorer";
 import { Shape, UNetTrace } from "./unet/unet-trace";
 
@@ -31,4 +34,7 @@ export const mdxComponents = {
   UNetTrace,
   Shape,
   RequestVsEvent,
+  AttackPath,
+  KeyTheft,
+  EnvOnDisk,
 };
