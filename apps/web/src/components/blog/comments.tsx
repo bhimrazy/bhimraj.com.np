@@ -11,12 +11,14 @@ import { siteConfig } from "@/config/site";
  * so the theme is known, and the iframe loads lazily near the viewport.
  */
 /**
- * giscus fetches the theme CSS itself, so it must be a public HTTPS URL:
- * production uses our own files (public/giscus), local dev the built-ins.
+ * giscus fetches the theme CSS itself, so it must be a public HTTPS URL. Use
+ * our own files (public/giscus) from whichever deployment served the page, so
+ * previews test them too; plain-HTTP local dev falls back to the built-ins.
  */
 function themeUrl(dark: boolean) {
-  if (process.env.NODE_ENV !== "production") return dark ? "dark" : "light";
-  return `${siteConfig.url}/giscus/${dark ? "dark" : "light"}.css`;
+  const name = dark ? "dark" : "light";
+  const { origin, protocol } = window.location;
+  return protocol === "https:" ? `${origin}/giscus/${name}.css` : name;
 }
 
 export default function Comments() {
