@@ -67,7 +67,7 @@ async function main() {
   const key = apiKey();
   if (!key) {
     log.error("YOUTUBE_API_KEY not set; nothing fetched", {
-      hint: "add it to apps/web/.env.local, or the youtube-sync environment in CI",
+      hint: "add it to apps/web/.env.local",
     });
     process.exit(1);
   }

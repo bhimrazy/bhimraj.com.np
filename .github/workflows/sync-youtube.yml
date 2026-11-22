@@ -7,9 +7,7 @@ on:
     - cron: "30 9 * * 1,4"
   workflow_dispatch:
   # A merged change to the sync or a course file (say, a new playlist) runs
-  # it right away instead of waiting for the schedule. Pull requests can't
-  # run it: the key's environment only admits main, and the unit tests
-  # already run in CI.
+  # it right away instead of waiting for the schedule.
   push:
     branches: [main]
     paths:
@@ -33,7 +31,6 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    # Holds YOUTUBE_API_KEY; its branch policy allows main only.
     environment: youtube-sync
     steps:
       - name: Checkout code
