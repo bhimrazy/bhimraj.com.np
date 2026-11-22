@@ -10,6 +10,7 @@ import { postMeta, remarkDropDek } from "./src/components/blog/post-meta";
 import rehypeArticle from "./src/components/blog/rehype-article";
 import { codeTransformers } from "./src/components/mdx/shiki-transformers";
 import {
+  MATERIAL_KINDS,
   RESOURCE_KINDS,
   RESOURCE_STATUSES,
   RESOURCE_TOPICS,
@@ -139,6 +140,22 @@ const Resource = defineCollection({
     /** Earlier offerings, newest first. */
     otherTerms: z
       .array(z.object({ term: z.string(), url: z.url() }))
+      .default([]),
+    /**
+     * Links to what the course publishes (slides, readings, labs). Links
+     * only, never copies. `lecture` is the position in the lecture list,
+     * counting from 1; leave it out for course-wide links.
+     */
+    materials: z
+      .array(
+        z.object({
+          kind: z.enum(MATERIAL_KINDS),
+          url: z.url(),
+          lecture: z.number().int().positive().optional(),
+          /** Defaults to the kind's label; readings fall back to their source. */
+          label: z.string().optional(),
+        }),
+      )
       .default([]),
   }),
   transform: async (document, context) => {

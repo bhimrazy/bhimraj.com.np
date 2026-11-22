@@ -17,6 +17,7 @@ import {
   saveLecture,
   subscribe,
 } from "./learning-db";
+import type { MaterialLink } from "./materials";
 import { type PlaybackEvent, YouTubePlayer } from "./youtube-player";
 
 export type ClassroomLecture = {
@@ -26,6 +27,8 @@ export type ClassroomLecture = {
   durationSec: number;
   /** False when the channel only allows playback on YouTube. */
   embeddable: boolean;
+  /** Slides, readings and labs the course publishes for this lecture. */
+  materials: MaterialLink[];
 };
 
 /** Counted as watched past this share of the video (end credits, Q&A tails). */
@@ -275,6 +278,29 @@ export function CourseClassroom({
                   <p className="mt-1 text-site-text-secondary text-sm">
                     {lecture.speakers}
                   </p>
+                )}
+                {lecture.materials.length > 0 && (
+                  <ul
+                    aria-label="Lecture materials"
+                    className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-sm"
+                  >
+                    {lecture.materials.map((m) => (
+                      <li key={m.url}>
+                        <a
+                          href={m.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={cn(
+                            "inline-flex items-center gap-1 rounded-sm font-medium text-site-accent-text transition-colors hover:text-site-text dark:hover:text-site-accent-hover",
+                            focusRing,
+                          )}
+                        >
+                          {m.label}
+                          <ExternalLinkIcon aria-hidden className="size-3" />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
               <div className="flex items-center gap-2">

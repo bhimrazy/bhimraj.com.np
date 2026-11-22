@@ -9,6 +9,7 @@ import { Chip } from "@/components/chip";
 import { Container } from "@/components/container";
 import { JsonLd } from "@/components/json-ld";
 import { CourseClassroom } from "@/components/resources/course-classroom";
+import { groupMaterials } from "@/components/resources/materials";
 import {
   getLectures,
   getResource,
@@ -60,6 +61,7 @@ export default async function ResourcePage({ params }: Props) {
   const slug = resource._meta.path;
   const lectures = getLectures(resource);
   const totalSec = totalSeconds(lectures);
+  const { byLecture, general } = groupMaterials(resource.materials);
   const playlistUrl = resource.playlist
     ? `https://www.youtube.com/playlist?list=${resource.playlist}`
     : null;
@@ -181,12 +183,13 @@ export default async function ResourcePage({ params }: Props) {
             <CourseClassroom
               course={slug}
               lectures={lectures.map(
-                ({ id, title, speakers, durationSec, embeddable }) => ({
+                ({ id, title, speakers, durationSec, embeddable }, index) => ({
                   id,
                   title,
                   speakers,
                   durationSec,
                   embeddable,
+                  materials: byLecture.get(index + 1) ?? [],
                 }),
               )}
             />
@@ -201,6 +204,29 @@ export default async function ResourcePage({ params }: Props) {
             </p>
           </Container>
         )
+      )}
+
+      {general.length > 0 && (
+        <Container className="px-4 pb-16 sm:px-8">
+          <section aria-labelledby="materials-heading" className="max-w-3xl">
+            <h2
+              id="materials-heading"
+              className="font-display font-semibold text-2xl text-site-text tracking-tight"
+            >
+              Course materials
+            </h2>
+            <p className="mt-2 text-site-text-secondary text-sm">
+              Published by the course. These open on its own site.
+            </p>
+            <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+              {general.map((m) => (
+                <li key={m.url}>
+                  <OutLink href={m.url}>{m.label}</OutLink>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </Container>
       )}
 
       {(resource.note || resource.notes) && (
