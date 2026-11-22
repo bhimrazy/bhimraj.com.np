@@ -65,6 +65,8 @@ Rapid7 found that high-severity vulnerabilities in mid-2026 were exploited about
 
 The payloads changed as well. The October LiteLLM release took cloud keys, SSH and GPG keys, browser data, and the login files of Codex, Claude, Gemini and Cursor.[^litellm-oct] The Nx compromise in 2025 went one step further. Its install script asked the AI command-line tools already on the victim's machine to search the disk for secrets.[^nx]
 
+Each theft also feeds the next one. In March 2026, attackers took over the release tags of Trivy's GitHub Action, a popular security scanner. LiteLLM's CI ran that action without pinning it. The poisoned scanner read LiteLLM's PyPI token, and two malicious LiteLLM releases followed within days.[^trivy][^litellm-mar] A security tool became the way in.
+
 So here is the threat model for the rest of this guide:
 
 > Assume one of your tools will be compromised, and that you won't notice when it happens. Arrange things so that a single compromise steals little and what it steals stops working soon.
@@ -124,7 +126,7 @@ This protects you from the copy-and-leave stealer. It doesn't protect you from m
 
 In September 2025, a maintainer of `chalk` and `debug` got an email from `npmjs.help`, a domain registered three days earlier. They entered their credentials and a one-time code. Within hours, malicious versions of 18 packages with more than 2 billion weekly downloads were on npm.[^chalk]
 
-A one-time code typed into a fake page works for the attacker too. Passkeys and hardware security keys don't, because the browser only uses them on the real domain. Turn them on for GitHub, npm, PyPI, your cloud console and your email. Your email matters because it can reset everything else.
+A one-time code typed into a fake page works for the attacker too. Passkeys and hardware security keys don't, because the browser only uses them on the real domain. Turn them on for GitHub, npm, PyPI, your cloud console and your email. Your email matters because it can reset everything else. A password manager helps here too, because it won't fill your password into a look-alike domain.
 
 ### Start here: fewer, quieter editor extensions
 
@@ -261,6 +263,8 @@ gitleaks git --staged          # in a pre-commit hook
 gitleaks dir .                 # find plaintext secrets lying around
 ```
 
+Run the second command on your whole projects folder once. Most people find old `.env` files and keys they forgot about. Delete them, and rotate any that still work.
+
 ### Level up: one manager, one identity per app
 
 As a project grows, the question changes from where a secret is stored to who may read it. Give each app, server and pipeline its own identity with access to only its own secrets. If one server is compromised, you disable that one identity and the audit log shows exactly what it read.
@@ -304,7 +308,7 @@ Simon Willison describes the danger as three capabilities in one agent: access t
 ### Start here: keep the approvals on
 
 - Don't run agents with blanket auto-approve. Allow read-only commands freely and keep approvals for shell commands, file writes outside the project, and network calls.
-- Treat edits to agent and editor configuration as dangerous. These include `.vscode/`, `.cursor/`, `mcp.json`, `.claude/` and `AGENTS.md`. Read the diff before you accept one.
+- Treat edits to agent and editor configuration as dangerous. These include `.vscode/`, `.cursor/`, `mcp.json`, `.claude/` and `AGENTS.md`. Read the diff before you accept one. In 2025, Cursor tied its approval of an MCP server to the server's name, so anyone who could edit a shared repository could swap the command after you approved it.[^mcpoison]
 - Keep your agent updated. Most of the flaws above were fixed in a point release.
 
 ### Level up: sandbox the agent
@@ -319,7 +323,7 @@ An MCP server is code that runs with your permissions and talks to your agent. I
 
 ### Advanced: agents in CI
 
-Agents that triage issues or review pull requests read text from strangers by design. In 2026, researchers showed that a crafted pull request title could make Claude Code, Gemini CLI and Copilot's review actions post their own API keys as comments.[^comment-control] Don't give an agent that reads public input any secrets or write tokens it doesn't need, and require a human approval before any privileged step.
+Agents that triage issues or review pull requests read text from strangers by design. In February 2026, a crafted issue title tricked the AI triage bot in Cline's repository. The attackers used it to steal an npm token, and a malicious `cline` release was live for about eight hours.[^clinejection] In 2026, researchers showed that a crafted pull request title could make Claude Code, Gemini CLI and Copilot's review actions post their own API keys as comments.[^comment-control] Don't give an agent that reads public input any secrets or write tokens it doesn't need, and require a human approval before any privileged step.
 
 ## 4. Dependencies
 
@@ -443,6 +447,8 @@ jobs:
 Two more defaults to change:
 
 - Set `persist-credentials: false` on `actions/checkout`. Otherwise the token stays on disk for every later step.[^checkout]
+- Require review for changes to `.github/workflows/` with a `CODEOWNERS` entry and branch protection. GhostAction used stolen accounts to push a new workflow that sent every secret to the attacker.[^ghostaction]
+- Don't use self-hosted runners on public repositories. Anyone who opens a pull request can run code on them.[^secure-use]
 - Never put `${{ github.event.pull_request.title }}` or similar values straight into a `run:` script. A pull request titled with shell code runs as shell code. The Nx compromise started exactly this way.[^nx] Pass the value through an environment variable instead.
 
 ### Level up: stay away from `pull_request_target`
@@ -608,7 +614,7 @@ Get the digest with `docker buildx imagetools inspect node:22-slim`. Use small b
 
 ## When something leaks
 
-It will happen eventually. What matters is the order you do things in.
+It will happen eventually. What matters is the order you do things in, and whether you have the logs to see what happened. Check now that audit logging is on for your cloud accounts, GitHub organisation and secrets manager. Logs you never turned on can't help you later.
 
 1. **Revoke and rotate the key at the provider first.** This makes the leaked value useless. Cleaning Git history first only hides a key that still works.
 2. **Check the logs** for any use of the key since the leak: cloud audit logs, API dashboards, billing spikes.
@@ -626,6 +632,7 @@ You don't need to do all of this at once. Each tier builds on the one before.
 - [ ] Add a passphrase to your SSH keys and store it in the keychain
 - [ ] Turn on passkeys or a hardware key for GitHub, npm, PyPI, cloud and email
 - [ ] Install a pre-commit secret scanner and turn on push protection
+- [ ] Scan your projects folder for old `.env` files and keys, and rotate what you find
 - [ ] Set a 3 to 7 day dependency cooldown in each project
 - [ ] Remove editor extensions you don't use
 
@@ -645,6 +652,7 @@ You don't need to do all of this at once. Each tier builds on the one before.
 - [ ] Move package publishing to trusted publishing
 - [ ] Close public SSH ports and confirm automatic updates
 - [ ] Add spend caps and alerts to every AI and cloud API key
+- [ ] Turn on audit logs for cloud, GitHub and your secrets manager
 - [ ] Write down your leaked-key steps before you need them
 
 ## What I left out
@@ -688,6 +696,11 @@ If you spot something wrong or out of date, tell me in the comments below and I'
 [^trifecta]: Simon Willison, [The lethal trifecta for AI agents](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/), 16 June 2025.
 [^cc-sandbox]: Anthropic, [Claude Code sandboxing](https://code.claude.com/docs/en/sandboxing).
 [^comment-control]: VentureBeat, [Comment and Control: prompt injection in AI agent actions](https://venturebeat.com/security/ai-agent-runtime-security-system-card-audit-comment-and-control-2026), April 2026.
+[^trivy]: Aqua Security, [GHSA-69fq-xp46-6x23: trivy-action tags compromised](https://github.com/aquasecurity/trivy/security/advisories/GHSA-69fq-xp46-6x23), March 2026.
+[^litellm-mar]: Snyk, [How a poisoned security scanner backdoored LiteLLM](https://snyk.io/articles/poisoned-security-scanner-backdooring-litellm), March 2026.
+[^mcpoison]: Check Point Research, [MCPoison: Cursor vulnerability (CVE-2025-54136)](https://research.checkpoint.com/2025/cursor-vulnerability-mcpoison/), August 2025.
+[^clinejection]: Cloud Security Alliance, [Research note on prompt injection in Claude Code's GitHub Action and the Cline compromise](https://labs.cloudsecurityalliance.org/research/csa-research-note-claude-code-github-action-prompt-injection/), February 2026.
+[^secure-use]: GitHub Docs, [Secure use reference](https://docs.github.com/en/actions/reference/security/secure-use).
 [^cooldowns]: William Woodruff, [We should all be using dependency cooldowns](https://blog.yossarian.net/2025/11/21/We-should-all-be-using-dependency-cooldowns), 21 November 2025.
 [^renovate-age]: Renovate, [Minimum release age](https://docs.renovatebot.com/key-concepts/minimum-release-age/), and GitHub Docs, [Dependabot options: cooldown](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference).
 [^shai2]: Wiz, [Shai-Hulud 2.0: ongoing supply chain attack](https://www.wiz.io/blog/shai-hulud-2-0-ongoing-supply-chain-attack), November 2025.
