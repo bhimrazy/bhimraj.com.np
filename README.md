@@ -8,12 +8,12 @@ Next.js 16 (App Router), React Server Components, Tailwind CSS v4, shadcn/ui, Co
 
 ## Repository layout
 
-| Path               | Description                                          |
-| ------------------ | ---------------------------------------------------- |
-| `apps/web`         | The Next.js site                                     |
-| `packages/github`  | `@bhimrazy/github`: GitHub data layer and snapshot   |
+| Path               | Description                                            |
+| ------------------ | ------------------------------------------------------ |
+| `apps/web`         | The Next.js site                                       |
+| `packages/github`  | `@bhimrazy/github`: GitHub data layer and snapshot     |
 | `packages/youtube` | `@bhimrazy/youtube`: YouTube lecture data and snapshot |
-| `packages/utils`   | `@bhimrazy/utils`: shared logger                     |
+| `packages/utils`   | `@bhimrazy/utils`: shared logger                       |
 
 ## Getting started
 
@@ -29,14 +29,14 @@ bun dev                                        # http://localhost:3000
 
 Run from the repository root:
 
-| Command             | Purpose                                    |
-| ------------------- | ------------------------------------------ |
-| `bun run build`     | Production build                           |
-| `bun typecheck`     | Type-check all workspaces                  |
-| `bun test`          | Run Vitest                                 |
-| `bun lint`          | Biome lint                                 |
-| `bun format:write`  | Biome format                               |
-| `bun run knip`      | Find unused code                           |
+| Command                 | Purpose                                      |
+| ----------------------- | -------------------------------------------- |
+| `bun run build`         | Production build                             |
+| `bun typecheck`         | Type-check all workspaces                    |
+| `bun test`              | Run Vitest                                   |
+| `bun lint`              | Biome lint                                   |
+| `bun format:write`      | Biome format                                 |
+| `bun run knip`          | Find unused code                             |
 | `bun run lint:versions` | One version per dependency across workspaces |
 
 ## Content and data
@@ -49,14 +49,18 @@ Run from the repository root:
 
 All are optional for local development; features that need a missing variable are unavailable. Copy `apps/web/.env.example` to `apps/web/.env.local`.
 
-| Variable | Used for |
-| -------- | -------- |
+| Variable                                                    | Used for                                      |
+| ----------------------------------------------------------- | --------------------------------------------- |
 | `RESEND_API_KEY`, `RESEND_AUDIENCE_ID`, `RESEND_FROM_EMAIL` | Newsletter subscriptions and email via Resend |
-| `FEEDBACK_NOTIFY_EMAIL` | Recipient of site feedback notifications |
-| `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | PostHog analytics |
-| `NEXT_PUBLIC_GOOGLE_ANALYTICS` | Google Analytics measurement ID |
-| `GITHUB_TOKEN` | `bun run sync`: needed for full GitHub data |
-| `YOUTUBE_API_KEY` | `bun run sync:youtube` |
+| `FEEDBACK_NOTIFY_EMAIL`                                     | Recipient of site feedback notifications      |
+| `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST`       | PostHog analytics                             |
+| `NEXT_PUBLIC_GOOGLE_ANALYTICS`                              | Google Analytics measurement ID               |
+| `GITHUB_TOKEN`                                              | `bun run sync`: needed for full GitHub data   |
+| `YOUTUBE_API_KEY`                                           | `bun run sync:youtube`                        |
+
+## Deployment
+
+Deployed on [Vercel](https://vercel.com); every pull request gets a preview deployment.
 
 ## Contributing
 
