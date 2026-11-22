@@ -17,7 +17,7 @@ export function createClient(key: string, fetchImpl = fetch): Get {
       url.searchParams.set(name, value);
     }
     url.searchParams.set("key", key);
-    const res = await fetchImpl(url);
+    const res = await fetchImpl(url, { signal: AbortSignal.timeout(20_000) });
     const body = (await res.json()) as {
       error?: { message?: string; errors?: { reason?: string }[] };
     };
@@ -48,6 +48,7 @@ type VideosResponse = {
       liveBroadcastContent?: string;
     };
     contentDetails: { duration: string };
+    status?: { embeddable?: boolean };
   }[];
 };
 
@@ -87,7 +88,7 @@ export async function fetchPlaylist(
   const byId = new Map<string, Lecture>();
   for (let i = 0; i < videoIds.length; i += 50) {
     const batch = (await get("videos", {
-      part: "snippet,contentDetails",
+      part: "snippet,contentDetails,status",
       id: videoIds.slice(i, i + 50).join(","),
     })) as VideosResponse;
     for (const video of batch.items) {
@@ -100,6 +101,7 @@ export async function fetchPlaylist(
         rawTitle: video.snippet.title,
         durationSec,
         publishedAt: video.snippet.publishedAt,
+        embeddable: video.status?.embeddable !== false,
       });
     }
   }

@@ -1,14 +1,13 @@
 "use client";
 
 import { PlayIcon } from "@radix-ui/react-icons";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { focusRing } from "@/components/surface";
 import { cn } from "@/lib/utils";
 
 /** The slice of the IFrame Player API this file uses. */
 type YTPlayer = {
   loadVideoById: (opts: { videoId: string; startSeconds?: number }) => void;
-  cueVideoById: (opts: { videoId: string; startSeconds?: number }) => void;
   getCurrentTime: () => number;
   getDuration: () => number;
   destroy: () => void;
@@ -21,6 +20,7 @@ type YTNamespace = {
       videoId: string;
       playerVars: Record<string, string | number>;
       events: {
+        onReady: () => void;
         onStateChange: (e: { data: number }) => void;
       };
     },
@@ -101,26 +101,32 @@ export function YouTubePlayer({
   const started = useRef(new Set<string>());
   /** The video in the player, which can trail the prop for a render. */
   const loaded = useRef(video);
+  /** Player methods exist only after YouTube's onReady. */
+  const ready = useRef(false);
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Stable, so the effects below can list it without re-running.
+  const stopTimer = useCallback(() => {
+    if (timer.current) clearInterval(timer.current);
+    timer.current = null;
+  }, []);
+  const report = (kind: PlaybackEvent["kind"]) => {
+    const player = playerRef.current;
+    if (!player || !ready.current) return;
+    latest.current.onPlayback({
+      video: loaded.current,
+      positionSec: player.getCurrentTime(),
+      durationSec: player.getDuration(),
+      kind,
+    });
+  };
+  // Read from YouTube's handlers, which are bound once.
+  const reportRef = useRef(report);
+  reportRef.current = report;
 
   useEffect(() => {
     if (!active) return;
-    let timer: ReturnType<typeof setInterval> | null = null;
     let cancelled = false;
-
-    const report = (kind: PlaybackEvent["kind"]) => {
-      const player = playerRef.current;
-      if (!player) return;
-      latest.current.onPlayback({
-        video: loaded.current,
-        positionSec: player.getCurrentTime(),
-        durationSec: player.getDuration(),
-        kind,
-      });
-    };
-    const stopTimer = () => {
-      if (timer) clearInterval(timer);
-      timer = null;
-    };
 
     loadApi()
       .then((YT) => {
@@ -130,9 +136,11 @@ export function YouTubePlayer({
         const mount = document.createElement("div");
         mount.className = "size-full";
         hostRef.current.replaceChildren(mount);
+        // A lecture picked while the script loaded is the one to play.
+        loaded.current = latest.current.video;
         playerRef.current = new YT.Player(mount, {
           host: "https://www.youtube-nocookie.com",
-          videoId: latest.current.video,
+          videoId: loaded.current,
           playerVars: {
             autoplay: 1,
             start: Math.floor(latest.current.startSec),
@@ -141,6 +149,17 @@ export function YouTubePlayer({
             origin: window.location.origin,
           },
           events: {
+            onReady: () => {
+              ready.current = true;
+              // Picked while the player was starting up.
+              if (latest.current.video !== loaded.current) {
+                loaded.current = latest.current.video;
+                playerRef.current?.loadVideoById({
+                  videoId: loaded.current,
+                  startSeconds: Math.floor(latest.current.startSec),
+                });
+              }
+            },
             onStateChange: ({ data }) => {
               if (data === YT.PlayerState.PLAYING) {
                 const current = loaded.current;
@@ -149,13 +168,16 @@ export function YouTubePlayer({
                   latest.current.onStart(current);
                 }
                 stopTimer();
-                timer = setInterval(() => report("progress"), SAVE_EVERY_MS);
+                timer.current = setInterval(
+                  () => reportRef.current("progress"),
+                  SAVE_EVERY_MS,
+                );
               } else if (data === YT.PlayerState.PAUSED) {
                 stopTimer();
-                report("pause");
+                reportRef.current("pause");
               } else if (data === YT.PlayerState.ENDED) {
                 stopTimer();
-                report("end");
+                reportRef.current("end");
               }
             },
           },
@@ -163,36 +185,41 @@ export function YouTubePlayer({
       })
       .catch(() => setFailed(true));
 
+    // Closing or hiding the tab saves the position the timer hasn't yet.
+    const onHide = () => {
+      if (document.visibilityState === "hidden") reportRef.current("pause");
+    };
+    document.addEventListener("visibilitychange", onHide);
+    window.addEventListener("pagehide", onHide);
+
     return () => {
       cancelled = true;
       stopTimer();
+      document.removeEventListener("visibilitychange", onHide);
+      window.removeEventListener("pagehide", onHide);
       // Save where the viewer was before the player goes away.
-      if (playerRef.current) {
-        report("pause");
-        playerRef.current.destroy();
-        playerRef.current = null;
-      }
+      reportRef.current("pause");
+      playerRef.current?.destroy();
+      playerRef.current = null;
+      ready.current = false;
     };
     // Created once per activation; later videos load through the effect below.
-  }, [active]);
+  }, [active, stopTimer]);
 
   // A different lecture picked while the player is up: save where the old
-  // one stopped, then swap the new one in place.
+  // one stopped, then swap the new one in place. Before onReady, onReady
+  // does the swap.
   useEffect(() => {
     const player = playerRef.current;
-    if (!player || loaded.current === video) return;
-    latest.current.onPlayback({
-      video: loaded.current,
-      positionSec: player.getCurrentTime(),
-      durationSec: player.getDuration(),
-      kind: "pause",
-    });
+    if (!player || !ready.current || loaded.current === video) return;
+    stopTimer(); // restarts when the new video plays
+    reportRef.current("pause");
     loaded.current = video;
     player.loadVideoById({
       videoId: video,
       startSeconds: Math.floor(startSec),
     });
-  }, [video, startSec]);
+  }, [video, startSec, stopTimer]);
 
   if (failed) {
     return (
@@ -219,10 +246,7 @@ export function YouTubePlayer({
       ) : (
         <button
           type="button"
-          onClick={() => {
-            loaded.current = video;
-            setActive(true);
-          }}
+          onClick={() => setActive(true)}
           className={cn("group absolute inset-0 size-full", focusRing)}
         >
           {/* biome-ignore lint/performance/noImgElement: YouTube's own thumbnail CDN; next/image adds nothing with images unoptimized */}

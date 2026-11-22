@@ -16,7 +16,13 @@ type EventProps = {
   resource_opened: { slug: string; kind: string };
   /** Course pages; `course` is the resource slug, `video` the YouTube ID. */
   course_started: { course: string };
-  lecture_played: { course: string; video: string; index: number };
+  lecture_played: {
+    course: string;
+    video: string;
+    index: number;
+    /** False when the lecture opened on YouTube instead. */
+    embedded: boolean;
+  };
   lecture_completed: { course: string; video: string };
   progress_exported: { lectures: number };
   progress_imported: { lectures: number };

@@ -85,7 +85,13 @@ async function main() {
   results.forEach((result, i) => {
     const source = sources[i];
     if (!source) return;
-    if (result.status === "fulfilled") {
+    // An empty list from a playlist that had lectures is a bad fetch (made
+    // private, emptied by mistake), not news: treat it as a failure.
+    const emptied =
+      result.status === "fulfilled" &&
+      result.value.lectures.length === 0 &&
+      (prev?.playlists[source.playlist]?.lectures.length ?? 0) > 0;
+    if (result.status === "fulfilled" && !emptied) {
       const before = prev?.playlists[source.playlist]?.lectures.length ?? 0;
       playlists[source.playlist] = result.value;
       log.info("playlist synced", {
@@ -98,11 +104,19 @@ async function main() {
     // Keep the last good copy so one bad fetch doesn't empty a course page.
     const kept = prev?.playlists[source.playlist];
     if (kept) playlists[source.playlist] = kept;
+    const error =
+      result.status === "rejected"
+        ? String(result.reason)
+        : "returned no lectures";
     log.warn("playlist fetch failed", {
       course: source.course,
-      error: String(result.reason),
+      error,
       keptPrevious: Boolean(kept),
     });
+    // Surfaces on the run's summary page; the job itself stays green.
+    if (process.env.GITHUB_ACTIONS) {
+      console.log(`::warning::${source.course}: ${error}`);
+    }
   });
 
   // Sorted keys keep the committed diff stable between runs.

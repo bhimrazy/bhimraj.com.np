@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lectures = getLectures(resource);
   const facts =
     lectures.length > 0
-      ? ` ${lectures.length} lectures, ${formatHours(totalSeconds(lectures))} in all, with your progress saved as you watch.`
+      ? ` ${lectures.length} lectures, ${formatHours(totalSeconds(lectures))} in all, with a checklist that keeps your progress in your browser.`
       : "";
   return pageMetadata({
     title: `${resource.title}${resource.term ? ` (${resource.term})` : ""}`,
@@ -180,11 +180,12 @@ export default async function ResourcePage({ params }: Props) {
             <CourseClassroom
               course={slug}
               lectures={lectures.map(
-                ({ id, title, speakers, durationSec }) => ({
+                ({ id, title, speakers, durationSec, embeddable }) => ({
                   id,
                   title,
                   speakers,
                   durationSec,
+                  embeddable,
                 }),
               )}
             />

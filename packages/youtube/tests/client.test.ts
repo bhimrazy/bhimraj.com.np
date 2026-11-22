@@ -26,6 +26,7 @@ const video = (
   id,
   snippet: { title, publishedAt, liveBroadcastContent: "none" },
   contentDetails: { duration },
+  status: { embeddable: id !== "c" },
 });
 
 describe("fetchPlaylist", () => {
@@ -73,9 +74,11 @@ describe("fetchPlaylist", () => {
       "published",
     );
     expect(playlist.channel).toBe("Stanford Online");
-    expect(playlist.lectures.map((l) => [l.id, l.title, l.number])).toEqual([
-      ["a", "Early", 1],
-      ["c", "Late", 3],
+    expect(
+      playlist.lectures.map((l) => [l.id, l.title, l.number, l.embeddable]),
+    ).toEqual([
+      ["a", "Early", 1, true],
+      ["c", "Late", 3, false],
     ]);
   });
 

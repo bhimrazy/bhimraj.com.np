@@ -12,6 +12,8 @@ export const lectureSchema = z.object({
   rawTitle: z.string(),
   durationSec: z.number().int().nonnegative(),
   publishedAt: z.string(),
+  /** False when the channel only allows playback on YouTube itself. */
+  embeddable: z.boolean(),
 });
 
 export const playlistSchema = z.object({

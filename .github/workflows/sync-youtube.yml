@@ -6,13 +6,16 @@ on:
     # add a lecture or two a week.
     - cron: "30 9 * * 1,4"
   workflow_dispatch:
-  # Changes to the sync run it for real; the PR step below stays gated to
-  # schedule/dispatch. Pull requests can't run it: the key's environment
-  # only admits main, and the unit tests already run in CI.
+  # A merged change to the sync or a course file (say, a new playlist) runs
+  # it right away instead of waiting for the schedule. Pull requests can't
+  # run it: the key's environment only admits main, and the unit tests
+  # already run in CI.
   push:
     branches: [main]
     paths:
       - "packages/youtube/**"
+      - "!packages/youtube/data/**"
+      - "apps/web/src/content/resources/**"
       - ".github/workflows/sync-youtube.yml"
 
 permissions:
@@ -47,15 +50,8 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: bun run sync:youtube
 
-      - name: Report snapshot diff
-        if: github.event_name == 'push'
-        run: |
-          git --no-pager diff --stat -- packages/youtube/data/youtube.json
-          git checkout -- packages/youtube/data/youtube.json
-
       # A no-op when no lecture changed.
       - name: Open pull request on change
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

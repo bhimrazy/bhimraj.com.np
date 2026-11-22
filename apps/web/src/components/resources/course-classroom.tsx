@@ -7,6 +7,7 @@ import { capture } from "@/lib/analytics";
 import { formatDuration, formatHours, formatTimestamp } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import {
+  BackupError,
   type CourseProgress,
   exportBackup,
   importBackup,
@@ -23,6 +24,8 @@ export type ClassroomLecture = {
   title: string;
   speakers: string | null;
   durationSec: number;
+  /** False when the channel only allows playback on YouTube. */
+  embeddable: boolean;
 };
 
 /** Counted as watched past this share of the video (end credits, Q&A tails). */
@@ -77,6 +80,12 @@ export function CourseClassroom({
   const playerRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState("");
   const asked = useRef(false);
+  /**
+   * Lectures auto-completed this visit. Each completes once, so the event
+   * fires once even when storage is off, and an untick isn't undone by the
+   * next save.
+   */
+  const autoDone = useRef(new Set<string>());
 
   const indexOf = useCallback(
     (id: string) => lectures.findIndex((l) => l.id === id),
@@ -124,27 +133,31 @@ export function CourseClassroom({
     const lecture = lectures[indexOf(event.video)];
     if (!lecture) return;
     const durationSec = event.durationSec || lecture.durationSec;
-    const wasDone = progress.lectures[event.video]?.done ?? false;
     const reached =
       event.kind === "end" || event.positionSec >= durationSec * DONE_AT;
-    if (reached && !wasDone) {
-      capture("lecture_completed", { course, video: event.video });
-    }
+    const completes =
+      reached &&
+      !autoDone.current.has(event.video) &&
+      !progress.lectures[event.video]?.done;
+    if (reached) autoDone.current.add(event.video);
+    if (completes) capture("lecture_completed", { course, video: event.video });
     void save({
       course,
       video: event.video,
       positionSec: event.kind === "end" ? 0 : event.positionSec,
       durationSec,
-      done: reached ? true : undefined,
+      done: completes ? true : undefined,
     });
   };
 
   const toggleDone = (lecture: ClassroomLecture) => {
     const saved = progress.lectures[lecture.id];
+    // An untick should stick for this visit, not be re-ticked at 90%.
+    autoDone.current.add(lecture.id);
     void save({
       course,
       video: lecture.id,
-      positionSec: saved?.positionSec ?? 0,
+      positionSec: 0, // ignored for ticks: the stored position is kept
       durationSec: lecture.durationSec,
       done: !saved?.done,
       played: false,
@@ -169,22 +182,49 @@ export function CourseClassroom({
       >
         {lecture ? (
           <>
-            <YouTubePlayer
-              video={lecture.id}
-              title={lecture.title}
-              startSec={resumeAt(
-                progress.lectures[lecture.id],
-                lecture.durationSec,
-              )}
-              onPlayback={onPlayback}
-              onStart={(video) =>
-                capture("lecture_played", {
-                  course,
-                  video,
-                  index: indexOf(video) + 1,
-                })
-              }
-            />
+            {lecture.embeddable ? (
+              <YouTubePlayer
+                video={lecture.id}
+                title={lecture.title}
+                startSec={resumeAt(
+                  progress.lectures[lecture.id],
+                  lecture.durationSec,
+                )}
+                onPlayback={onPlayback}
+                onStart={(video) =>
+                  capture("lecture_played", {
+                    course,
+                    video,
+                    index: indexOf(video) + 1,
+                    embedded: true,
+                  })
+                }
+              />
+            ) : (
+              <ExternalLecture
+                lecture={lecture}
+                startSec={resumeAt(
+                  progress.lectures[lecture.id],
+                  lecture.durationSec,
+                )}
+                onOpen={() => {
+                  capture("lecture_played", {
+                    course,
+                    video: lecture.id,
+                    index: lectureIndex + 1,
+                    embedded: false,
+                  });
+                  // Counts as played for "Continue"; the position stays put.
+                  void save({
+                    course,
+                    video: lecture.id,
+                    positionSec:
+                      progress.lectures[lecture.id]?.positionSec ?? 0,
+                    durationSec: lecture.durationSec,
+                  });
+                }}
+              />
+            )}
             <div className="mt-4 flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
               <div className="min-w-0">
                 <p className="font-mono text-site-text-tertiary text-xs">
@@ -359,7 +399,13 @@ export function CourseClassroom({
                     </span>
                   )}
                 </button>
-                <span className="mt-0.5 shrink-0 font-mono text-site-text-tertiary text-xs">
+                <span className="mt-0.5 flex shrink-0 items-center gap-1 font-mono text-site-text-tertiary text-xs">
+                  {!l.embeddable && (
+                    <>
+                      <ExternalLinkIcon aria-hidden className="size-3" />
+                      <span className="sr-only">Plays on YouTube,</span>
+                    </>
+                  )}
                   {formatDuration(l.durationSec)}
                 </span>
               </li>
@@ -407,7 +453,8 @@ function BackupControls({
       a.href = URL.createObjectURL(blob);
       a.download = `learning-progress-${data.exportedAt.slice(0, 10)}.json`;
       a.click();
-      URL.revokeObjectURL(a.href);
+      // Revoked later: revoking at once can cancel the download.
+      setTimeout(() => URL.revokeObjectURL(a.href), 60_000);
       capture("progress_exported", { lectures: data.lectures.length });
       onMessage("Backup downloaded. It covers every course on this site.");
     } catch {
@@ -426,7 +473,7 @@ function BackupControls({
       );
     } catch (error) {
       onMessage(
-        error instanceof Error && error.message.startsWith("Not a")
+        error instanceof BackupError
           ? error.message
           : "Couldn't read that file.",
       );
@@ -487,6 +534,58 @@ function BackupControls({
           }}
         />
       </div>
+    </div>
+  );
+}
+
+/**
+ * For lectures the channel won't let other sites embed: the thumbnail and a
+ * link out, with a note on ticking it off here.
+ */
+function ExternalLecture({
+  lecture,
+  startSec,
+  onOpen,
+}: {
+  lecture: ClassroomLecture;
+  startSec: number;
+  onOpen: () => void;
+}) {
+  const href = `https://www.youtube.com/watch?v=${lecture.id}${
+    startSec > 0 ? `&t=${Math.floor(startSec)}s` : ""
+  }`;
+  return (
+    <div>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onOpen}
+        className={cn(
+          "group relative block aspect-video overflow-hidden rounded-2xl border border-site-border bg-black dark:border-white/8",
+          focusRing,
+        )}
+      >
+        {/* biome-ignore lint/performance/noImgElement: YouTube's own thumbnail CDN; next/image adds nothing with images unoptimized */}
+        <img
+          src={`https://i.ytimg.com/vi/${lecture.id}/hqdefault.jpg`}
+          alt=""
+          className="size-full object-cover opacity-70 transition-opacity group-hover:opacity-90"
+        />
+        <span className="absolute inset-0 flex items-center justify-center">
+          <span className="flex items-center gap-2 rounded-full bg-site-accent px-5 py-2.5 font-semibold text-site-on-accent text-sm shadow-lg">
+            Watch on YouTube
+            <ExternalLinkIcon aria-hidden className="size-4" />
+            <span className="sr-only">
+              : {lecture.title} (opens in a new tab)
+            </span>
+          </span>
+        </span>
+      </a>
+      <p className="mt-2 text-site-text-tertiary text-xs">
+        The channel only allows this lecture to play on YouTube. Tick it off
+        here when you&apos;ve watched it.
+      </p>
     </div>
   );
 }

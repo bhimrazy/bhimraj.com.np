@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T12:13:01.868Z",
+  "generatedAt": "2026-11-22T12:25:47.571Z",
   "playlists": {
     "PLakGfbKCei80": {
       "id": "PLakGfbKCei80",
@@ -13,7 +13,8 @@
           "speakers": null,
           "rawTitle": "Stanford CME295 Transformers & LLMs | Autumn 2026 | Lecture 1 - Transformers",
           "durationSec": 6268,
-          "publishedAt": "2026-09-28T20:06:59Z"
+          "publishedAt": "2026-09-28T20:06:59Z",
+          "embeddable": false
         },
         {
           "id": "GaIeu3npx04",
@@ -22,7 +23,8 @@
           "speakers": null,
           "rawTitle": "Stanford CME295 Transformers & LLMs | Autumn 2026 | Lecture 2 - Large Language Models",
           "durationSec": 6195,
-          "publishedAt": "2026-10-09T21:32:13Z"
+          "publishedAt": "2026-10-09T21:32:13Z",
+          "embeddable": false
         },
         {
           "id": "S3bCDcJhz4s",
@@ -31,7 +33,8 @@
           "speakers": null,
           "rawTitle": "Stanford CME295 Transformers & LLMs | Autumn 2026 | Lecture 3 - LLM training",
           "durationSec": 6272,
-          "publishedAt": "2026-10-15T23:03:23Z"
+          "publishedAt": "2026-10-15T23:03:23Z",
+          "embeddable": false
         },
         {
           "id": "3Vaj0Oka_t4",
@@ -40,7 +43,8 @@
           "speakers": null,
           "rawTitle": "Stanford CME295 Transformers & LLMs | Autumn 2026 | Lecture 4 - Reinforcement Learning with LLMs",
           "durationSec": 6207,
-          "publishedAt": "2026-10-19T23:10:53Z"
+          "publishedAt": "2026-10-19T23:10:53Z",
+          "embeddable": false
         },
         {
           "id": "25KIyaeI_Fg",
@@ -49,7 +53,8 @@
           "speakers": null,
           "rawTitle": "Stanford CME295 Transformers & LLMs | Autumn 2026 | Lecture 5 -  LLM Systems",
           "durationSec": 6421,
-          "publishedAt": "2026-11-05T17:00:02Z"
+          "publishedAt": "2026-11-05T17:00:02Z",
+          "embeddable": false
         },
         {
           "id": "nU2a2lm6vDE",
@@ -58,7 +63,8 @@
           "speakers": null,
           "rawTitle": "Stanford CME295 Transformers & LLMs | Autumn 2026 | Lecture 6 - AI Agents",
           "durationSec": 6044,
-          "publishedAt": "2026-11-13T21:02:37Z"
+          "publishedAt": "2026-11-13T21:02:37Z",
+          "embeddable": false
         },
         {
           "id": "uoSynlTDyMs",
@@ -67,7 +73,8 @@
           "speakers": null,
           "rawTitle": "Stanford CME295 Transformers & LLMs | Autumn 2026 | Lecture 7 - LLM Evaluation",
           "durationSec": 6300,
-          "publishedAt": "2026-11-21T00:00:37Z"
+          "publishedAt": "2026-11-21T00:00:37Z",
+          "embeddable": false
         }
       ]
     },
@@ -83,7 +90,8 @@
           "speakers": "Cynthia Bailey",
           "rawTitle": "How AI Chatbots Work: LLMs, Tokens & Hallucination | Stanford CS193T Lecture 1 with Cynthia Bailey",
           "durationSec": 4362,
-          "publishedAt": "2026-11-09T18:00:30Z"
+          "publishedAt": "2026-11-09T18:00:30Z",
+          "embeddable": false
         },
         {
           "id": "Qhf1mp74tbk",
@@ -92,7 +100,8 @@
           "speakers": "Cynthia Bailey",
           "rawTitle": "How to Prompt AI Well: Trust, Evidence & Context Rot | Stanford CS193T Lecture 2 with Cynthia Bailey",
           "durationSec": 4577,
-          "publishedAt": "2026-11-10T18:00:09Z"
+          "publishedAt": "2026-11-10T18:00:09Z",
+          "embeddable": false
         },
         {
           "id": "8Ok6ZYILp2Q",
@@ -101,7 +110,8 @@
           "speakers": "Cynthia Bailey",
           "rawTitle": "AI Memory, RAG & Prompt Injection Explained | Stanford CS193T Lecture 3 with Cynthia Bailey",
           "durationSec": 3800,
-          "publishedAt": "2026-11-11T18:00:08Z"
+          "publishedAt": "2026-11-11T18:00:08Z",
+          "embeddable": false
         },
         {
           "id": "PeRJkvzIEts",
@@ -110,7 +120,8 @@
           "speakers": "Mark Algee-Hewitt, Megan Ma & Markus Covert",
           "rawTitle": "Using AI in Research | Stanford CS193T Guest Panel with Mark Algee-Hewitt, Megan Ma & Markus Covert",
           "durationSec": 4282,
-          "publishedAt": "2026-11-12T18:00:24Z"
+          "publishedAt": "2026-11-12T18:00:24Z",
+          "embeddable": false
         },
         {
           "id": "ho00IesajkY",
@@ -119,7 +130,8 @@
           "speakers": "Cynthia Bailey",
           "rawTitle": "How AI Agents Work: Connectors, MCP & Agent Safety | Stanford CS193T Lecture 5 with Cynthia Bailey",
           "durationSec": 3533,
-          "publishedAt": "2026-11-17T00:00:36Z"
+          "publishedAt": "2026-11-17T00:00:36Z",
+          "embeddable": false
         },
         {
           "id": "0Uk4uLjuEeY",
@@ -128,7 +140,8 @@
           "speakers": "Cynthia Bailey",
           "rawTitle": "Vibe Coding, AI Risk & AI Evaluation | Stanford CS193T Lecture 6 with Cynthia Bailey",
           "durationSec": 4168,
-          "publishedAt": "2026-11-17T17:00:03Z"
+          "publishedAt": "2026-11-17T17:00:03Z",
+          "embeddable": false
         },
         {
           "id": "l07K2cdLofM",
@@ -137,7 +150,8 @@
           "speakers": "Cynthia Bailey",
           "rawTitle": "AI Costs: Tokens, Energy, Model Choice & API Keys | Stanford CS193T Lecture 7 with Cynthia Bailey",
           "durationSec": 2940,
-          "publishedAt": "2026-11-19T00:00:19Z"
+          "publishedAt": "2026-11-19T00:00:19Z",
+          "embeddable": false
         }
       ]
     },
@@ -153,7 +167,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 1 - Introduction (MIT 6.5940 Fall 2026)",
           "durationSec": 3796,
-          "publishedAt": "2026-09-11T20:21:34Z"
+          "publishedAt": "2026-09-11T20:21:34Z",
+          "embeddable": true
         },
         {
           "id": "CzGTQseaM38",
@@ -162,7 +177,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 2 - Basics of Neural Networks (MIT 6.5940 Fall 2026)",
           "durationSec": 3471,
-          "publishedAt": "2026-09-16T01:33:06Z"
+          "publishedAt": "2026-09-16T01:33:06Z",
+          "embeddable": true
         },
         {
           "id": "47nNIPj3B98",
@@ -171,7 +187,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 3 - Pruning and Sparsity (Part I) (MIT 6.5940 Fall 2026)",
           "durationSec": 2518,
-          "publishedAt": "2026-09-18T04:45:30Z"
+          "publishedAt": "2026-09-18T04:45:30Z",
+          "embeddable": true
         },
         {
           "id": "y-WU7PVj0cg",
@@ -180,7 +197,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 4 - Pruning and Sparsity (Part II) (MIT 6.5940 Fall 2026)",
           "durationSec": 4446,
-          "publishedAt": "2026-09-23T00:52:02Z"
+          "publishedAt": "2026-09-23T00:52:02Z",
+          "embeddable": true
         },
         {
           "id": "Qg_3N8pdK9s",
@@ -189,7 +207,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 5 - Quantization (Part I) (MIT 6.5940 Fall 2026)",
           "durationSec": 4061,
-          "publishedAt": "2026-09-25T03:56:59Z"
+          "publishedAt": "2026-09-25T03:56:59Z",
+          "embeddable": true
         },
         {
           "id": "_sHTMuOQY5A",
@@ -198,7 +217,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 6 - Quantization (Part II) (MIT 6.5940 Fall 2026)",
           "durationSec": 3708,
-          "publishedAt": "2026-09-30T03:54:50Z"
+          "publishedAt": "2026-09-30T03:54:50Z",
+          "embeddable": true
         },
         {
           "id": "lPKZZyQxQXY",
@@ -207,7 +227,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 7 - Neural Architecture Search (Part I) (MIT 6.5940 Fall 2026)",
           "durationSec": 3645,
-          "publishedAt": "2026-10-02T05:03:25Z"
+          "publishedAt": "2026-10-02T05:03:25Z",
+          "embeddable": true
         },
         {
           "id": "IlPSXPrchrM",
@@ -216,7 +237,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 8 - Neural Architecture Search (Part II) (MIT 6.5940 Fall 2026)",
           "durationSec": 4156,
-          "publishedAt": "2026-10-07T17:16:03Z"
+          "publishedAt": "2026-10-07T17:16:03Z",
+          "embeddable": true
         },
         {
           "id": "JIPaWplqj_A",
@@ -225,7 +247,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 9 - Knowledge-Distillation (MIT 6.5940 Fall 2026)",
           "durationSec": 3510,
-          "publishedAt": "2026-10-11T19:19:25Z"
+          "publishedAt": "2026-10-11T19:19:25Z",
+          "embeddable": true
         },
         {
           "id": "vyd1bFxPjL8",
@@ -234,7 +257,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 10 - MCUNet and TinyML (MIT 6.5940 Fall 2026)",
           "durationSec": 3756,
-          "publishedAt": "2026-10-16T04:22:04Z"
+          "publishedAt": "2026-10-16T04:22:04Z",
+          "embeddable": true
         },
         {
           "id": "EHsWS2OYk0g",
@@ -243,7 +267,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 11 - TinyEngine and Parallel Processing (MIT 6.5940 Fall 2026)",
           "durationSec": 4533,
-          "publishedAt": "2026-10-21T02:42:30Z"
+          "publishedAt": "2026-10-21T02:42:30Z",
+          "embeddable": true
         },
         {
           "id": "vQ6YFJ2FlM4",
@@ -252,7 +277,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 12 - Transformer and LLM (MIT 6.5940 Fall 2026)",
           "durationSec": 4594,
-          "publishedAt": "2026-10-23T04:17:22Z"
+          "publishedAt": "2026-10-23T04:17:22Z",
+          "embeddable": true
         },
         {
           "id": "8TbTEyeQd8I",
@@ -261,7 +287,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 13 - LLM Deployment Techniques (MIT 6.5940 Fall 2026)",
           "durationSec": 4160,
-          "publishedAt": "2026-10-28T19:59:16Z"
+          "publishedAt": "2026-10-28T19:59:16Z",
+          "embeddable": true
         },
         {
           "id": "hd2vvVN4EO8",
@@ -270,7 +297,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 14 - LLM Post-Training (MIT 6.5940 Fall 2026)",
           "durationSec": 4568,
-          "publishedAt": "2026-10-30T04:05:06Z"
+          "publishedAt": "2026-10-30T04:05:06Z",
+          "embeddable": true
         },
         {
           "id": "q0WQyW1inqk",
@@ -279,7 +307,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 15 - Long-Context LLM (MIT 6.5940 Fall 2026)",
           "durationSec": 4121,
-          "publishedAt": "2026-11-04T05:44:11Z"
+          "publishedAt": "2026-11-04T05:44:11Z",
+          "embeddable": true
         },
         {
           "id": "6nVaH8cZDqU",
@@ -288,7 +317,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 16 - Vision Transformer (MIT 6.5940 Fall 2026)",
           "durationSec": 4693,
-          "publishedAt": "2026-11-06T09:23:55Z"
+          "publishedAt": "2026-11-06T09:23:55Z",
+          "embeddable": true
         },
         {
           "id": "Vpztdp3O0cg",
@@ -297,7 +327,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 17 - Diffusion Model (Part I) (MIT 6.5940 Fall 2026)",
           "durationSec": 3970,
-          "publishedAt": "2026-11-11T05:45:44Z"
+          "publishedAt": "2026-11-11T05:45:44Z",
+          "embeddable": true
         },
         {
           "id": "211AhMi_Yds",
@@ -306,7 +337,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 18 - Diffusion Model (Part II) (MIT 6.5940 Fall 2026)",
           "durationSec": 3963,
-          "publishedAt": "2026-11-13T20:42:02Z"
+          "publishedAt": "2026-11-13T20:42:02Z",
+          "embeddable": true
         },
         {
           "id": "pU6l6sDQ_SA",
@@ -315,7 +347,8 @@
           "speakers": null,
           "rawTitle": "EfficientML.ai Lecture 19 - Lec19-Distributed-Training (Part I) (MIT 6.5940 Fall 2026)",
           "durationSec": 3160,
-          "publishedAt": "2026-11-18T19:24:28Z"
+          "publishedAt": "2026-11-18T19:24:28Z",
+          "embeddable": true
         }
       ]
     },
@@ -331,7 +364,8 @@
           "speakers": null,
           "rawTitle": "Stanford CS153 Frontier Systems | Anjney Midha from AMP PBC on Frontier Systems",
           "durationSec": 3955,
-          "publishedAt": "2026-04-30T21:55:52Z"
+          "publishedAt": "2026-04-30T21:55:52Z",
+          "embeddable": true
         },
         {
           "id": "vfF011ko89o",
@@ -340,7 +374,8 @@
           "speakers": null,
           "rawTitle": "Stanford CS153 Frontier Systems | Mati Staniszewski from ElevenLabs on The Future of Voice Systems",
           "durationSec": 3986,
-          "publishedAt": "2026-05-04T19:45:45Z"
+          "publishedAt": "2026-05-04T19:45:45Z",
+          "embeddable": false
         },
         {
           "id": "CBaLU0dDEY8",
@@ -349,7 +384,8 @@
           "speakers": null,
           "rawTitle": "Stanford CS153 Frontier Systems | Andreas Blattmann from Black Forest Labs on Visual Intelligence",
           "durationSec": 3674,
-          "publishedAt": "2026-05-04T19:45:56Z"
+          "publishedAt": "2026-05-04T19:45:56Z",
+          "embeddable": false
         },
         {
           "id": "6nUl_w5W9Wk",
@@ -358,7 +394,8 @@
           "speakers": null,
           "rawTitle": "Stanford CS153 Frontier Systems | Amit Jain from Luma AI on Unified Intelligence Systems",
           "durationSec": 3462,
-          "publishedAt": "2026-05-06T21:07:28Z"
+          "publishedAt": "2026-05-06T21:07:28Z",
+          "embeddable": false
         },
         {
           "id": "BQrJ4lHAjhc",
@@ -367,7 +404,8 @@
           "speakers": null,
           "rawTitle": "Stanford CS153 Frontier Systems | Nikhyl Singhal from Skip on Product Management in the AI Era",
           "durationSec": 3794,
-          "publishedAt": "2026-05-07T20:58:42Z"
+          "publishedAt": "2026-05-07T20:58:42Z",
+          "embeddable": false
         },
         {
           "id": "B8NvdfssGac",
@@ -376,7 +414,8 @@
           "speakers": null,
           "rawTitle": "Stanford CS153 Frontier Systems | Ben Horowitz from a16z on Venture Capital Systems, Network Effects",
           "durationSec": 3978,
-          "publishedAt": "2026-05-11T19:56:12Z"
+          "publishedAt": "2026-05-11T19:56:12Z",
+          "embeddable": false
         },
         {
           "id": "wisccQYTRQc",
@@ -385,7 +424,8 @@
           "speakers": null,
           "rawTitle": "Stanford CS153 Frontier Systems | Scott Nolan from General Matter on Energy Bottlenecks",
           "durationSec": 3628,
-          "publishedAt": "2026-05-12T16:59:41Z"
+          "publishedAt": "2026-05-12T16:59:41Z",
+          "embeddable": false
         },
         {
           "id": "Lri2LNYtERM",
@@ -394,7 +434,8 @@
           "speakers": null,
           "rawTitle": "Stanford CS153 Frontier Systems | The AI Native Company: How One Founder Becomes a 1000x Engineer",
           "durationSec": 2835,
-          "publishedAt": "2026-05-20T17:36:41Z"
+          "publishedAt": "2026-05-20T17:36:41Z",
+          "embeddable": false
         },
         {
           "id": "VeTqsCpcDgg",
@@ -403,7 +444,8 @@
           "speakers": null,
           "rawTitle": "Stanford CS153 Frontier Systems | The Discipline of Delivering Value per Gigawatt",
           "durationSec": 3863,
-          "publishedAt": "2026-05-27T21:15:42Z"
+          "publishedAt": "2026-05-27T21:15:42Z",
+          "embeddable": false
         },
         {
           "id": "g50FHC-PzK8",
@@ -412,7 +454,8 @@
           "speakers": null,
           "rawTitle": "Stanford CS153 Frontier Systems | The Road Ahead: Resilience Required",
           "durationSec": 3919,
-          "publishedAt": "2026-05-28T16:20:02Z"
+          "publishedAt": "2026-05-28T16:20:02Z",
+          "embeddable": false
         },
         {
           "id": "F_7M4Hc-usM",
@@ -421,7 +464,8 @@
           "speakers": null,
           "rawTitle": "Stanford CS153 Frontier Systems | Scale, AGI, and the Future of Everything",
           "durationSec": 2470,
-          "publishedAt": "2026-06-15T17:58:40Z"
+          "publishedAt": "2026-06-15T17:58:40Z",
+          "embeddable": false
         },
         {
           "id": "d0Pfu6B7gIM",
@@ -430,7 +474,8 @@
           "speakers": null,
           "rawTitle": "Stanford CS153 Frontier Systems | Building the Frontier Ecosystem",
           "durationSec": 3438,
-          "publishedAt": "2026-06-29T16:16:48Z"
+          "publishedAt": "2026-06-29T16:16:48Z",
+          "embeddable": false
         },
         {
           "id": "8cAQdELWYuo",
@@ -439,7 +484,8 @@
           "speakers": null,
           "rawTitle": "Stanford CS153 Frontier Systems | Teaching AI to Touch Atoms",
           "durationSec": 2529,
-          "publishedAt": "2026-09-29T23:06:27Z"
+          "publishedAt": "2026-09-29T23:06:27Z",
+          "embeddable": false
         }
       ]
     },
@@ -455,7 +501,8 @@
           "speakers": "Diyi Yang",
           "rawTitle": "What Are AI Agents? Agentic Systems Explained | Stanford CS329Z Lecture 1 with Diyi Yang",
           "durationSec": 4176,
-          "publishedAt": "2026-11-09T21:00:05Z"
+          "publishedAt": "2026-11-09T21:00:05Z",
+          "embeddable": false
         },
         {
           "id": "Vr1NzH8bT44",
@@ -464,7 +511,8 @@
           "speakers": "Michael Ryan",
           "rawTitle": "LLMs for Agent Builders: Context Engineering | Stanford CS329Z Lecture 2 with Michael Ryan",
           "durationSec": 4673,
-          "publishedAt": "2026-11-10T21:00:11Z"
+          "publishedAt": "2026-11-10T21:00:11Z",
+          "embeddable": false
         },
         {
           "id": "psLc-46GqY0",
@@ -473,7 +521,8 @@
           "speakers": "Diyi Yang",
           "rawTitle": "RAG Explained: From BM25 to Agentic RAG | Stanford CS329Z Lecture 3 with Diyi Yang",
           "durationSec": 4591,
-          "publishedAt": "2026-11-11T21:00:17Z"
+          "publishedAt": "2026-11-11T21:00:17Z",
+          "embeddable": true
         },
         {
           "id": "s0S38lz6O7M",
@@ -482,7 +531,8 @@
           "speakers": "Diyi Yang",
           "rawTitle": "How AI Agents Use Tools: Function Calling & MCP | Stanford CS329Z Lecture 4 with Diyi Yang",
           "durationSec": 4756,
-          "publishedAt": "2026-11-12T21:00:35Z"
+          "publishedAt": "2026-11-12T21:00:35Z",
+          "embeddable": true
         },
         {
           "id": "q0Q-Hy8TTps",
@@ -491,7 +541,8 @@
           "speakers": "Michael Ryan",
           "rawTitle": "DSPy vs. LangGraph: AI Agent Frameworks Explained | Stanford CS329Z Lecture 5 with Michael Ryan",
           "durationSec": 4634,
-          "publishedAt": "2026-11-13T21:00:26Z"
+          "publishedAt": "2026-11-13T21:00:26Z",
+          "embeddable": true
         },
         {
           "id": "JC_pLC5EX_w",
@@ -500,7 +551,8 @@
           "speakers": "Michael Ryan",
           "rawTitle": "AI Agent Design Patterns: ReAct, CodeAct & More | Stanford CS329Z Lecture 6 with Michael Ryan",
           "durationSec": 4611,
-          "publishedAt": "2026-11-14T21:00:05Z"
+          "publishedAt": "2026-11-14T21:00:05Z",
+          "embeddable": true
         },
         {
           "id": "qh5tP6PBZ6U",
@@ -509,7 +561,8 @@
           "speakers": "Michael Ryan",
           "rawTitle": "How AI Agent Memory Works: MemGPT & Memory Types | Stanford CS329Z Lecture 7 with Michael Ryan",
           "durationSec": 4735,
-          "publishedAt": "2026-11-15T21:00:28Z"
+          "publishedAt": "2026-11-15T21:00:28Z",
+          "embeddable": true
         },
         {
           "id": "TlX_ft_PQIM",
@@ -518,7 +571,8 @@
           "speakers": "Michael Ryan",
           "rawTitle": "Multi-Agent Systems: When More Agents Help or Hurt | Stanford CS329Z Lecture 8 with Michael Ryan",
           "durationSec": 4736,
-          "publishedAt": "2026-11-16T21:00:05Z"
+          "publishedAt": "2026-11-16T21:00:05Z",
+          "embeddable": true
         },
         {
           "id": "e_m99aR7_3Q",
@@ -527,7 +581,8 @@
           "speakers": "Michael Ryan",
           "rawTitle": "Optimizing AI Agents: Prompts vs. Weights (GEPA, GRPO) | Stanford CS329Z Lecture 9 with Michael Ryan",
           "durationSec": 4834,
-          "publishedAt": "2026-11-17T21:00:35Z"
+          "publishedAt": "2026-11-17T21:00:35Z",
+          "embeddable": true
         },
         {
           "id": "7GW-9ug2nvw",
@@ -536,7 +591,8 @@
           "speakers": "Alex Shaw & Ryan Marten",
           "rawTitle": "Terminal-Bench: Evaluating AI Agents | Stanford CS329Z Guest Lecture with Alex Shaw & Ryan Marten",
           "durationSec": 4404,
-          "publishedAt": "2026-11-18T21:00:35Z"
+          "publishedAt": "2026-11-18T21:00:35Z",
+          "embeddable": true
         }
       ]
     }

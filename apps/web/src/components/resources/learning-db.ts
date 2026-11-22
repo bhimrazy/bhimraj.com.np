@@ -45,6 +45,12 @@ function openDb(): Promise<IDBDatabase> {
       return;
     }
     const req = indexedDB.open(DB_NAME, VERSION);
+    // An open can wait forever behind another tab's pending upgrade or
+    // delete; give up so the page falls back to "can't save".
+    const timeout = setTimeout(() => {
+      dbPromise = null;
+      reject(new Error("IndexedDB open timed out"));
+    }, 5000);
     req.onupgradeneeded = (event) => {
       const db = req.result;
       if (event.oldVersion < 1) {
@@ -55,6 +61,7 @@ function openDb(): Promise<IDBDatabase> {
       }
     };
     req.onsuccess = () => {
+      clearTimeout(timeout);
       const db = req.result;
       // Another tab is upgrading the schema: let it.
       db.onversionchange = () => {
@@ -64,6 +71,7 @@ function openDb(): Promise<IDBDatabase> {
       resolve(db);
     };
     req.onerror = () => {
+      clearTimeout(timeout);
       dbPromise = null;
       reject(req.error);
     };
@@ -151,7 +159,11 @@ export async function saveLecture(input: {
   lectures.put({
     course: input.course,
     video: input.video,
-    positionSec: Math.max(0, Math.floor(input.positionSec)),
+    // A tick keeps the stored position; React state may be behind it.
+    positionSec:
+      input.played === false && prev
+        ? prev.positionSec
+        : Math.max(0, Math.floor(input.positionSec)),
     durationSec: Math.floor(input.durationSec),
     // Once watched, a lecture stays watched until unticked.
     done: input.done ?? prev?.done ?? false,
@@ -183,6 +195,9 @@ export async function resetCourse(course: string): Promise<void> {
 }
 
 const BACKUP_FORMAT = "bhimraj.com.np/learning";
+
+/** A file that can't be restored; its message is shown to the visitor. */
+export class BackupError extends Error {}
 
 export type Backup = {
   format: typeof BACKUP_FORMAT;
@@ -241,7 +256,7 @@ function isCourse(v: unknown): v is CourseState {
 /**
  * Merges a backup into what's stored; for each lecture and course the newer
  * record wins. Returns the number of lectures restored. Throws on a file
- * that isn't a backup from this site.
+ * that isn't a backup from this site, or comes from a newer version.
  */
 export async function importBackup(data: unknown): Promise<number> {
   const backup = data as Partial<Backup>;
@@ -250,10 +265,30 @@ export async function importBackup(data: unknown): Promise<number> {
     !Array.isArray(backup.lectures) ||
     !Array.isArray(backup.courses)
   ) {
-    throw new Error("Not a progress backup from this site.");
+    throw new BackupError("That file isn't a progress backup from this site.");
   }
-  const lectures = backup.lectures.filter(isLecture);
-  const courses = backup.courses.filter(isCourse);
+  if (typeof backup.version !== "number" || backup.version > VERSION) {
+    throw new BackupError(
+      "That backup is from a newer version of this page. Reload and try again.",
+    );
+  }
+  // Rebuilt from known fields, so nothing extra in the file is stored.
+  const lectures: LectureProgress[] = backup.lectures
+    .filter(isLecture)
+    .map((r) => ({
+      course: r.course,
+      video: r.video,
+      positionSec: r.positionSec,
+      durationSec: r.durationSec,
+      done: r.done,
+      updatedAt: r.updatedAt,
+    }));
+  const courses: CourseState[] = backup.courses.filter(isCourse).map((r) => ({
+    course: r.course,
+    lastVideo: r.lastVideo,
+    startedAt: r.startedAt,
+    updatedAt: r.updatedAt,
+  }));
 
   const db = await openDb();
   const tx = db.transaction([LECTURES, COURSES], "readwrite");
