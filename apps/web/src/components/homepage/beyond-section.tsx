@@ -40,7 +40,8 @@ export default function BeyondSection() {
             <dl
               className={cn(
                 surface,
-                "flex-1 divide-y divide-site-border/60 dark:divide-white/5",
+                "divide-y divide-site-border/60 dark:divide-white/5",
+                learning.length === 0 && "flex-1",
               )}
             >
               {currently.map(({ label, value }) => (
@@ -57,14 +58,13 @@ export default function BeyondSection() {
                 </div>
               ))}
             </dl>
+            <LearningNow slots={learning} />
           </div>
 
           <div className="flex flex-col">
             <ColumnTitle title="Off the clock" />
             <OffTheClock />
           </div>
-
-          <LearningNow slots={learning} />
         </div>
       </Container>
     </section>

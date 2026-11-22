@@ -72,24 +72,24 @@ function SlotTile({ slot }: { slot: Slot }) {
   const r = slot.resource;
   const share = slot.next ? null : watchedShare(r.watched, r.lectureCount);
   const inPath = getPathsWith(r.slug)[0];
-  const status = slot.next
+  // "Learning now" is the column title, so only the other states get a label.
+  const label = slot.next
     ? "Next up"
-    : r.status
+    : r.status && r.status !== "learning"
       ? STATUS_LABELS[r.status]
-      : "";
+      : null;
 
   return (
-    <div className="flex flex-col px-6 py-5 sm:px-7 sm:py-6">
+    <div className="flex flex-col px-6 py-5 sm:px-7">
       <p className="flex flex-wrap items-center gap-x-2 font-mono text-2xs text-site-text-tertiary">
-        <span
-          className={cn(
-            "uppercase tracking-wider",
-            slot.next ? "text-site-text-secondary" : "text-site-accent-text",
-          )}
-        >
-          {status}
-        </span>
-        <span aria-hidden>·</span>
+        {label && (
+          <>
+            <span className="text-site-accent-text uppercase tracking-wider">
+              {label}
+            </span>
+            <span aria-hidden>·</span>
+          </>
+        )}
         <span>{[r.source, r.term].filter(Boolean).join(" · ")}</span>
       </p>
       <h4 className="mt-2 text-pretty font-display font-semibold text-site-text leading-snug">
@@ -155,16 +155,22 @@ function SlotTile({ slot }: { slot: Slot }) {
 export function LearningNow({ slots }: { slots: Slot[] }) {
   if (slots.length === 0) return null;
   return (
-    <div className="flex flex-col lg:col-span-2">
+    <div className="mt-8 flex flex-1 flex-col">
       <ColumnTitle
         title="Learning now"
-        action={<ArrowLink href="/resources">All resources</ArrowLink>}
+        action={
+          <ArrowLink href="/resources" className="-my-3 py-3">
+            All resources
+          </ArrowLink>
+        }
       />
+      {/* Side by side on tablets; stacked when it shares the row on desktop. */}
       <div
         className={cn(
           surface,
-          "grid grid-cols-1 divide-y divide-site-border/60 sm:grid-cols-2 sm:divide-x sm:divide-y-0 dark:divide-white/5",
-          slots.length === 1 && "sm:grid-cols-1",
+          "grid flex-1 grid-cols-1 divide-y divide-site-border/60 dark:divide-white/5",
+          slots.length > 1 &&
+            "sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-1 lg:divide-x-0 lg:divide-y",
         )}
       >
         {slots.map((slot) => (
