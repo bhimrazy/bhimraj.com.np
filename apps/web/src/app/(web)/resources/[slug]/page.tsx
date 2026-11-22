@@ -199,7 +199,7 @@ export default async function ResourcePage({ params }: Props) {
       </Container>
 
       {lectures.length > 0 ? (
-        <section aria-label="Lectures" className="pb-16">
+        <section aria-label="Lectures" data-no-chat-launcher className="pb-16">
           <Container className="px-4 sm:px-8">
             <CourseClassroom
               course={slug}
