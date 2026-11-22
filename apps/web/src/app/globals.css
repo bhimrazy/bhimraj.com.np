@@ -481,6 +481,65 @@
   color: var(--site-accent);
 }
 
+/* GFM task lists: the checkbox is the marker. */
+.article-prose li.task-list-item {
+  position: relative;
+  padding-left: 1.75rem;
+  list-style: none;
+}
+.article-prose ul.contains-task-list {
+  padding-left: 0;
+}
+.article-prose li.task-list-item input[type="checkbox"] {
+  position: absolute;
+  top: 0.45em;
+  left: 0;
+  margin: 0;
+  accent-color: var(--site-accent);
+}
+
+/* GFM footnotes: superscript refs in the text, a numbered References list at the end. */
+.article-prose sup:has([data-footnote-ref]) {
+  font-size: 0.7em;
+  line-height: 0;
+}
+.article-prose [data-footnote-ref] {
+  margin-inline: 0.1em;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--site-accent);
+  text-decoration: none;
+}
+.article-prose [data-footnote-ref]::before {
+  content: "[";
+}
+.article-prose [data-footnote-ref]::after {
+  content: "]";
+}
+.article-prose section[data-footnotes] {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--site-border);
+  font-size: 0.875rem;
+  color: var(--site-text-secondary);
+}
+.article-prose section[data-footnotes] > h2 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  color: var(--site-text);
+}
+.article-prose section[data-footnotes] li {
+  margin-block: 0.375rem;
+}
+.article-prose section[data-footnotes] li :target,
+.article-prose section[data-footnotes] li:target {
+  color: var(--site-text);
+}
+.article-prose [data-footnote-backref] {
+  margin-left: 0.25em;
+  text-decoration: none;
+}
+
 .article-prose .table-wrap {
   margin-block: 2rem;
   overflow-x: auto;

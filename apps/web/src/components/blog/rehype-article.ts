@@ -5,6 +5,7 @@
  *   becomes its `<figcaption>` (the "Figure:" prefix is rendered by CSS).
  * - h2/h3 headings get a hover/focus permalink anchor.
  * - Tables are wrapped in a horizontally scrollable container.
+ * - GFM's screen-reader-only "Footnotes" heading becomes a visible "References".
  * - External links open in a new tab.
  *
  * Only structure changes — the author's words are left untouched.
@@ -129,6 +130,10 @@ export default function rehypeArticle() {
 
     walk(tree, (el, parent) => {
       const id = el.properties.id;
+      if (el.tagName === "h2" && id === "footnote-label") {
+        el.properties.className = [];
+        el.children = [{ type: "text", value: "References" }];
+      }
       if ((el.tagName === "h2" || el.tagName === "h3") && id) {
         el.children.push({
           type: "element",

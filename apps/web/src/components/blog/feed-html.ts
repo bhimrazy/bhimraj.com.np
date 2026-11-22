@@ -12,22 +12,25 @@ const nothing = () => null;
  * fails the build, so new figures must be listed.
  */
 export function feedHtml(mdx: string, postPath: string): string {
+  // Caption-less figures (chapter markers) carry nothing a reader needs.
   const onSite = ({ caption }: { caption?: ReactNode }) =>
-    createElement(
-      "p",
-      null,
-      createElement(
-        "em",
-        null,
-        caption,
-        " ",
-        createElement(
-          "a",
-          { href: postPath },
-          "See the interactive figure on the site.",
-        ),
-      ),
-    );
+    caption == null
+      ? null
+      : createElement(
+          "p",
+          null,
+          createElement(
+            "em",
+            null,
+            caption,
+            " ",
+            createElement(
+              "a",
+              { href: postPath },
+              "See the interactive figure on the site.",
+            ),
+          ),
+        );
   const passThrough = ({ children }: { children?: ReactNode }) =>
     createElement(Fragment, null, children);
   const step = ({ title, children }: { title: string; children?: ReactNode }) =>
@@ -43,6 +46,14 @@ export function feedHtml(mdx: string, postPath: string): string {
         UNetExplorer: nothing,
         UNetTrace: nothing,
         RequestVsEvent: nothing,
+        AttackPath: nothing,
+        BlastRadius: nothing,
+        KeyTheft: nothing,
+        EnvOnDisk: nothing,
+        CveByYear: nothing,
+        CooldownWindow: nothing,
+        TagVsSha: nothing,
+        LethalTrifecta: nothing,
       },
     }),
   );
