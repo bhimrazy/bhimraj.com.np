@@ -4,29 +4,20 @@
 
 Personal site of Bhimraj Yadav, software engineer in Kathmandu: [bhimraj.com.np](https://bhimraj.com.np).
 
-## What's on the site
+[Blog](https://bhimraj.com.np/blog) · [Projects](https://bhimraj.com.np/projects) · [Open source](https://bhimraj.com.np/oss) · [Research](https://bhimraj.com.np/research) · [Resources](https://bhimraj.com.np/resources)
 
-- **Blog**: writing on machine learning and software engineering.
-- **Projects**: things I've built.
-- **Open source**: my contributions.
-- **Research**: papers and reading.
-- **Resources**: courses, books and talks worth learning from.
+## Stack
 
-## Built with
-
-Next.js 16 (App Router), React, Tailwind CSS v4, shadcn/ui, Content Collections, Resend, PostHog, Biome and Vitest, in a Bun and Turborepo monorepo.
+Next.js 16, Tailwind CSS v4, shadcn/ui and Content Collections in a Bun + Turborepo monorepo, deployed on Vercel.
 
 ## Development
 
-Setup, commands, layout and environment: [docs/development.md](docs/development.md).
+```bash
+bun install
+bun dev   # http://localhost:3000
+```
 
-## Deployment
-
-Deployed on [Vercel](https://vercel.com); every pull request gets a preview deployment.
-
-## Contributing
-
-Run `bun format:write`, `bun lint`, `bun typecheck` and `bun test` before opening a PR. See [docs/development.md](docs/development.md).
+More in [docs/development.md](docs/development.md).
 
 ## License
 
