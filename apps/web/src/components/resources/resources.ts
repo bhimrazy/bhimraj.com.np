@@ -1,5 +1,11 @@
 import { getPlaylist, type Lecture } from "@bhimrazy/youtube";
-import { allResources, type Resource } from "content-collections";
+import {
+  allLearningPaths,
+  allResources,
+  type LearningPath,
+  type Resource,
+} from "content-collections";
+import { pathVideo, resolveSteps } from "./paths";
 
 /** Featured first, then newest added. */
 export function getSortedResources(): Resource[] {
@@ -51,4 +57,66 @@ export function toCardData(resource: Resource): ResourceCardData {
     lectureCount: lectures.length,
     totalSec: totalSeconds(lectures),
   };
+}
+
+export type PathStep = {
+  resource: ResourceCardData;
+  why: string;
+  /** Synced lecture IDs, for reading the visitor's saved progress. */
+  lectureIds: string[];
+};
+
+export type ResolvedPath = {
+  slug: string;
+  title: string;
+  promise: string;
+  forWho: string;
+  intro: string | null;
+  steps: PathStep[];
+  /** Synced lecture time across all steps. */
+  totalSec: number;
+  /** Steps with no synced lectures, left out of `totalSec`. */
+  untimed: number;
+};
+
+function resolvePath(path: LearningPath): ResolvedPath {
+  const slug = path._meta.path;
+  const bySlug = new Map(allResources.map((r) => [r._meta.path, r]));
+  const steps = resolveSteps({ slug, steps: path.steps }, bySlug).map(
+    ({ resource, why }) => ({
+      resource: toCardData(resource),
+      why,
+      lectureIds: getLectures(resource).map((l) => l.id),
+    }),
+  );
+  return {
+    slug,
+    title: path.title,
+    promise: path.promise,
+    forWho: path.forWho,
+    intro: path.intro,
+    steps,
+    ...pathVideo(steps.map((s) => s.resource)),
+  };
+}
+
+/** Every path, resolved; throws (failing the build) on a bad step. */
+export function getPaths(): ResolvedPath[] {
+  return [...allLearningPaths]
+    .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title))
+    .map(resolvePath);
+}
+
+export function getPath(slug: string): ResolvedPath | undefined {
+  return getPaths().find((p) => p.slug === slug);
+}
+
+/** Paths that include a resource, with its 1-based position in each. */
+export function getPathsWith(
+  resourceSlug: string,
+): { path: ResolvedPath; position: number }[] {
+  return getPaths().flatMap((path) => {
+    const index = path.steps.findIndex((s) => s.resource.slug === resourceSlug);
+    return index >= 0 ? [{ path, position: index + 1 }] : [];
+  });
 }

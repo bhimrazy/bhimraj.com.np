@@ -19,7 +19,7 @@ export default function BeyondSection() {
     <section id="beyond" className="scroll-mt-20 pt-4 pb-20 sm:pb-24">
       <Container className="px-4 sm:px-8">
         <SectionHeading
-          index="04"
+          index="05"
           eyebrow="Beyond code"
           title="A little more about me"
           description={PERSONAL.voiceLine}

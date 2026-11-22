@@ -1,6 +1,7 @@
 import { cacheLife } from "next/cache";
 import { sortedPosts } from "@/components/blog/posts";
 import { getSortedProjects } from "@/components/projects/projects";
+import { getPaths } from "@/components/resources/resources";
 import { buildLlmsTxt } from "@/lib/llms";
 
 async function getLlmsTxt() {
@@ -19,7 +20,14 @@ async function getLlmsTxt() {
     slug: project._meta.path,
   }));
 
-  return buildLlmsTxt({ posts, projects });
+  const paths = getPaths().map((path) => ({
+    title: path.title,
+    promise: path.promise,
+    slug: path.slug,
+    steps: path.steps.map((s) => s.resource.title),
+  }));
+
+  return buildLlmsTxt({ posts, projects, paths });
 }
 
 export async function GET() {

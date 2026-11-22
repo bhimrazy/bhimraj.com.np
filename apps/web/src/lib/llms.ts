@@ -2,6 +2,13 @@ import { siteConfig } from "@/config/site";
 
 export type LlmsPost = { title: string; description: string; slug: string };
 export type LlmsProject = { title: string; description: string; slug: string };
+export type LlmsPath = {
+  title: string;
+  promise: string;
+  slug: string;
+  /** Step titles, in order. */
+  steps: string[];
+};
 
 /**
  * Plain-text index of who Bhimraj is and where to find key pages, posts
@@ -10,6 +17,7 @@ export type LlmsProject = { title: string; description: string; slug: string };
 export function buildLlmsTxt(input: {
   posts: LlmsPost[];
   projects: LlmsProject[];
+  paths: LlmsPath[];
 }): string {
   const baseUrl = siteConfig.url.replace(/\/$/, "");
 
@@ -36,6 +44,15 @@ export function buildLlmsTxt(input: {
     for (const post of input.posts) {
       lines.push(
         `- [${post.title}](${baseUrl}/blog/${post.slug}): ${post.description}`,
+      );
+    }
+  }
+
+  if (input.paths.length > 0) {
+    lines.push("", "## Learning paths", "");
+    for (const path of input.paths) {
+      lines.push(
+        `- [${path.title}](${baseUrl}/resources/paths/${path.slug}): ${path.promise} Steps: ${path.steps.join(" → ")}.`,
       );
     }
   }

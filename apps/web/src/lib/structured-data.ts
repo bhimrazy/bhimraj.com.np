@@ -197,22 +197,51 @@ export function buildResourceCollectionJsonLd(input: {
       itemListElement: input.resources.map((r, index) => ({
         "@type": "ListItem",
         position: index + 1,
-        item: {
-          "@type": RESOURCE_TYPES[r.kind] ?? "CreativeWork",
-          name: r.title,
-          url: r.url,
-          description: r.tldr,
-          ...(r.kind === "course"
-            ? { provider: { "@type": "Organization", name: r.source } }
-            : { publisher: { "@type": "Organization", name: r.source } }),
-          ...(r.people.length > 0 && {
-            [r.kind === "course" ? "instructor" : "author"]: r.people.map(
-              (name) => ({ "@type": "Person", name }),
-            ),
-          }),
-        },
+        item: resourceItem(r),
       })),
     },
+  };
+}
+
+function resourceItem(r: ResourceInput) {
+  return {
+    "@type": RESOURCE_TYPES[r.kind] ?? "CreativeWork",
+    name: r.title,
+    url: r.url,
+    description: r.tldr,
+    ...(r.kind === "course"
+      ? { provider: { "@type": "Organization", name: r.source } }
+      : { publisher: { "@type": "Organization", name: r.source } }),
+    ...(r.people.length > 0 && {
+      [r.kind === "course" ? "instructor" : "author"]: r.people.map((name) => ({
+        "@type": "Person",
+        name,
+      })),
+    }),
+  };
+}
+
+/** A learning path: an ordered ItemList of its steps, in the order to take them. */
+export function buildLearningPathJsonLd(path: {
+  slug: string;
+  title: string;
+  promise: string;
+  steps: ResourceInput[];
+}): JsonLdObject {
+  return {
+    "@context": CONTEXT,
+    "@type": "ItemList",
+    name: path.title,
+    description: path.promise,
+    url: absoluteUrl(`/resources/paths/${path.slug}`),
+    author: personRef,
+    itemListOrder: "https://schema.org/ItemListOrderAscending",
+    numberOfItems: path.steps.length,
+    itemListElement: path.steps.map((r, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: resourceItem(r),
+    })),
   };
 }
 
