@@ -55,7 +55,7 @@ export default function Comments() {
           loading="lazy"
         />
       ) : (
-        <div className="min-h-40" />
+        <div className="min-h-88" />
       )}
     </section>
   );

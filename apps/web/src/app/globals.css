@@ -520,3 +520,9 @@
     transition: none;
   }
 }
+
+/* giscus starts its iframe at the browser default (150px) and grows it once
+   loaded; start near the empty-thread height so the box isn't cut off. */
+giscus-widget::part(iframe) {
+  min-height: 22rem;
+}
