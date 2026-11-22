@@ -76,7 +76,7 @@ export function WalkthroughClient({
       <div onKeyDown={onKeyDown}>
         <div className="flex items-center gap-3 border-site-border border-b px-4 py-3 sm:px-5">
           <p className="min-w-0 flex-1 truncate font-mono text-2xs text-site-text-tertiary">
-            <span className="text-site-accent tabular-nums">
+            <span className="text-site-accent-text tabular-nums">
               {index + 1}/{steps.length}
             </span>{" "}
             <span className="text-site-text">{step.title}</span>

@@ -32,7 +32,7 @@ export default async function BlogSection() {
           <div className="flex items-baseline justify-between gap-4 border-site-border border-b pb-4">
             <h2
               id="archive"
-              className="font-medium font-mono text-[13px] text-site-accent uppercase tracking-[1.5px]"
+              className="font-medium font-mono text-[13px] text-site-accent-text uppercase tracking-[1.5px]"
             >
               More writing
             </h2>
@@ -90,7 +90,7 @@ function FeaturedPost({
       <div className="flex flex-col p-6 sm:p-8 lg:p-10">
         <div className="mb-5 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-site-text-tertiary text-xs">
           {label && (
-            <span className="rounded-full bg-site-accent-subtle px-2.5 py-0.5 font-medium text-[10px] text-site-accent uppercase tracking-[1.5px]">
+            <span className="rounded-full bg-site-accent-subtle px-2.5 py-0.5 font-medium text-[10px] text-site-accent-text uppercase tracking-[1.5px]">
               {label}
             </span>
           )}
@@ -107,7 +107,7 @@ function FeaturedPost({
           <Link
             href={postHref(post)}
             className={cn(
-              "rounded-sm transition-colors after:absolute after:inset-0 after:z-10 group-hover:text-site-accent",
+              "rounded-sm transition-colors after:absolute after:inset-0 after:z-10 group-hover:text-site-accent-text",
               focusRing,
             )}
           >
@@ -121,7 +121,7 @@ function FeaturedPost({
 
         <div className="mt-auto flex flex-wrap items-end justify-between gap-4 pt-8">
           <TagList tags={post.tags} />
-          <span className="inline-flex items-center gap-1.5 font-medium text-site-accent text-sm">
+          <span className="inline-flex items-center gap-1.5 font-medium text-site-accent-text text-sm">
             Read article
             <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
           </span>
@@ -146,7 +146,7 @@ function ArchiveRow({ post }: { post: BlogPost }) {
           <Link
             href={postHref(post)}
             className={cn(
-              "rounded-sm transition-colors after:absolute after:inset-0 after:z-10 group-hover:text-site-accent",
+              "rounded-sm transition-colors after:absolute after:inset-0 after:z-10 group-hover:text-site-accent-text",
               focusRing,
             )}
           >
@@ -178,7 +178,7 @@ function TagList({ tags, className }: { tags: string[]; className?: string }) {
       {tags.slice(0, 3).map((tag) => (
         <li
           key={tag}
-          className="rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[10px] text-site-accent"
+          className="rounded-md bg-site-accent-subtle px-2 py-0.5 font-mono text-[10px] text-site-accent-text"
         >
           {tagLabel(tag)}
         </li>

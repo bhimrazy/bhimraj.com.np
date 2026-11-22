@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { NowItem } from "./data";
 
 const linkClass =
-  "rounded-sm text-site-text underline decoration-site-accent/40 decoration-1 underline-offset-4 transition-colors hover:text-site-accent hover:decoration-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2";
+  "rounded-sm text-site-text underline decoration-site-accent/40 decoration-1 underline-offset-4 transition-colors hover:text-site-accent-text hover:decoration-site-accent focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2";
 
 function Item({ text, note, href }: NowItem) {
   const name = !href ? (

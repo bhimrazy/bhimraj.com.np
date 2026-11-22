@@ -33,7 +33,7 @@
   --site-bg-tertiary: #e7e5e4;
   --site-text: #1c1917;
   --site-text-secondary: #57534e;
-  --site-text-tertiary: #736c66;
+  --site-text-tertiary: #66605a;
   --site-accent: #d97706;
   --site-accent-hover: #f59e0b;
   --site-accent-subtle: rgba(217, 119, 6, 0.08);
@@ -55,7 +55,7 @@
   --site-bg-tertiary: #1f1c16;
   --site-text: #f5f0e8;
   --site-text-secondary: #a09882;
-  --site-text-tertiary: #8a836e;
+  --site-text-tertiary: #968e79;
   --site-accent: #f59e0b;
   --site-accent-hover: #fbbf24;
   --site-accent-subtle: rgba(245, 158, 11, 0.1);
@@ -253,6 +253,10 @@
   font-style: var(--shiki-dark-font-style);
   font-weight: var(--shiki-dark-font-weight);
   text-decoration: var(--shiki-dark-text-decoration);
+}
+/* github-dark comment grey is 3.8:1 on the block */
+.dark .shiki span[style*="--shiki-dark:#6A737D" i] {
+  color: #8b949e;
 }
 
 /* ── Blog reading experience ─────────────────────────────────────── */

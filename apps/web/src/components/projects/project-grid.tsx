@@ -124,7 +124,7 @@ function ProjectCard({
           </h2>
           <span
             aria-hidden
-            className="text-site-accent text-sm transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none"
+            className="text-site-accent-text text-sm transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none"
           >
             →
           </span>

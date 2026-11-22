@@ -32,7 +32,7 @@ const tab =
 
 const tabState = (active: boolean) =>
   active
-    ? "bg-site-accent-subtle text-site-accent"
+    ? "bg-site-accent-subtle text-site-accent-text"
     : "text-site-text-secondary hover:text-site-text";
 
 /**

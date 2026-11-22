@@ -17,7 +17,7 @@ const buttonVariants = cva(
           "bg-site-bg-secondary text-site-text shadow-sm hover:bg-site-bg-secondary/80",
         ghost:
           "hover:bg-site-bg-secondary hover:text-site-text dark:hover:bg-site-bg-secondary/60",
-        link: "text-site-accent underline-offset-4 hover:underline",
+        link: "text-site-accent-text underline-offset-4 hover:underline",
         /** Post figures: mono, hairline border; aria-disabled keeps focus. */
         figure:
           "border border-site-border font-mono font-normal text-2xs text-site-text-secondary hover:border-site-border-hover focus-visible:ring-2 focus-visible:ring-site-accent hover:text-site-text aria-disabled:cursor-default aria-disabled:opacity-40 aria-disabled:hover:border-site-border aria-disabled:hover:text-site-text-secondary",

@@ -257,7 +257,7 @@ export default function ResearchPage() {
                     href={`https://arxiv.org/abs/${paper.arxiv}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-sm underline-offset-4 transition-colors hover:text-site-accent hover:underline focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
+                    className="rounded-sm underline-offset-4 transition-colors hover:text-site-accent-text hover:underline focus-visible:outline-2 focus-visible:outline-site-accent focus-visible:outline-offset-2"
                   >
                     {paper.title}
                   </a>

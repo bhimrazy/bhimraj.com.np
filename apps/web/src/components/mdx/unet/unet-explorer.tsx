@@ -149,7 +149,8 @@ export function UNetExplorer() {
       <div className="mt-3 min-h-18 space-y-1 border-site-border border-t pt-3 text-sm">
         {shapes.error ? (
           <p className="text-site-text-secondary">
-            <span className="font-mono text-site-accent">✕</span> {shapes.error}
+            <span className="font-mono text-site-accent-text">✕</span>{" "}
+            {shapes.error}
           </p>
         ) : null}
         {stage ? (
@@ -158,7 +159,7 @@ export function UNetExplorer() {
               <span className="font-medium text-site-text">
                 {stageTitle(stage, shapes.depth)}
               </span>
-              <code className="font-mono text-site-accent text-xs">
+              <code className="font-mono text-site-accent-text text-xs">
                 {formatShape(stage)}
               </code>
             </p>
@@ -170,7 +171,7 @@ export function UNetExplorer() {
                   {i > 0 && ", "}
                   <a
                     href={s.href}
-                    className="font-mono text-site-accent text-xs underline-offset-2 hover:underline"
+                    className="font-mono text-site-accent-text text-xs underline-offset-2 hover:underline"
                   >
                     {s.label}
                   </a>
@@ -185,7 +186,7 @@ export function UNetExplorer() {
                 {formatShape(shapes.input)}
               </span>
               <span className="text-site-text-tertiary">→</span>
-              <span className="text-site-accent">
+              <span className="text-site-accent-text">
                 {formatShape(shapes.output)}
               </span>
             </p>

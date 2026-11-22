@@ -104,7 +104,7 @@ export default async function PathPage({ params }: Props) {
           </dl>
           {path.intro && (
             <div
-              className="prose dark:prose-invert mt-6 max-w-none prose-a:text-site-accent prose-p:text-site-text-secondary prose-p:leading-relaxed dark:prose-p:text-site-text-secondary"
+              className="prose dark:prose-invert mt-6 max-w-none prose-a:text-site-accent-text prose-p:text-site-text-secondary prose-p:leading-relaxed dark:prose-p:text-site-text-secondary"
               // biome-ignore lint/security/noDangerouslySetInnerHtml: compiled from my own markdown at build time
               dangerouslySetInnerHTML={{ __html: path.intro }}
             />
@@ -177,7 +177,7 @@ function Step({
   const arrow = (glyph: string) => (
     <span
       aria-hidden
-      className="ml-1.5 inline-block text-site-accent text-sm transition-transform group-hover/link:translate-x-0.5"
+      className="ml-1.5 inline-block text-site-accent-text text-sm transition-transform group-hover/link:translate-x-0.5"
     >
       {glyph}
     </span>

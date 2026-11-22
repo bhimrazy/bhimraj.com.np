@@ -40,7 +40,7 @@ export default function MobileToc({
               <a
                 href={`#${item.id}`}
                 className={cn(
-                  "block rounded-sm py-1.5 text-site-text-secondary text-sm leading-snug transition-colors hover:text-site-accent focus-visible:outline-2 focus-visible:outline-site-accent",
+                  "block rounded-sm py-1.5 text-site-text-secondary text-sm leading-snug transition-colors hover:text-site-accent-text focus-visible:outline-2 focus-visible:outline-site-accent",
                   item.level === 3 && "pl-4 text-[13px]",
                 )}
               >

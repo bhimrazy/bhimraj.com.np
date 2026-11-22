@@ -49,7 +49,7 @@ export function UNetTrace({ at }: { at: string }) {
         {skips.map((k) => (
           <li key={k.to} className="flex justify-between gap-3">
             <span>skip</span>
-            <span className="text-site-accent tabular-nums">
+            <span className="text-site-accent-text tabular-nums">
               crop {k.fromSize}→{k.cropTo}, cat → {k.concatChannels} ch
             </span>
           </li>

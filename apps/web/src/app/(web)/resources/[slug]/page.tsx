@@ -267,7 +267,7 @@ export default async function ResourcePage({ params }: Props) {
             )}
             {resource.notes && (
               <div
-                className="prose dark:prose-invert mt-4 max-w-none prose-headings:font-display prose-a:text-site-accent prose-headings:text-site-text prose-li:text-site-text-secondary prose-p:text-site-text-secondary prose-p:leading-relaxed prose-headings:tracking-tight dark:prose-headings:text-site-text dark:prose-li:text-site-text-secondary dark:prose-p:text-site-text-secondary dark:prose-strong:text-site-text"
+                className="prose dark:prose-invert mt-4 max-w-none prose-headings:font-display prose-a:text-site-accent-text prose-headings:text-site-text prose-li:text-site-text-secondary prose-p:text-site-text-secondary prose-p:leading-relaxed prose-headings:tracking-tight dark:prose-headings:text-site-text dark:prose-li:text-site-text-secondary dark:prose-p:text-site-text-secondary dark:prose-strong:text-site-text"
                 // biome-ignore lint/security/noDangerouslySetInnerHtml: compiled from my own markdown at build time
                 dangerouslySetInnerHTML={{ __html: resource.notes }}
               />
