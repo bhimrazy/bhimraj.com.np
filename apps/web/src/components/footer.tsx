@@ -84,7 +84,7 @@ export default async function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col gap-3 border-site-border/60 border-t pt-6 text-site-text-secondary text-xs sm:flex-row sm:items-center sm:justify-between dark:border-white/4">
-          <span>© {year} Bhimraj Yadav</span>
+          <span>© {year} Bhimraj Yadav · Designed and built in Kathmandu</span>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <span className="inline-flex items-center gap-1.5">
               <span
