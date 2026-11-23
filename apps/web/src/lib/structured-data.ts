@@ -172,6 +172,7 @@ type ResourceInput = {
 const RESOURCE_TYPES: Record<string, string> = {
   course: "Course",
   book: "Book",
+  blog: "Blog",
   paper: "ScholarlyArticle",
   article: "Article",
 };

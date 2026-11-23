@@ -37,6 +37,7 @@ function haystack(r: ResourceCardData): string {
     KIND_LABELS[r.kind].one,
     ...r.people,
     ...r.topics.map((t) => TOPIC_LABELS[t]),
+    ...r.posts.map((p) => p.title),
   ]
     .join(" ")
     .toLowerCase();
@@ -246,7 +247,10 @@ export function ResourceExplorer({
               </h2>
               <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {group.items.map((r) => (
-                  <li key={r.slug}>
+                  <li
+                    key={r.slug}
+                    className={cn(r.posts.length > 0 && "md:col-span-2")}
+                  >
                     <ResourceCard
                       resource={r}
                       onTopic={(topic) => setFilters((f) => ({ ...f, topic }))}
@@ -329,112 +333,170 @@ function ResourceCard({
   resource: ResourceCardData;
   onTopic: (topic: ResourceTopic) => void;
 }) {
+  const posts = r.posts.length > 0;
   return (
     <article
       className={cn(
         surface,
-        "flex h-full flex-col p-5 transition-colors hover:border-site-border-hover sm:p-6 dark:hover:border-white/10",
+        "flex h-full flex-col gap-6 p-5 transition-colors hover:border-site-border-hover sm:p-6 dark:hover:border-white/10",
+        posts && "md:flex-row md:gap-8",
       )}
     >
-      <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-2xs text-site-text-tertiary">
-        <span className="text-site-text-secondary">{r.source}</span>
-        {r.term && (
-          <>
-            <span aria-hidden>·</span>
-            <span>{r.term}</span>
-          </>
-        )}
-        <span className="ml-auto flex items-center gap-1.5">
-          {r.video && (
-            <Chip tone="neutral" className="gap-1">
-              <VideoIcon aria-hidden className="size-3" />
-              {r.lectureCount > 0
-                ? `${r.lectureCount} lectures · ${formatHours(r.totalSec)}`
-                : "Video"}
-            </Chip>
+      <div className={cn("flex flex-1 flex-col", posts && "md:max-w-sm")}>
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-2xs text-site-text-tertiary">
+          <span className="text-site-text-secondary">{r.source}</span>
+          {r.term && (
+            <>
+              <span aria-hidden>·</span>
+              <span>{r.term}</span>
+            </>
           )}
-          {r.status && <Chip>{STATUS_LABELS[r.status]}</Chip>}
-        </span>
-      </p>
-
-      <h3 className="mt-3 text-pretty font-display font-semibold text-lg text-site-text leading-snug tracking-tight">
-        {r.hasPage ? (
-          <Link
-            href={`/resources/${r.slug}`}
-            onClick={() =>
-              capture("resource_opened", { slug: r.slug, kind: r.kind })
-            }
-            className={cn(
-              "group/link rounded-sm transition-colors hover:text-site-accent-text",
-              focusRing,
-            )}
-          >
-            {r.title}
-            <span
-              aria-hidden
-              className="ml-1.5 inline-block text-site-accent-text text-sm transition-transform group-hover/link:translate-x-0.5"
-            >
-              →
-            </span>
-          </Link>
-        ) : (
-          <a
-            href={r.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() =>
-              capture("resource_opened", { slug: r.slug, kind: r.kind })
-            }
-            className={cn(
-              "group/link rounded-sm transition-colors hover:text-site-accent-text",
-              focusRing,
-            )}
-          >
-            {r.title}
-            <span
-              aria-hidden
-              className="ml-1.5 inline-block text-site-accent-text text-sm transition-transform group-hover/link:translate-x-0.5"
-            >
-              ↗
-            </span>
-            <span className="sr-only"> (opens in a new tab)</span>
-          </a>
-        )}
-      </h3>
-      {r.people.length > 0 && (
-        <p className="mt-1 text-site-text-tertiary text-xs">
-          {formatPeople(r.people)}
-        </p>
-      )}
-
-      <p className="mt-3 text-pretty text-site-text-secondary text-sm leading-relaxed">
-        {r.tldr}
-      </p>
-      {r.note && (
-        <p className="mt-3 text-pretty border-site-accent/40 border-l-2 pl-3 text-site-text text-sm italic leading-relaxed">
-          {r.note}
-        </p>
-      )}
-
-      <ul className="mt-auto flex flex-wrap gap-1.5 pt-5">
-        {r.topics.map((topic) => (
-          <li key={topic}>
-            <button
-              type="button"
-              onClick={() => onTopic(topic)}
-              className={cn("rounded-md", focusRing)}
-            >
-              <Chip
-                tone="neutral"
-                className="transition-colors hover:text-site-text"
-              >
-                {TOPIC_LABELS[topic]}
+          <span className="ml-auto flex items-center gap-1.5">
+            {r.video && (
+              <Chip tone="neutral" className="gap-1">
+                <VideoIcon aria-hidden className="size-3" />
+                {r.lectureCount > 0
+                  ? `${r.lectureCount} lectures · ${formatHours(r.totalSec)}`
+                  : "Video"}
               </Chip>
-            </button>
+            )}
+            {r.status && <Chip>{STATUS_LABELS[r.status]}</Chip>}
+          </span>
+        </p>
+
+        <h3 className="mt-3 text-pretty font-display font-semibold text-lg text-site-text leading-snug tracking-tight">
+          {r.hasPage ? (
+            <Link
+              href={`/resources/${r.slug}`}
+              onClick={() =>
+                capture("resource_opened", { slug: r.slug, kind: r.kind })
+              }
+              className={cn(
+                "group/link rounded-sm transition-colors hover:text-site-accent-text",
+                focusRing,
+              )}
+            >
+              {r.title}
+              <span
+                aria-hidden
+                className="ml-1.5 inline-block text-site-accent-text text-sm transition-transform group-hover/link:translate-x-0.5"
+              >
+                →
+              </span>
+            </Link>
+          ) : (
+            <a
+              href={r.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                capture("resource_opened", { slug: r.slug, kind: r.kind })
+              }
+              className={cn(
+                "group/link rounded-sm transition-colors hover:text-site-accent-text",
+                focusRing,
+              )}
+            >
+              {r.title}
+              <span
+                aria-hidden
+                className="ml-1.5 inline-block text-site-accent-text text-sm transition-transform group-hover/link:translate-x-0.5"
+              >
+                ↗
+              </span>
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          )}
+        </h3>
+        {r.people.length > 0 && (
+          <p className="mt-1 text-site-text-tertiary text-xs">
+            {formatPeople(r.people)}
+          </p>
+        )}
+
+        <p className="mt-3 text-pretty text-site-text-secondary text-sm leading-relaxed">
+          {r.tldr}
+        </p>
+        {r.note && (
+          <p className="mt-3 text-pretty border-site-accent/40 border-l-2 pl-3 text-site-text text-sm italic leading-relaxed">
+            {r.note}
+          </p>
+        )}
+
+        <ul className="mt-auto flex flex-wrap gap-1.5 pt-5">
+          {r.topics.map((topic) => (
+            <li key={topic}>
+              <button
+                type="button"
+                onClick={() => onTopic(topic)}
+                className={cn("rounded-md", focusRing)}
+              >
+                <Chip
+                  tone="neutral"
+                  className="transition-colors hover:text-site-text"
+                >
+                  {TOPIC_LABELS[topic]}
+                </Chip>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {posts && <PostList resource={r} />}
+    </article>
+  );
+}
+
+const postDate = new Intl.DateTimeFormat("en", {
+  month: "short",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+function PostList({ resource: r }: { resource: ResourceCardData }) {
+  return (
+    <div className="flex-1 border-site-border border-t pt-5 md:border-t-0 md:border-l md:pt-0 md:pl-8 dark:border-white/5">
+      <p className="mb-3 font-mono text-2xs text-site-text-tertiary uppercase tracking-wider">
+        Start with
+      </p>
+      <ol className="flex flex-col divide-y divide-site-border dark:divide-white/5">
+        {r.posts.map((post) => (
+          <li key={post.url} className="py-3 first:pt-0 last:pb-0">
+            <a
+              href={post.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                capture("resource_opened", { slug: r.slug, kind: r.kind })
+              }
+              className={cn(
+                "group/post block rounded-sm transition-colors",
+                focusRing,
+              )}
+            >
+              <span className="flex items-baseline justify-between gap-4">
+                <span className="text-pretty font-medium text-site-text text-sm leading-snug transition-colors group-hover/post:text-site-accent-text">
+                  {post.title}
+                  <span aria-hidden className="ml-1 text-site-accent-text">
+                    ↗
+                  </span>
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </span>
+                <time
+                  dateTime={post.date}
+                  className="shrink-0 font-mono text-2xs text-site-text-tertiary"
+                >
+                  {postDate.format(new Date(post.date))}
+                </time>
+              </span>
+              <span className="mt-1 block text-pretty text-site-text-secondary text-xs leading-relaxed">
+                {post.tldr}
+              </span>
+            </a>
           </li>
         ))}
-      </ul>
-    </article>
+      </ol>
+    </div>
   );
 }
 

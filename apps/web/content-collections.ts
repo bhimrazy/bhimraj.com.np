@@ -158,6 +158,17 @@ const Resource = defineCollection({
         }),
       )
       .default([]),
+    /** Blogs: the posts to start with, newest first. */
+    posts: z
+      .array(
+        z.object({
+          title: z.string(),
+          url: z.url(),
+          date: z.iso.date(),
+          tldr: z.string(),
+        }),
+      )
+      .default([]),
   }),
   transform: async (document, context) => {
     const notes = document.content.trim()

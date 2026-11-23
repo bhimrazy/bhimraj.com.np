@@ -17,7 +17,7 @@ import {
 
 const TITLE = "Free AI and systems courses, books and talks";
 const DESCRIPTION =
-  "Free courses, books and talks on LLMs, agents, efficient AI, ML systems and reliability, from Stanford, MIT, Harvard and Google, with a short summary of each.";
+  "Free courses, books, talks and blogs on LLMs, agents, efficient AI, ML systems and reliability, from Stanford, MIT, Harvard and Google, with a short summary of each.";
 
 export const metadata: Metadata = pageMetadata({
   title: TITLE,
@@ -57,7 +57,7 @@ export default function Resources() {
       <Container className="px-4 pt-28 pb-10 sm:px-8 sm:pt-32 sm:pb-12">
         <PageHeader
           eyebrow="Resources"
-          title="Courses, books and talks I keep coming back to"
+          title="Courses, books, talks and blogs I keep coming back to"
           description="The material I learn from on LLMs, agents, efficient AI and running systems. Nearly all of it is free, and each entry says in a line what it covers."
         />
       </Container>
