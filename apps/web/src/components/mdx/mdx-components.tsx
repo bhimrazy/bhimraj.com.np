@@ -4,6 +4,14 @@ import { CodeWalkthrough, Step } from "./code-walkthrough";
 import { CopyButton } from "./copy-button";
 import { RequestVsEvent } from "./events/request-vs-event";
 import { Figure } from "./figure";
+import { AttackPath } from "./security/attack-path";
+import { BlastRadius } from "./security/blast-radius";
+import { CooldownWindow } from "./security/cooldown-window";
+import { CveByYear } from "./security/cve-by-year";
+import { EnvOnDisk } from "./security/env-on-disk";
+import { KeyTheft } from "./security/key-theft";
+import { LethalTrifecta } from "./security/lethal-trifecta";
+import { TagVsSha } from "./security/tag-vs-sha";
 import { UNetExplorer } from "./unet/unet-explorer";
 import { Shape, UNetTrace } from "./unet/unet-trace";
 
@@ -31,4 +39,12 @@ export const mdxComponents = {
   UNetTrace,
   Shape,
   RequestVsEvent,
+  AttackPath,
+  BlastRadius,
+  KeyTheft,
+  EnvOnDisk,
+  CveByYear,
+  CooldownWindow,
+  TagVsSha,
+  LethalTrifecta,
 };

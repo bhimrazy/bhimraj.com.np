@@ -3,6 +3,7 @@ import { compileMarkdown } from "@content-collections/markdown";
 import { compileMDX } from "@content-collections/mdx";
 import rehypeShiki from "@shikijs/rehype";
 import rehypeSlug from "rehype-slug";
+import remarkGfm from "remark-gfm";
 import type { Pluggable } from "unified";
 import { z } from "zod";
 import { feedHtml } from "./src/components/blog/feed-html";
@@ -34,7 +35,7 @@ const rehypePlugins: Pluggable[] = [
 // Blog posts get extra editorial markup (figures, heading anchors); the dek
 // shows under the title, so the body drops it.
 const blogMdxOptions = {
-  remarkPlugins: [remarkDropDek],
+  remarkPlugins: [remarkGfm, remarkDropDek],
   rehypePlugins: [...rehypePlugins, rehypeArticle],
 };
 
@@ -154,6 +155,17 @@ const Resource = defineCollection({
           lecture: z.number().int().positive().optional(),
           /** Defaults to the kind's label; readings fall back to their source. */
           label: z.string().optional(),
+        }),
+      )
+      .default([]),
+    /** Blogs: the posts to start with, newest first. */
+    posts: z
+      .array(
+        z.object({
+          title: z.string(),
+          url: z.url(),
+          date: z.iso.date(),
+          tldr: z.string(),
         }),
       )
       .default([]),

@@ -8,6 +8,7 @@ export const RESOURCE_KINDS = [
   "course",
   "book",
   "talk",
+  "blog",
   "paper",
   "article",
 ] as const;
@@ -18,6 +19,7 @@ export const KIND_LABELS: Record<ResourceKind, { one: string; many: string }> =
     course: { one: "Course", many: "Courses" },
     book: { one: "Book", many: "Books" },
     talk: { one: "Talk", many: "Talks" },
+    blog: { one: "Blog", many: "Blogs" },
     paper: { one: "Paper", many: "Papers" },
     article: { one: "Article", many: "Articles" },
   };

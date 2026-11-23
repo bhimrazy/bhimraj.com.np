@@ -76,6 +76,7 @@ declare module "content-collections" {
       lecture?: number;
       label?: string;
     }[];
+    posts: { title: string; url: string; date: string; tldr: string }[];
     /** The body as HTML: my notes on the course, or null when empty. */
     notes: string | null;
     hasPage: boolean;

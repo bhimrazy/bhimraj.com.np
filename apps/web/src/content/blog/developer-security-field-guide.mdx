@@ -1,0 +1,808 @@
+---
+title: "A developer's security field guide for the AI era"
+seoTitle: "Developer security in the AI era: a practical guide"
+seoDescription: "A practical, beginner-to-advanced guide to securing your device, secrets, AI agents, dependencies, CI and servers, with real incidents and copy-paste config."
+description: "Attackers rarely break in any more. They log in with tokens they took from a developer's device, a package or a pipeline. This guide walks the path your code takes to production and hardens each stop, from SSH keys to dependency cooldowns."
+publishedAt: "2026-11-22"
+updatedAt: "2026-11-22"
+tags:
+  [
+    security,
+    supply-chain,
+    secrets-management,
+    github-actions,
+    ai-agents,
+    devsecops,
+  ]
+image: "/blog/security/developer-security-field-guide.png"
+---
+
+October 2026 was a hard month to be a developer reading the news.
+
+On 29 October, about $6.3 billion left Binance in roughly 20 minutes. Binance traced it back to one engineer's laptop.[^binance] The same day, Cursor's extension marketplace served up to 5,000 developers a fake update of the Claude Code extension. It planted the attacker's SSH key on their machines.[^cursor-ext] A week earlier, a poisoned LiteLLM release went out on PyPI, published with tokens stolen from LiteLLM's own engineers.[^litellm-oct]
+
+None of these needed a clever exploit. Nobody broke any encryption. The attackers logged in, with credentials that a developer's device, a package or a pipeline gave up.
+
+That's the part that stayed with me. These are well-run companies and projects, using the same tools most of us use every day: an editor that updates itself, a package manager, a CI pipeline, a token sitting in the terminal. The doors they left open are probably open on my machine too, and on yours.
+
+And it wasn't one bad month:
+
+- In October 2026 alone, Wiz tracked 17 separate breaches at AI developer platforms and called it "Black October".[^wiz-oct]
+- In May 2026, attackers published 84 malicious versions of TanStack packages without stealing a single password. They tricked a CI workflow into publishing for them.[^tanstack]
+- In November 2025, the Shai-Hulud 2.0 worm spread through about 800 npm packages and dumped stolen secrets into more than 25,000 public repositories.[^shai2]
+
+This guide is my attempt to close those doors. It's for working developers, whether you've never thought about any of this or you already run the pipeline for your team.
+
+## How this guide works
+
+A line of code travels a path before it reaches users. It starts on your device, goes into a Git repository, pulls in dependencies, runs through CI and lands on a server. Attackers have broken in at every one of those stops in the last two years, and each chapter below covers one stop.
+
+<Figure label="Where attacks land" caption="The path a change takes from your device to production, with real incidents at each stop. Each chapter of this guide covers one stop.">
+  <AttackPath />
+</Figure>
+
+Every chapter opens with the problem, usually a real incident, and then gives fixes in three levels:
+
+- **Start here.** Low effort, high value. Most readers should do all of these.
+- **Level up.** Worth it once you work on a team or ship to real users.
+- **Advanced.** For people who run infrastructure or publish packages.
+
+You can stop at any level and still be safer than you were. The checklist at the end collects everything into one list.
+
+## Why the old habits stopped working
+
+Security advice from five years ago assumed three things. Vulnerabilities were found slowly. Attackers needed days to weaponise them. Your own machine was safe as long as you didn't download strange files. None of these holds in 2026.
+
+### More vulnerabilities, found faster
+
+The CVE Program published 48,150 vulnerability records in 2025. By 22 November 2026 it had published 102,419, more than twice as many with five weeks of the year left.[^cve-data]
+
+<Figure label="Published CVEs per year" caption="CVE records published per year. 2026 runs to 22 November. Part of the 2026 jump comes from advisory databases backfilling older bugs, but the trend was steep before that.">
+  <CveByYear />
+</Figure>
+
+Part of that jump is bookkeeping. GitHub and VulnCheck have been backfilling older bugs into the CVE list.[^first] Part of it is AI. Anthropic reports that its models found 5,087 vulnerabilities in 680 open source projects, and says that's a subset limited by how fast humans can triage them.[^anthropic-cvd] Google's Big Sleep agent found and reproduced 20 flaws in projects like FFmpeg and ImageMagick in 2025.[^bigsleep]
+
+### Shorter time to patch
+
+Rapid7 tracked 43 high-severity vulnerabilities in mid-2026. On average, attackers exploited them about three days after disclosure, and 71% within a week.[^rapid7] VulnCheck found that 23% of known-exploited vulnerabilities in early 2026 were attacked on or before the day their CVE was published.[^vulncheck] A monthly patch window now leaves you exposed for most of the month.
+
+### Your tools became the target
+
+The payloads changed as well. The October LiteLLM release took cloud keys, SSH and GPG keys, browser data, and the login files of Codex, Claude, Gemini and Cursor.[^litellm-oct] The Nx compromise in 2025 went one step further. Its install script asked the AI command-line tools already on the victim's machine to search the disk for secrets.[^nx]
+
+Each theft also feeds the next one. In March 2026, attackers took over the release tags of Trivy's GitHub Action, a popular security scanner. LiteLLM's CI ran that action without pinning it. The poisoned scanner read LiteLLM's PyPI token, and two malicious LiteLLM releases followed within days.[^trivy][^litellm-mar] A security tool became the way in.
+
+That leads to the threat model for the rest of this guide:
+
+> Assume one of your tools will be compromised, and that you won't notice when it happens. Arrange things so that a single compromise steals little and what it steals stops working soon.
+
+Most of the fixes below do one of three things. They keep secrets off the disk, they make credentials expire, or they slow down untrusted code before it can run.
+
+## 1. Your device
+
+<Figure label="Chapter 1">
+  <AttackPath active="device" />
+</Figure>
+
+An infostealer is malware that copies credentials and leaves. It usually runs once, from a malicious package or a fake installer. In its first few seconds it reads the usual places: `~/.ssh`, `~/.aws`, every `.env` file it can find, browser cookies, `~/.npmrc`, the GitHub CLI's config, and now your AI tools' login files. It sends them home, and the attacker logs in from somewhere else, often within minutes.
+
+You can't make every one of those files disappear. You can make each one worth less.
+
+### Start here: put a passphrase on your SSH keys
+
+An SSH private key without a passphrase is a plain file. Anyone who copies it can use it, from any machine, until you remove it from every server and from GitHub. A passphrase encrypts the file, so a stolen copy is useless on its own.
+
+Create a new key with a passphrase:
+
+```sh
+ssh-keygen -t ed25519 -a 100 -C "you@laptop-2026"
+```
+
+`-a 100` raises the number of key-derivation rounds, which makes guessing the passphrase slower.[^ssh-keygen] If you already have a key without a passphrase, add one in place:
+
+```sh
+ssh-keygen -p -f ~/.ssh/id_ed25519
+```
+
+Typing a passphrase for every `git push` gets old fast, which is why people skip it. On macOS, the keychain can remember it for you. Store the passphrase once:
+
+```sh
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+```
+
+Then tell SSH to load the key from the keychain:
+
+```txt title="~/.ssh/config"
+Host *
+  IgnoreUnknown UseKeychain
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+```
+
+`UseKeychain` exists only in Apple's OpenSSH. `IgnoreUnknown` keeps the same file working with Homebrew's OpenSSH or on Linux.
+
+You type the passphrase once. After that, the keychain unlocks the key when you log in to your Mac.[^apple-tn] On Linux, `ssh-agent` with GNOME Keyring or KeePassXC does the same job.
+
+This protects you from the copy-and-leave stealer. It doesn't protect you from malware that stays on your machine while you're logged in. That malware can ask the unlocked agent to sign for it. `ssh-add -t 1h` makes the agent forget the key after an hour, which shrinks that window.[^ssh-add]
+
+<Figure label="What a thief gets" caption="The same two attacks against three ways of storing an SSH key. A passphrase stops the stealer that copies files and leaves. Only hardware-backed keys also stop malware that stays on your machine.">
+  <KeyTheft />
+</Figure>
+
+### Start here: the boring basics
+
+Turn on disk encryption (FileVault on macOS, LUKS on Linux), automatic OS updates and a short screen lock. They protect you against a lost laptop and against the bugs that the CVE chart above keeps counting.
+
+### Start here: phishing-resistant logins for the accounts that publish
+
+In September 2025, a maintainer of `chalk` and `debug` got an email from `npmjs.help`, a domain registered three days earlier. They entered their credentials and a one-time code. Within hours, malicious versions of 18 packages with more than 2 billion weekly downloads were on npm.[^chalk]
+
+A one-time code typed into a fake page works for the attacker too. Passkeys and hardware security keys don't, because the browser only uses them on the real domain. Turn them on for GitHub, npm, PyPI, your cloud console and your email. Your email matters because it can reset everything else. A password manager helps here too, because it won't fill your password into a look-alike domain. Register two keys or passkeys per account and save the recovery codes, so losing one device doesn't lock you out.
+
+### Start here: fewer, quieter editor extensions
+
+An editor extension runs with your permissions and updates itself. On 29 October 2026, two versions of the Claude Code extension that Anthropic never wrote appeared in Cursor's marketplace under the real extension's name. Auto-update installed them. They added an SSH key labelled `svc-telemetry` to `~/.ssh/authorized_keys`, opened a reverse SSH tunnel, and set themselves up to run at login.[^cursor-ext] Cursor hasn't said how the versions got into its marketplace. Uninstalling the extension doesn't remove what it planted, so Cursor's advice is to check `authorized_keys`, run its cleanup script, and consider rebuilding the machine.
+
+A year earlier, in October 2025, the GlassWorm campaign spread through VS Code extensions on Open VSX and the Microsoft marketplace. It hid its code in invisible Unicode characters and stole npm, GitHub and Open VSX tokens.[^glassworm]
+
+Remove extensions you don't use. Prefer verified publishers. A verified name didn't help in the Cursor case, because the fake build carried the real extension's ID. What would have helped is turning off automatic extension updates and installing updates a few days after release, the same cooldown idea as in chapter 4.
+
+### Level up: keys that can't be copied
+
+The strongest fix keeps the private key in hardware, where no file holds it. There's nothing for a stealer to copy. If you set the key to require it, every use also needs your touch or fingerprint. A prompt you didn't start is then your alarm.
+
+- **A FIDO2 security key**, like a YubiKey, holds an `ed25519-sk` key. `verify-required` asks for your PIN or fingerprint on every signature.[^yubico]
+
+  ```sh
+  ssh-keygen -t ed25519-sk -O resident -O verify-required -C "you@yubikey"
+  ```
+
+  Older macOS versions ship an OpenSSH without security-key support. If the command fails, install OpenSSH from Homebrew.
+
+- **Secretive** on macOS keeps keys in the Secure Enclave and can require Touch ID for each use. Keys can't be exported or backed up, so every Mac gets its own key.[^secretive]
+- **The 1Password SSH agent** keeps keys in your vault and asks for Touch ID before each use. It's the easiest one to use across several machines.[^1p-agent]
+
+Point SSH at 1Password's agent instead of the keychain setup above:
+
+```txt title="~/.ssh/config (1Password agent on macOS)"
+Host *
+  IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+```
+
+### Level up: sign your commits
+
+GitHub shows whatever author name and email a commit claims. Signing proves the commit came from your key. Git can sign with the SSH key you already have:[^gh-signing]
+
+```sh
+git config --global gpg.format ssh
+git config --global user.signingkey ~/.ssh/id_ed25519.pub
+git config --global commit.gpgsign true
+git config --global tag.gpgSign true
+```
+
+Add the same public key to GitHub as a **Signing key**. Once everything you push is signed, turn on vigilant mode so GitHub marks unsigned commits under your name as unverified.
+
+### Level up: cloud logins that expire
+
+A static AWS key in `~/.aws/credentials` works until someone deletes it. An SSO login gives you temporary credentials instead:[^aws-sso]
+
+```sh
+aws configure sso
+aws sso login --profile dev
+```
+
+The cached token is still a file on disk, but it stops working within hours. The GitHub CLI stores its token in the system keychain by default.[^gh-auth] Don't pass `--insecure-storage`, and run `gh auth status` to check where your token lives.
+
+### Level up: clean out old tokens
+
+Every token you created and forgot is a credential someone can steal. Once a quarter, open GitHub's personal access tokens, OAuth apps and SSH keys, and the tokens pages on npm, PyPI and your cloud console. Delete what you don't recognise. Replace classic GitHub tokens with fine-grained ones that expire.
+
+### Advanced: open unfamiliar code in a throwaway machine
+
+A cloned repository can run code on your machine before you've read it: install scripts, Git hooks, editor tasks, an AI agent following instructions in a README. For code you don't trust yet, use a disposable VM or dev container that can't see your home directory.
+
+Check the defaults. OrbStack, for example, mounts your Mac's files and forwards your SSH agent into its Linux machines. A forwarded agent gives untrusted code the use of your keys, so turn both off for untrusted work.[^orbstack]
+
+## 2. Secrets: get them off the disk
+
+Secrets aren't one stop on the path. They sit at every stop, which is why they get their own chapter. Most leaks still start as a copy on a developer's machine.
+
+A secret is anything that lets someone act as you or as your system: passwords, API keys, tokens, SSH keys, database URLs, signing keys. A useful test: would you be fine seeing it on a billboard? If not, treat it as a secret.
+
+Secrets rarely leak through clever hacking. They leak through copies. GitGuardian counted 28.65 million new hardcoded secrets on public GitHub in 2025, 34% more than the year before. Leaked keys for AI services grew 81%, and 64% of the valid secrets it found in 2022 still worked four years later.[^sprawl] The usual copies are:
+
+- a key committed to Git, which stays in history after you delete the file
+- a key pasted into Slack, a doc or a ticket, which stays searchable
+- a `.env` file on a developer's machine, which a stealer collects in one glob
+- a value typed into a hosting dashboard, which is only as safe as that platform
+- an old key nobody revoked, which still works years later
+
+### Why `.env` files became a liability
+
+A gitignored `.env` file was good advice. It kept secrets out of source code. The trouble is that it keeps them in plaintext on every machine that runs the project, next to every other project's `.env`. Malware from a poisoned package doesn't need to know your project. It searches for `**/.env` and takes them all.
+
+You also might not know it happened. A stealer that runs during `npm install` and exits leaves no trace you'd notice. So the goal is that a stolen file holds nothing useful.
+
+### One machine, many projects
+
+Most of us don't have one project on our machine. We have a day job, a client or two, side projects and some open source, all under one user account. Each project has its own `.env`. The home directory holds logins that every project shares: AWS profiles, an npm token in `~/.npmrc`, the GitHub CLI token, browser sessions for every dashboard.
+
+Now a dependency in your weekend side project turns malicious. It runs as you, so it doesn't stop at that project. It reads the client's production database URL, your employer's cloud profile and the token that publishes your open source package. One bad install becomes a breach of several organisations, and some of them aren't yours.
+
+<Figure label="Blast radius" caption="Three projects on one machine. A malicious install in one of them can read everything your user account can read. Isolating projects and scoping logins shrinks what one compromise reaches.">
+  <BlastRadius />
+</Figure>
+
+So give each project its own walls:
+
+- **Start here.** Keep one vault or project per client in your secrets manager, and use references instead of values, as the next section shows.
+- **Start here.** Scope every login to the project. Use fine-grained GitHub tokens for one repository, and a separate cloud SSO profile per client that expires within hours: `aws sso login --profile client-a`.
+- **Start here.** Keep no long-lived tokens in your home directory. Remove the token line from `~/.npmrc`, and log in to npm only when you publish, or better, publish from CI with trusted publishing.
+- **Level up.** Start AI agents inside the project folder, never from your home directory, so they only see that project.
+- **Level up.** Run client projects in their own dev container or VM, with only that project's secrets and no home directory mounted. A malicious install then sees one project.
+- **Advanced.** Use a separate OS user, or a separate machine, for work that has production access.
+
+### Start here: commit references, not values
+
+Most secrets managers can inject values into a process when it starts. Your `.env` file then holds a pointer to each secret instead of the secret itself. With the 1Password CLI, it looks like this:[^op-refs]
+
+```sh title=".env (before)"
+STRIPE_SECRET_KEY=sk_live_51Nabc...
+DATABASE_URL=postgres://app:hunter2@db.example.com/app
+```
+
+```sh title=".env (after)"
+STRIPE_SECRET_KEY="op://dev/Stripe/secret_key"
+DATABASE_URL="op://dev/Postgres/url"
+```
+
+Run your app through the CLI, which swaps each reference for the real value in the child process's environment only:
+
+```sh
+op run --env-file=.env -- npm run dev
+```
+
+The file on disk is now safe to commit, and a stealer that copies it gets a list of names. With the 1Password desktop app's CLI integration turned on, unlocking the vault takes Touch ID.
+
+<Figure label="What a stealer takes" caption="The same .env file in two forms. A stealer that copies every .env on disk takes three live keys from the first and three useless paths from the second.">
+  <EnvOnDisk />
+</Figure>
+
+Other tools follow the same pattern. Infisical is open source at its core and you can host it yourself:[^infisical-cli]
+
+```sh
+infisical login
+infisical init                          # writes .infisical.json, a pointer with no secrets
+infisical run --env=dev -- npm run dev
+```
+
+Bitwarden Secrets Manager does it with `bws run -- 'npm run dev'`, and Doppler with `doppler run -- npm run dev`.
+
+| Tool | Open source | Self-host | Free tier | Run locally with |
+| --- | --- | --- | --- | --- |
+| [1Password CLI](https://www.1password.dev/cli/secrets-environment-variables/) | No | No | None | `op run --env-file=.env --` |
+| [Infisical](https://infisical.com/pricing) | MIT core | Yes, free | 5 identities | `infisical run --` |
+| [Bitwarden Secrets Manager](https://bitwarden.com/products/secrets-manager/) | Public source, custom license | Enterprise plan | 2 users, 3 projects | `bws run --` |
+| [Doppler](https://www.doppler.com/pricing) | No | No | 3 users | `doppler run --` |
+| [OpenBao](https://openbao.org/) | Yes | Yes | Free | API and agent |
+
+Pick the one your team will use. A solo developer with 1Password already has it. A team that wants to self-host should look at Infisical or OpenBao. OpenBao is the open source fork of HashiCorp Vault, started after Vault moved to a business source license in 2023.[^vault-bsl]
+
+### What this protects, and what it doesn't
+
+Runtime injection protects against the stealer that copies files and leaves, against accidental commits, and against stale copies in backups and old clones. It gives you one place to rotate a key and a log of who read it.
+
+It doesn't hide a secret from malware that is running as you while your app runs. On Linux, any process running as the same user can read it from `/proc`. On any system, malware running as you can start `op run` itself or read what your app logs.[^op-env] The token that unlocks the secrets manager is also a secret. Keep it in the OS keychain or behind Touch ID, never in `~/.zshrc`.
+
+### Start here: scan before you commit
+
+Install a scanner as a pre-commit hook, and turn on GitHub push protection for every repository. Gitleaks, TruffleHog and `infisical scan` all work as hooks.[^gitleaks]
+
+```sh
+gitleaks git --staged          # in a pre-commit hook
+gitleaks dir .                 # find plaintext secrets lying around
+```
+
+Run the second command on your whole projects folder once. Most people find old `.env` files and keys they forgot about. Delete them, and rotate any that still work.
+
+### Level up: one manager, one identity per app
+
+As a project grows, the question changes from where a secret is stored to who may read it. Give each app, server and pipeline its own identity with access to only its own secrets. If one server is compromised, you disable that one identity and the audit log shows exactly what it read.
+
+There's a ladder here, from the simplest method to the safest:
+
+1. A gitignored `.env` file, for solo work on a project with no real users.
+2. An encrypted file in Git with [SOPS](https://github.com/getsops/sops) or [dotenvx](https://dotenvx.com/docs/quickstart), for a small team with no server to run. The decryption key becomes the secret to protect.
+3. References injected at runtime from a manager, as above.
+4. A manager with one machine identity per app, audit logs and rotation.
+5. Short-lived credentials with no stored secret at all: OIDC in CI, SSO for cloud CLIs, SSH certificates for servers.
+
+Most teams use two or three of these at once. Climb one rung at a time.
+
+### Advanced: if it ships to users, it's public
+
+Anything inside a JavaScript bundle or a mobile app can be read by anyone who downloads it. Variables prefixed with `NEXT_PUBLIC_`, `VITE_` or `REACT_APP_` end up in the bundle by design. Keep real keys on a server you control, and have the client call your server. Keys that are meant to be public, like a Stripe publishable key or a maps key, should be restricted by domain or app ID.[^google-keys]
+
+## 3. AI agents and MCP servers
+
+A coding agent reads text and runs commands. That's what makes it useful. It's also the whole problem, because the agent can't reliably tell your instructions apart from instructions hidden in the text it reads.
+
+That's called prompt injection, and it has moved from research demos into real attacks:
+
+- In May 2025, Invariant Labs filed an issue on a public repository with hidden instructions. An agent connected to the official GitHub MCP server read it and copied data from the user's private repositories into a public pull request.[^invariant]
+- In August 2025, Microsoft patched a Copilot flaw where injected text in a source file made the agent edit `.vscode/settings.json` to approve its own commands. That turned a comment in a file into remote code execution.[^copilot-cve]
+- In September 2025, a copy of Postmark's MCP server on npm behaved for 15 versions. Version 1.0.16 added one line that blind-copied every email it sent to the attacker.[^postmark]
+
+### The lethal trifecta
+
+Simon Willison describes the danger as three capabilities in one agent: access to private data, exposure to untrusted content, and a way to send data out.[^trifecta] With all three, anyone who can put text in front of the agent can make it leak your data. Remove any one and that attack fails.
+
+<Figure label="The lethal trifecta" caption="An agent that combines private data, untrusted content and a way to send data out can be made to leak. Turn off any one capability to break the attack.">
+  <LethalTrifecta />
+</Figure>
+
+### Start here: keep the approvals on
+
+- Don't run agents with blanket auto-approve. Allow read-only commands freely and keep approvals for shell commands, file writes outside the project, and network calls.
+- Treat edits to agent and editor configuration as dangerous. These include `.vscode/`, `.cursor/`, `mcp.json`, `.claude/` and `AGENTS.md`. Read the diff before you accept one. In 2025, Cursor tied its approval of an MCP server to the server's name, so anyone who could edit a shared repository could swap the command after you approved it.[^mcpoison]
+- Keep your agent updated. The Copilot and Cursor flaws in this chapter were fixed in point releases.
+
+### Level up: sandbox the agent
+
+Run the agent in a sandbox that limits what it can read and where it can connect. Check what your sandbox actually blocks. Claude Code's sandbox, for example, limits writes to the project and routes network traffic through an allowlist. By default it can still read most of your home directory, including `~/.ssh` and `~/.aws/credentials`, unless you add them to `denyRead`.[^cc-sandbox]
+
+Start agent sessions without production secrets in the environment. If the agent needs a token, give it a fine-grained token for one repository that expires in a day.
+
+### Level up: treat MCP servers like dependencies
+
+An MCP server is code that runs with your permissions and talks to your agent. Install it from the vendor's official source, pin the exact version, and read the changes before you upgrade. `postmark-mcp` was clean for 15 releases before the bad one.
+
+### Advanced: agents in CI
+
+Agents that triage issues or review pull requests read text from strangers by design. In February 2026, a crafted issue title tricked the AI triage bot in Cline's repository. The attackers used it to steal an npm token, and a malicious `cline` release was live for about eight hours.[^clinejection] In April 2026, Aonan Guan and researchers at Johns Hopkins showed that a crafted pull request title could make the review actions of Claude Code, Gemini CLI and Copilot post their own API keys as comments.[^comment-control] Give an agent that reads public input only the tokens it needs. Require a human approval before any privileged step.
+
+## 4. Dependencies
+
+<Figure label="Chapter 4">
+  <AttackPath active="deps" />
+</Figure>
+
+When you run `npm install` or `pip install`, you run code written by thousands of people you've never met, with your permissions. Most of the time that's fine. When a maintainer's account is taken over, it isn't.
+
+The good news is that the community catches most malicious releases fast. The poisoned `chalk` and `debug` versions were live for a few hours. The Nx versions lasted about four hours.[^cooldowns] Most of the damage happens to people who install in that window.
+
+### Start here: wait a few days before installing new versions
+
+A dependency cooldown tells your package manager to ignore any version younger than a set age. William Woodruff looked at ten recent supply-chain attacks. Eight of them were removed within a week, and a seven-day cooldown would have skipped every one of those eight.[^cooldowns]
+
+<Figure label="Cooldown vs time to removal" caption="How long each malicious release stayed live before removal, on a log scale. Releases that were removed inside the cooldown window never reach you. Data from William Woodruff, plus LiteLLM's October 2026 release.">
+  <CooldownWindow />
+</Figure>
+
+Most package managers support a cooldown now. Watch the units, because the same number means different things in each tool:
+
+| Tool | Setting | Units | Example: 3 days |
+| --- | --- | --- | --- |
+| pnpm | `minimumReleaseAge` in `pnpm-workspace.yaml` | minutes | `4320` |
+| Bun | `minimumReleaseAge` in `bunfig.toml` | seconds | `259200` |
+| npm | `min-release-age` in `.npmrc` | days | `3` |
+| Yarn | `npmMinimalAgeGate` in `.yarnrc.yml` | duration | `"3d"` |
+| uv | `exclude-newer` | duration | `"3 days"` |
+| pip | `--uploaded-prior-to` | duration | `P3D` |
+| Renovate | `minimumReleaseAge` | duration | `"3 days"` |
+| Dependabot | `cooldown.default-days` | days | `3` |
+
+For Bun, it looks like this:
+
+```toml title="bunfig.toml"
+[install]
+minimumReleaseAge = 259200 # 3 days, in seconds
+```
+
+Two to seven days covers most attacks. Seven is a good default. A cooldown doesn't stop a slow, patient attack like the xz-utils backdoor, which stayed hidden for weeks.
+
+### The exception: urgent security fixes
+
+Sometimes upstream ships a fix for a vulnerability that is being exploited right now, and waiting a week is the bigger risk. Make that exception explicit, for one package, and remove it afterwards:
+
+```toml title="bunfig.toml"
+[install]
+minimumReleaseAge = 259200
+minimumReleaseAgeExcludes = ["next"] # CVE fix, remove after 3 days
+```
+
+pnpm has `minimumReleaseAgeExclude` and uv has `exclude-newer-package`. Dependabot and Renovate already raise security updates straight away and ignore their own cooldown.[^renovate-age] Your package manager's cooldown still applies, though, so the bot's pull request will fail until you add the exception.
+
+### Start here: lockfiles and frozen installs
+
+Commit your lockfile and install from it exactly in CI, so nothing resolves to a newer version on its own:
+
+```sh
+npm ci
+pnpm install --frozen-lockfile
+bun install --frozen-lockfile
+uv sync --locked
+```
+
+### Level up: don't run install scripts you didn't approve
+
+Most npm malware runs from a `postinstall` or `preinstall` script. Shai-Hulud 2.0 moved its payload into `preinstall` and spread to about 800 packages.[^shai2] Bun and recent pnpm block dependency install scripts by default and make you allow each one. Bun still runs scripts for a built-in list of popular packages, and `trustedDependencies` replaces that list. pnpm calls its allowlist `allowBuilds` in version 11 and `onlyBuiltDependencies` before that. In npm, set `ignore-scripts=true` in `.npmrc`.
+
+### Level up: check that a package exists before you install it
+
+AI assistants sometimes recommend packages that don't exist, and attackers register those names. This is called slopsquatting. In one study, commercial models invented package names in 5.2% of suggestions and open models in 21.7%.[^slopsquat] Before you install a name an assistant gave you, check the package page, its age, its downloads and its repository.
+
+### Level up: patch known vulnerabilities fast
+
+A cooldown protects you from new malicious versions. Known vulnerabilities in old versions need the opposite: an upgrade soon. Turn on Dependabot alerts and security updates, or run `osv-scanner` in CI, and merge security fixes within days.
+
+### Advanced: scan new dependencies in review
+
+Add GitHub's dependency review action to pull requests to block new dependencies with known vulnerabilities.[^dep-review] Socket and OSV-Scanner flag malicious packages and known CVEs. Treat a large upgrade like a code change: read the changelog and check for new install scripts or network access.
+
+## 5. CI and GitHub Actions
+
+<Figure label="Chapter 5">
+  <AttackPath active="ci" />
+</Figure>
+
+Your CI pipeline holds the most valuable credentials you have: the token that publishes your package and the keys that deploy to production. It also runs third-party code on every push.
+
+### Start here: pin actions to a full commit SHA
+
+A line like `uses: tj-actions/changed-files@v45` points at a Git tag, and a tag can be moved. In March 2025, attackers repointed the tags of `tj-actions/changed-files` to a malicious commit that printed CI secrets into the build logs. More than 23,000 repositories used it. Repositories pinned to a full commit SHA were not affected.[^tj-actions]
+
+<Figure label="Tag vs SHA" caption="A tag is a pointer the action's owner can move. A full commit SHA names one exact commit, so it can't be moved.">
+  <TagVsSha />
+</Figure>
+
+Pin every third-party action to its full SHA, with the version in a comment so humans and Dependabot can read it:
+
+```yaml
+- uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+```
+
+You don't have to look up SHAs by hand. `pinact run` rewrites your workflows with pinned SHAs, and Dependabot keeps them up to date.[^pinact] An organisation can also require SHA pins. Since August 2025, GitHub's allowed-actions policy has a setting that fails any workflow using an unpinned action.[^sha-policy]
+
+GitHub went one step further in October 2026. Workflow lockfiles are now generally available. `gh actions-lock` writes `.github/workflows/actions.lock`, which pins the actions your actions call as well, something SHA pins on your own `uses:` lines can't reach.[^lockfiles]
+
+```sh
+gh extension install github/gh-actions-lock
+gh actions-lock
+```
+
+### Start here: least privilege by default
+
+Give every workflow no permissions at the top, then grant each job only what it needs:
+
+```yaml
+permissions: {}
+
+jobs:
+  test:
+    permissions:
+      contents: read
+```
+
+More defaults to change:
+
+- Set `persist-credentials: false` on `actions/checkout`. Otherwise the token stays on disk for every later step.[^checkout]
+- Require review for changes to `.github/workflows/` with a `CODEOWNERS` entry and branch protection. GhostAction used stolen accounts to push a new workflow that sent every secret to the attacker.[^ghostaction]
+- Don't use self-hosted runners on public repositories. Anyone who opens a pull request can run code on them.[^secure-use]
+- Never put `${{ github.event.pull_request.title }}` or similar values straight into a `run:` script. A pull request titled with shell code runs as shell code. The Nx compromise started exactly this way.[^nx] Pass the value through an environment variable instead.
+
+### Level up: stay away from `pull_request_target`
+
+`pull_request_target` runs a workflow with your repository's secrets on pull requests from forks. If that workflow checks out the fork's code, the stranger's code runs with your secrets. This is called a pwn request, and it's how the TanStack packages were compromised in May 2026.[^tanstack] From 2 December 2026, GitHub blocks `pull_request_target` by default in public repositories, unless an Actions policy allows it.[^prt] Use `pull_request` unless you are certain you need the other one.
+
+### Level up: OIDC instead of stored cloud keys
+
+A cloud key stored in GitHub secrets is a long-lived credential that any compromised step can read. With OIDC, each job asks your cloud for a token that lasts for that job only.[^oidc-aws] Restrict the cloud role to your repository and environment, so a token from another repo or branch is refused.
+
+Here is a workflow before and after:
+
+```yaml title="before.yml"
+on: pull_request_target
+permissions: write-all
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}  # runs the fork's code
+      - uses: tj-actions/changed-files@v45                # tag can be moved
+      - run: echo "Title: ${{ github.event.pull_request.title }}"  # injection
+      - run: aws s3 sync ./dist s3://bucket
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY }}       # long-lived key
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET }}
+```
+
+```yaml title="after.yml"
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions: {}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: echo "Title: $TITLE"
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production # needs a reviewer's approval
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: npm ci && npm run build
+      - uses: aws-actions/configure-aws-credentials@<full-sha> # pin with pinact
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/gha-deploy
+          aws-region: us-east-1
+      - run: aws s3 sync ./dist s3://bucket
+```
+
+### Level up: let a linter find the rest
+
+zizmor reads your workflows and reports template injection, excessive permissions, credentials left on disk, unpinned actions and more.[^zizmor] Run it locally first:
+
+```sh
+brew install zizmor   # or: pipx install zizmor
+zizmor .github/workflows
+```
+
+Then add it to CI so new workflows are checked on every pull request:
+
+```yaml title=".github/workflows/zizmor.yml"
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions: {}
+jobs:
+  zizmor:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: zizmorcore/zizmor-action@45d7276c9ca790aabd705e31ca99c6185c3e76dd # v0.8.1
+```
+
+| Tool | What it checks | Run it with |
+| --- | --- | --- |
+| [zizmor](https://docs.zizmor.sh/) | Injection, permissions, credential persistence, impostor commits | `zizmor .github/workflows` |
+| [actionlint](https://github.com/rhysd/actionlint) | Syntax, expressions, shellcheck on `run:` steps | `actionlint` |
+| [pinact](https://github.com/suzuki-shunsuke/pinact) | Pins actions to SHAs and keeps them current | `pinact run` |
+| [harden-runner](https://github.com/step-security/harden-runner) | Network and process activity on the runner at run time | first step of each job |
+| [OpenSSF Scorecard](https://github.com/ossf/scorecard-action) | Overall repository hygiene | scheduled workflow |
+
+### Advanced: publish without tokens
+
+If you publish packages, use trusted publishing. npm and PyPI accept an OIDC token from your release workflow, so no publish token sits in your secrets.[^npm-trusted] After you set it up on npm, choose "Require two-factor authentication and disallow tokens".
+
+Scope it tightly. Grant `id-token: write` only to the publish job, from one workflow on one branch, and protect that job with an environment that needs approval. The TanStack attackers didn't steal a stored token. They poisoned the Actions cache, took the runner's short-lived OIDC token, and published packages that carried valid provenance.[^tanstack] Keep release jobs away from caches that pull request workflows can write to. zizmor checks for this.
+
+## 6. Servers and production
+
+<Figure label="Chapter 6">
+  <AttackPath active="prod" />
+</Figure>
+
+The last stop is where stolen credentials get spent. With exploits arriving in days, the server rules are about two things: expose as little as possible, and patch automatically.
+
+If you deploy to a VPS of your own, those steps are yours. A fresh server gives you `root@ip`, and there is a list of things to set up before it should face the internet: an admin user with a key, SSH hardening, a firewall, automatic updates, kernel settings. The common way to get it wrong is to lock yourself out of SSH halfway through.
+
+### Start here: harden a fresh VPS with a tool that can undo
+
+I built [vps-ready](https://vps-ready.bhimraj.com.np/) for this. It's an open source tool for Debian and Ubuntu that audits the server, shows you a plan of every change before it writes anything, and applies it. If a change could lock you out, like SSH or firewall settings, a timer rolls it back unless you confirm from a new SSH login within five minutes. It's in beta, so expect rough edges, but it covers the common setup for a single server.[^vps-ready]
+
+Install it the way its README asks: download the script, read it, then run it. The script checks the release checksum and signature.
+
+```sh
+curl -fsSLO https://github.com/bhimrazy/vps-ready/releases/download/v0.7.0/install.sh
+less install.sh
+sudo sh install.sh
+sudo vps-ready audit     # what fails, and why it matters
+sudo vps-ready plan      # what would change; nothing is written
+sudo vps-ready           # guided setup: asks a few questions, then applies with the rollback timer
+```
+
+The sections below are the same steps by hand, if you'd rather do them yourself or want to know what the tool changes.
+
+### Start here: SSH with keys only
+
+Put this in a drop-in file so package upgrades don't overwrite it:[^sshd]
+
+```txt title="/etc/ssh/sshd_config.d/00-hardening.conf"
+PermitRootLogin no
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+AuthenticationMethods publickey
+MaxAuthTries 3
+AllowUsers deploy
+```
+
+sshd keeps the first value it reads for each setting, and files load in name order. The `00-` prefix makes yours win over cloud images' `50-cloud-init.conf`, which often turns password login back on. Check the config, reload, and confirm what sshd actually uses:
+
+```sh
+sudo sshd -t
+sudo systemctl reload ssh      # the unit is sshd on some distributions
+sudo sshd -T | grep -i passwordauthentication
+```
+
+Keep a second session open until a new login works.
+
+### Start here: automatic security updates
+
+On Ubuntu, unattended security updates are on by default. Check that they still are:[^unattended]
+
+```txt title="/etc/apt/apt.conf.d/20auto-upgrades"
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
+```
+
+Then test with `sudo unattended-upgrade -v --dry-run`. Since exploits now arrive within days, patch anything internet-facing within two days of a critical fix, and the rest weekly.
+
+### Level up: close the SSH port
+
+You don't need port 22 open to the internet. Tailscale or WireGuard gives you a private network to SSH over, and Cloudflare Tunnel exposes a service without any inbound port.[^tailscale] First check that you can log in over the tailnet with `ssh you@<tailscale-ip>`. Only then close everything else, or you'll lock yourself out:
+
+```sh
+sudo ufw default deny incoming
+sudo ufw allow in on tailscale0
+sudo ufw enable
+```
+
+If you run Docker, check what is reachable from outside. Ports that Docker publishes go around ufw's rules, so a container you thought was firewalled may be open to the internet. Bind published ports to `127.0.0.1` and put a reverse proxy in front.
+
+### Level up: don't park long-lived keys on platforms
+
+Black October showed the cost of keys stored as environment variables on hosting and AI platforms. Wiz saw stolen AI provider keys abused for up to 1.7 million model calls.[^wiz-oct] Prefer short-lived, scoped credentials. Put spend caps and usage alerts on every AI and cloud API key, so abuse shows up as an alert and not as an invoice.
+
+### Advanced: pin images by digest
+
+A Docker tag can move just like a Git tag. Pin base images by digest and let Renovate or Dependabot bump them:[^digests]
+
+```dockerfile
+FROM node:22-slim@sha256:<digest>
+```
+
+Get the digest with `docker buildx imagetools inspect node:22-slim`. Use small base images, and run as a non-root user.
+
+## When something leaks
+
+It will happen eventually. What matters is the order you do things in, and whether you have the logs to see what happened. Check now that audit logging is on for your cloud accounts, GitHub organisation and secrets manager. Logs you never turned on can't help you later.
+
+1. **Revoke and rotate the key at the provider first.** This makes the leaked value useless. Cleaning Git history first only hides a key that still works. If a device was involved, also sign out every session on GitHub, Google and your cloud console, because stealers take browser cookies and a session cookie skips your passkey.
+2. **Check the logs** for any use of the key since the leak: cloud audit logs, API dashboards, billing spikes.
+3. **Clean up the copies** in Git history, chat, docs and CI logs. Forks and clones keep their copy, which is why step 1 comes first.
+4. **Fix the cause.** Move the new value into your secrets manager, and add a scanner rule or a policy so the same mistake gets caught next time.
+
+Two warnings from real incidents. If malware is still on the machine, isolate the machine before you rotate. Shai-Hulud 2.0 carried a fallback that wipes the home directory.[^shai2] And deleting the attacker's change isn't the same as revoking access. Teams hit by GhostAction that removed the malicious workflow but kept their secrets stayed exposed.[^ghostaction]
+
+## The checklist
+
+You don't need to do all of this at once. Each tier builds on the one before.
+
+### Today
+
+- [ ] Add a passphrase to your SSH keys and store it in the keychain
+- [ ] Turn on passkeys or a hardware key for GitHub, npm, PyPI, cloud and email, with a backup key and recovery codes
+- [ ] Install a pre-commit secret scanner and turn on push protection
+- [ ] Scan your projects folder for old `.env` files and keys, and rotate what you find
+- [ ] Set a 7-day dependency cooldown in each project
+- [ ] Remove editor extensions you don't use
+
+### This week
+
+- [ ] Replace plaintext `.env` values with references from a secrets manager
+- [ ] Switch cloud CLIs to SSO logins and delete static keys
+- [ ] Delete old GitHub, npm and cloud tokens you don't recognise
+- [ ] Turn on Dependabot security updates or osv-scanner
+- [ ] Pin GitHub Actions to full SHAs, or adopt workflow lockfiles
+- [ ] Set `permissions: {}` at the top of every workflow
+- [ ] Run zizmor on your workflows and fix what it finds
+- [ ] Keep agent approvals on, and turn on your agent's sandbox
+
+### This month
+
+- [ ] Move SSH keys to a security key, Secretive or the 1Password agent
+- [ ] Give client work its own dev container, secrets vault and cloud profile
+- [ ] Replace stored CI cloud keys with OIDC
+- [ ] Move package publishing to trusted publishing
+- [ ] Audit your servers, close public SSH ports and confirm automatic updates
+- [ ] Add spend caps and alerts to every AI and cloud API key
+- [ ] Turn on audit logs for cloud, GitHub and your secrets manager
+- [ ] Write down your leaked-key steps before you need them
+
+## What I left out
+
+This guide is for individual developers and small teams. It skips company controls like device management and endpoint detection, SBOMs, and formal threat modelling, which deserve their own posts. Security advice also ages fast. Several of the GitHub and npm changes above shipped in the last few months, so check the linked docs before you copy a command.
+
+If you spot something wrong or out of date, tell me in the comments below and I'll fix it.
+
+[^binance]: BleepingComputer, [Binance links $6.3 billion crypto theft to compromised DevOps laptop](https://bleepingcomputer.com/news/security/binance-links-63-billion-crypto-theft-to-compromised-devops-laptop), October 2026. Cognition's [practical guide to security in November 2026](https://cognition.com/blog/practical-guide-to-security-november-2026) covers the Binance breach and that month's other incidents.
+[^litellm-oct]: Help Net Security, [LiteLLM compromised in supply chain attack via PyPI and Docker](https://www.helpnetsecurity.com/2026/10/22/litellm-compromised-supply-chain-attack-pypi-docker/), 22 October 2026.
+[^wiz-oct]: Wiz, ["Black October" for AI developer platforms](https://www.wiz.io/blog/black-october-for-ai-developer-platforms), 2026.
+[^cve-data]: [cve.icu yearly summary](https://cve.icu/data/yearly_summary.json), built from CVE Program data, fetched 22 November 2026. Cross-checked against [cve.0xosprey.com](https://cve.0xosprey.com/), which agrees within 1%.
+[^first]: Help Net Security, [FIRST's 2026 CVE forecast](https://www.helpnetsecurity.com/2026/06/15/first-2026-cve-forecast/), 15 June 2026.
+[^anthropic-cvd]: Anthropic, [Coordinated vulnerability disclosure dashboard](https://red.anthropic.com/2026/cvd/), as of 2 November 2026.
+[^bigsleep]: TechCrunch, [Google says its AI-based bug hunter found 20 security vulnerabilities](https://techcrunch.com/2025/08/04/google-says-its-ai-based-bug-hunter-found-20-security-vulnerabilities/), 4 August 2025.
+[^rapid7]: Rapid7, [Q3 2026 threat update: attackers exploiting vulnerabilities within 3 days](https://www.rapid7.com/blog/post/tr-q3-2026-threat-update-attackers-exploiting-vulnerabilities-within-3-days/), 21 October 2026. The sample is 43 vulnerabilities.
+[^vulncheck]: VulnCheck, [State of exploitation 1H 2026](https://www.vulncheck.com/blog/state-of-exploitation-1h-2026), 28 July 2026.
+[^nx]: Nx, [s1ngularity postmortem](https://nx.dev/blog/s1ngularity-postmortem), 2025.
+[^ssh-keygen]: OpenBSD manual, [ssh-keygen(1)](https://man.openbsd.org/ssh-keygen).
+[^ssh-add]: OpenBSD manual, [ssh-add(1)](https://man.openbsd.org/ssh-add).
+[^apple-tn]: Apple, [Technical Note TN2449: OpenSSH updates in macOS 10.12.2](https://developer.apple.com/library/archive/technotes/tn2449/_index.html).
+[^chalk]: Aikido, [npm debug and chalk packages compromised](https://www.aikido.dev/blog/npm-debug-and-chalk-packages-compromised), 8 September 2025.
+[^cursor-ext]: Cursor, [Claude Code extension security notice](https://cursor.com/blog/claude-code-extension-security-notice), 29 and 30 October 2026, and BleepingComputer, [Malicious Claude Code extension on Cursor planted SSH backdoors](https://www.bleepingcomputer.com/news/security/malicious-claude-code-extension-on-cursor-planted-ssh-backdoors/).
+[^glassworm]: Veracode, [GlassWorm: a VS Code extension worm](https://www.veracode.com/blog/glassworm-vs-code-extension), October 2025.
+[^yubico]: Yubico, [Securing SSH with FIDO2](https://developers.yubico.com/SSH/Securing_SSH_with_FIDO2.html).
+[^secretive]: [Secretive](https://github.com/maxgoedjen/secretive) and its [FAQ](https://github.com/maxgoedjen/secretive/blob/main/FAQ.md).
+[^1p-agent]: 1Password, [SSH agent](https://www.1password.dev/ssh/agent/) and [get started](https://www.1password.dev/ssh/get-started/).
+[^gh-signing]: GitHub Docs, [Telling Git about your signing key](https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key) and [vigilant mode](https://docs.github.com/en/authentication/managing-commit-signature-verification/displaying-verification-statuses-for-all-of-your-commits).
+[^aws-sso]: AWS, [Configuring IAM Identity Center authentication with the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html).
+[^gh-auth]: GitHub CLI manual, [gh auth login](https://cli.github.com/manual/gh_auth_login).
+[^orbstack]: OrbStack, [Linux machines](https://docs.orbstack.dev/machines/).
+[^sprawl]: GitGuardian, [State of Secrets Sprawl 2026](https://gitguardian.com/state-of-secrets-sprawl-report-2026).
+[^op-refs]: 1Password, [Secret references](https://www.1password.dev/cli/secret-references/).
+[^op-env]: 1Password, [Load secrets into the environment](https://www.1password.dev/cli/secrets-environment-variables/).
+[^infisical-cli]: Infisical, [CLI reference](https://infisical.com/docs/cli/reference-agents) and [license](https://raw.githubusercontent.com/Infisical/infisical/main/LICENSE).
+[^vault-bsl]: HashiCorp, [HashiCorp adopts the Business Source License](https://www.hashicorp.com/en/blog/hashicorp-adopts-business-source-license), 10 August 2023.
+[^gitleaks]: [Gitleaks](https://github.com/gitleaks/gitleaks) and GitHub Docs, [secret scanning](https://docs.github.com/en/code-security/secret-scanning).
+[^google-keys]: Google, [Best practices for securely using API keys](https://support.google.com/googleapi/answer/6310037).
+[^invariant]: Invariant Labs, [GitHub MCP exploited](https://invariantlabs.ai/blog/mcp-github-vulnerability), 26 May 2025.
+[^copilot-cve]: Embrace The Red, [GitHub Copilot remote code execution via prompt injection (CVE-2025-53773)](https://embracethered.com/blog/posts/2025/github-copilot-remote-code-execution-via-prompt-injection), August 2025.
+[^postmark]: The Register, [postmark-mcp server code hijacked](https://www.theregister.com/2025/09/29/postmark_mcp_server_code_hijacked/), 29 September 2025.
+[^trifecta]: Simon Willison, [The lethal trifecta for AI agents](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/), 16 June 2025.
+[^cc-sandbox]: Anthropic, [Claude Code sandboxing](https://code.claude.com/docs/en/sandboxing).
+[^comment-control]: VentureBeat, [Comment and Control: prompt injection in AI agent actions](https://venturebeat.com/security/ai-agent-runtime-security-system-card-audit-comment-and-control-2026), April 2026.
+[^trivy]: Aqua Security, [GHSA-69fq-xp46-6x23: trivy-action tags compromised](https://github.com/aquasecurity/trivy/security/advisories/GHSA-69fq-xp46-6x23), March 2026.
+[^litellm-mar]: Snyk, [How a poisoned security scanner backdoored LiteLLM](https://snyk.io/articles/poisoned-security-scanner-backdooring-litellm), March 2026.
+[^mcpoison]: Check Point Research, [MCPoison: Cursor vulnerability (CVE-2025-54136)](https://research.checkpoint.com/2025/cursor-vulnerability-mcpoison/), August 2025.
+[^clinejection]: Cloud Security Alliance, [Research note on prompt injection in Claude Code's GitHub Action and the Cline compromise](https://labs.cloudsecurityalliance.org/research/csa-research-note-claude-code-github-action-prompt-injection/), February 2026.
+[^secure-use]: GitHub Docs, [Secure use reference](https://docs.github.com/en/actions/reference/security/secure-use).
+[^cooldowns]: William Woodruff, [We should all be using dependency cooldowns](https://blog.yossarian.net/2025/11/21/We-should-all-be-using-dependency-cooldowns), 21 November 2025.
+[^renovate-age]: Renovate, [Minimum release age](https://docs.renovatebot.com/key-concepts/minimum-release-age/), and GitHub Docs, [Dependabot options: cooldown](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference).
+[^shai2]: Wiz, [Shai-Hulud 2.0: ongoing supply chain attack](https://www.wiz.io/blog/shai-hulud-2-0-ongoing-supply-chain-attack), November 2025.
+[^slopsquat]: The Register, [AI code suggestions sabotage the software supply chain](https://www.theregister.com/2025/04/12/ai_code_suggestions_sabotage_supply_chain/), 12 April 2025.
+[^dep-review]: GitHub, [dependency-review-action](https://github.com/actions/dependency-review-action).
+[^tj-actions]: CISA, [Supply chain compromise of third-party GitHub Action (CVE-2025-30066)](https://www.cisa.gov/news-events/alerts/2025/03/18/supply-chain-compromise-third-party-github-action-cve-2025-30066), and Wiz, [reviewdog/action-setup compromise](https://www.wiz.io/blog/new-github-action-supply-chain-attack-reviewdog-action-setup), March 2025.
+[^pinact]: [pinact](https://github.com/suzuki-shunsuke/pinact).
+[^sha-policy]: GitHub changelog, [Actions policy now supports blocking and SHA pinning](https://github.blog/changelog/2025-08-15-github-actions-policy-now-supports-blocking-and-sha-pinning-actions/), 15 August 2025.
+[^lockfiles]: GitHub changelog, [Workflow lockfiles are generally available](https://github.blog/changelog/2026-10-28-github-actions-workflow-lockfiles-are-generally-available), 28 October 2026, and [Lock workflow dependencies](https://docs.github.com/en/actions/how-tos/secure-your-work/lock-workflow-dependencies).
+[^checkout]: [actions/checkout](https://github.com/actions/checkout).
+[^tanstack]: Snyk, [TanStack npm packages compromised](https://snyk.io/blog/tanstack-npm-packages-compromised), May 2026.
+[^prt]: GitHub changelog, [pull_request_target blocked by default from December 2](https://github.blog/changelog/2026-11-02-pull_request_target-blocked-by-default-december-2), 2 November 2026.
+[^oidc-aws]: GitHub Docs, [Configuring OpenID Connect in AWS](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws).
+[^zizmor]: zizmor, [usage](https://docs.zizmor.sh/usage/), [audits](https://docs.zizmor.sh/audits) and [integrations](https://docs.zizmor.sh/integrations/).
+[^npm-trusted]: npm Docs, [Trusted publishing](https://docs.npmjs.com/trusted-publishers).
+[^vps-ready]: [vps-ready](https://github.com/bhimrazy/vps-ready), v0.7, for Debian 12 and 13 and Ubuntu 22.04 and 24.04.
+[^sshd]: OpenBSD manual, [sshd_config(5)](https://man.openbsd.org/sshd_config).
+[^unattended]: Ubuntu Server docs, [Automatic updates](https://ubuntu.com/server/docs/how-to/software/automatic-updates/).
+[^tailscale]: Tailscale, [Tailscale SSH](https://tailscale.com/kb/1193/tailscale-ssh), and Cloudflare, [SSH with Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/use-cases/ssh/).
+[^digests]: Docker Docs, [Image digests](https://docs.docker.com/dhi/core-concepts/digests/).
+[^ghostaction]: GitGuardian, [GhostAction campaign: 3,325 secrets stolen](https://blog.gitguardian.com/ghostaction-campaign-3-325-secrets-stolen/), September 2025, and [GhostAction returns](https://blog.gitguardian.com/ghostaction-github-actions-supply-chain-attack-returns/), 2026.
