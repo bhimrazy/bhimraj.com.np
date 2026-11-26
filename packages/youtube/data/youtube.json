@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T12:25:47.571Z",
+  "generatedAt": "2026-11-26T19:14:49.606Z",
   "playlists": {
     "PLakGfbKCei80": {
       "id": "PLakGfbKCei80",
@@ -592,6 +592,26 @@
           "rawTitle": "Terminal-Bench: Evaluating AI Agents | Stanford CS329Z Guest Lecture with Alex Shaw & Ryan Marten",
           "durationSec": 4404,
           "publishedAt": "2026-11-18T21:00:35Z",
+          "embeddable": true
+        },
+        {
+          "id": "HbgZFwWj4vY",
+          "title": "What Data Do AI Agents Need?",
+          "number": 10,
+          "speakers": "John Yang",
+          "rawTitle": "What Data Do AI Agents Need? | Stanford CS329Z Lecture 10 with John Yang",
+          "durationSec": 5078,
+          "publishedAt": "2026-11-24T19:13:46Z",
+          "embeddable": true
+        },
+        {
+          "id": "y2cwbmOy12U",
+          "title": "Better Data for AI Agents: Data Selection & Quality",
+          "number": 11,
+          "speakers": "John Yang",
+          "rawTitle": "Better Data for AI Agents: Data Selection & Quality | Stanford CS329Z Lecture 11 with John Yang",
+          "durationSec": 4498,
+          "publishedAt": "2026-11-25T16:00:13Z",
           "embeddable": true
         }
       ]
